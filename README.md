@@ -73,7 +73,7 @@ python main.py
 
 特别的，我们提供了涵盖量子优化、量子化学、量子机器学习等多个领域的案例供大家学习。比如：
 
-- 量子组合优化（QAOA），完成安装步骤后打开 tutorial\QAOA.ipynb 即可进行研究学习。
+- 量子近似优化（QAOA），完成安装步骤后打开 tutorial\QAOA.ipynb 即可进行研究学习。
 
 ```bash
 cd tutorial
@@ -91,7 +91,7 @@ jupyter notebook  VQE.ipynb
 
 ### 开发
 
-Paddle Quantum 使用 setuptools的develop 模式进行安装，相关代码修改可以直接进入`paddle_quantum` 文件夹进行修改。python 文件携带了自说明注释。
+Paddle Quantum 使用 setuptools 的develop 模式进行安装，相关代码修改可以直接进入`paddle_quantum` 文件夹进行修改。python 文件携带了自说明注释。
 
 
 
@@ -105,7 +105,7 @@ Paddle Quantum 使用 setuptools的develop 模式进行安装，相关代码修�
 
 我们非常欢迎开发者使用Paddle Quantum进行量子机器学习的研发，如果您的工作有使用Paddle Quantum，也非常欢迎联系我们。目前使用 Paddle Quantum 的代表性工作关于 Gibbs 态制备如下：
 
-[1] Y. Wang, G. Li, and X. Wang, “Variational quantum Gibbs state preparation with a truncated Taylor series,” arXiv:2005.08797, May 2020. [[pdf](https://arxiv.org/pdf/2005.08797.pdf)]
+[1] Youle Wang, Guangxi Li, and Xin Wang. 2020. Variational quantum Gibbs state preparation with a truncated Taylor series. arXiv2005.08797. [[pdf](https://arxiv.org/pdf/2005.08797.pdf)]
 
 
 ## Copyright and License
@@ -118,12 +118,12 @@ Paddle Quantum 使用 [Apache-2.0 license](LICENSE)许可证。
 
 [1] [量子计算 - 百度百科](https://baike.baidu.com/item/量子计算/11035661?fr=aladdin)
 
-[2] M. A. Nielsen and I. L. Chuang, Quantum computation and quantum information. Cambridge university press, 2010.
+[2] Michael A Nielsen and Isaac L Chuang. 2010. Quantum computation and quantum information. Cambridge university press.
 
-[3] Phillip Kaye, R. Laflamme, and M. Mosca, An Introduction to Quantum Computing. 2007.
+[3] Phillip Kaye, Raymond Laflamme, and Michele Mosca. 2007. An Introduction to Quantum Computing. 
 
-[4] J. Biamonte, P. Wittek, N. Pancotti, P. Rebentrost, N. Wiebe, and S. Lloyd, “Quantum machine learning,” Nature, vol. 549, no. 7671, pp. 195–202, Sep. 2017. [[pdf](https://arxiv.org/pdf/1611.09347)]
+[4] Jacob Biamonte, Peter Wittek, Nicola Pancotti, Patrick Rebentrost, Nathan Wiebe, and Seth Lloyd. 2017. Quantum machine learning. Nature 549, 7671, 195–202. [[pdf](https://arxiv.org/pdf/1611.09347)]
 
-[5] M. Schuld, I. Sinayskiy, and F. Petruccione, “An introduction to quantum machine learning,” Contemp. Phys., vol. 56, no. 2, pp. 172–185, 2015. [[pdf](https://arxiv.org/pdf/1409.3097)]
+[5] Maria Schuld, Ilya Sinayskiy, and Francesco Petruccione. 2015. An introduction to quantum machine learning. Contemp. Phys. 56, 2, 172–185. [[pdf](https://arxiv.org/pdf/1409.3097)]
 
-[6] M. Benedetti, E. Lloyd, S. Sack, and M. Fiorentini, “Parameterized quantum circuits as machine learning models,” Quantum Sci. Technol., vol. 4, no. 4, p. 043001, Nov. 2019. [[pdf](https://arxiv.org/pdf/1906.07682)]
+[6] Marcello Benedetti, Erika Lloyd, Stefan Sack, and Mattia Fiorentini. 2019. Parameterized quantum circuits as machine learning models. Quantum Sci. Technol. 4, 4, 043001. [[pdf](https://arxiv.org/pdf/1906.07682)]
