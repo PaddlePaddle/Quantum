@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Paddle Quantum Authors. All Rights Reserved.
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ def H_generator():
         sigma_I, sigma_Z) + 0.2 * kron(sigma_X, sigma_X)
     rho = scipy.linalg.expm(-1 * beta *
                             H) / trace(scipy.linalg.expm(-1 * beta * H))
-    return H.astype('complex64'), rho.astype('complex64')
+    return H.astype('complex128'), rho.astype('complex128')
 
 
 def H2_generator():
@@ -56,22 +56,39 @@ def H2_generator():
     sigma_Z = array([[1, 0], [0, -1]])
     sigma_X = array([[0, 1], [1, 0]])
     sigma_Y = array([[0, -1j], [1j, 0]])
-    H = (-0.04207897647782276) * kron(kron(kron(sigma_I, sigma_I), sigma_I), sigma_I) \
-        + (0.17771287465139946) * kron(kron(kron(sigma_Z, sigma_I), sigma_I), sigma_I) \
-        + (0.1777128746513994) * kron(kron(kron(sigma_I, sigma_Z), sigma_I), sigma_I) \
-        + (-0.24274280513140462) * kron(kron(kron(sigma_I, sigma_I), sigma_Z), sigma_I) \
-        + (-0.24274280513140462) * kron(kron(kron(sigma_I, sigma_I), sigma_I), sigma_Z) \
-        + (0.17059738328801052) * kron(kron(kron(sigma_Z, sigma_Z), sigma_I), sigma_I) \
-        + (0.04475014401535161) * kron(kron(kron(sigma_Y, sigma_X), sigma_X), sigma_Y) \
-        + (-0.04475014401535161) * kron(kron(kron(sigma_Y, sigma_Y), sigma_X), sigma_X) \
-        + (-0.04475014401535161) * kron(kron(kron(sigma_X, sigma_X), sigma_Y), sigma_Y) \
-        + (0.04475014401535161) * kron(kron(kron(sigma_X, sigma_Y), sigma_Y), sigma_X) \
-        + (0.12293305056183798) * kron(kron(kron(sigma_Z, sigma_I), sigma_Z), sigma_I) \
-        + (0.1676831945771896) * kron(kron(kron(sigma_Z, sigma_I), sigma_I), sigma_Z) \
-        + (0.1676831945771896) * kron(kron(kron(sigma_I, sigma_Z), sigma_Z), sigma_I) \
-        + (0.12293305056183798) * kron(kron(kron(sigma_I, sigma_Z), sigma_I), sigma_Z) \
-        + (0.17627640804319591) * kron(kron(kron(sigma_I, sigma_I), sigma_Z), sigma_Z)
-    rho = scipy.linalg.expm(-1 * beta *
-                            H) / trace(scipy.linalg.expm(-1 * beta * H))
+    # H = (-0.04207897647782276) * kron(kron(kron(sigma_I, sigma_I), sigma_I), sigma_I) \
+    #     + (0.17771287465139946) * kron(kron(kron(sigma_Z, sigma_I), sigma_I), sigma_I) \
+    #     + (0.1777128746513994) * kron(kron(kron(sigma_I, sigma_Z), sigma_I), sigma_I) \
+    #     + (-0.24274280513140462) * kron(kron(kron(sigma_I, sigma_I), sigma_Z), sigma_I) \
+    #     + (-0.24274280513140462) * kron(kron(kron(sigma_I, sigma_I), sigma_I), sigma_Z) \
+    #     + (0.17059738328801052) * kron(kron(kron(sigma_Z, sigma_Z), sigma_I), sigma_I) \
+    #     + (0.04475014401535161) * kron(kron(kron(sigma_Y, sigma_X), sigma_X), sigma_Y) \
+    #     + (-0.04475014401535161) * kron(kron(kron(sigma_Y, sigma_Y), sigma_X), sigma_X) \
+    #     + (-0.04475014401535161) * kron(kron(kron(sigma_X, sigma_X), sigma_Y), sigma_Y) \
+    #     + (0.04475014401535161) * kron(kron(kron(sigma_X, sigma_Y), sigma_Y), sigma_X) \
+    #     + (0.12293305056183798) * kron(kron(kron(sigma_Z, sigma_I), sigma_Z), sigma_I) \
+    #     + (0.1676831945771896) * kron(kron(kron(sigma_Z, sigma_I), sigma_I), sigma_Z) \
+    #     + (0.1676831945771896) * kron(kron(kron(sigma_I, sigma_Z), sigma_Z), sigma_I) \
+    #     + (0.12293305056183798) * kron(kron(kron(sigma_I, sigma_Z), sigma_I), sigma_Z) \
+    #     + (0.17627640804319591) * kron(kron(kron(sigma_I, sigma_I), sigma_Z), sigma_Z)
+    H = [
+        [-0.04207897647782277, 'i0'],
+        [0.17771287465139946, 'z0'],
+        [0.1777128746513994, 'z1'],
+        [-0.2427428051314046, 'z2'],
+        [-0.24274280513140462, 'z3'],
+        [0.17059738328801055, 'z0,z1'],
+        [0.04475014401535163, 'y0,x1,x2,y3'],
+        [-0.04475014401535163, 'y0,y1,x2,x3'],
+        [-0.04475014401535163, 'x0,x1,y2,y3'],
+        [0.04475014401535163, 'x0,y1,y2,x3'],
+        [0.12293305056183797, 'z0,z2'],
+        [0.1676831945771896, 'z0,z3'],
+        [0.1676831945771896, 'z1,z2'],
+        [0.12293305056183797, 'z1,z3'],
+        [0.1762764080431959, 'z2,z3']
+        ]
+    # rho = scipy.linalg.expm(-1 * beta *
+    #                         H) / trace(scipy.linalg.expm(-1 * beta * H))
     N = 4
-    return H.astype('complex64'), rho.astype('complex64'), N
+    return H, N

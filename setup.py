@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Paddle Quantum Authors. All Rights Reserved.
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ from setuptools import setup
 
 setup(
     name='paddle_quantum',
-    version='1.0.0',
+    version='1.1.0',
     description='Paddle Quantum circuit and function',
     author='Institute for Quantum Computing, Baidu INC.',
     author_email='quantum@baidu.com',
-    url='http://quantum-hub.baidu.com',
+    url='http://quantum.baidu.com',
     packages=['paddle_quantum'],
-    install_requires=['paddlepaddle>=1.8.0', 'networkx', 'matplotlib'])
+    install_requires=['paddlepaddle>=1.8.3', 'networkx>=2.4', 'matplotlib>=3.3.0', 'interval>=1.0.0', 'progressbar>=2.5'])

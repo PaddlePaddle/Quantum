@@ -1,0 +1,10 @@
+paddlepaddle>=1.8.3
+networkx>=2.4
+matplotlib>=3.3.0
+interval>=1.0.0
+progressbar>=2.5
+sphinx
+sphinx-rtd-theme
+PyStemmer
+readthedocs-sphinx-search
+jieba
