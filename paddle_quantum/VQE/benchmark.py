@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Paddle Quantum Authors. All Rights Reserved.
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,24 +16,26 @@
 benchmark the result
 """
 
+
 import platform
 
 import matplotlib.pyplot as plt
 import numpy
+from paddle_quantum.utils import pauli_str_to_matrix
 from paddle_quantum.VQE.chemistrysub import H2_generator
+
+__all__ = [
+    "benchmark_result",
+]
 
 
 def benchmark_result():
-    """
-    benchmark using numpy
-    """
-
     # Read H and calc using numpy
     sysStr = platform.system()
     if sysStr == 'Windows':
         #  Windows does not support SCF, using H2_generator instead
         print('Molecule data will be read from built-in function')
-        _H, _, _ = H2_generator()
+        Hamiltonian, N = H2_generator()
         print('Read Process Finished')
     elif sysStr == 'Linux' or sysStr == 'Darwin':
         # for linux only
@@ -41,51 +43,32 @@ def benchmark_result():
         # Harmiltonian and cnot module preparing, must be executed under Linux
         # Read the H2 molecule data
         print('Molecule data will be read from h2.xyz')
-        _H, _, _ = read_calc_H(geo_fn='h2.xyz')
+        Hamiltonian, N = read_calc_H(geo_fn='h2.xyz')
         print('Read Process Finished')
     else:
         print("Don't support this os.")
 
-    # plot
-    x1 = numpy.load('./output/summary_data.npz')
+    result = numpy.load('./output/summary_data.npz')
 
-    eig_val, eig_state = numpy.linalg.eig(_H)
-    min_eig_H = numpy.min(eig_val)
-    min_loss = numpy.ones([len(x1['iter'])]) * min_eig_H
+    eig_val, eig_state = numpy.linalg.eig(pauli_str_to_matrix(Hamiltonian, N))
+    min_eig_H = numpy.min(eig_val.real)
+    min_loss = numpy.ones([len(result['iter'])]) * min_eig_H
 
     plt.figure(1)
-    func1, = plt.plot(
-        x1['iter'],
-        x1['energy'],
-        alpha=0.7,
-        marker='',
-        linestyle="--",
-        color='m')
-    func_min, = plt.plot(
-        x1['iter'], min_loss, alpha=0.7, marker='', linestyle=":", color='b')
+    func1, = plt.plot(result['iter'], result['energy'], alpha=0.7, marker='', linestyle="-", color='r')
+    func_min, = plt.plot(result['iter'], min_loss, alpha=0.7, marker='', linestyle=":", color='b')
     plt.xlabel('Number of iteration')
     plt.ylabel('Energy (Ha)')
 
-    plt.legend(
-        handles=[func1, func_min],
+    plt.legend(handles=[
+        func1,
+        func_min
+    ],
         labels=[
-            r'$\left\langle {\psi \left( {\bf{\theta }} \right)} '
-            r'\right|H\left| {\psi \left( {\bf{\theta }} \right)} \right\rangle $',
-            'Minimum energy',
-        ],
-        loc='best')
+            r'$\left\langle {\psi \left( {\theta } \right)} '
+            r'\right|H\left| {\psi \left( {\theta } \right)} \right\rangle $',
+            'Ground-state energy',
+        ], loc='best')
 
-    # output the picture
+    # plt.savefig("vqe.png", bbox_inches='tight', dpi=300)
     plt.show()
-
-
-def main():
-    """
-    Call the real benchmark function
-    """
-
-    benchmark_result()
-
-
-if __name__ == '__main__':
-    main()

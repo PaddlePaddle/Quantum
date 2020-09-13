@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Paddle Quantum Authors. All Rights Reserved.
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,28 +28,28 @@ def main():
     Main Learning network using dynamic graph
     :return: Plot or No return
     """
-
     # Read data from built-in function or xyz file depending on OS
     sysStr = platform.system()
+
     if sysStr == 'Windows':
         #  Windows does not support SCF, using H2_generator instead
         print('Molecule data will be read from built-in function')
-        _H, _, N = H2_generator()
+        hamiltonian, N = H2_generator()
         print('Read Process Finished')
 
     elif sysStr in ('Linux', 'Darwin'):
         # for linux only
         from paddle_quantum.VQE.chemistrygen import read_calc_H
-        # Harmiltonian and cnot module preparing, must be executed under Linux
+        # Hamiltonian and cnot module preparing, must be executed under Linux
         # Read the H2 molecule data
         print('Molecule data will be read from h2.xyz')
-        _H, _, N = read_calc_H(geo_fn='h2.xyz')
+        hamiltonian, N = read_calc_H(geo_fn='h2.xyz')
         print('Read Process Finished')
 
     else:
         print("Don't support this OS.")
 
-    Paddle_VQE(_H, N)
+    Paddle_VQE(hamiltonian, N)
     benchmark_result()
 
 

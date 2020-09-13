@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Paddle Quantum Authors. All Rights Reserved.
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,32 @@ __all__ = [
     "calc_H_rho_from_qubit_operator",
     "read_calc_H",
 ]
+
+
+# todo
+def Hamiltonian_str_convert(qubit_op):
+    '''
+    转换提供的哈密顿量信息成为我们熟悉的泡利字符串
+    '''
+    info_dic = qubit_op.terms
+
+    def process_tuple(tup):
+        if len(tup) == 0:
+            return 'i0'
+        else:
+            res = ''
+            for ele in tup:
+                res += ele[1].lower()
+                res += str(ele[0])
+                res += ','
+            return res[:-1]
+
+    H_info = []
+
+    for key, value in qubit_op.terms.items():
+        H_info.append([value.real, process_tuple(key)])
+
+    return H_info
 
 
 def calc_H_rho_from_qubit_operator(qubit_op, n_qubits):
@@ -63,8 +89,8 @@ def calc_H_rho_from_qubit_operator(qubit_op, n_qubits):
     rho = scipy.linalg.expm(-1 * beta *
                             H) / trace(scipy.linalg.expm(-1 * beta * H))
 
-    return H.astype('complex64'), rho.astype(
-        'complex64')  # the returned dic will have 2 ** n value
+    return H.astype('complex128'), rho.astype(
+        'complex128')  # the returned dic will have 2 ** n value
 
 
 def read_calc_H(geo_fn, multiplicity=1, charge=0):
@@ -91,7 +117,6 @@ def read_calc_H(geo_fn, multiplicity=1, charge=0):
                                                  charge)
     openfermionpyscf.run_pyscf(mol)
 
-    
     terms_molecular_hamiltonian = mol.get_molecular_hamiltonian(
     )
     fermionic_hamiltonian = openfermion.transforms.get_fermion_operator(
@@ -99,10 +124,9 @@ def read_calc_H(geo_fn, multiplicity=1, charge=0):
     qubit_op = openfermion.transforms.jordan_wigner(
         fermionic_hamiltonian)
 
-
-    # calc H, rho
-    H, rho = calc_H_rho_from_qubit_operator(qubit_op, mol.n_qubits)
-    return H, rho, mol.n_qubits
+    # calc H
+    Hamiltonian = Hamiltonian_str_convert(qubit_op)
+    return Hamiltonian, mol.n_qubits
 
 
 def main():
@@ -112,10 +136,8 @@ def main():
     """
 
     filename = 'h2.xyz'
-    H, rho, N = read_calc_H(geo_fn=filename)
+    H, N = read_calc_H(geo_fn=filename)
     print('H', H)
-    print("--------------------------  ")
-    print('rho', rho)
 
 
 if __name__ == '__main__':

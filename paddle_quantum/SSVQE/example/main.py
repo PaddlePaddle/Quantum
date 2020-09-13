@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Paddle Quantum Authors. All Rights Reserved.
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,32 +17,28 @@ main
 """
 
 import numpy
+
 from paddle_quantum.SSVQE.HGenerator import H_generator
 from paddle_quantum.SSVQE.Paddle_SSVQE import Paddle_SSVQE
 
 
 def main():
-    """
-    main
-    """
-    hamiltonian = H_generator()
-    loss_components = Paddle_SSVQE(hamiltonian)
+    N = 2
+    H = H_generator(N)
+
+    loss_components = Paddle_SSVQE(H)
 
     print('The estimated ground state energy is: ', loss_components[0].numpy())
-    print('The estimated 1st excited state energy is: ',
-          loss_components[1].numpy())
-    print('The estimated 2nd excited state energy is: ',
-          loss_components[2].numpy())
-    print('The estimated 3rd excited state energy is: ',
-          loss_components[3].numpy())
-    print('The theoretical ground state energy: ',
-          numpy.linalg.eigh(hamiltonian)[0][0])
-    print('The theoretical 1st excited state energy: ',
-          numpy.linalg.eigh(hamiltonian)[0][1])
-    print('The theoretical 2nd excited state energy: ',
-          numpy.linalg.eigh(hamiltonian)[0][2])
-    print('The theoretical 3rd excited state energy: ',
-          numpy.linalg.eigh(hamiltonian)[0][3])
+    print('The theoretical ground state energy: ', numpy.linalg.eigh(H)[0][0])
+
+    print('The estimated 1st excited state energy is: ', loss_components[1].numpy())
+    print('The theoretical 1st excited state energy: ', numpy.linalg.eigh(H)[0][1])
+
+    print('The estimated 2nd excited state energy is: ', loss_components[2].numpy())
+    print('The theoretical 2nd excited state energy: ', numpy.linalg.eigh(H)[0][2])
+
+    print('The estimated 3rd excited state energy is: ', loss_components[3].numpy())
+    print('The theoretical 3rd excited state energy: ', numpy.linalg.eigh(H)[0][3])
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Paddle Quantum Authors. All Rights Reserved.
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,21 +16,15 @@
 Aid func
 """
 from matplotlib import pyplot
+import numpy as np
 from numpy import abs, array, binary_repr, diag, kron, max, ones, real, where, zeros
 import networkx
-
-__all__ = [
-    "plot_graph",
-    "generate_graph",
-    "H_generator",
-]
 
 
 def plot_graph(measure_prob_distribution, graph, N):
     """
     This function plots the graph encoding the combinatorial problem such as Max-Cut and the final graph encoding the
     approximate solution obtained from QAOA
-
     Args:
         measure_prob_distribution: the measurement probability distribution which is sampled from the output state
                                    of optimized QAOA circuit.
@@ -93,68 +87,63 @@ def plot_graph(measure_prob_distribution, graph, N):
 
 def generate_graph(N, GRAPHMETHOD):
     """
-    This function offers two methods to generate a graph.
+    It plots an N-node graph which is specified by Method 1 or 2.
 
     Args:
-        N: number of nodes (vertices) in the graph, which is also the number of qubits
-        GRAPHMETHOD: which method to generate a graph
-    Return:
-        graph description and its adjacency matrix
+        N: number of nodes (vertices) in the graph
+        METHOD: choose which method to generate a graph
+    Returns:
+        the specific graph and its adjacency matrix
     """
-    # Method 1 generates a graph by self-definition. Note that the node label starts from 0 to N-1, while the edges
-    # could be attributed to weights additionally. If no specific rules are given, then all weights are set to 1.
+    # Method 1 generates a graph by self-definition
     if GRAPHMETHOD == 1:
-        print(
-            "Method 1 generates the graph from self-definition using EDGE description"
-        )
+        print("Method 1 generates the graph from self-definition using EDGE description")
         graph = networkx.Graph()
         graph_nodelist = range(N)
         graph.add_edges_from([(0, 1), (1, 2), (2, 3), (3, 0)])
-        graph_adjacency = networkx.to_numpy_matrix(
-            graph, nodelist=graph_nodelist)
+        graph_adjacency = networkx.to_numpy_matrix(graph, nodelist=graph_nodelist)
     # Method 2 generates a graph by using its adjacency matrix directly
     elif GRAPHMETHOD == 2:
-        print(
-            "Method 2 generates the graph from networks using adjacency matrix")
-        graph_adjacency = array(
-            [[0, 1, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0]])
+        print("Method 2 generates the graph from networks using adjacency matrix")
+        graph_adjacency = np.array([[0, 1, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0]])
         graph = networkx.Graph(graph_adjacency)
     else:
         print("Method doesn't exist ")
 
-    output_graph = graph
-    output_graph_adjacency = graph_adjacency
-
-    return output_graph, output_graph_adjacency
+    return graph, graph_adjacency
 
 
 def H_generator(N, adjacency_matrix):
     """
-    This function generates the problem-based Hamiltonian, given the graph with its adjacency matrix description.
+    This function maps the given graph via its adjacency matrix to the corresponding Hamiltiona H_c.
 
     Args:
         N: number of qubits, or number of nodes in the graph, or number of parameters in the classical problem
         adjacency_matrix:  the adjacency matrix generated from the graph encoding the classical problem
-    Return:
-        H_graph: the problem-based Hamiltonian H generated from the graph_adjacency matrix for the given graph
-        H_graph_diag: the real part of the problem-based Hamiltonian H_graph
+    Returns:
+        the problem-based Hmiltonian H's list form generated from the graph_adjacency matrix for the given graph
     """
-
-    sigma_Z = array([[1, 0], [0, -1]])
-    H = zeros([2**N, 2**N])
-
+    H_list = []
+    # Generate the Hamiltonian H_c from the graph via its adjacency matrix
     for row in range(N):
         for col in range(N):
-            if abs(adjacency_matrix[N - row - 1, N - col - 1]) and row < col:
-                identity_1 = diag(ones([2**row]))
-                identity_2 = diag(ones([2**(col - row - 1)]))
-                identity_3 = diag(ones([2**(N - col - 1)]))
-                H += adjacency_matrix[N - row - 1, N - col - 1] * kron(
-                    kron(
-                        kron(kron(identity_1, sigma_Z), identity_2), sigma_Z),
-                    identity_3, )
+            if adjacency_matrix[row, col] and row < col:
+                # Construct the Hamiltonian in the list form for the calculation of expectation value
+                H_list.append([1.0, 'z' + str(row) + ',z' + str(col)])
 
-    H_graph = H.astype("complex64")
-    H_graph_diag = diag(H_graph).real
+    return H_list
 
-    return H_graph, H_graph_diag
+
+def main():
+    # number of qubits or number of nodes in the graph
+    N = 4
+    classical_graph, classical_graph_adjacency = generate_graph(N, GRAPHMETHOD=1)
+    print(classical_graph_adjacency)
+
+    pos = networkx.circular_layout(classical_graph)
+    networkx.draw(classical_graph, pos, width=4, with_labels=True, font_weight='bold')
+    pyplot.show()
+
+
+if __name__ == "__main__":
+    main()

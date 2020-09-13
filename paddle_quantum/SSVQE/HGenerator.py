@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Paddle Quantum Authors. All Rights Reserved.
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,22 +16,20 @@
 HGenerator
 """
 
-from numpy import array, kron
+from paddle_quantum.utils import random_pauli_str_generator, pauli_str_to_matrix
 
 __all__ = ["H_generator"]
 
 
-def H_generator():
+def H_generator(N):
     """
     Generate a Hamiltonian with trivial descriptions
     Returns: A Hamiltonian
-
     """
-    sigma_I = array([[1, 0], [0, 1]])
-    sigma_X = array([[0, 1], [1, 0]])
-    sigma_Y = array([[0, -1j], [1j, 0]])
-    sigma_Z = array([[1, 0], [0, -1]])
-    H = 0.4 * kron(sigma_Z, sigma_I) + 0.4 * kron(
-        sigma_I, sigma_Z) + 0.2 * kron(sigma_X, sigma_X)
-    # H = numpy.diag([0.1, 0.2, 0.3, 0.4])
-    return H.astype('complex64')
+    # 生成用泡利字符串表示的随机哈密顿量
+    hamiltonian = random_pauli_str_generator(N, terms=10)
+    print("Random Hamiltonian in Pauli string format = \n", hamiltonian)
+
+    # 生成哈密顿量的矩阵信息
+    H = pauli_str_to_matrix(hamiltonian, N)
+    return H
