@@ -46,7 +46,7 @@ __all__ = [
     "von_neumann_entropy",
     "relative_entropy",
     "NKron",
-    "hermitian",
+    "dagger",
     "random_pauli_str_generator",
     "pauli_str_to_matrix"
 ]
@@ -220,7 +220,7 @@ def NKron(matrix_A, matrix_B, *args):
     return reduce(lambda result, index: np_kron(result, index), args, np_kron(matrix_A, matrix_B), )
 
 
-def hermitian(matrix):
+def dagger(matrix):
     r"""计算矩阵的埃尔米特转置，即Hermitian transpose。
 
     Args:
@@ -233,12 +233,12 @@ def hermitian(matrix):
 
     .. code-block:: python
     
-        from paddle_quantum.utils import hermitian
+        from paddle_quantum.utils import dagger
         from paddle import fluid
         import numpy as np
         with fluid.dygraph.guard():
             rho = fluid.dygraph.to_variable(np.array([[1+1j, 2+2j], [3+3j, 4+4j]]))
-            print(hermitian(rho).numpy())
+            print(dagger(rho).numpy())
 
     ::
 

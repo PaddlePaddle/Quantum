@@ -33,7 +33,7 @@ from paddle.fluid import dygraph
 from paddle.fluid.layers import reshape, cast, eye, zeros
 from paddle.fluid.framework import ComplexVariable
 
-from paddle_quantum.utils import hermitian, pauli_str_to_matrix
+from paddle_quantum.utils import dagger, pauli_str_to_matrix
 from paddle_quantum.intrinsic import *
 from paddle_quantum.state import density_op
 
@@ -166,7 +166,7 @@ class UAnsatz:
         state = dygraph.to_variable(density_op(self.n)) if input_state is None else input_state
 
         assert state.real.shape == [2 ** self.n, 2 ** self.n], "The dimension is not right"
-        state = matmul(self.U, matmul(state, hermitian(self.U)))
+        state = matmul(self.U, matmul(state, dagger(self.U)))
 
         if store_state:
             self.__state = state

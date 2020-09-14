@@ -20,7 +20,7 @@ you could check the corresponding Jupyter notebook under the Tutorial folder.
 import numpy
 from paddle import fluid
 from paddle_quantum.circuit import UAnsatz
-from paddle_quantum.utils import hermitian
+from paddle_quantum.utils import dagger
 from paddle.complex import matmul, trace
 from paddle_quantum.VQSD.HGenerator import generate_rho_sigma
 
@@ -70,7 +70,7 @@ class Net(fluid.dygraph.Layer):
         U = U_theta(self.theta, N)
 
         # rho_tilde 是将 U 作用在 rho 后得到的量子态 U*rho*U^dagger
-        rho_tilde = matmul(matmul(U, self.rho), hermitian(U))
+        rho_tilde = matmul(matmul(U, self.rho), dagger(U))
 
         # 计算损失函数
         loss = trace(matmul(self.sigma, rho_tilde))

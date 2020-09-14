@@ -22,7 +22,7 @@ import numpy
 from paddle.complex import matmul
 from paddle import fluid
 from paddle_quantum.circuit import UAnsatz
-from paddle_quantum.utils import hermitian
+from paddle_quantum.utils import dagger
 from paddle_quantum.SSVQE.HGenerator import H_generator
 
 SEED = 14  # 固定随机种子
@@ -67,7 +67,7 @@ class Net(fluid.dygraph.Layer):
         U = U_theta(self.theta, N)
 
         # 计算损失函数
-        loss_struct = matmul(matmul(hermitian(U), H), U).real
+        loss_struct = matmul(matmul(dagger(U), H), U).real
 
         # 输入计算基去计算每个子期望值，相当于取 U^dagger*H*U 的对角元
         loss_components = [
