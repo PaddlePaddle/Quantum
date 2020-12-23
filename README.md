@@ -42,7 +42,7 @@ Paddle Quantum（量桨）是基于百度飞桨开发的量子机器学习工具
 
 ### 安装 PaddlePaddle
 
-请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 1.8.3 或更高版本。
+请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 1.8.5。
 
 ### 下载 Paddle Quantum 并安装
 
