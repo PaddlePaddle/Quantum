@@ -26,4 +26,4 @@ setup(
     author_email='quantum@baidu.com',
     url='http://quantum.baidu.com',
     packages=['paddle_quantum'],
-    install_requires=['paddlepaddle>=1.8.3', 'networkx>=2.4', 'matplotlib>=3.3.0', 'interval>=1.0.0', 'progressbar>=2.5'])
+    install_requires=['paddlepaddle==1.8.5', 'networkx>=2.4', 'matplotlib>=3.3.0', 'interval>=1.0.0', 'progressbar>=2.5'])
