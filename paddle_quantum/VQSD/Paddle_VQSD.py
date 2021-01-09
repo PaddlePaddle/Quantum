@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,14 +37,14 @@ def U_theta(theta, N):
     """
     Quantum Neural Network
     """
-
-    # 按照量子比特数量/网络宽度初始化量子神经网络
+    
+    # Initialize the quantum neural network by the number of qubits (width of the network)
     cir = UAnsatz(N)
 
-    # 调用内置的量子神经网络模板
+    # Use built-in template
     cir.universal_2_qubit_gate(theta)
 
-    # 返回量子神经网络所模拟的酉矩阵 U
+    # Return the Unitary matrix simulated by QNN
     return cir.U
 
 
@@ -56,23 +56,22 @@ class Net(fluid.dygraph.Layer):
     def __init__(self, shape, rho, sigma, param_attr=fluid.initializer.Uniform(low=0.0, high=2 * numpy.pi, seed=SEED),
                  dtype='float64'):
         super(Net, self).__init__()
-
-        # 将 Numpy array 转换成 Paddle 动态图模式中支持的 variable
+        # Convert Numpy array to variable supported in PaddlePaddle
         self.rho = fluid.dygraph.to_variable(rho)
         self.sigma = fluid.dygraph.to_variable(sigma)
 
-        # 初始化 theta 参数列表，并用 [0, 2*pi] 的均匀分布来填充初始值
+        # Initialize theta by sampling from a uniform distribution [0, 2*pi]
         self.theta = self.create_parameter(shape=shape, attr=param_attr, dtype=dtype, is_bias=False)
 
-    # 定义损失函数和前向传播机制
+    # Define the loss function and forward propagation mechanism
     def forward(self, N):
-        # 施加量子神经网络
+        # Apply quantum neural network onto the initial state
         U = U_theta(self.theta, N)
 
-        # rho_tilde 是将 U 作用在 rho 后得到的量子态 U*rho*U^dagger
+        # rho_tilda is the quantum state obtained by acting U on rho, which is U*rho*U^dagger
         rho_tilde = matmul(matmul(U, self.rho), dagger(U))
-
-        # 计算损失函数
+        
+        # Calculate loss function
         loss = trace(matmul(self.sigma, rho_tilde))
 
         return loss.real, rho_tilde
@@ -81,35 +80,35 @@ class Net(fluid.dygraph.Layer):
 def Paddle_VQSD(rho, sigma, N=2, THETA_SIZE=15, ITR=50, LR=0.1):
     r"""
     Paddle_VQSD
-    :param rho: 待对角化的量子态
-    :param sigma: 输入用来标记的量子态sigma
-    :param N: 量子神经网络的宽度
-    :param THETA_SIZE: 量子神经网络中参数的数量
-    :param ITR: 设置训练的总的迭代次数
-    :param LR: 设置学习速率
-    :return: 优化之后量子态rho接近对角态的numpy形式
+    :param rho: Qauntum state to be diagonalized
+    :param sigma: Quantum state sigma
+    :param N: Width of QNN
+    :param THETA_SIZE: Number of parameters in QNN
+    :param ITR: Number of iterations
+    :param LR: Learning rate
+    :return: Diagonalized quantum state after optimization 
     """
-    # 初始化paddle动态图机制
+    # Initialize PaddlePaddle dynamic graph machanism
     with fluid.dygraph.guard():
-        # 确定网络的参数维度
+        # Fix the dimensions of network
         net = Net(shape=[THETA_SIZE], rho=rho, sigma=sigma)
 
-        # 一般来说，我们利用Adam优化器来获得相对好的收敛，当然你可以改成SGD或者是RMS prop.
+        # Use Adagrad optimizer
         opt = fluid.optimizer.AdagradOptimizer(learning_rate=LR, parameter_list=net.parameters())
 
-        # 优化循环
+        # Optimization iterations
         for itr in range(ITR):
-
-            # 前向传播计算损失函数并返回估计的能谱
+            
+            # Run forward propagation to calculate loss function and obtain energy spectrum
             loss, rho_tilde = net(N)
             rho_tilde_np = rho_tilde.numpy()
-
-            # 在动态图机制下，反向传播极小化损失函数
+            
+            # In dynamic graph, run backward propogation to minimize loss function
             loss.backward()
             opt.minimize(loss)
             net.clear_gradients()
 
-            # 打印训练结果
+            # Print results
             if itr % 10 == 0:
                 print('iter:', itr, 'loss:', '%.4f' % loss.numpy()[0])
     return rho_tilde_np

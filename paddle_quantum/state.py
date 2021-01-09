@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ def vec(n):
 
 
 def vec_random(n, real_or_complex=2):
-    r"""随机生成一个量子态，使用numpy形式。
+    r"""随机生成一个量子态的numpy形式。
 
     Args:
         n (int): 量子比特数量
@@ -152,7 +152,7 @@ def density_op_random(n, real_or_complex=2, rank=None):
     Args:
         n (int): 量子比特数量
         real_or_complex (int, optional): 默认为2，即生成复数组，若为1，则生成实数组
-        rank (int, optional): 矩阵的秩，默认为 :math:`2^n` （当rank为 ``None`` 时）
+        rank (int, optional): 矩阵的秩，默认为 :math:`2^n` （当 ``rank`` 为 ``None`` 时）
 
     Returns:
         numpy.ndarray: 一个形状为 ``(2**n, 2**n)`` 的numpy数组

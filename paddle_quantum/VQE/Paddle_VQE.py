@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,21 +39,20 @@ def U_theta(theta, Hamiltonian, N, D):
     """
     Quantum Neural Network
     """
-
-    # 按照量子比特数量/网络宽度初始化量子神经网络
+    # Initialize the quantum neural network by the number of qubits (width of the network)
     cir = UAnsatz(N)
 
-    # 内置的 {R_y + CNOT} 电路模板
+    # Use built-in template (R_y + CNOT)
     cir.real_entangled_layer(theta[:D], D)
 
-    # 铺上最后一列 R_y 旋转门
+    # Add a layer of R_y rotation gates
     for i in range(N):
         cir.ry(theta=theta[D][i][0], which_qubit=i)
 
-    # 量子神经网络作用在默认的初始态 |0000>上
+    # Act QNN on the default initial state |0000>
     cir.run_state_vector()
 
-    # 计算给定哈密顿量的期望值
+    # Calculate the expectation value of the given Hamiltonian
     expectation_val = cir.expecval(Hamiltonian)
 
     return expectation_val
@@ -67,12 +66,12 @@ class StateNet(fluid.dygraph.Layer):
     def __init__(self, shape, param_attr=fluid.initializer.Uniform(low=0.0, high=2 * PI), dtype="float64"):
         super(StateNet, self).__init__()
 
-        # 初始化 theta 参数列表，并用 [0, 2*pi] 的均匀分布来填充初始值
+        # Initialize theta by sampling from a uniform distribution [0, 2*pi]
         self.theta = self.create_parameter(shape=shape, attr=param_attr, dtype=dtype, is_bias=False)
 
-    # 定义损失函数和前向传播机制
+    # Define the loss function and forward propagation mechanism
     def forward(self, Hamiltonian, N, D):
-        # 计算损失函数/期望值
+        # Calculate loss function (expectation value)
         loss = U_theta(self.theta, Hamiltonian, N, D)
 
         return loss
@@ -81,46 +80,47 @@ class StateNet(fluid.dygraph.Layer):
 def Paddle_VQE(Hamiltonian, N, D=2, ITR=80, LR=0.2):
     r"""
     Main Learning network using dynamic graph
-    :param Hamiltonian:
-    :param N:
-    :param D: 设置量子神经网络中重复计算模块的深度 Depth
-    :param ITR: 设置训练的总迭代次数
-    :param LR: 设置学习速率
-    :return: return: Plot or No return
+    :param Hamiltonian: Hamiltonian
+    :param N: Width of QNN
+    :param D: Depth of QNN
+    :param ITR: Number of iterations
+    :param LR: Learning rate
+    :return: No return
     """
 
-    # 初始化paddle动态图机制
+    # Initialize PaddlePaddle dynamic graph machanism
     with fluid.dygraph.guard():
+        # Determine the dimensions of network
         # 确定网络的参数维度
         net = StateNet(shape=[D + 1, N, 1])
 
-        # 一般来说，我们利用Adam优化器来获得相对好的收敛，当然你可以改成SGD或者是RMS prop.
+        # Usually, we recommend Adam optimizer for better result. If you wish, you could use SGD or RMS prop.
         opt = fluid.optimizer.AdamOptimizer(learning_rate=LR, parameter_list=net.parameters())
 
-        # 记录优化结果
+        # Record optimization results
         summary_iter, summary_loss = [], []
-
-        # 优化循环
+        
+        # Optimization iterations
         for itr in range(1, ITR + 1):
 
-            # 前向传播计算损失函数
+            # Run forward propagation to calculate loss function
             loss = net(Hamiltonian, N, D)
 
-            # 在动态图机制下，反向传播极小化损失函数
+            # In dynamic graph, run backward propogation to minimize loss function
             loss.backward()
             opt.minimize(loss)
             net.clear_gradients()
 
-            # 更新优化结果
+            # Update optimized results
             summary_loss.append(loss.numpy())
             summary_iter.append(itr)
 
-            # 打印结果
+            # Print results
             if itr % 20 == 0:
                 print("iter:", itr, "loss:", "%.4f" % loss.numpy())
                 print("iter:", itr, "Ground state energy:", "%.4f Ha" % loss.numpy())
 
-        # 储存训练结果到 output 文件夹
+        # Save results in the 'output' directory
         os.makedirs("output", exist_ok=True)
         savez("./output/summary_data", iter=summary_iter, energy=summary_loss)
 

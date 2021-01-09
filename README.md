@@ -1,6 +1,6 @@
 English | [简体中文](README_CN.md)
 
-# Paddle Quantum （量桨）
+# Paddle Quantum (量桨)
 
 - [Features](#features)
 - [Install](#install)
@@ -63,7 +63,7 @@ pip install -e .
 python -m pip install --upgrade -r requirements.txt
 ```
 
-### Use OpenFermion to read xyz molecule configuration file
+### Use OpenFermion to read .xyz molecule configuration file
 
 > Only macOS and linux users can use OpenFermion to read .xyz description files.
 

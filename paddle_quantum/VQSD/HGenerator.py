@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ __all__ = ["generate_rho_sigma", ]
 
 def generate_rho_sigma():
     scipy.random.seed(SEED)
-    V = scipy.stats.unitary_group.rvs(4)  # 随机生成一个酉矩阵
-    D = diag([0.5, 0.3, 0.1, 0.1])  # 输入目标态 rho 的谱
+    V = scipy.stats.unitary_group.rvs(4)  # Generate a random unitary martrix
+    D = diag([0.5, 0.3, 0.1, 0.1])  # Input the spectrum of the target state rho
     V_H = V.conj().T
-    rho = V @ D @ V_H  # 生成 rho
-    # print(rho)  # 打印量子态 rho
+    rho = V @ D @ V_H  # Generate rho
+    # print(rho)  # Print quantum state rho
 
-    # 输入用来标记的量子态sigma
+    # Input the quantum state sigma
     sigma = diag([0.1, 0.2, 0.3, 0.4]).astype('complex128')
     return rho, sigma

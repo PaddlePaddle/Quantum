@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import numpy as np
 from numpy import binary_repr, eye, identity
 import matplotlib.pyplot as plt
 
-from Simulator.main import StateTranfer, init_state_gen, measure_state
-
 import paddle
 from paddle.complex import kron as pp_kron
 from paddle.complex import reshape as complex_reshape
@@ -33,6 +31,7 @@ from paddle.fluid import dygraph
 from paddle.fluid.layers import reshape, cast, eye, zeros
 from paddle.fluid.framework import ComplexVariable
 
+from paddle_quantum.simulator import StateTranfer, init_state_gen, measure_state
 from paddle_quantum.utils import dagger, pauli_str_to_matrix
 from paddle_quantum.intrinsic import *
 from paddle_quantum.state import density_op
@@ -44,7 +43,7 @@ __all__ = [
 
 
 class UAnsatz:
-    r"""基于Paddle的动态图机制实现量子线路的 ``class`` 。
+    r"""基于PaddlePaddle的动态图机制实现量子线路的 ``class`` 。
 
     用户可以通过实例化该 ``class`` 来搭建自己的量子线路。
 
@@ -95,11 +94,11 @@ class UAnsatz:
                 cir.ry(theta[1], 1)
                 cir.rz(theta[2], 1)
                 vec = cir.run_state_vector(input_state_var).numpy()
-                print(f"运行后的向量是 {vec}")
+                print(f"The output state vector is {vec}")
 
         ::
 
-            运行后的向量是 [0.17470783-0.09544332j 0.59544332+0.32529217j 0.17470783-0.09544332j 0.59544332+0.32529217j]
+            The output state vector is [0.17470783-0.09544332j 0.59544332+0.32529217j 0.17470783-0.09544332j 0.59544332+0.32529217j]
         """
         state = init_state_gen(self.n, 0) if input_state is None else input_state
         old_shape = state.shape
@@ -155,11 +154,11 @@ class UAnsatz:
                 cir.ry(theta[1], 0)
                 cir.rz(theta[2], 0)
                 density = cir.run_density_matrix(input_state_var).numpy()
-                print(f"密度矩阵是\n{density}")
+                print(f"The output density matrix is\n{density}")
 
         ::
 
-            密度矩阵是
+            The output density matrix is
             [[ 0.35403671+0.j         -0.47686058-0.03603751j]
             [-0.47686058+0.03603751j  0.64596329+0.j        ]]
         """
@@ -194,11 +193,11 @@ class UAnsatz:
                 cir.h(0)
                 cir.cnot([0, 1])
                 matrix = cir.U
-                print("生成贝尔态电路的酉矩阵表示为\n",matrix.numpy())
+                print("The unitary matrix of the circuit for Bell state preparation is\n",matrix.numpy())
 
         ::
 
-            生成贝尔态电路的酉矩阵表示为
+            The unitary matrix of the circuit for Bell state preparation is
             [[ 0.70710678+0.j  0.        +0.j  0.70710678+0.j  0.        +0.j]
             [ 0.        +0.j  0.70710678+0.j  0.        +0.j  0.70710678+0.j]
             [ 0.        +0.j  0.70710678+0.j  0.        +0.j -0.70710678+0.j]
@@ -234,7 +233,7 @@ class UAnsatz:
  
         Args:
             theta (Variable): 旋转角度
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
  
         ..  code-block:: python
 
@@ -265,7 +264,7 @@ class UAnsatz:
 
         Args:
             theta (Variable): 旋转角度
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
 
         ..  code-block:: python
         
@@ -286,17 +285,17 @@ class UAnsatz:
                                                     dygraph.to_variable(np.array([0.0]))]])
 
     def rz(self, theta, which_qubit):
-        r"""添加关于y轴的单量子比特旋转门。
+        r"""添加关于z轴的单量子比特旋转门。
  
         其矩阵形式为：
         
         .. math::
         
-            \begin{bmatrix} e^{-\frac{i\theta}{2}} & 0 \\ 0 & e^{\frac{i\theta}{2}} \end{bmatrix}
+            \begin{bmatrix} 1 & 0 \\ 0 & e^{i\theta} \end{bmatrix}
  
         Args:
             theta (Variable): 旋转角度
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
  
         ..  code-block:: python
         
@@ -319,7 +318,7 @@ class UAnsatz:
     def cnot(self, control):
         r"""添加一个CNOT门。
  
-        对于2量子比特的量子线路，当control为 ``[0, 1]`` 时，其矩阵形式为：
+        对于2量子比特的量子线路，当 ``control`` 为 ``[0, 1]`` 时，其矩阵形式为：
         
         .. math::
         
@@ -329,7 +328,7 @@ class UAnsatz:
             \end{align}
  
         Args:
-            control (list): 作用在的qubit的编号，``control[0]`` 为控制位，``control[1]`` 为目标位，其值都应该在 :math:`[0, n)`范围内， :math:`n` 为该量子线路的量子比特数
+            control (list): 作用在的qubit的编号，``control[0]`` 为控制位，``control[1]`` 为目标位，其值都应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
 
         ..  code-block:: python
         
@@ -356,7 +355,7 @@ class UAnsatz:
             \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
  
         Args:
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
  
         .. code-block:: python
             
@@ -381,7 +380,7 @@ class UAnsatz:
             \begin{bmatrix} 0 & -i \\ i & 0 \end{bmatrix}
  
         Args:
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
  
         .. code-block:: python
             
@@ -406,7 +405,7 @@ class UAnsatz:
             \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}
  
         Args:
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
  
         .. code-block:: python
         
@@ -424,14 +423,14 @@ class UAnsatz:
     def h(self, which_qubit):
         r"""添加一个单量子比特的Hadamard门。
 
-        具体形式为
+        其矩阵形式为：
 
         .. math::
         
             H = \frac{1}{\sqrt{2}}\begin{bmatrix} 1&1\\1&-1 \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
         """
         assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
         self.__history.append(['h', [which_qubit], None])
@@ -439,14 +438,14 @@ class UAnsatz:
     def s(self, which_qubit):
         r"""添加一个单量子比特的S门。
 
-        具体形式为
+        其矩阵形式为：
 
         .. math::
         
             S = \begin{bmatrix} 1&0\\0&i \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
         """
         assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
         self.__history.append(['u', [which_qubit], [dygraph.to_variable(np.array([0.0])),
@@ -456,14 +455,14 @@ class UAnsatz:
     def t(self, which_qubit):
         r"""添加一个单量子比特的T门。
 
-        具体形式为
+        其矩阵形式为：
 
         .. math::
 
             T = \begin{bmatrix} 1&0\\0&e^\frac{i\pi}{4} \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+            which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
         """
         assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
         self.__history.append(['u', [which_qubit], [dygraph.to_variable(np.array([0.0])),
@@ -473,7 +472,7 @@ class UAnsatz:
     def u3(self, theta, phi, lam, which_qubit):
         r"""添加一个单量子比特的旋转门。
 
-        具体形式为
+        其矩阵形式为：
 
         .. math::
         
@@ -489,7 +488,7 @@ class UAnsatz:
               theta (Variable): 旋转角度 :math:`\theta` 。
               phi (Variable): 旋转角度 :math:`\phi` 。
               lam (Variable): 旋转角度 :math:`\lambda` 。
-              which_qubit (int): 作用在的qubit的编号，其值应该在[0, n)范围内，n为该量子线路的量子比特数
+              which_qubit (int): 作用在的qubit的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子线路的量子比特数
         """
         assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
         self.__history.append(['u', [which_qubit], [theta, phi, lam]])
@@ -564,11 +563,11 @@ class UAnsatz:
         r"""对量子线路输出的量子态进行测量。
 
         Warning:
-            当plot为True时，当前量子线路的量子比特数需要小于6，否则无法绘制图片，会抛出异常。
+            当 ``plot`` 为 ``True`` 时，当前量子线路的量子比特数需要小于6，否则无法绘制图片，会抛出异常。
 
         Args:
             which_qubits (list, optional): 要测量的qubit的编号，默认全都测量
-            shots (int, optional): 该量子线路输出的量子态的测量次数，默认为1024次；若为0，则输出测量期望值的精确值
+            shots (int, optional): 该量子线路输出的量子态的测量次数，默认为1024次；若为0，则返回测量结果的精确概率分布
             plot (bool, optional): 是否绘制测量结果图，默认为 ``False`` ，即不绘制
         
         Returns:
@@ -586,11 +585,11 @@ class UAnsatz:
                 cir.cnot([0,1])
                 cir.run_state_vector()
                 result = cir.measure(shots = 2048, which_qubits = [1])
-                print(f"测量第1号量子比特2048次的结果是{result}")
+                print(f"The results of measuring qubit 1 2048 times are {result}")
 
         ::
 
-            测量第1号量子比特2048次的结果是{'0': 964, '1': 1084}
+            The results of measuring qubit 1 2048 times are {'0': 964, '1': 1084}
 
         .. code-block:: python
         
@@ -602,11 +601,11 @@ class UAnsatz:
                 cir.cnot([0,1])
                 cir.run_state_vector()
                 result = cir.measure(shots = 0, which_qubits = [1])
-                print(f"测量第1号量子比特的概率结果是{result}")
+                print(f"The probability distribution of measurement results on qubit 1 is {result}")
 
         ::
 
-            测量第1号量子比特的概率结果是{'0': 0.4999999999999999, '1': 0.4999999999999999}
+            The probability distribution of measurement results on qubit 1 is {'0': 0.4999999999999999, '1': 0.4999999999999999}
         """
         if self.__run_state == 'state_vector':
             state = self.__state
@@ -672,11 +671,11 @@ class UAnsatz:
                 cir.rx(theta[2], 2)
                 cir.run_state_vector(input_state_var)
                 expect_value = cir.expecval(H_info).numpy()
-                print(f'计算得到的{H_info}期望值是{expect_value}')
+                print(f'Calculated expectation value of {H_info} is {expect_value}')
         
         ::
         
-            计算得到的[[0.1, 'x1'], [0.2, 'y0,z4']]期望值是[0.05403023]
+            Calculated expectation value of [[0.1, 'x1'], [0.2, 'y0,z4']] is [0.05403023]
         
         .. code-block:: python
             
@@ -697,11 +696,11 @@ class UAnsatz:
                 cir.rz(theta[2], 2)
                 cir.run_density_matrix(input_state_var)
                 expect_value = cir.expecval(H_info).numpy()
-                print(f'计算得到的{H_info}期望值是{expect_value}')
+                print(f'Calculated expectation value of {H_info} is {expect_value}')
         
         ::
 
-            计算得到的[[0.1, 'x1'], [0.2, 'y0,z4']]期望值是[-0.02171538]
+            Calculated expectation value of [[0.1, 'x1'], [0.2, 'y0,z4']] is [-0.02171538]
         """
         if self.__run_state == 'state_vector':
             return vec_expecval(H, self.__state).real
@@ -731,17 +730,17 @@ class UAnsatz:
                 cir.superposition_layer()
                 cir.run_state_vector()
                 result = cir.measure(shots = 0)
-                print(f"测量全部量子比特的结果是{result}")
+                print(f"The probability distribution of measurement results on both qubits is {result}")
 
         ::
 
-            测量全部量子比特结果是{'00': 0.2499999999999999, '01': 0.2499999999999999, '10': 0.2499999999999999, '11': 0.2499999999999999}
+            The probability distribution of measurement results on both qubits is {'00': 0.2499999999999999, '01': 0.2499999999999999, '10': 0.2499999999999999, '11': 0.2499999999999999}
         """
         for i in range(self.n):
             self.h(i)
 
     def weak_superposition_layer(self):
-        r"""添加一层Hadamard的平方根门，即 :math:`\sqrt{H}` 门。
+        r"""添加一层旋转角度为 :math:`\pi/4` 的Ry门。
 
         代码示例:
 
@@ -754,18 +753,18 @@ class UAnsatz:
                 cir.weak_superposition_layer()
                 cir.run_state_vector()
                 result = cir.measure(shots = 0)
-                print(f"测量全部量子比特的结果是{result}")
+                print(f"The probability distribution of measurement results on both qubits is {result}")
 
         ::
 
-            测量全部量子比特的结果是{'00': 0.7285533905932737, '01': 0.12500000000000003, '10': 0.12500000000000003, '11': 0.021446609406726238}
+            The probability distribution of measurement results on both qubits is {'00': 0.7285533905932737, '01': 0.12500000000000003, '10': 0.12500000000000003, '11': 0.021446609406726238}
         """
         _theta = fluid.dygraph.to_variable(np.array([np.pi / 4]))  # Used in fixed Ry gate
         for i in range(self.n):
             self.ry(_theta, i)
 
     def real_entangled_layer(self, theta, depth):
-        r"""添加一层包含Ry门的强纠缠层。
+        r"""添加 ``depth`` 层包含Ry门和CNOT门的强纠缠层。
 
         Note:
             这一层量子门的数学表示形式为实数酉矩阵。
@@ -812,7 +811,7 @@ class UAnsatz:
             self.cnot([self.n - 1, 0])
 
     def complex_entangled_layer(self, theta, depth):
-        r"""添加一层包含U3门的强纠缠层。
+        r"""添加 ``depth`` 层包含U3门和CNOT门的强纠缠层。
 
         Note:
             这一层量子门的数学表示形式为复数酉矩阵。
@@ -967,7 +966,7 @@ class UAnsatz:
             self.__add_complex_block(theta[int((i - position[0]) / 2)], [i, i + 1])
 
     def real_block_layer(self, theta, depth):
-        r"""添加一层包含Ry门的弱纠缠层。
+        r"""添加 ``depth`` 层包含Ry门和CNOT门的弱纠缠层。
 
         Note:
             这一层量子门的数学表示形式为实数酉矩阵。
@@ -1014,7 +1013,7 @@ class UAnsatz:
                 self.__add_real_layer(theta[i][int((self.n - 1) / 2):], [1, self.n - 1])
 
     def complex_block_layer(self, theta, depth):
-        r"""添加一层包含U3门的弱纠缠层。
+        r"""添加 ``depth`` 层包含U3门和CNOT门的弱纠缠层。
         
         Note:
             这一层量子门的数学表示形式为复数酉矩阵。
@@ -1061,7 +1060,7 @@ class UAnsatz:
                 self.__add_complex_layer(theta[i][int((self.n - 1) / 2):], [1, self.n - 1])
 
 
-def local_H_prob(cir, hamiltonian, shots=1024):
+def __local_H_prob(cir, hamiltonian, shots=1024):
     r"""
     构造出Pauli测量电路并测量ancilla，处理实验结果来得到 ``H`` (只有一项)期望值的实验测量值。
 
@@ -1137,15 +1136,15 @@ def H_prob(cir, H, shots=1024):
             cir.rz(theta[2], 1)
             result_1 = H_prob(cir, H_info, shots = experiment_shots)
             result_2 = H_prob(cir, H_info, shots = 0)
-            print(f'消耗 {experiment_shots} 次测量后的期望值实验值是 {result_1}')
-            print(f'H期望值精确值是 {result_2}')
+            print(f'The expectation value obtained by {experiment_shots} measurements is {result_1}')
+            print(f'The accurate expectation value of H is {result_2}')
 
     ::
 
-        消耗 1024 次测量后的期望值实验值是 0.2326171875
-        H期望值精确值是 0.21242202548207134
+        The expectation value obtained by 1024 measurements is 0.2326171875
+        The accurate expectation value of H is 0.21242202548207134
     """
     expval = 0
     for term in H:
-        expval += term[0] * local_H_prob(cir, term[1], shots=shots)
+        expval += term[0] * __local_H_prob(cir, term[1], shots=shots)
     return expval

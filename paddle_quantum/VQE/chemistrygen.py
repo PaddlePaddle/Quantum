@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ __all__ = [
 # todo
 def Hamiltonian_str_convert(qubit_op):
     '''
-    转换提供的哈密顿量信息成为我们熟悉的泡利字符串
+    Convert provided Hamiltonian information to Pauli string
     '''
     info_dic = qubit_op.terms
 
@@ -96,7 +96,7 @@ def calc_H_rho_from_qubit_operator(qubit_op, n_qubits):
 def read_calc_H(geo_fn, multiplicity=1, charge=0):
     """
     Read and calc the H and rho
-    return: H,rho matrix
+    Returns: H,rho matrix
     """
 
     if not isinstance(geo_fn, str):  # geo_fn = 'h2.xyz'
@@ -132,7 +132,6 @@ def read_calc_H(geo_fn, multiplicity=1, charge=0):
 def main():
     """
     The main function
-    Returns:
     """
 
     filename = 'h2.xyz'

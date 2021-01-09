@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,18 +28,18 @@ def H_generator():
     Generate a Hamiltonian with trivial descriptions
     Returns: A Hamiltonian
     """
-    # 生成用泡利字符串表示的特定的哈密顿量
+    # Generate Pauli string representing a specific Hamiltonian
     H = [[-1.0, 'z0,z1'], [-1.0, 'z1,z2'], [-1.0, 'z0,z2']]
 
-    # 生成哈密顿量的矩阵信息
-    N_SYS_B = 3  # 用于生成吉布斯态的子系统B的量子比特数
+    # Generate the marix form of the Hamiltonian
+    N_SYS_B = 3  # Number of qubits in subsystem B used to generate Gibbs state
     hamiltonian = pauli_str_to_matrix(H, N_SYS_B)
 
-    # 生成理想情况下的目标吉布斯态 rho
-    beta = 1.5  # 设置逆温度参数 beta
+    # Generate the target Gibbs state rho
+    beta = 1.5  # Set inverse temperature beta
     rho_G = scipy.linalg.expm(-1 * beta * hamiltonian) / np_trace(scipy.linalg.expm(-1 * beta * hamiltonian))
 
-    # 设置成 Paddle quantum 所支持的数据类型
+    # Convert to the data type supported by Paddle Quantum
     hamiltonian = hamiltonian.astype("complex128")
     rho_G = rho_G.astype("complex128")
     return hamiltonian, rho_G

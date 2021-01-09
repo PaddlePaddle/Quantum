@@ -16,14 +16,30 @@
 Install library to site-packages
 """
 
-from setuptools import setup
+import setuptools
 
-setup(
-    name='paddle_quantum',
-    version='1.1.0',
-    description='Paddle Quantum circuit and function',
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
+    name='paddle-quantum',
+    version='1.1.1',
     author='Institute for Quantum Computing, Baidu INC.',
     author_email='quantum@baidu.com',
-    url='http://quantum.baidu.com',
-    packages=['paddle_quantum'],
-    install_requires=['paddlepaddle==1.8.5', 'networkx>=2.4', 'matplotlib>=3.3.0', 'interval>=1.0.0', 'progressbar>=2.5'])
+    description='Paddle Quantum is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle.',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url='http://qml.baidu.com',
+    packages=['paddle_quantum', 'paddle_quantum.GIBBS', 'paddle_quantum.QAOA', 'paddle_quantum.SSVQE', 'paddle_quantum.VQE', 'paddle_quantum.VQSD',
+              'paddle_quantum.GIBBS.example', 'paddle_quantum.QAOA.example', 'paddle_quantum.SSVQE.example', 'paddle_quantum.VQE.example', 'paddle_quantum.VQSD.example'],
+    install_requires=['paddlepaddle==1.8.5', 'networkx>=2.4', 'matplotlib>=3.3.0', 'interval>=1.0.0', 'progressbar>=2.5'],
+    python_requires='>=3.6, <4',
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: Apache Software License',
+        'Operating System :: OS Independent',
+    ],
+    project_urls={
+        'Documentation': 'https://qml.baidu.com/api/introduction.html',
+        'Source': 'https://github.com/PaddlePaddle/Quantum/',
+        'Tracker': 'https://github.com/PaddlePaddle/Quantum/issues'},)

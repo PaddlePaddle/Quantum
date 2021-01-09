@@ -1,4 +1,4 @@
-﻿# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+﻿# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,10 +59,10 @@ def partial_trace(rho_AB, dim1, dim2, A_or_B):
         rho_AB (ComplexVariable): 输入的量子态
         dim1 (int): 系统A的维数
         dim2 (int): 系统B的维数
-        A_or_B (int): 1或者2，1表示去除A，2表示去除B
+        A_or_B (int): 1或者2，1表示计算系统A上的偏迹，2表示计算系统B上的偏迹
 
     Returns:
-        ComplexVariable: 量子态的偏迹
+        ComplexVariable: 输入的量子态的偏迹
 
     """
     if A_or_B == 2:
@@ -126,8 +126,8 @@ def gate_fidelity(U, V):
     :math:`U` 是一个 :math:`2^n\times 2^n` 的 Unitary 矩阵。
 
     Args:
-        U (numpy.ndarray): 量子门的酉矩阵形式
-        V (numpy.ndarray): 量子门的酉矩阵形式
+        U (numpy.ndarray): 量子门 :math:`U` 的酉矩阵形式
+        V (numpy.ndarray): 量子门 :math:`V` 的酉矩阵形式
 
     Returns:
         float: 输入的量子门之间的保真度
@@ -215,7 +215,7 @@ def NKron(matrix_A, matrix_B, *args):
         C = density_op_random(2)
         result = NKron(A, B, C)
 
-    ``result`` 应为： :math:`A \otimes B \otimes C`
+    ``result`` 应为 :math:`A \otimes B \otimes C`
     """
     return reduce(lambda result, index: np_kron(result, index), args, np_kron(matrix_A, matrix_B), )
 
