@@ -70,8 +70,8 @@ python -m pip install --upgrade -r requirements.txt
 VQE中调用 openfermion 读取分子 xyz 文件并计算，因此需要安装 openfermion 和 openfermionpyscf。
 
 ```bash
-pip install openfermion
-pip install openfermionpyscf
+pip install openfermion==0.11.0
+pip install openfermionpyscf==0.4
 ```
 
 ### 运行

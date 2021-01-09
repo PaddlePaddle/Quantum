@@ -70,8 +70,8 @@ python -m pip install --upgrade -r requirements.txt
 Once the user confirms the above OS constraint, OpenFermion can be installed with the following command. These packages are used for quantum chemistry calculations and could be potentially used in the VQE tutorial.
 
 ```bash
-pip install openfermion
-pip install openfermionpyscf
+pip install openfermion==0.11.0
+pip install openfermionpyscf==0.4
 ```
 
 ### Run programs
