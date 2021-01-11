@@ -5,8 +5,7 @@
 - [特色](#特色)
 - [安装步骤](#安装步骤)
    - [安装 PaddlePaddle](#安装-paddlepaddle)
-   - [下载 Paddle Quantum 并安装](#下载-paddle-quantum-并安装)
-   - [或使用 requirements.txt 安装依赖包](#或使用-requirementstxt-安装依赖包)
+   - [安装 Paddle Quantum](#安装-paddle-quantum)
    - [使用 openfermion 读取 xyz 描述文件](#使用-openfermion-读取-xyz-描述文件)
    - [运行](#运行)
 - [入门与开发](#入门与开发)
@@ -44,24 +43,23 @@ Paddle Quantum（量桨）是基于百度飞桨开发的量子机器学习工具
 
 ### 安装 PaddlePaddle
 
-请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 1.8.5。
+当用户安装 Paddle Quantum 时会自动下载安装这个关键依赖包。关于 PaddlePaddle 更全面的安装信息请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 1.8.5。
 
-### 下载 Paddle Quantum 并安装
+### 安装 Paddle Quantum 
+
+我们推荐通过 `pip` 完成安装,
+
+```bash
+pip install paddle-quantum
+```
+用户也可以选择下载全部文件后进行本地安装，
 
 ```bash
 git clone http://github.com/PaddlePaddle/quantum
-```
-
-```bash
 cd quantum
 pip install -e .
 ```
 
-### 或使用 requirements.txt 安装依赖包
-
-```bash
-python -m pip install --upgrade -r requirements.txt
-```
 
 ### 使用 openfermion 读取 xyz 描述文件
 
@@ -118,11 +116,11 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
 - [吉布斯态的制备 (Gibbs State Preparation)](./tutorial/Gibbs)
 - [变分量子奇异值分解 (VQSVD)](./tutorial/VQSVD)
 
-此外，Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./tutorial/GPU)。
+此外，Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。
 
 ### API 文档
 
-我们为 Paddle Quantum 提供了独立的 [API 文档页面](https://paddle-quantum.readthedocs.io/zh_CN/latest/)，包含了供用户使用的所有函数和类的详细说明与用法。
+我们为 Paddle Quantum 提供了独立的 [API 文档页面](https://qml.baidu.com/api/introduction.html)，包含了供用户使用的所有函数和类的详细说明与用法。
 
 ### 开发
 
@@ -177,7 +175,7 @@ Paddle Quantum 使用 [Apache-2.0 license](LICENSE) 许可证。
 
 [1] [量子计算 - 百度百科](https://baike.baidu.com/item/%E9%87%8F%E5%AD%90%E8%AE%A1%E7%AE%97/11035661)
 
-[2] Nielsen, M. A. & Chuang, I. L. Quantum computation and quantum information. (Cambridge university press, 2010).
+[2] Nielsen, M. A. & Chuang, I. L. Quantum computation and quantum information. (2010).
 
 [3] Phillip Kaye, Laflamme, R. & Mosca, M. An Introduction to Quantum Computing. (2007).
 

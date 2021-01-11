@@ -5,8 +5,7 @@ English | [简体中文](README_CN.md)
 - [Features](#features)
 - [Install](#install)
    - [Install PaddlePaddle](#install-paddlepaddle)
-   - [Download and install Paddle Quantum](#download-and-install-paddle-quantum)
-   - [Or use requirements.txt to install dependencies](#or-use-requirements-to-install-dependencies)
+   - [Install Paddle Quantum](#install-paddle-quantum)
    - [Use OpenFermion to read .xyz molecule configuration file](#use-openfermion-to-read-xyz-molecule-configuration-file)
    - [Run programs](#run-programs)
 - [Introduction and developments](#introduction-and-developments)
@@ -44,24 +43,23 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 
 ### Install PaddlePaddle
 
-Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 1.8.5.
+This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 1.8.5.
 
-### Download and install Paddle Quantum
+### Install Paddle Quantum
+
+We recommend the following way of installing Paddle Quantum with `pip`,
+
+```bash
+pip install paddle-quantum
+```
+or download all the files and finish the installation locally,
 
 ```bash
 git clone http://github.com/PaddlePaddle/quantum
-```
-
-```bash
 cd quantum
 pip install -e .
 ```
 
-### Or use requirements to install dependencies
-
-```bash
-python -m pip install --upgrade -r requirements.txt
-```
 
 ### Use OpenFermion to read .xyz molecule configuration file
 
@@ -89,7 +87,7 @@ python main.py
 
 ### Quick start
 
-[Paddle Quantum Quick Start Manual]((https://github.com/PaddlePaddle/Quantum/tree/master/introduction)) is probably the best place to get started with Paddle Quantum. Currently, we support online reading and running the Jupyter Notebook locally. The manual includes the following contents:
+[Paddle Quantum Quick Start Manual](https://github.com/PaddlePaddle/Quantum/tree/master/introduction) is probably the best place to get started with Paddle Quantum. Currently, we support online reading and running the Jupyter Notebook locally. The manual includes the following contents:
 
 - Detailed installation tutorials for Paddle Quantum
 - Introduction to the basics of quantum computing and QNN
@@ -112,11 +110,11 @@ We provide tutorials covering combinatorial optimization, quantum chemistry, qua
 9. [Gibbs State Preparation](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/Gibbs)
 10. [Variational Quantum Singular Value Decomposition (VQSVD)](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/VQSVD)
 
-In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](https://github.com/PaddlePaddle/Quantum/tree/master/tutorial/GPU).
+In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](https://github.com/PaddlePaddle/Quantum/blob/master/introduction/PaddleQuantum_GPU_EN.ipynb).
 
 ### API documentation
 
-For those who are looking for explanation on the python class and functions provided in Paddle Quantum, we refer to our API documentation page.
+For those who are looking for explanation on the python class and functions provided in Paddle Quantum, we refer to our [API documentation page](https://qml.baidu.com/api/introduction.html).
 
 > We, in particular, denote that the current docstring specified in source code **is written in simplified Chinese**, this will be updated in later versions.
 
@@ -131,7 +129,7 @@ We also highly encourage developers to use Paddle Quantum as a research tool to 
 > @misc{Paddlequantum,
 > title = {{Paddle Quantum}},
 > year = {2020},
-> url = {https://github.com/paddlepaddle/Quantum}, }
+> url = {https://github.com/PaddlePaddle/Quantum}, }
 
 So far, we have done several projects with the help of Paddle Quantum as a powerful QML development platform.
 
@@ -169,9 +167,9 @@ Paddle Quantum uses [Apache-2.0 license](LICENSE).
 
 ## References
 
-[1] [Quantum Computing - Wikipedia](https://en.wikipedia.org/wiki/Quantum_computing.)
+[1] [Quantum Computing - Wikipedia](https://en.wikipedia.org/wiki/Quantum_computing)
 
-[2] Nielsen, M. A. & Chuang, I. L. Quantum computation and quantum information. (Cambridge university press, 2010).
+[2] Nielsen, M. A. & Chuang, I. L. Quantum computation and quantum information. (2010).
 
 [3] Phillip Kaye, Laflamme, R. & Mosca, M. An Introduction to Quantum Computing. (2007).
 
