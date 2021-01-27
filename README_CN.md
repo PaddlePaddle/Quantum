@@ -19,24 +19,51 @@
 - [Copyright and License](#copyright-and-license)
 - [References](#references)
 
-Paddle Quantum（量桨）是基于百度飞桨开发的量子机器学习工具集，支持量子神经网络的搭建与训练，提供易用的量子机器学习开发套件与量子优化、量子化学等前沿量子应用工具集，使得百度飞桨也因此成为国内首个目前也是唯一一个支持量子机器学习的深度学习框架。
+[Paddle Quantum（量桨）](https://qml.baidu.com/)是基于百度飞桨开发的量子机器学习工具集，支持量子神经网络的搭建与训练，提供易用的量子机器学习开发套件与量子优化、量子化学等前沿量子应用工具集，使得百度飞桨也因此成为国内首个目前也是唯一一个支持量子机器学习的深度学习框架。
 
-![](https://release-data.cdn.bcebos.com/Paddle%20Quantum.png)
+<p align="center">
+  <a href="https://qml.baidu.com/">
+    <img width=80% src="https://release-data.cdn.bcebos.com/Paddle%20Quantum.png">
+  </a>
+</p>
+
+<p align="center">
+  <!-- docs -->
+  <a href="https://qml.baidu.com/api/paddle_quantum.circuit.html">
+    <img src="https://img.shields.io/badge/docs-link-green.svg?style=flat-square&logo=read-the-docs"/>
+  </a>
+  <!-- PyPI -->
+  <a href="https://pypi.org/project/paddle-quantum/">
+    <img src="https://img.shields.io/badge/pypi-v1.2.0-orange.svg?style=flat-square&logo=pypi"/>
+  </a>
+  <!-- Python -->
+  <a href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/Python-3.6+-blue.svg?style=flat-square&logo=python"/>
+  </a>
+  <!-- License -->
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square&logo=apache"/>
+  </a>
+  <!-- Platform -->
+  <a href="https://github.com/PaddlePaddle/Quantum">
+    <img src="https://img.shields.io/badge/OS-MacOS%20|%20Windows%20|%20Linux-lightgrey.svg?style=flat-square"/>
+  </a>
+</p>
 
 量桨建立起了人工智能与量子计算的桥梁，不但可以快速实现量子神经网络的搭建与训练，还提供易用的量子机器学习开发套件与量子优化、量子化学等前沿量子应用工具集，并提供多项自研量子机器学习应用。通过百度飞桨深度学习平台赋能量子计算，量桨为领域内的科研人员以及开发者便捷地开发量子人工智能的应用提供了强有力的支撑，同时也为广大量子计算爱好者提供了一条可行的学习途径。
 
 ## 特色
 
-- 易用性
-   - 高效搭建量子神经网络
-   - 多种量子神经网络模板
-   - 丰富的量子算法教程（10+用例）
-- 可拓展性
-   - 支持通用量子电路模型
-   - 高性能模拟器支持20多个量子比特的模拟运算
-   - 提供多种优化工具和 GPU 加速
+- 轻松上手
+   - 丰富的在线学习资源（16+ 教程案例）
+   - 通过模板高效搭建量子神经网络
+   - 自动微分框架
+- 功能丰富
+   - 提供多种优化工具和 GPU 模式
+   - 高性能模拟器支持25+量子比特的模拟运算
 - 特色工具集
    - 提供组合优化和量子化学等前沿领域的计算工具箱
+   - 分布式量子信息处理模组 LOCCNet
    - 自研多种量子机器学习算法
 
 ## 安装步骤
@@ -61,11 +88,11 @@ pip install -e .
 ```
 
 
-### 使用 openfermion 读取 xyz 描述文件
+### 使用 OpenFermion 读取 .xyz 描述文件
 
-> 仅在 macOS 和 linux 下可以使用 openfermion 读取 xyz 描述文件。
+> 仅在 macOS 和 linux 下可以使用 OpenFermion 读取 .xyz 描述文件。
 
-VQE中调用 openfermion 读取分子 xyz 文件并计算，因此需要安装 openfermion 和 openfermionpyscf。
+VQE中调用 OpenFermion 读取分子 .xyz 文件并计算，因此需要安装 openfermion 和 openfermionpyscf。
 
 ```bash
 pip install openfermion==0.11.0
@@ -103,20 +130,26 @@ python main.py
 
 Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为量子机器学习领域的研发提供强有力的支撑，也提供了丰富的案例供开发者学习。
 
-在这里，我们提供了涵盖量子优化、量子化学、量子机器学习等多个领域的案例供大家学习。每个教程目前支持网页阅览和运行 Jupyter Notebook 两种方式。我们推荐用户下载 Notebook 后，本地运行进行实践。
+在这里，我们提供了涵盖量子优化、量子化学、量子机器学习、量子纠缠处理等多个领域的案例供大家学习。每个教程目前支持网页阅览和运行 Jupyter Notebook 两种方式。我们推荐用户下载 Notebook 后，本地运行进行实践。
 
 - [量子近似优化算法 (QAOA)](./tutorial/QAOA)
 - [变分量子特征求解器 (VQE)](./tutorial/VQE)
-- [量子神经网络的贫瘠高原效应 (Barren Plateaus)](./tutorial/Barren)
 - [量子分类器 (Quantum Classifier)](./tutorial/Q-Classifier)
+- [量子神经网络的贫瘠高原效应 (Barren Plateaus)](./tutorial/Barren)
 - [量子变分自编码器 (Quantum Autoencoder)](./tutorial/Q-Autoencoder)
 - [量子生成对抗网络 (Quantum GAN)](./tutorial/Q-GAN)
 - [子空间搜索 - 量子变分特征求解器 (SSVQE)](./tutorial/SSVQE)
 - [变分量子态对角化算法 (VQSD)](./tutorial/VQSD)
 - [吉布斯态的制备 (Gibbs State Preparation)](./tutorial/Gibbs)
 - [变分量子奇异值分解 (VQSVD)](./tutorial/VQSVD)
+- [LOCC 量子神经网络](./tutorial/LOCC/LOCCNET_Tutorial_CN.ipynb)
+- [纠缠蒸馏 -- BBPSSW 协议](./tutorial/LOCC)
+- [纠缠蒸馏 -- DEJMPS 协议](./tutorial/LOCC)
+- [纠缠蒸馏 -- LOCCNet 设计协议](./tutorial/LOCC)
+- [量子隐态传输](./tutorial/LOCC)
+- [量子态分辨](./tutorial/LOCC)
 
-此外，Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。
+随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见[教程](./tutorial/LOCC/LOCCNET_Tutorial_CN.ipynb)。此外，Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。
 
 ### API 文档
 

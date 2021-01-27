@@ -18,25 +18,53 @@ English | [简体中文](README_CN.md)
 - [Copyright and License](#copyright-and-license)
 - [References](#references)
 
-Paddle Quantum (量桨) is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle. It provides a platform to construct and train quantum neural networks (QNNs) with easy-to-use QML development kits suporting combinatorial optimization, quantum chemistry and other cutting-edge quantum applications, making PaddlePaddle the first and only deep learning framework in China that supports quantum machine learning.
+[Paddle Quantum (量桨)](https://qml.baidu.com/) is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle. It provides a platform to construct and train quantum neural networks (QNNs) with easy-to-use QML development kits suporting combinatorial optimization, quantum chemistry and other cutting-edge quantum applications, making PaddlePaddle the first and only deep learning framework in China that supports quantum machine learning.
 
-![](https://release-data.cdn.bcebos.com/Paddle%20Quantum.png)
+<p align="center">
+  <a href="https://qml.baidu.com/">
+    <img width=80% src="https://release-data.cdn.bcebos.com/Paddle%20Quantum.png">
+  </a>
+</p>
+
+<p align="center">
+  <!-- docs -->
+  <a href="https://qml.baidu.com/api/paddle_quantum.circuit.html">
+    <img src="https://img.shields.io/badge/docs-link-green.svg?style=flat-square&logo=read-the-docs"/>
+  </a>
+  <!-- PyPI -->
+  <a href="https://pypi.org/project/paddle-quantum/">
+    <img src="https://img.shields.io/badge/pypi-v1.2.0-orange.svg?style=flat-square&logo=pypi"/>
+  </a>
+  <!-- Python -->
+  <a href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/Python-3.6+-blue.svg?style=flat-square&logo=python"/>
+  </a>
+  <!-- License -->
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square&logo=apache"/>
+  </a>
+  <!-- Platform -->
+  <a href="https://github.com/PaddlePaddle/Quantum">
+    <img src="https://img.shields.io/badge/OS-MacOS%20|%20Windows%20|%20Linux-lightgrey.svg?style=flat-square"/>
+  </a>
+</p>
+
 
 Paddle Quantum aims at establishing a bridge between artificial intelligence (AI) and quantum computing (QC). It has been utilized for developing several quantum machine learning applications. With the PaddlePaddle deep learning platform empowering QC, Paddle Quantum provides strong support for scientific research community and developers in the field to easily develop QML applications. Moreover, it provides a learning platform for quantum computing enthusiasts.
 
 ## Features
 
 - Easy-to-use
-  - Build quantum neural networks efficiently
-  - Various quantum neural network templates
-  - 10+ QML algorithm tutorials
-- Scalability
-  - Support universal quantum circuit model
-  - Provide multiple optimization tools and GPU mode
-  - High-performance simulator that supports more than 20 qubits
+  - Many online learning resources (16+ tutorials)
+  - High efficiency in building QNN with various QNN templates
+  - Automatic differentiation
+- Versatile
+  - Multiple optimization tools and GPU mode
+  - Simulation with 25+ qubits
 - Featured Toolkits
-  - Provides computational toolboxes in cutting-edge fields such as combinatorial optimization and quantum chemistry
-  - Self-innovated quantum machine learning algorithms
+  - Toolboxes for Chemistry & Optimization
+  - LOCCNet for distributed quantum information processing
+  - Self-developed QML algorithms
   
 
 ## Install
@@ -72,7 +100,7 @@ pip install openfermion==0.11.0
 pip install openfermionpyscf==0.4
 ```
 
-### Run programs
+### Run example
 
 Now, you can try to run a program to verify whether Paddle Quantum has been installed successfully. Here we take quantum approximate optimization algorithm (QAOA) as an example.
 
@@ -97,20 +125,26 @@ python main.py
 
 ### Tutorials
 
-We provide tutorials covering combinatorial optimization, quantum chemistry, quantum classification and other popular QML research topics. Each tutorial currently supports reading on our website and running Jupyter Notebooks locally. For interested developers, we recommend them to download Jupyter Notebooks and play around with it. Here is the tutorial list,
+We provide tutorials covering combinatorial optimization, quantum chemistry, quantum classification, quantum entanglement manipulation and other popular QML research topics. Each tutorial currently supports reading on our website and running Jupyter Notebooks locally. For interested developers, we recommend them to download Jupyter Notebooks and play around with it. Here is the tutorial list,
 
-1. [Quantum Approximation Optimization Algorithm (QAOA)](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/QAOA)
-2. [Variational Quantum Eigensolver (VQE)](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/VQE)
-3. [Quantum Classifier](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/Q-Classifier)
-4. [The Barren Plateaus Phenomenon on Quantum Neural Networks (Barren Plateaus)](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/Barren)
-5. [Quantum Autoencoder](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/Q-Autoencoder)
-6. [Quantum GAN](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/Q-GAN)
-7. [Subspace Search-Quantum Variational Quantum Eigensolver (SSVQE)](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/SSVQE)
-8. [Variational Quantum State Diagonalization (VQSD)](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/VQSD)
-9. [Gibbs State Preparation](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/Gibbs)
-10. [Variational Quantum Singular Value Decomposition (VQSVD)](https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/VQSVD)
+1. [Quantum Approximation Optimization Algorithm (QAOA)](./tutorial/QAOA)
+2. [Variational Quantum Eigensolver (VQE)](./tutorial/VQE)
+3. [Quantum Classifier](./tutorial/Q-Classifier)
+4. [The Barren Plateaus Phenomenon on Quantum Neural Networks (Barren Plateaus)](./tutorial/Barren)
+5. [Quantum Autoencoder](./tutorial/Q-Autoencoder)
+6. [Quantum GAN](./tutorial/Q-GAN)
+7. [Subspace Search-Quantum Variational Quantum Eigensolver (SSVQE)](./tutorial/SSVQE)
+8. [Variational Quantum State Diagonalization (VQSD)](./tutorial/VQSD)
+9. [Gibbs State Preparation](./tutorial/Gibbs)
+10. [Variational Quantum Singular Value Decomposition (VQSVD)](./tutorial/VQSVD)
+11. [Local Operations and Classical Communication in QNN (LOCCNet)](./tutorial/LOCC/LOCCNET_Tutorial_EN.ipynb)
+12. [Entanglement Distillation -- the BBPSSW protocol](./tutorial/LOCC)
+13. [Entanglement Distillation -- the DEJMPS protocol](./tutorial/LOCC)
+14. [Entanglement Distillation -- Protocol design with LOCCNet](./tutorial/LOCC)
+15. [Quantum Teleportation](./tutorial/LOCC)
+16. [Quantum State Discrimination](./tutorial/LOCC)
 
-In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](https://github.com/PaddlePaddle/Quantum/blob/master/introduction/PaddleQuantum_GPU_EN.ipynb).
+With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can start with this [tutorial on LOCCNet](./tutorial/LOCC/LOCCNET_Tutorial_EN.ipynb). In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](./introduction/PaddleQuantum_GPU_EN.ipynb).
 
 ### API documentation
 

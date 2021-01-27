@@ -1,4 +1,4 @@
-﻿# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,7 +48,12 @@ __all__ = [
     "NKron",
     "dagger",
     "random_pauli_str_generator",
-    "pauli_str_to_matrix"
+    "pauli_str_to_matrix",
+    "partial_transpose_2",
+    "partial_transpose",
+    "negativity",
+    "logarithmic_negativity",
+    "is_ppt"
 ]
 
 
@@ -266,12 +271,12 @@ def random_pauli_str_generator(n, terms=3):
     """
     pauli_str = []
     for sublen in np_random.randint(1, high=n+1, size=terms):
-        # Tips: -1 <= coef < 1
-        coef = np_random.rand()*2-1
+        # Tips: -1 <= coeff < 1
+        coeff = np_random.rand()*2-1
         ops = np_random.choice(['x', 'y', 'z'], size=sublen)
         pos = np_random.choice(range(n), size=sublen, replace=False)
         op_list = [ops[i]+str(pos[i]) for i in range(sublen)]
-        pauli_str.append([coef, ','.join(op_list)])
+        pauli_str.append([coeff, ','.join(op_list)])
     return pauli_str
 
 
@@ -315,3 +320,154 @@ def pauli_str_to_matrix(pauli_str, n):
             matrices.append(coeff * NKron(sub_matrices[0], sub_matrices[1], *sub_matrices[2:]))
 
     return sum(matrices)
+
+def partial_transpose_2(density_op, sub_system=None):
+    r"""计算输入量子态的 partial transpose :math:`\rho^{T_A}`
+
+    Args:
+        density_op (numpy.ndarray): 量子态的密度矩阵形式
+        sub_system (int): 1或2，表示关于哪个子系统进行 partial transpose，默认为第二个
+
+    Returns:
+        float: 输入的量子态的 partial transpose
+
+    代码示例:
+
+    .. code-block:: python
+
+        from paddle_quantum.utils import partial_transpose_2
+        rho_test = np.arange(1,17).reshape(4,4)
+        partial_transpose_2(rho_test, sub_system=1)
+
+    ::
+
+       [[ 1,  2,  9, 10],
+        [ 5,  6, 13, 14],
+        [ 3,  4, 11, 12],
+        [ 7,  8, 15, 16]]
+    """
+    sys_idx = 2 if sub_system is None else 1
+
+    # Copy the density matrix and not corrupt the original one
+    transposed_density_op = numpy.copy(density_op)
+    if sys_idx == 2:
+        for j in [0, 2]:
+            for i in [0, 2]:
+                transposed_density_op[i:i+2, j:j+2] = density_op[i:i+2, j:j+2].transpose()
+    else:
+        transposed_density_op[2:4, 0:2] = density_op[0:2, 2:4]
+        transposed_density_op[0:2, 2:4] = density_op[2:4, 0:2]
+
+    return transposed_density_op
+
+
+def partial_transpose(density_op, n):
+    r"""计算输入量子态的 partial transpose :math:`\rho^{T_A}`。
+
+    Args:
+        density_op (numpy.ndarray): 量子态的密度矩阵形式
+
+    Returns:
+        float: 输入的量子态的 partial transpose
+    """
+
+    # Copy the density matrix and not corrupt the original one
+    transposed_density_op = numpy.copy(density_op)
+    for j in range(0, 2**n, 2):
+        for i in range(0, 2**n, 2):
+            transposed_density_op[i:i+2, j:j+2] = density_op[i:i+2, j:j+2].transpose()
+
+    return transposed_density_op
+
+def negativity(density_op):
+    r"""计算输入量子态的 Negativity :math:`N = ||\frac{\rho^{T_A}-1}{2}||`。
+
+    Args:
+        density_op (numpy.ndarray): 量子态的密度矩阵形式
+
+    Returns:
+        float: 输入的量子态的 Negativity
+
+    代码示例:
+
+    .. code-block:: python
+
+        from paddle_quantum.utils import negativity
+        from paddle_quantum.state import bell_state
+        rho = bell_state(2)
+        print("Negativity of the Bell state is:", negativity(rho))
+
+    ::
+
+        Negativity of the Bell state is: 0.5
+    """
+    # Implement the partial transpose
+    density_op_T = partial_transpose_2(density_op)
+
+    # Calculate through the equivalent expression N = sum(abs(\lambda_i)) when \lambda_i<0
+    n = 0
+    eigen_val, _ = numpy.linalg.eig(density_op_T)
+    for val in eigen_val:
+        if val < 0:
+            n = n + numpy.abs(val)
+    return n
+
+def logarithmic_negativity(density_op):
+    r"""计算输入量子态的 Logarithmic Negativity :math:`E_N = ||\rho^{T_A}||`。
+
+    Args:
+        density_op (numpy.ndarray): 量子态的密度矩阵形式
+
+    Returns:
+        float: 输入的量子态的 Logarithmic Negativity
+
+    代码示例:
+
+    .. code-block:: python
+
+        from paddle_quantum.utils import logarithmic_negativity
+        from paddle_quantum.state import bell_state
+        rho = bell_state(2)
+        print("Logarithmic negativity of the Bell state is:", logarithmic_negativity(rho))
+
+    ::
+
+        Logarithmic negativity of the Bell state is: 1.0
+    """
+    # Calculate the negativity
+    n = negativity(density_op)
+
+    # Calculate through the equivalent expression
+    log2_n = numpy.log2(2*n + 1)
+    return log2_n
+
+
+def is_ppt(density_op):
+    r"""计算输入量子态是否满足 PPT 条件。
+
+    Args:
+        density_op (numpy.ndarray): 量子态的密度矩阵形式
+
+    Returns:
+        bool: 输入的量子态是否满足 PPT 条件
+
+    代码示例:
+
+    .. code-block:: python
+
+        from paddle_quantum.utils import is_ppt
+        from paddle_quantum.state import bell_state
+        rho = bell_state(2)
+        print("Whether the Bell state satisfies PPT condition:", is_ppt(rho))
+
+    ::
+
+        Whether the Bell state satisfies PPT condition: False
+    """
+    # By default the PPT condition is satisfied
+    ppt = True
+
+    # Detect negative eigenvalues from the partial transposed density_op
+    if negativity(density_op) > 0:
+        ppt = False
+    return ppt

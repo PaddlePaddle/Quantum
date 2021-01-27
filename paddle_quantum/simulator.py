@@ -1,3 +1,17 @@
+# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 This simulator uses statevector(Tensor) to simulate quantum behaviors.
 Basically, the core of the algorithm is tensor contraction with one-way calculation that each gate is
@@ -185,6 +199,16 @@ def cx_gate_matrix():
                      [0, 0, 0, 1],
                      [0, 0, 1, 0]], dtype=complex).reshape(2, 2, 2, 2)
 
+def swap_gate_matrix():
+    """
+    Control Not
+    :return:
+    """
+    return np.array([[1, 0, 0, 0],
+                     [0, 0, 1, 0],
+                     [0, 1, 0, 0],
+                     [0, 0, 0, 1]], dtype=complex).reshape(2, 2, 2, 2)
+
 
 ### PaddleE ###
 def normalize_axis(axis, ndim):
@@ -359,7 +383,7 @@ def StateTranfer(state, gate_name, bits, params=None):
     """
     To transfer state by only gate name and bits
     :param state: the last step state, can be init vector or  the last step vector.
-    :param gate_name:x,y,z,h,CNOT
+    :param gate_name:x,y,z,h,CNOT, SWAP
     :param bits: the gate working on the bits.
     :param params: params for u gate.
     :return: the updated state
@@ -379,6 +403,9 @@ def StateTranfer(state, gate_name, bits, params=None):
     elif gate_name == 'CNOT':
         # print('----------', gate_name, bits, '----------')
         gate_matrix = cx_gate_matrix()
+    elif gate_name == 'SWAP':
+        # print('----------', gate_name, bits, '----------')
+        gate_matrix = swap_gate_matrix()
     elif gate_name == 'u':
         # print('----------', gate_name, bits, '----------')
         gate_matrix = u_gate_matrix(params)
