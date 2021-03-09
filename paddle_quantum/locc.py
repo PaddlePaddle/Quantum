@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import warnings
 import numpy as np
-import paddle.fluid as fluid
 import paddle
 from paddle_quantum.circuit import UAnsatz
 from paddle_quantum.utils import NKron, partial_trace, dagger
-from paddle.complex import matmul, trace, elementwise_div, kron, elementwise_add, elementwise_mul
-from paddle.fluid.framework import ComplexVariable
-from paddle.fluid.layers import diag, sin, cos, concat, zeros, ones
+from paddle import matmul, trace, divide, kron, add, multiply
+from paddle import sin, cos, concat, zeros, ones, real
 from paddle_quantum.state import isotropic_state, bell_state
 from math import log2, sqrt
 from numpy import pi as PI
@@ -46,8 +45,8 @@ class LoccStatus(object):
         """
         super(LoccStatus, self).__init__()
         if state is None and prob is None and measured_result is None:
-            self.state = fluid.dygraph.to_variable(np.array([1], dtype=np.complex128))
-            self.prob = fluid.dygraph.to_variable(np.array([1], dtype=np.float64))
+            self.state = paddle.to_tensor(np.array([1], dtype=np.complex128))
+            self.prob = paddle.to_tensor(np.array([1], dtype=np.float64))
             self.measured_result = ""
         else:
             self.state = state
@@ -75,7 +74,7 @@ class LoccStatus(object):
     def __repr__(self):
         return f"state: {self.state.numpy()}\nprob: {self.prob.numpy()[0]}\nmeasured_result: {self.measured_result}"
 
-    def __str(self):
+    def __str__(self):
         return f"state: {self.state.numpy()}\nprob: {self.prob.numpy()[0]}\nmeasured_result: {self.measured_result}"
 
 
@@ -158,7 +157,7 @@ class LoccAnsatz(UAnsatz):
         r"""添加关于 x 轴的单量子比特旋转门。
 
         Args:
-            theta (Variable): 量子门的角度
+            theta (Tensor): 量子门的角度
             which_qubit (int): 添加该门量子比特编号
         """
         which_qubit = self.party[which_qubit]
@@ -168,7 +167,7 @@ class LoccAnsatz(UAnsatz):
         r"""添加关于 y 轴的单量子比特旋转门。
 
         Args:
-            theta (Variable): 量子门的角度
+            theta (Tensor): 量子门的角度
             which_qubit (int): 添加该门量子比特编号
         """
         which_qubit = self.party[which_qubit]
@@ -178,7 +177,7 @@ class LoccAnsatz(UAnsatz):
         r"""添加关于 z 轴的单量子比特旋转门。
 
         Args:
-            theta (Variable): 量子门的角度
+            theta (Tensor): 量子门的角度
             which_qubit (int): 添加该门量子比特编号
         """
         which_qubit = self.party[which_qubit]
@@ -197,7 +196,7 @@ class LoccAnsatz(UAnsatz):
         r"""添加一个 SWAP 门。
 
         Args:
-            control (list): 作用在的 qubit 的编号，``control[0]`` 和``control[1]`` 是想要交换的位，其值都应该在 :math:`[0, m)`范围内， :math:`m` 为该参与方的量子比特数
+            control (list): 作用在的 qubit 的编号，``control[0]`` 和 ``control[1]`` 是想要交换的位，其值都应该在 :math:`[0, m)`范围内， :math:`m` 为该参与方的量子比特数
         """
         control = [self.party[which_qubit] for which_qubit in control]
         super(LoccAnsatz, self).swap(control)
@@ -260,9 +259,9 @@ class LoccAnsatz(UAnsatz):
         r"""添加一个单量子比特的旋转门。
 
         Args:
-            theta (Variable): 旋转角度 :math:`\theta` 。
-            phi (Variable): 旋转角度 :math:`\phi` 。
-            lam (Variable): 旋转角度 :math:`\lambda` 。
+            theta (Tensor): 旋转角度 :math:`\theta` 。
+            phi (Tensor): 旋转角度 :math:`\phi` 。
+            lam (Tensor): 旋转角度 :math:`\lambda` 。
             which_qubit (int): 作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该量子线路的量子比特数
         """
         which_qubit = self.party[which_qubit]
@@ -277,7 +276,7 @@ class LoccAnsatz(UAnsatz):
     def weak_superposition_layer(self):
         r"""添加一层旋转角度为 :math:`\pi/4` 的 Ry 门。
         """
-        _theta = fluid.dygraph.to_variable(np.array([np.pi / 4]))
+        _theta = paddle.to_tensor(np.array([np.pi / 4]))
         for which_qubit in self.party.qubits:
             self.ry(_theta, which_qubit)
 
@@ -291,7 +290,7 @@ class LoccAnsatz(UAnsatz):
             ``theta`` 的维度为 ``(depth, m, 1)``
 
         Args:
-            theta (Variable): Ry 门的旋转角度
+            theta (Tensor): Ry 门的旋转角度
             depth (int): 纠缠层的深度
             which_qubits(list): 作用的量子比特编号
         """
@@ -318,7 +317,7 @@ class LoccAnsatz(UAnsatz):
             ``theta`` 的维度为 ``(depth, m, 3)``，最低维内容为对应的 ``u3`` 的参数 ``(theta, phi, lam)``
 
         Args:
-            theta (Variable): U3 门的旋转角度
+            theta (Tensor): U3 门的旋转角度
             depth (int): 纠缠层的深度
             which_qubits(list): 作用的量子比特编号
         """
@@ -340,7 +339,7 @@ class LoccAnsatz(UAnsatz):
         r"""添加 2-qubit 通用门，这个通用门需要 15 个参数。
 
         Args:
-            theta (Variable): 2-qubit 通用门的参数，其维度为 ``(15, )``
+            theta (Tensor): 2-qubit 通用门的参数，其维度为 ``(15, )``
             which_qubits(list): 作用的量子比特编号
         """
 
@@ -353,7 +352,7 @@ class LoccAnsatz(UAnsatz):
             参考: https://cds.cern.ch/record/708846/files/0401178.pdf
 
         Args:
-            theta (Variable): 3-qubit 通用门的参数，其维度为 ``(81, )``
+            theta (Tensor): 3-qubit 通用门的参数，其维度为 ``(81, )``
             which_qubits(list): 作用的量子比特编号
         """
 
@@ -452,7 +451,7 @@ class LoccAnsatz(UAnsatz):
             self.__add_complex_block(theta[int((i - position[0]) / 2)], [i, i + 1])
 
 
-class LoccNet(fluid.dygraph.Layer):
+class LoccNet(paddle.nn.Layer):
     r"""用于设计我们的 LOCC 下的 protocol，并进行验证或者训练。
     """
 
@@ -467,8 +466,23 @@ class LoccNet(fluid.dygraph.Layer):
     def set_init_status(self, state, which_qubits):
         r"""对 LoccNet 的初始 LOCC 态节点进行初始化。
 
+        Warning:
+            该方法已弃用，请使用 ``set_init_state()`` 方法以代替。
+
         Args:
-            state (ComplexVariable): 输入的量子态的矩阵形式
+            state (Tensor): 输入的量子态的矩阵形式
+            which_qubits (tuple or list): 该量子态所对应的量子比特，其形式为 ``(party_id, qubit_id)`` 的 ``tuple`` ，或者由其组成的 ``list``
+        """
+        warnings.warn('The member method set_init_status() is deprecated and please use set_init_state() instead.',
+                      DeprecationWarning)
+
+        self.set_init_state(state, which_qubits)
+
+    def set_init_state(self, state, which_qubits):
+        r"""对 LoccNet 的初始 LOCC 态节点进行初始化。
+
+        Args:
+            state (Tensor): 输入的量子态的矩阵形式
             which_qubits (tuple or list): 该量子态所对应的量子比特，其形式为 ``(party_id, qubit_id)`` 的 ``tuple`` ，或者由其组成的 ``list``
         """
         if isinstance(which_qubits, tuple):
@@ -552,7 +566,7 @@ class LoccNet(fluid.dygraph.Layer):
 
         Args:
             status (LoccStatus or list): 输入的 LOCC 态节点，其类型应该为 ``LoccStatus`` 或者由其组成的 ``list``
-            state (ComplexVariable): 输入的量子态的矩阵形式
+            state (Tensor): 输入的量子态的矩阵形式
             which_qubits (tuple or list): 指定需要被重置的量子比特编号，其形式为 ``(party_id, qubit_id)`` 的 ``tuple``，或者由其组成的 ``list``
 
         Returns:
@@ -664,63 +678,63 @@ class LoccNet(fluid.dygraph.Layer):
         r"""进行参数化的测量。
 
         Args:
-            state (ComplexVariable): 输入的量子态
+            state (Tensor): 输入的量子态
             which_qubits (list): 测量作用的量子比特编号
-            result_desired (list): 期望得到的测量结果，如 ``"0"``、``"1"`` 或者 ``["0", "1"]``
-            theta (Variable): 测量运算的参数
+            result_desired (str): 期望得到的测量结果
+            theta (Tensor): 测量运算的参数
 
         Returns:
-            ComplexVariable: 测量坍塌后的量子态
-            Variable：测量坍塌得到的概率
-            list: 测量得到的结果（0 或 1）
+            Tensor: 测量坍塌后的量子态
+            Tensor：测量坍塌得到的概率
+            str: 测量得到的结果
         """
         n = self.get_qubit_number()
         assert len(which_qubits) == len(result_desired), \
             "the length of qubits wanted to be measured and the result desired should be same"
-        op_list = [fluid.dygraph.to_variable(np.eye(2, dtype=np.complex128))] * n
+        op_list = [paddle.to_tensor(np.eye(2, dtype=np.complex128))] * n
         for idx in range(0, len(which_qubits)):
             i = which_qubits[idx]
             ele = result_desired[idx]
             if int(ele) == 0:
-                basis0 = fluid.dygraph.to_variable(np.array([[1, 0], [0, 0]], dtype=np.complex128))
-                basis1 = fluid.dygraph.to_variable(np.array([[0, 0], [0, 1]], dtype=np.complex128))
-                rho0 = elementwise_mul(basis0, cos(theta[idx]))
-                rho1 = elementwise_mul(basis1, sin(theta[idx]))
-                rho = elementwise_add(rho0, rho1)
+                basis0 = paddle.to_tensor(np.array([[1, 0], [0, 0]], dtype=np.complex128))
+                basis1 = paddle.to_tensor(np.array([[0, 0], [0, 1]], dtype=np.complex128))
+                rho0 = multiply(basis0, cos(theta[idx]))
+                rho1 = multiply(basis1, sin(theta[idx]))
+                rho = add(rho0, rho1)
                 op_list[i] = rho
             elif int(ele) == 1:
                 # rho = diag(concat([cos(theta[idx]), sin(theta[idx])]))
-                # rho = ComplexVariable(rho, zeros((2, 2), dtype="float64"))
-                basis0 = fluid.dygraph.to_variable(np.array([[1, 0], [0, 0]], dtype=np.complex128))
-                basis1 = fluid.dygraph.to_variable(np.array([[0, 0], [0, 1]], dtype=np.complex128))
-                rho0 = elementwise_mul(basis0, sin(theta[idx]))
-                rho1 = elementwise_mul(basis1, cos(theta[idx]))
-                rho = elementwise_add(rho0, rho1)
+                # rho = paddle.to_tensor(rho, zeros((2, 2), dtype="float64"))
+                basis0 = paddle.to_tensor(np.array([[1, 0], [0, 0]], dtype=np.complex128))
+                basis1 = paddle.to_tensor(np.array([[0, 0], [0, 1]], dtype=np.complex128))
+                rho0 = multiply(basis0, sin(theta[idx]))
+                rho1 = multiply(basis1, cos(theta[idx]))
+                rho = add(rho0, rho1)
                 op_list[i] = rho
             else:
-                print("cannot recognize the results_desired.")
-            # rho = ComplexVariable(ones((2, 2), dtype="float64"), zeros((2, 2), dtype="float64"))
-        measure_operator = fluid.dygraph.to_variable(op_list[0])
+                print("cannot recognize the result_desired.")
+            # rho = paddle.to_tensor(ones((2, 2), dtype="float64"), zeros((2, 2), dtype="float64"))
+        measure_operator = paddle.to_tensor(op_list[0])
         if n > 1:
             for idx in range(1, len(op_list)):
                 measure_operator = kron(measure_operator, op_list[idx])
         state_measured = matmul(matmul(measure_operator, state), dagger(measure_operator))
-        prob = trace(matmul(matmul(dagger(measure_operator), measure_operator), state)).real
-        state_measured = elementwise_div(state_measured, prob)
+        prob = real(trace(matmul(matmul(dagger(measure_operator), measure_operator), state)))
+        state_measured = divide(state_measured, prob)
         return state_measured, prob, result_desired
 
     def __measure_parameterless(self, state, which_qubits, result_desired):
         r"""进行 01 测量。
 
         Args:
-            state (ComplexVariable): 输入的量子态
+            state (Tensor): 输入的量子态
             which_qubits (list): 测量作用的量子比特编号
-            result_desired (list): 期望得到的测量结果，如 ``"0"``、``"1"`` 或者 ``["0", "1"]``
+            result_desired (str): 期望得到的测量结果
 
         Returns:
-            ComplexVariable: 测量坍塌后的量子态
-            ComplexVariable：测量坍塌得到的概率
-            list: 测量得到的结果（0 或 1）
+            Tensor: 测量坍塌后的量子态
+            Tensor：测量坍塌得到的概率
+            str: 测量得到的结果
         """
         n = self.get_qubit_number()
         assert len(which_qubits) == len(result_desired), \
@@ -732,22 +746,22 @@ class LoccNet(fluid.dygraph.Layer):
             rho[int(k), int(k)] = 1
             op_list[i] = rho
         if n > 1:
-            measure_operator = fluid.dygraph.to_variable(NKron(*op_list))
+            measure_operator = paddle.to_tensor(NKron(*op_list))
         else:
-            measure_operator = fluid.dygraph.to_variable(op_list[0])
+            measure_operator = paddle.to_tensor(op_list[0])
         state_measured = matmul(matmul(measure_operator, state), dagger(measure_operator))
-        prob = trace(matmul(matmul(dagger(measure_operator), measure_operator), state)).real
-        state_measured = elementwise_div(state_measured, prob)
+        prob = real(trace(matmul(matmul(dagger(measure_operator), measure_operator), state)))
+        state_measured = divide(state_measured, prob)
         return state_measured, prob, result_desired
 
     def measure(self, status, which_qubits, results_desired, theta=None):
         r"""对 LOCC 态节点进行 01 测量或者含参测量。
 
         Args:
-            state (LoccStatus or list): 输入的量子态，其类型应该为 ``LoccStatus`` 或者由其组成的 ``list``
+            status (LoccStatus or list): 输入的量子态，其类型应该为 ``LoccStatus`` 或者由其组成的 ``list``
             which_qubits (tuple or list): 测量作用的量子比特编号，其形式为 ``(party_id, qubit_id)`` 的 ``tuple`` ，或者由其组成的 ``list``
-            result_desired (str or list): 期望得到的测量结果，用字符串进行表示，其类型为 ``str`` 或者由 ``str`` 组成的 ``list``
-            theta (Variable): 测量运算的参数，默认是 ``None``，表示 01 测量；若要使用含参测量则需要赋值
+            results_desired (str or list): 期望得到的测量结果，用字符串进行表示，其类型为 ``str`` 或者由 ``str`` 组成的 ``list``，如 ``"0"``、``"1"`` 或者 ``["0", "1"]``
+            theta (Tensor): 测量运算的参数，默认是 ``None``，表示 01 测量；若要使用含参测量则需要赋值
 
         Returns:
             LoccStatus or list: 测量后得到的 LOCC 态节点，其类型为 ``LoccStatus`` 或者由其组成的 ``list``

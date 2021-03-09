@@ -18,10 +18,10 @@ you could check the corresponding Jupyter notebook under the Tutorial folder.
 """
 
 import numpy
-from paddle import fluid
+import paddle
 from paddle_quantum.circuit import UAnsatz
 from paddle_quantum.utils import dagger
-from paddle.complex import matmul, trace
+from paddle import matmul, trace
 from paddle_quantum.VQSD.HGenerator import generate_rho_sigma
 
 SEED = 14
@@ -42,23 +42,23 @@ def U_theta(theta, N):
     cir = UAnsatz(N)
 
     # Use built-in template
-    cir.universal_2_qubit_gate(theta)
+    cir.universal_2_qubit_gate(theta, [0, 1])
 
     # Return the Unitary matrix simulated by QNN
     return cir.U
 
 
-class Net(fluid.dygraph.Layer):
+class Net(paddle.nn.Layer):
     """
     Construct the model net
     """
 
-    def __init__(self, shape, rho, sigma, param_attr=fluid.initializer.Uniform(low=0.0, high=2 * numpy.pi, seed=SEED),
+    def __init__(self, shape, rho, sigma, param_attr=paddle.nn.initializer.Uniform(low=0.0, high=2 * numpy.pi),
                  dtype='float64'):
         super(Net, self).__init__()
         # Convert Numpy array to variable supported in PaddlePaddle
-        self.rho = fluid.dygraph.to_variable(rho)
-        self.sigma = fluid.dygraph.to_variable(sigma)
+        self.rho = paddle.to_tensor(rho)
+        self.sigma = paddle.to_tensor(sigma)
 
         # Initialize theta by sampling from a uniform distribution [0, 2*pi]
         self.theta = self.create_parameter(shape=shape, attr=param_attr, dtype=dtype, is_bias=False)
@@ -74,10 +74,10 @@ class Net(fluid.dygraph.Layer):
         # Calculate loss function
         loss = trace(matmul(self.sigma, rho_tilde))
 
-        return loss.real, rho_tilde
+        return paddle.real(loss), rho_tilde
 
 
-def Paddle_VQSD(rho, sigma, N=2, THETA_SIZE=15, ITR=50, LR=0.1):
+def Paddle_VQSD(rho, sigma, N=2, THETA_SIZE=15, ITR=50, LR=0.2):
     r"""
     Paddle_VQSD
     :param rho: Qauntum state to be diagonalized
@@ -88,29 +88,29 @@ def Paddle_VQSD(rho, sigma, N=2, THETA_SIZE=15, ITR=50, LR=0.1):
     :param LR: Learning rate
     :return: Diagonalized quantum state after optimization 
     """
-    # Initialize PaddlePaddle dynamic graph machanism
-    with fluid.dygraph.guard():
-        # Fix the dimensions of network
-        net = Net(shape=[THETA_SIZE], rho=rho, sigma=sigma)
 
-        # Use Adagrad optimizer
-        opt = fluid.optimizer.AdagradOptimizer(learning_rate=LR, parameter_list=net.parameters())
+    # Fix the dimensions of network
+    net = Net(shape=[THETA_SIZE], rho=rho, sigma=sigma)
 
-        # Optimization iterations
-        for itr in range(ITR):
-            
-            # Run forward propagation to calculate loss function and obtain energy spectrum
-            loss, rho_tilde = net(N)
-            rho_tilde_np = rho_tilde.numpy()
-            
-            # In dynamic graph, run backward propogation to minimize loss function
-            loss.backward()
-            opt.minimize(loss)
-            net.clear_gradients()
+    # Use Adagrad optimizer
+    opt = paddle.optimizer.Adagrad(learning_rate=LR, parameters=net.parameters())
 
-            # Print results
-            if itr % 10 == 0:
-                print('iter:', itr, 'loss:', '%.4f' % loss.numpy()[0])
+    # Optimization iterations
+    for itr in range(ITR):
+
+        # Run forward propagation to calculate loss function and obtain energy spectrum
+        loss, rho_tilde = net(N)
+        rho_tilde_np = rho_tilde.numpy()
+
+        # In dynamic graph, run backward propagation to minimize loss function
+        loss.backward()
+        opt.minimize(loss)
+        opt.clear_grad()
+
+        # Print results
+        if itr % 10 == 0:
+            print('iter:', itr, 'loss:', '%.4f' % loss.numpy()[0])
+
     return rho_tilde_np
 
 

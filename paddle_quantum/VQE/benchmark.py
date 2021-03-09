@@ -40,7 +40,7 @@ def benchmark_result():
     elif sysStr == 'Linux' or sysStr == 'Darwin':
         # for linux only
         from paddle_quantum.VQE.chemistrygen import read_calc_H
-        # Harmiltonian and cnot module preparing, must be executed under Linux
+        # Hamiltonian and cnot module preparing, must be executed under Linux
         # Read the H2 molecule data
         print('Molecule data will be read from h2.xyz')
         Hamiltonian, N = read_calc_H(geo_fn='h2.xyz')

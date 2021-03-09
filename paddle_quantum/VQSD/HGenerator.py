@@ -18,6 +18,7 @@ HGenerator
 
 from numpy import diag
 import scipy
+import scipy.stats
 
 SEED = 13
 

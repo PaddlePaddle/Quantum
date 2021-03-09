@@ -17,6 +17,7 @@ main
 """
 
 import numpy
+import paddle
 
 from paddle_quantum.SSVQE.HGenerator import H_generator
 from paddle_quantum.SSVQE.Paddle_SSVQE import Paddle_SSVQE

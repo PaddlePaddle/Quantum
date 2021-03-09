@@ -15,6 +15,7 @@
 """
 Benchmark
 """
+
 from matplotlib import pyplot
 from numpy import diag, max, min, load, ones
 from paddle_quantum.utils import pauli_str_to_matrix
@@ -48,8 +49,8 @@ def benchmark_QAOA(classical_graph_adjacency=None, N=None):
 
     # Plot it
     pyplot.figure(1)
-    loss_QAOA, = pyplot.plot(x1['iter'], x1['energy'], \
-                                        alpha=0.7, marker='', linestyle="--", linewidth=2, color='m')
+    loss_QAOA, = pyplot.plot(x1['iter'], x1['energy'],
+                             alpha=0.7, marker='', linestyle="--", linewidth=2, color='m')
     benchmark, = pyplot.plot(
         x1['iter'],
         H_min,
@@ -78,7 +79,6 @@ def main():
     """
     main
     """
-
     benchmark_QAOA()
 
 

@@ -34,7 +34,7 @@
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v1.2.0-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.0.0-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -70,7 +70,7 @@
 
 ### 安装 PaddlePaddle
 
-当用户安装 Paddle Quantum 时会自动下载安装这个关键依赖包。关于 PaddlePaddle 更全面的安装信息请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 1.8.5。
+当用户安装 Paddle Quantum 时会自动下载安装这个关键依赖包。关于 PaddlePaddle 更全面的安装信息请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 2.0.1+。
 
 ### 安装 Paddle Quantum 
 
@@ -95,8 +95,8 @@ pip install -e .
 VQE中调用 OpenFermion 读取分子 .xyz 文件并计算，因此需要安装 openfermion 和 openfermionpyscf。
 
 ```bash
-pip install openfermion==0.11.0
-pip install openfermionpyscf==0.4
+pip install openfermion
+pip install openfermionpyscf
 ```
 
 ### 运行

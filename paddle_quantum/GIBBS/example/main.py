@@ -17,6 +17,7 @@ main
 """
 
 import scipy
+import paddle
 from numpy import trace as np_trace
 from paddle_quantum.utils import pauli_str_to_matrix
 from paddle_quantum.GIBBS.Paddle_GIBBS import Paddle_GIBBS

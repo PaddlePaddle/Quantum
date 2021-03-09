@@ -16,13 +16,11 @@
 main
 """
 
-from paddle import fluid
-
-import os
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 
+import paddle
 from paddle_quantum.utils import pauli_str_to_matrix
 from paddle_quantum.QAOA.Paddle_QAOA import Paddle_QAOA
 from paddle_quantum.QAOA.QAOA_Prefunc import generate_graph, H_generator
@@ -76,9 +74,8 @@ def main(N=4):
     # Show the plot
     plt.show()
 
-    with fluid.dygraph.guard():
-        # Measure the output state of the QAOA circuit for 1024 shots by default
-        prob_measure = opt_cir.measure(plot=True)
+    # Measure the output state of the QAOA circuit for 1024 shots by default
+    prob_measure = opt_cir.measure(plot=True)
 
     # Find the max value in measured probability of bitstrings
     max_prob = max(prob_measure.values())

@@ -19,8 +19,8 @@ you could check the corresponding Jupyter notebook under the Tutorial folder.
 
 import numpy
 
-from paddle.complex import matmul
-from paddle import fluid
+import paddle
+from paddle import matmul
 from paddle_quantum.circuit import UAnsatz
 from paddle_quantum.utils import dagger
 from paddle_quantum.SSVQE.HGenerator import H_generator
@@ -43,18 +43,18 @@ def U_theta(theta, N):
     cir = UAnsatz(N)
 
     # Use a built-in QNN template
-    cir.universal_2_qubit_gate(theta)
+    cir.universal_2_qubit_gate(theta, [0, 1])
 
     # Return the Unitary matrix simulated by QNN
     return cir.U
 
 
-class Net(fluid.dygraph.Layer):
+class Net(paddle.nn.Layer):
     """
     Construct the model net
     """
 
-    def __init__(self, shape, param_attr=fluid.initializer.Uniform(low=0.0, high=2 * numpy.pi, seed=SEED),
+    def __init__(self, shape, param_attr=paddle.nn.initializer.Uniform(low=0.0, high=2 * numpy.pi),
                  dtype='float64'):
         super(Net, self).__init__()
 
@@ -67,7 +67,7 @@ class Net(fluid.dygraph.Layer):
         U = U_theta(self.theta, N)
 
         # Calculate loss function
-        loss_struct = matmul(matmul(dagger(U), H), U).real
+        loss_struct = paddle.real(matmul(matmul(dagger(U), H), U))
 
         # Use computational basis to calculate each expectation value, which is the same
         # as a diagonal element in U^dagger*H*U
@@ -94,36 +94,35 @@ def Paddle_SSVQE(H, N=2, THETA_SIZE=15, ITR=50, LR=0.3):
     :param LR: Learning rate
     :return: First several smallest eigenvalues of the Hamiltonian
     """
-    
-    # Initialize PaddlePaddle dynamic graph machanism
-    with fluid.dygraph.guard():
-        # We need to convert Numpy array to variable supported in PaddlePaddle
-        hamiltonian = fluid.dygraph.to_variable(H)
 
-        # Fix the dimensions of network
-        net = Net(shape=[THETA_SIZE])
-        
-        # Use Adagrad optimizer
-        opt = fluid.optimizer.AdagradOptimizer(learning_rate=LR, parameter_list=net.parameters())
+    # We need to convert Numpy array to variable supported in PaddlePaddle
+    hamiltonian = paddle.to_tensor(H)
 
-        # Optimization iterations
-        for itr in range(1, ITR + 1):
+    # Fix the dimensions of network
+    net = Net(shape=[THETA_SIZE])
 
-            # Run forward propagation to calculate loss function and obtain energy spectrum
-            loss, loss_components = net(hamiltonian, N)
+    # Use Adagrad optimizer
+    opt = paddle.optimizer.Adagrad(learning_rate=LR, parameters=net.parameters())
 
-            # In dynamic graph, run backward propogation to minimize loss function
-            loss.backward()
-            opt.minimize(loss)
-            net.clear_gradients()
-            
-            # Print results
-            if itr % 10 == 0:
-                print('iter:', itr, 'loss:', '%.4f' % loss.numpy()[0])
+    # Optimization iterations
+    for itr in range(1, ITR + 1):
+
+        # Run forward propagation to calculate loss function and obtain energy spectrum
+        loss, loss_components = net(hamiltonian, N)
+
+        # In dynamic graph, run backward propagation to minimize loss function
+        loss.backward()
+        opt.minimize(loss)
+        opt.clear_grad()
+
+        # Print results
+        if itr % 10 == 0:
+            print('iter:', itr, 'loss:', '%.4f' % loss.numpy()[0])
     return loss_components
 
 
 def main():
+    paddle.seed(SEED)
     N = 2
     H = H_generator(N)
 

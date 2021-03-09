@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v1.2.0-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.0.0-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -71,7 +71,7 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 
 ### Install PaddlePaddle
 
-This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 1.8.5.
+This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 2.0.1+.
 
 ### Install Paddle Quantum
 
@@ -96,8 +96,8 @@ pip install -e .
 Once the user confirms the above OS constraint, OpenFermion can be installed with the following command. These packages are used for quantum chemistry calculations and could be potentially used in the VQE tutorial.
 
 ```bash
-pip install openfermion==0.11.0
-pip install openfermionpyscf==0.4
+pip install openfermion
+pip install openfermionpyscf
 ```
 
 ### Run example

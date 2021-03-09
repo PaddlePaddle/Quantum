@@ -30,6 +30,6 @@ def H_generator(N):
     hamiltonian = random_pauli_str_generator(N, terms=10)
     print("Random Hamiltonian in Pauli string format = \n", hamiltonian)
 
-    # Generate the marix form of the Hamiltonian
+    # Generate the matrix form of the Hamiltonian
     H = pauli_str_to_matrix(hamiltonian, N)
     return H

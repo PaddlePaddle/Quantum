@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+﻿# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 from functools import reduce
 
-import numpy 
+import numpy as np
 from numpy import absolute, log
 from numpy import diag, dot, identity
 from numpy import kron as np_kron
@@ -26,17 +26,17 @@ from numpy import sum as np_sum
 from numpy import transpose as np_transpose
 from numpy import zeros as np_zeros
 
-from paddle.complex import elementwise_add
-from paddle.complex import kron as pp_kron
-from paddle.complex import matmul
-from paddle.complex import transpose as pp_transpose
+from paddle import add, to_tensor
+from paddle import kron as pp_kron
+from paddle import matmul
+from paddle import transpose as pp_transpose
 
-from paddle.fluid.dygraph import to_variable
-from paddle.fluid.framework import ComplexVariable
-from paddle.fluid.layers import concat, cos, ones, reshape, sin
-from paddle.fluid.layers import zeros as pp_zeros
+from paddle import concat, cos, ones, reshape, sin
+from paddle import zeros as pp_zeros
 
 from scipy.linalg import logm, sqrtm
+
+import paddle
 
 __all__ = [
     "partial_trace",
@@ -61,43 +61,40 @@ def partial_trace(rho_AB, dim1, dim2, A_or_B):
     r"""计算量子态的偏迹。
 
     Args:
-        rho_AB (ComplexVariable): 输入的量子态
+        rho_AB (Tensor): 输入的量子态
         dim1 (int): 系统A的维数
         dim2 (int): 系统B的维数
         A_or_B (int): 1或者2，1表示计算系统A上的偏迹，2表示计算系统B上的偏迹
 
     Returns:
-        ComplexVariable: 输入的量子态的偏迹
+        Tensor: 输入的量子态的偏迹
 
     """
     if A_or_B == 2:
         dim1, dim2 = dim2, dim1
 
     idty_np = identity(dim2).astype("complex128")
-    idty_B = to_variable(idty_np)
+    idty_B = to_tensor(idty_np)
 
     zero_np = np_zeros([dim2, dim2], "complex128")
-    res = to_variable(zero_np)
+    res = to_tensor(zero_np)
 
     for dim_j in range(dim1):
         row_top = pp_zeros([1, dim_j], dtype="float64")
         row_mid = ones([1, 1], dtype="float64")
         row_bot = pp_zeros([1, dim1 - dim_j - 1], dtype="float64")
-        bra_j_re = concat([row_top, row_mid, row_bot], axis=1)
-        bra_j_im = pp_zeros([1, dim1], dtype="float64")
-        bra_j = ComplexVariable(bra_j_re, bra_j_im)
+        bra_j = concat([row_top, row_mid, row_bot], axis=1)
+        bra_j = paddle.cast(bra_j, 'complex128')
 
         if A_or_B == 1:
             row_tmp = pp_kron(bra_j, idty_B)
-            res = elementwise_add(res, matmul(matmul(row_tmp, rho_AB),
-                                              pp_transpose(ComplexVariable(row_tmp.real, -row_tmp.imag),
-                                                           perm=[1, 0]), ), )
+            row_tmp_conj = paddle.conj(row_tmp)
+            res = add(res, matmul(matmul(row_tmp, rho_AB), pp_transpose(row_tmp_conj, perm=[1, 0]), ), )
 
         if A_or_B == 2:
             row_tmp = pp_kron(idty_B, bra_j)
-            res = elementwise_add(res, matmul(matmul(row_tmp, rho_AB),
-                                              pp_transpose(ComplexVariable(row_tmp.real, -row_tmp.imag),
-                                                           perm=[1, 0]), ), )
+            row_tmp_conj = paddle.conj(row_tmp)
+            res = add(res, matmul(matmul(row_tmp, rho_AB), pp_transpose(row_tmp_conj, perm=[1, 0]), ), )
 
     return res
 
@@ -116,7 +113,7 @@ def state_fidelity(rho, sigma):
         float: 输入的量子态之间的保真度
     """
     assert rho.shape == sigma.shape, 'The shape of two quantum states are different'
-    fidelity = numpy.trace(sqrtm(sqrtm(rho) @ sigma @ sqrtm(rho))).real
+    fidelity = np.trace(sqrtm(sqrtm(rho) @ sigma @ sqrtm(rho))).real
 
     return fidelity
 
@@ -196,7 +193,7 @@ def relative_entropy(rho, sig):
         float: 输入的量子态之间的相对熵
     """
     assert rho.shape == sig.shape, 'The shape of two quantum states are different'
-    res = numpy.trace(rho @ logm(rho) - rho @ logm(sig))
+    res = np.trace(rho @ logm(rho) - rho @ logm(sig))
     return res.real
 
 
@@ -209,7 +206,7 @@ def NKron(matrix_A, matrix_B, *args):
         *args (numpy.ndarray): 其余矩阵
 
     Returns:
-        ComplexVariable: 输入矩阵的Kronecker积
+        Tensor: 输入矩阵的Kronecker积
 
     .. code-block:: python
     
@@ -229,28 +226,27 @@ def dagger(matrix):
     r"""计算矩阵的埃尔米特转置，即Hermitian transpose。
 
     Args:
-        matrix (ComplexVariable): 需要埃尔米特转置的矩阵
+        matrix (Tensor): 需要埃尔米特转置的矩阵
 
     Returns:
-        ComplexVariable: 输入矩阵的埃尔米特转置
+        Tensor: 输入矩阵的埃尔米特转置
 
     代码示例:
 
     .. code-block:: python
     
         from paddle_quantum.utils import dagger
-        from paddle import fluid
         import numpy as np
-        with fluid.dygraph.guard():
-            rho = fluid.dygraph.to_variable(np.array([[1+1j, 2+2j], [3+3j, 4+4j]]))
-            print(dagger(rho).numpy())
+        rho = paddle.to_tensor(np.array([[1+1j, 2+2j], [3+3j, 4+4j]]))
+        print(dagger(rho).numpy())
 
     ::
 
         [[1.-1.j 3.-3.j]
         [2.-2.j 4.-4.j]]
     """
-    matrix_dagger = pp_transpose(ComplexVariable(matrix.real, -matrix.imag), perm=[1, 0])
+    matrix_conj = paddle.conj(matrix)
+    matrix_dagger = pp_transpose(matrix_conj, perm=[1, 0])
 
     return matrix_dagger
 
@@ -294,8 +290,8 @@ def pauli_str_to_matrix(pauli_str, n):
     Returns:
         numpy.ndarray: 输入列表对应的可观测量的矩阵形式
     """
-    pauli_dict = {'i': numpy.eye(2) + 0j, 'x': numpy.array([[0, 1], [1, 0]]) + 0j,
-                  'y': numpy.array([[0, -1j], [1j, 0]]), 'z': numpy.array([[1, 0], [0, -1]]) + 0j}
+    pauli_dict = {'i': np.eye(2) + 0j, 'x': np.array([[0, 1], [1, 0]]) + 0j,
+                  'y': np.array([[0, -1j], [1j, 0]]), 'z': np.array([[1, 0], [0, -1]]) + 0j}
 
     # Parse pauli_str; 'x0,z1,y4' to 'xziiy'
     new_pauli_str = []
@@ -320,6 +316,7 @@ def pauli_str_to_matrix(pauli_str, n):
             matrices.append(coeff * NKron(sub_matrices[0], sub_matrices[1], *sub_matrices[2:]))
 
     return sum(matrices)
+
 
 def partial_transpose_2(density_op, sub_system=None):
     r"""计算输入量子态的 partial transpose :math:`\rho^{T_A}`
@@ -349,7 +346,7 @@ def partial_transpose_2(density_op, sub_system=None):
     sys_idx = 2 if sub_system is None else 1
 
     # Copy the density matrix and not corrupt the original one
-    transposed_density_op = numpy.copy(density_op)
+    transposed_density_op = np.copy(density_op)
     if sys_idx == 2:
         for j in [0, 2]:
             for i in [0, 2]:
@@ -372,12 +369,13 @@ def partial_transpose(density_op, n):
     """
 
     # Copy the density matrix and not corrupt the original one
-    transposed_density_op = numpy.copy(density_op)
+    transposed_density_op = np.copy(density_op)
     for j in range(0, 2**n, 2):
         for i in range(0, 2**n, 2):
             transposed_density_op[i:i+2, j:j+2] = density_op[i:i+2, j:j+2].transpose()
 
     return transposed_density_op
+
 
 def negativity(density_op):
     r"""计算输入量子态的 Negativity :math:`N = ||\frac{\rho^{T_A}-1}{2}||`。
@@ -406,11 +404,12 @@ def negativity(density_op):
 
     # Calculate through the equivalent expression N = sum(abs(\lambda_i)) when \lambda_i<0
     n = 0
-    eigen_val, _ = numpy.linalg.eig(density_op_T)
+    eigen_val, _ = np.linalg.eig(density_op_T)
     for val in eigen_val:
         if val < 0:
-            n = n + numpy.abs(val)
+            n = n + np.abs(val)
     return n
+
 
 def logarithmic_negativity(density_op):
     r"""计算输入量子态的 Logarithmic Negativity :math:`E_N = ||\rho^{T_A}||`。
@@ -438,7 +437,7 @@ def logarithmic_negativity(density_op):
     n = negativity(density_op)
 
     # Calculate through the equivalent expression
-    log2_n = numpy.log2(2*n + 1)
+    log2_n = np.log2(2*n + 1)
     return log2_n
 
 

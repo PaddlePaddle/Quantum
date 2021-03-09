@@ -20,9 +20,9 @@ you could check the corresponding Jupyter notebook under the Tutorial folder.
 import os
 import platform
 
+import paddle
 from numpy import pi as PI
 from numpy import savez
-from paddle import fluid
 from paddle_quantum.circuit import UAnsatz
 from paddle_quantum.VQE.benchmark import benchmark_result
 from paddle_quantum.VQE.chemistrysub import H2_generator
@@ -58,12 +58,12 @@ def U_theta(theta, Hamiltonian, N, D):
     return expectation_val
 
 
-class StateNet(fluid.dygraph.Layer):
+class StateNet(paddle.nn.Layer):
     """
     Construct the model net
     """
 
-    def __init__(self, shape, param_attr=fluid.initializer.Uniform(low=0.0, high=2 * PI), dtype="float64"):
+    def __init__(self, shape, param_attr=paddle.nn.initializer.Uniform(low=0.0, high=2 * PI), dtype="float64"):
         super(StateNet, self).__init__()
 
         # Initialize theta by sampling from a uniform distribution [0, 2*pi]
@@ -88,41 +88,38 @@ def Paddle_VQE(Hamiltonian, N, D=2, ITR=80, LR=0.2):
     :return: No return
     """
 
-    # Initialize PaddlePaddle dynamic graph machanism
-    with fluid.dygraph.guard():
-        # Determine the dimensions of network
-        # 确定网络的参数维度
-        net = StateNet(shape=[D + 1, N, 1])
+    # Determine the dimensions of network
+    net = StateNet(shape=[D + 1, N, 1])
 
-        # Usually, we recommend Adam optimizer for better result. If you wish, you could use SGD or RMS prop.
-        opt = fluid.optimizer.AdamOptimizer(learning_rate=LR, parameter_list=net.parameters())
+    # Usually, we recommend Adam optimizer for better result. If you wish, you could use SGD or RMS prop.
+    opt = paddle.optimizer.Adam(learning_rate=LR, parameters=net.parameters())
 
-        # Record optimization results
-        summary_iter, summary_loss = [], []
-        
-        # Optimization iterations
-        for itr in range(1, ITR + 1):
+    # Record optimization results
+    summary_iter, summary_loss = [], []
 
-            # Run forward propagation to calculate loss function
-            loss = net(Hamiltonian, N, D)
+    # Optimization iterations
+    for itr in range(1, ITR + 1):
 
-            # In dynamic graph, run backward propogation to minimize loss function
-            loss.backward()
-            opt.minimize(loss)
-            net.clear_gradients()
+        # Run forward propagation to calculate loss function
+        loss = net(Hamiltonian, N, D)
 
-            # Update optimized results
-            summary_loss.append(loss.numpy())
-            summary_iter.append(itr)
+        # In dynamic graph, run backward propagation to minimize loss function
+        loss.backward()
+        opt.minimize(loss)
+        opt.clear_grad()
 
-            # Print results
-            if itr % 20 == 0:
-                print("iter:", itr, "loss:", "%.4f" % loss.numpy())
-                print("iter:", itr, "Ground state energy:", "%.4f Ha" % loss.numpy())
+        # Update optimized results
+        summary_loss.append(loss.numpy())
+        summary_iter.append(itr)
 
-        # Save results in the 'output' directory
-        os.makedirs("output", exist_ok=True)
-        savez("./output/summary_data", iter=summary_iter, energy=summary_loss)
+        # Print results
+        if itr % 20 == 0:
+            print("iter:", itr, "loss:", "%.4f" % loss.numpy())
+            print("iter:", itr, "Ground state energy:", "%.4f Ha" % loss.numpy())
+
+    # Save results in the 'output' directory
+    os.makedirs("output", exist_ok=True)
+    savez("./output/summary_data", iter=summary_iter, energy=summary_loss)
 
 
 def main():

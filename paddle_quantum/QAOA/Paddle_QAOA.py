@@ -17,13 +17,12 @@ Paddle_QAOA: To learn more about the functions and properties of this applicatio
 you could check the corresponding Jupyter notebook under the Tutorial folder.
 """
 
-from paddle import fluid
-
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 
+import paddle
 from paddle_quantum.circuit import UAnsatz
 from paddle_quantum.utils import pauli_str_to_matrix
 from paddle_quantum.QAOA.QAOA_Prefunc import generate_graph, H_generator
@@ -114,7 +113,7 @@ def circuit_extend_QAOA(theta, adjacency_matrix, N, P):
     return cir
 
 
-class Net(fluid.dygraph.Layer):
+class Net(paddle.nn.Layer):
     """
     It constructs the net for QAOA which combines the  QAOA circuit with the classical optimizer which sets rules
     to update parameters described by theta introduced in the QAOA circuit.
@@ -124,7 +123,7 @@ class Net(fluid.dygraph.Layer):
     def __init__(
             self,
             shape,
-            param_attr=fluid.initializer.Uniform(low=0.0, high=np.pi, seed=SEED),
+            param_attr=paddle.nn.initializer.Uniform(low=0.0, high=np.pi),
             dtype="float64",
     ):
         super(Net, self).__init__()
@@ -179,36 +178,35 @@ def Paddle_QAOA(classical_graph_adjacency, N, P, METHOD, ITR, LR):
      Returns:
          the optimized QAOA circuit
     """
-    with fluid.dygraph.guard():
-        # Construct the net or QAOA circuits based on the standard modules
-        if METHOD == 1:
-            net = Net(shape=[P, 2])
-        # Construct the net or QAOA circuits based on the extended modules
-        elif METHOD == 2:
-            net = Net(shape=[P, 4])
-        else:
-            raise ValueError("Wrong method called!")
+    # Construct the net or QAOA circuits based on the standard modules
+    if METHOD == 1:
+        net = Net(shape=[P, 2])
+    # Construct the net or QAOA circuits based on the extended modules
+    elif METHOD == 2:
+        net = Net(shape=[P, 4])
+    else:
+        raise ValueError("Wrong method called!")
 
-        # Classical optimizer
-        opt = fluid.optimizer.AdamOptimizer(learning_rate=LR, parameter_list=net.parameters())
+    # Classical optimizer
+    opt = paddle.optimizer.Adam(learning_rate=LR, parameters=net.parameters())
 
-        # Gradient descent loop
-        summary_iter, summary_loss = [], []
-        for itr in range(1, ITR + 1):
-            loss, cir = net(
-                classical_graph_adjacency, N, P, METHOD
-            )
-            loss.backward()
-            opt.minimize(loss)
-            net.clear_gradients()
+    # Gradient descent loop
+    summary_iter, summary_loss = [], []
+    for itr in range(1, ITR + 1):
+        loss, cir = net(
+            classical_graph_adjacency, N, P, METHOD
+        )
+        loss.backward()
+        opt.minimize(loss)
+        opt.clear_grad()
 
-            if itr % 10 == 0:
-                print("iter:", itr, "  loss:", "%.4f" % loss.numpy())
-            summary_loss.append(loss[0][0].numpy())
-            summary_iter.append(itr)
+        if itr % 10 == 0:
+            print("iter:", itr, "  loss:", "%.4f" % loss.numpy())
+        summary_loss.append(loss[0][0].numpy())
+        summary_iter.append(itr)
 
         theta_opt = net.parameters()[0].numpy()
-        print("Optmized parameters theta:\n", theta_opt)
+        # print("Optimized parameters theta:\n", theta_opt)
 
         os.makedirs("output", exist_ok=True)
         np.savez("./output/summary_data", iter=summary_iter, energy=summary_loss)
@@ -217,6 +215,7 @@ def Paddle_QAOA(classical_graph_adjacency, N, P, METHOD, ITR, LR):
 
 
 def main(N=4):
+    paddle.seed(SEED)
     # number of qubits or number of nodes in the graph
     N = 4
     classical_graph, classical_graph_adjacency = generate_graph(N, GRAPHMETHOD=1)
@@ -264,9 +263,8 @@ def main(N=4):
     # Show the plot
     plt.show()
 
-    with fluid.dygraph.guard():
-        # Measure the output state of the QAOA circuit for 1024 shots by default
-        prob_measure = opt_cir.measure(plot=True)
+    # Measure the output state of the QAOA circuit for 1024 shots by default
+    prob_measure = opt_cir.measure(plot=True)
 
     # Find the max value in measured probability of bitstrings
     max_prob = max(prob_measure.values())

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+﻿# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,7 @@ import numpy as np
 from numpy import binary_repr
 
 import paddle
-import paddle.fluid as fluid
-from paddle.fluid.framework import ComplexVariable
-from paddle.complex.tensor.math import elementwise_mul, elementwise_add
+from paddle import multiply, add, to_tensor
 
 
 def dic_between2and10(n):
@@ -87,7 +85,7 @@ def single_H_vec(H, vec):
             coef, target_update = single_H_vec_i(H, dic10to2[i])
             index_update = dic2to10[target_update]
             new_vec[index_update] = coef * old_vec[i]
-    return fluid.dygraph.to_variable(new_vec)
+    return to_tensor(new_vec)
 
 
 def H_vec(H, vec):
@@ -97,13 +95,13 @@ def H_vec(H, vec):
     Note:
         这是内部函数，你并不需要直接调用到该函数。
     """
-    coefs = fluid.dygraph.to_variable(np.array([coef for coef, Hi in H], dtype=np.float64))
+    coefs = to_tensor(np.array([coef for coef, Hi in H], dtype=np.float64))
     # Convert all strings to lowercase
     H_list = [Hi.lower() for coef, Hi in H]
-    result = fluid.layers.zeros(shape=vec.shape, dtype='float64')
+    result = paddle.zeros(shape=vec.shape, dtype='float64')
     for i in range(len(coefs)):
-        xi = elementwise_mul(coefs[i], single_H_vec(H_list[i], vec))
-        result = elementwise_add(result, xi)
+        xi = multiply(coefs[i], single_H_vec(H_list[i], vec))
+        result = add(result, xi)
     return result
 
 
@@ -114,6 +112,6 @@ def vec_expecval(H, vec):
     Note:
         这是内部函数，你并不需要直接调用到该函数。
     """
-    vec_conj = ComplexVariable(vec.real, -vec.imag)
-    result = paddle.complex.sum(elementwise_mul(vec_conj, H_vec(H, vec)))
+    vec_conj = paddle.conj(vec)
+    result = paddle.sum(multiply(vec_conj, H_vec(H, vec)))
     return result

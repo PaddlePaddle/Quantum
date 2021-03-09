@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+﻿# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -296,8 +296,8 @@ def bell_diagonal_state(p1, p2, p3, p4):
         [0.  +0.j 0.  +0.j 0.25+0.j 0.  +0.j]
         [0.  +0.j 0.  +0.j 0.  +0.j 0.25+0.j]]
     """
-    # p4 = 1 - p1 - p2 - p3
-    # assert 0 <= p1 <= 1 and 0 <= p2 <= 1 and 0 <= p3 <= 1 and 0 <= p4 <= 1, "Probability must be in [0, 1]"
+    assert 0 <= p1 <= 1 and 0 <= p2 <= 1 and 0 <= p3 <= 1 and 0 <= p4 <= 1, "Each probability must be in [0, 1]"
+    assert abs(p1 + p2 + p3 + p4 - 1) < 1e-6, "The sum of probabilities should be 1"
 
     coeff = np.sqrt(0.5)
     phi_p_vec = np.array([[coeff, 0, 0, coeff]])

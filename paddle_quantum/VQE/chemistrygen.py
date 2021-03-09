@@ -113,20 +113,12 @@ def read_calc_H(geo_fn, multiplicity=1, charge=0):
             geo.append([species, (float(x), float(y), float(z))])
 
     # meanfield data
-    mol = openfermion.hamiltonians.MolecularData(geo, 'sto-3g', multiplicity,
-                                                 charge)
-    openfermionpyscf.run_pyscf(mol)
-
-    terms_molecular_hamiltonian = mol.get_molecular_hamiltonian(
-    )
-    fermionic_hamiltonian = openfermion.transforms.get_fermion_operator(
-        terms_molecular_hamiltonian)
-    qubit_op = openfermion.transforms.jordan_wigner(
-        fermionic_hamiltonian)
+    molecular_hamiltonian = openfermionpyscf.generate_molecular_hamiltonian(geo, 'sto-3g', multiplicity, charge)
+    qubit_op = openfermion.transforms.jordan_wigner(molecular_hamiltonian)
 
     # calc H
     Hamiltonian = Hamiltonian_str_convert(qubit_op)
-    return Hamiltonian, mol.n_qubits
+    return Hamiltonian, molecular_hamiltonian.n_qubits
 
 
 def main():

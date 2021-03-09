@@ -1,5 +1,6 @@
-paddlepaddle==1.8.5
-networkx>=2.4
-matplotlib>=3.3.0
-interval>=1.0.0
-progressbar>=2.5
+paddlepaddle>=2.0.1
+scipy
+networkx
+matplotlib
+interval
+tqdm
