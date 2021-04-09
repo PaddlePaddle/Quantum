@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.0.0-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.0.1-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -55,12 +55,13 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 ## Features
 
 - Easy-to-use
-  - Many online learning resources (16+ tutorials)
+  - Many online learning resources (17+ tutorials)
   - High efficiency in building QNN with various QNN templates
   - Automatic differentiation
 - Versatile
   - Multiple optimization tools and GPU mode
   - Simulation with 25+ qubits
+  - Flexible noise models
 - Featured Toolkits
   - Toolboxes for Chemistry & Optimization
   - LOCCNet for distributed quantum information processing
@@ -143,8 +144,9 @@ We provide tutorials covering combinatorial optimization, quantum chemistry, qua
 14. [Entanglement Distillation -- Protocol design with LOCCNet](./tutorial/LOCC)
 15. [Quantum Teleportation](./tutorial/LOCC)
 16. [Quantum State Discrimination](./tutorial/LOCC)
+17. [Noise Model and Quantum Channel](./tutorial/Noise)
 
-With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can start with this [tutorial on LOCCNet](./tutorial/LOCC/LOCCNET_Tutorial_EN.ipynb). In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](./introduction/PaddleQuantum_GPU_EN.ipynb).
+With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can start with this [tutorial on LOCCNet](./tutorial/LOCC/LOCCNET_Tutorial_EN.ipynb). In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](./introduction/PaddleQuantum_GPU_EN.ipynb). Moreover, Paddle Quantum could design robust quantum algorithms under noise. For more information, please see [Noise tutorial](./tutorial/Noise/Noise_EN.ipynb).
 
 ### API documentation
 
@@ -176,6 +178,8 @@ So far, we have done several projects with the help of Paddle Quantum as a power
 [4] Chen, R., Song, Z., Zhao, X. & Wang, X. Variational Quantum Algorithms for Trace Distance and Fidelity Estimation. arXiv:2012.05768 (2020). [[pdf]](https://arxiv.org/pdf/2012.05768.pdf)
 
 [5] Wang, K., Song, Z., Zhao, X., Wang Z. & Wang, X. Detecting and quantifying entanglement on near-term quantum devices. arXiv:2012.14311 (2020). [[pdf]](https://arxiv.org/pdf/2012.14311.pdf)
+
+[6] Zhao, X., Zhao, B., Wang, Z., Song, Z., & Wang, X. LOCCNet: a machine learning framework for distributed quantum information processing. arXiv:2101.12190 (2021). [[pdf]](https://arxiv.org/pdf/2101.12190.pdf)
 
 ## Frequently Asked Questions
 

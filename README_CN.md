@@ -34,7 +34,7 @@
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.0.0-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.0.1-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -55,12 +55,13 @@
 ## 特色
 
 - 轻松上手
-   - 丰富的在线学习资源（16+ 教程案例）
+   - 丰富的在线学习资源（17+ 教程案例）
    - 通过模板高效搭建量子神经网络
    - 自动微分框架
 - 功能丰富
    - 提供多种优化工具和 GPU 模式
    - 高性能模拟器支持25+量子比特的模拟运算
+   - 支持多种噪声模型的模拟
 - 特色工具集
    - 提供组合优化和量子化学等前沿领域的计算工具箱
    - 分布式量子信息处理模组 LOCCNet
@@ -148,8 +149,9 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
 - [纠缠蒸馏 -- LOCCNet 设计协议](./tutorial/LOCC)
 - [量子隐态传输](./tutorial/LOCC)
 - [量子态分辨](./tutorial/LOCC)
+- [噪声模型与量子信道](./tutorial/Noise)
 
-随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见[教程](./tutorial/LOCC/LOCCNET_Tutorial_CN.ipynb)。此外，Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。
+随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见[教程](./tutorial/LOCC/LOCCNET_Tutorial_CN.ipynb)。Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。此外，量桨可以基于噪声模块进行含噪算法的开发以及研究，详情请见[噪声模块教程](./tutorial/Noise/Noise_CN.ipynb)。
 
 ### API 文档
 
@@ -179,7 +181,7 @@ Paddle Quantum 使用 setuptools 的 develop 模式进行安装，相关代码�
 
 [5] Wang, K., et al. Detecting and quantifying entanglement on near-term quantum devices. arXiv:2012.14311 (2020). [[pdf]](https://arxiv.org/pdf/2012.14311.pdf)
 
-
+[6] Zhao, X., Zhao, B., Wang, Z., Song, Z., & Wang, X. LOCCNet: a machine learning framework for distributed quantum information processing. arXiv:2101.12190 (2021). [[pdf]](https://arxiv.org/pdf/2101.12190.pdf)
 
 ## FAQ
 

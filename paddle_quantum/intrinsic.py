@@ -13,11 +13,13 @@
 # limitations under the License.
 
 import math
+from functools import wraps
 import numpy as np
 from numpy import binary_repr
 
 import paddle
 from paddle import multiply, add, to_tensor
+from paddle_quantum.simulator import StateTransfer
 
 
 def dic_between2and10(n):
@@ -115,3 +117,38 @@ def vec_expecval(H, vec):
     vec_conj = paddle.conj(vec)
     result = paddle.sum(multiply(vec_conj, H_vec(H, vec)))
     return result
+
+
+def transfer_by_history(state, history):
+    r"""
+    It transforms the input state according to the history give.
+
+    Note:
+        这是内部函数，你并不需要直接调用到该函数。
+    """
+    for history_ele in history:
+        if history_ele[0] != 'channel':
+            state = StateTransfer(state, history_ele[0], history_ele[1], params=history_ele[2])
+
+    return state
+
+
+def apply_channel(func):
+    r"""
+    Decorator for channels.
+
+    Note:
+        这是内部函数，你并不需要直接调用到该函数。
+    """
+    @wraps(func)
+    def inner(self, *args):
+        """
+        args should include channel parameters and which_qubit
+        """
+        which_qubit = args[-1]
+        assert 0 <= which_qubit < self.n, "the qubit's index should >= 0 and < n(the number of qubit)"
+        self._UAnsatz__has_channel = True
+        ops = func(self, *args)
+        self._UAnsatz__history.append(['channel', ops, [which_qubit]])
+
+    return inner

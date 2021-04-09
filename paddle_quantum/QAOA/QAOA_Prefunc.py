@@ -15,134 +15,173 @@
 """
 Aid func
 """
-from matplotlib import pyplot
+import matplotlib.pyplot as plt
 import numpy as np
-from numpy import abs, array, binary_repr, diag, kron, max, ones, real, where, zeros
-import networkx
+import networkx as nx
+from paddle_quantum.utils import pauli_str_to_matrix
 
 
-def plot_graph(measure_prob_distribution, graph, N):
+def Draw_original_graph(G):
     """
-    This function plots the graph encoding the combinatorial problem such as Max-Cut and the final graph encoding the
-    approximate solution obtained from QAOA
+    This is to draw the original graph
+     Args:
+        G: the constructed graph
+     Returns:
+        Null
+    """
+    pos = nx.circular_layout(G)
+    options = {
+        "with_labels": True,
+        "font_size": 20,
+        "font_weight": "bold",
+        "font_color": "white",
+        "node_size": 2000,
+        "width": 2
+    }
+    nx.draw_networkx(G, pos, **options)
+    ax = plt.gca()
+    ax.margins(0.20)
+    plt.axis("off")
+    plt.show()
+    
+    return
+
+
+def Draw_cut_graph(V, E, G, cut_bitstring):
+    """
+    This is to draw the graph after cutting
     Args:
-        measure_prob_distribution: the measurement probability distribution which is sampled from the output state
-                                   of optimized QAOA circuit.
-        graph: graph encoding the topology of the classical combinatorial problem, such as Max-Cut problem
-        N: number of qubits, or number of nodes in the graph
-    Return:
-        three graphs: the first displays the graph topology of the classical problem;
-                      the second is the bar graph for the measurement distribution for each bitstring in the output state
-                      the third plots the graph corresponding to the bitstring with maximal measurement probability
+       V: vertices in the graph
+       E: edges in the graph
+       cut_bitstring: bit string indicate whether vertices belongs to the first group or the second group
+    Returns:
+       Null
     """
-
-    # Find the position of max value in the measure_prob_distribution
-    max_prob_pos_list = where(
-        measure_prob_distribution == max(measure_prob_distribution))
-    # Store the max value from ndarray to list
-    max_prob_list = max_prob_pos_list[0].tolist()
-    # Store it in the  binary format
-    solution_list = [binary_repr(index, width=N) for index in max_prob_list]
-    print("The output bitstring:", solution_list)
-
-    # Draw the graph representing the first bitstring in the solution_list to the MaxCut-like problem
-    head_bitstring = solution_list[0]
-
-    node_cut = [
-        "blue" if head_bitstring[node] == "1" else "red" for node in graph
-    ]
+    node_cut = ["blue" if cut_bitstring[v] == "1" else "red" for v in V]
 
     edge_cut = [
-        "solid"
-        if head_bitstring[node_row] == head_bitstring[node_col] else "dashed"
-        for node_row, node_col in graph.edges()
-    ]
+        "solid" if cut_bitstring[u] == cut_bitstring[v] else "dashed"
+        for (u, v) in G.edges()
+        ]
+    
+    pos = nx.circular_layout(G)
+    
+    options = {
+        "with_labels": True,
+        "font_size": 20,
+        "font_weight": "bold",
+        "font_color": "white",
+        "node_size": 2000,
+        "width": 2
+    }
 
-    pos = networkx.circular_layout(graph)
-
-    pyplot.figure(0)
-    networkx.draw(graph, pos, width=4, with_labels=True, font_weight="bold")
-
-    # when N is large, it is not suggested to plot this figure
-    pyplot.figure(1)
-    name_list = [binary_repr(index, width=N) for index in range(0, 2**N)]
-    pyplot.bar(
-        range(len(real(measure_prob_distribution))),
-        real(measure_prob_distribution),
-        width=0.7,
-        tick_label=name_list, )
-    pyplot.xticks(rotation=90)
-
-    pyplot.figure(2)
-    networkx.draw(
-        graph,
-        pos,
-        node_color=node_cut,
-        style=edge_cut,
-        width=4,
-        with_labels=True,
-        font_weight="bold", )
-    pyplot.show()
+    nx.draw(
+            G,
+            pos,
+            node_color = node_cut,
+            style = edge_cut,
+            **options
+    )
+    ax = plt.gca()
+    ax.margins(0.20)
+    plt.axis("off")
+    plt.show()
+    
+    return
 
 
-def generate_graph(N, GRAPHMETHOD):
+def Generate_default_graph(n):
     """
-    It plots an N-node graph which is specified by Method 1 or 2.
+    This is to generate a default graph if no input
+     Args:
+        n: number of vertices
+     Returns:
+        G: the graph
+        E: edges list
+        V: vertices list
+    """
+    G = nx.Graph()
+    V = range(n)
+    G.add_nodes_from(V)
+    E = []
+    for i in range(n - 1):
+        E.append((i, i + 1))
+    E.append((0, n - 1))
+        
+    G.add_edges_from(E)
+    
+    return G, V, E
 
+
+def Generate_H_D(E, n):
+    """
+    This is to construct Hamiltonia H_D
+     Args:
+        E: edges of the graph
+     Returns:
+        Hamiltonia list
+        Hamiltonia H_D
+    """
+    H_D_list = []
+    for (u, v) in E:
+        H_D_list.append([-1.0, 'z' + str(u) + ',z' + str(v)])
+    print(H_D_list)
+    H_D_matrix = pauli_str_to_matrix(H_D_list, n)
+
+    return H_D_list, H_D_matrix
+
+
+def Draw_benchmark(summary_iter, summary_loss, H_min):
+    """
+    This is draw the learning tendency, and difference bwtween it and the benchmark
     Args:
-        N: number of nodes (vertices) in the graph
-        METHOD: choose which method to generate a graph
+        summary_iter: indicate which iteration
+        summary_loss: indicate the energy of that iteration
+        H_min: benchmark value H_min
     Returns:
-        the specific graph and its adjacency matrix
+        NULL
     """
-    # Method 1 generates a graph by self-definition
-    if GRAPHMETHOD == 1:
-        print("Method 1 generates the graph from self-definition using EDGE description")
-        graph = networkx.Graph()
-        graph_nodelist = range(N)
-        graph.add_edges_from([(0, 1), (1, 2), (2, 3), (3, 0)])
-        graph_adjacency = networkx.to_numpy_matrix(graph, nodelist=graph_nodelist)
-    # Method 2 generates a graph by using its adjacency matrix directly
-    elif GRAPHMETHOD == 2:
-        print("Method 2 generates the graph from networks using adjacency matrix")
-        graph_adjacency = np.array([[0, 1, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0]])
-        graph = networkx.Graph(graph_adjacency)
-    else:
-        print("Method doesn't exist ")
+    plt.figure(1)
+    loss_QAOA, = plt.plot(
+        summary_iter, 
+        summary_loss,
+        alpha=0.7, 
+        marker='', 
+        linestyle="--", 
+        linewidth=2, 
+        color='m')
+    benchmark, = plt.plot(
+        summary_iter,
+        H_min,
+        alpha=0.7,
+        marker='',
+        linestyle=":",
+        linewidth=2,
+        color='b')
+        
+    plt.xlabel('Number of iteration')
+    plt.ylabel('Performance of the loss function for QAOA')
 
-    return graph, graph_adjacency
+    plt.legend(
+        handles=[loss_QAOA, benchmark],
+        labels=[
+            r'Loss function $\left\langle {\psi \left( {\bf{\theta }} \right)} '
+            r'\right|H\left| {\psi \left( {\bf{\theta }} \right)} \right\rangle $',
+            'The benchmark result',
+        ],
+        loc='best')
 
-
-def H_generator(N, adjacency_matrix):
-    """
-    This function maps the given graph via its adjacency matrix to the corresponding Hamiltiona H_c.
-
-    Args:
-        N: number of qubits, or number of nodes in the graph, or number of parameters in the classical problem
-        adjacency_matrix:  the adjacency matrix generated from the graph encoding the classical problem
-    Returns:
-        the problem-based Hmiltonian H's list form generated from the graph_adjacency matrix for the given graph
-    """
-    H_list = []
-    # Generate the Hamiltonian H_c from the graph via its adjacency matrix
-    for row in range(N):
-        for col in range(N):
-            if adjacency_matrix[row, col] and row < col:
-                # Construct the Hamiltonian in the list form for the calculation of expectation value
-                H_list.append([1.0, 'z' + str(row) + ',z' + str(col)])
-
-    return H_list
+    # Show the picture
+    plt.show()
+    
+    return 
 
 
 def main():
     # number of qubits or number of nodes in the graph
-    N = 4
-    classical_graph, classical_graph_adjacency = generate_graph(N, GRAPHMETHOD=1)
-    print(classical_graph_adjacency)
-
-    pos = networkx.circular_layout(classical_graph)
-    networkx.draw(classical_graph, pos, width=4, with_labels=True, font_weight='bold')
-    pyplot.show()
+    n = 4
+    G, V, E = Generate_default_graph(n)
+    Draw_original_graph(G)
 
 
 if __name__ == "__main__":

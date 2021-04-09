@@ -24,6 +24,7 @@ __all__ = [
     "vec",
     "vec_random",
     "w_state",
+    "GHZ_state",
     "density_op",
     "density_op_random",
     "completely_mixed_computational",
@@ -57,7 +58,7 @@ def vec(n):
         [[1.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j]]
     """
     assert n > 0, 'qubit number must be larger than 1'
-    state = concatenate(([[1.0]], np_zeros([1, 2**n - 1])), axis=1)
+    state = concatenate(([[1.0]], np_zeros([1, (2 ** n) - 1])), axis=1)
     return state.astype("complex128")
 
 
@@ -75,11 +76,11 @@ def vec_random(n, real_or_complex=2):
     assert real_or_complex == 1 or real_or_complex == 2, 'real_or_complex must be 1 or 2'
     # real
     if real_or_complex == 1:
-        psi = np_random.randn(1, 2**n)
+        psi = np_random.randn(1, 2 ** n)
     # complex
     else:
-        psi = np_random.randn(1, 2**n) + 1j * np_random.randn(1, 2**n)
-    psi = psi/np.linalg.norm(psi)
+        psi = np_random.randn(1, 2 ** n) + 1j * np_random.randn(1, 2 ** n)
+    psi = psi / np.linalg.norm(psi)
 
     return psi.astype("complex128")
 
@@ -109,13 +110,43 @@ def w_state(n, coeff=None):
     """
     assert n > 0, 'qubit number must be larger than 1'
     
-    c = coeff if coeff is not None else np.ones((1, 2**n))/np.sqrt(n)
-    assert c.shape[0] == 1 and c.shape[1] == 2**n, 'The dimension of coeff is not right'
+    c = coeff if coeff is not None else np.ones((1, 2 ** n)) / np.sqrt(n)
+    assert c.shape[0] == 1 and c.shape[1] == 2 ** n, 'The dimension of coeff is not right'
 
-    state = np_zeros((1, 2**n))
+    state = np_zeros((1, 2 ** n))
     for i in range(n):
-        state[0][2**i] = c[0][n-i-1]
+        state[0][2 ** i] = c[0][n - i - 1]
         
+    return state.astype("complex128")
+
+
+def GHZ_state(n):
+    r"""生成一个 GHZ-state 的 numpy 形式。
+
+    Args:
+        n (int): 量子比特数量
+
+    Returns:
+        numpy.ndarray: 一个形状为 ``(1, 2**n)`` 的 numpy 数组
+
+    代码示例:
+
+    .. code-block:: python
+
+        from paddle_quantum.state import GHZ_state
+        vector = GHZ_state(3)
+        print(vector)
+
+    ::
+
+        [[0.70710678+0.j 0.        +0.j 0.        +0.j 0.        +0.j
+          0.        +0.j 0.        +0.j 0.        +0.j 0.70710678+0.j]]
+    """
+    assert n > 2, 'qubit number must be larger than 2'
+    state = np_zeros((1, 2 ** n))
+    state[0][0] = 1 / np.sqrt(2)
+    state[0][-1] = 1 / np.sqrt(2)
+
     return state.astype("complex128")
 
 
@@ -145,7 +176,7 @@ def density_op(n):
 
     """
     assert n > 0, 'qubit number must be positive'
-    rho = np_zeros((2**n, 2**n))
+    rho = np_zeros((2 ** n, 2 ** n))
     rho[0, 0] = 1
 
     return rho.astype("complex128")
@@ -163,17 +194,17 @@ def density_op_random(n, real_or_complex=2, rank=None):
         numpy.ndarray: 一个形状为 ``(2**n, 2**n)`` 的 numpy 数组
     """
     assert n > 0, 'qubit number must be positive'
-    rank = rank if rank is not None else 2**n
-    assert 0 < rank <= 2**n, 'rank is an invalid number'
+    rank = rank if rank is not None else 2 ** n
+    assert 0 < rank <= 2 ** n, 'rank is an invalid number'
 
     if real_or_complex == 1:
-        psi = np_random.randn(2**n, rank)
+        psi = np_random.randn(2 ** n, rank)
     else:
-        psi = np_random.randn(2**n, rank) + 1j*np_random.randn(2**n, rank)
+        psi = np_random.randn(2 ** n, rank) + 1j * np_random.randn(2 ** n, rank)
 
     psi_dagger = psi.conj().T
     rho = np_matmul(psi, psi_dagger)
-    rho = rho/np_trace(rho)
+    rho = rho / np_trace(rho)
     
     return rho.astype('complex128')
 
@@ -209,7 +240,7 @@ def completely_mixed_computational(n):
         [0.  +0.j 0.  +0.j 0.  +0.j 0.25+0.j]]
     """
     assert n > 0, 'qubit number must be positive'
-    rho = np_eye(2**n)/2**n
+    rho = np_eye(2 ** n) / (2 ** n)
     
     return rho.astype('complex128')
 
@@ -225,7 +256,7 @@ def bell_state(n):
 
 
     Args:
-        n (int): 量子比特数量。必须为大于等于 2 的偶数
+        n (int): 量子比特数量，必须为大于等于 2 的偶数
 
     Returns:
         numpy.ndarray: 一个形状为 ``(2**n, 2**n)`` 的 numpy 数组
@@ -248,8 +279,8 @@ def bell_state(n):
     assert n > 0, "Qubit number must be positive"
     assert n % 2 == 0, "Qubit number must be even"
 
-    dim = 2**n
-    local_dim = 2**int(n/2)
+    dim = 2 ** n
+    local_dim = 2 ** int(n / 2)
     coeff = 1 / local_dim
     state = np.zeros((dim, dim))
     for i in range(0, dim, local_dim + 1):
@@ -309,7 +340,7 @@ def bell_diagonal_state(p1, p2, p3, p4):
     psi_m_vec = np.array([[0, coeff, -coeff, 0]])
     psi_m_mat = np.matmul(psi_m_vec.T, psi_m_vec)
 
-    state = p1*phi_p_mat + p2*psi_p_mat + p3*phi_m_mat + p4*psi_m_mat
+    state = p1 * phi_p_mat + p2 * psi_p_mat + p3 * phi_m_mat + p4 * psi_m_mat
 
     return state.astype("complex128")
 
@@ -324,7 +355,7 @@ def R_state(p):
         p|\Psi^{+}\rangle\langle\Psi^{+}| + (1 - p)|11\rangle\langle11|
 
     Args:
-        p (float): 控制生成 R-state 的参数。属于 :math:`[0, 1]` 区间内
+        p (float): 控制生成 R-state 的参数，属于 :math:`[0, 1]` 区间内
 
     Returns:
         numpy.ndarray: 一个形状为 ``(4, 4)`` 的 numpy 数组
@@ -352,7 +383,7 @@ def R_state(p):
     state_11 = np.zeros((4, 4))
     state_11[3, 3] = 1
 
-    state = p*psi_p_mat + (1-p)*state_11
+    state = p * psi_p_mat + (1 - p) * state_11
 
     return state.astype("complex128")
 
@@ -367,7 +398,7 @@ def S_state(p):
         p|\Phi^{+}\rangle\langle\Phi^{+}| + (1 - p)|00\rangle\langle00|
 
     Args:
-        p (float): 控制生成 S-state 的参数。属于 :math:`[0, 1]` 区间内
+        p (float): 控制生成 S-state 的参数，属于 :math:`[0, 1]` 区间内
 
     Returns:
         numpy.ndarray: 一个形状为 ``(4, 4)`` 的 numpy 数组
@@ -393,7 +424,7 @@ def S_state(p):
     psi0 = np.zeros_like(phi_p)
     psi0[0, 0] = 1
 
-    state = p * phi_p + (1-p) * psi0
+    state = p * phi_p + (1 - p) * psi0
     return state.astype("complex128")
 
 
@@ -407,8 +438,8 @@ def isotropic_state(n, p):
         p(\frac{1}{\sqrt{D}} \sum_{j=0}^{D-1}|j\rangle_{A}|j\rangle_{B}) + (1 - p)\frac{I}{2^n}
 
     Args:
-        n (int): 量子比特数量。
-        p (float): 控制生成 isotropic state 的参数。属于 :math:`[0, 1]` 区间内
+        n (int): 量子比特数量
+        p (float): 控制生成 isotropic state 的参数，属于 :math:`[0, 1]` 区间内
 
     Returns:
         numpy.ndarray: 一个形状为 ``(2**n, 2**n)`` 的 numpy 数组
@@ -430,7 +461,7 @@ def isotropic_state(n, p):
     """
     assert 0 <= p <= 1, "Probability must be in [0, 1]"
 
-    dim = 2**n
-    state = p*bell_state(n) + (1-p)*np.eye(dim)/dim
+    dim = 2 ** n
+    state = p * bell_state(n) + (1 - p) * np.eye(dim) / dim
 
     return state

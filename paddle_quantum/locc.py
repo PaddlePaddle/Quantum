@@ -136,7 +136,7 @@ class LoccAnsatz(UAnsatz):
             status (LoccStatus or list): 作为LOCC下的量子电路的输入的 LOCC 态节点，其类型应该为 ``LoccStatus`` 或由其组成的 ``list``
 
         Returns:
-            LoccStatus or list: 量子线路运行后得到的 LOCC 态节点,类型为 ``LoccStatus`` 或由其组成的 ``list``
+            LoccStatus or list: 量子电路运行后得到的 LOCC 态节点,类型为 ``LoccStatus`` 或由其组成的 ``list``
         """
         if isinstance(status, LoccStatus):
             assert int(log2(sqrt(status.state.numpy().size))) == self.n, "the length of qubits should be same"
@@ -262,78 +262,10 @@ class LoccAnsatz(UAnsatz):
             theta (Tensor): 旋转角度 :math:`\theta` 。
             phi (Tensor): 旋转角度 :math:`\phi` 。
             lam (Tensor): 旋转角度 :math:`\lambda` 。
-            which_qubit (int): 作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该量子线路的量子比特数
+            which_qubit (int): 作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该量子电路的量子比特数
         """
         which_qubit = self.party[which_qubit]
         super(LoccAnsatz, self).u3(theta, phi, lam, which_qubit)
-
-    def superposition_layer(self):
-        r"""添加一层 Hadamard 门。
-        """
-        for which_qubit in self.party.qubits:
-            self.h(which_qubit)
-
-    def weak_superposition_layer(self):
-        r"""添加一层旋转角度为 :math:`\pi/4` 的 Ry 门。
-        """
-        _theta = paddle.to_tensor(np.array([np.pi / 4]))
-        for which_qubit in self.party.qubits:
-            self.ry(_theta, which_qubit)
-
-    def real_entangled_layer(self, theta, depth):
-        r"""添加 ``depth`` 层包含 Ry 门和 CNOT 门的强纠缠层。
-
-        Note:
-            这一层量子门的数学表示形式为实数酉矩阵。
-
-        Attention:
-            ``theta`` 的维度为 ``(depth, m, 1)``
-
-        Args:
-            theta (Tensor): Ry 门的旋转角度
-            depth (int): 纠缠层的深度
-            which_qubits(list): 作用的量子比特编号
-        """
-        assert self.m > 1, 'you need at least 2 qubits'
-        assert len(theta.shape) == 3, 'the shape of theta is not right'
-        assert theta.shape[2] == 1, 'the shape of theta is not right'
-        assert theta.shape[1] == len(self.party), 'the shape of theta is not right'
-        assert theta.shape[0] == depth, 'the depth of theta has a mismatch'
-
-        for repeat in range(depth):
-            for i in range(self.party.qubits):
-                self.ry(theta=theta[repeat][i][0], which_qubit=i)
-            for idx in range(0, self.m - 1):
-                self.cnot(control=[idx, idx + 1])
-            self.cnot([len(self.party) - 1, 0])
-
-    def complex_entangled_layer(self, theta, depth, which_qubits=None):
-        r"""添加 ``depth`` 层包含 U3 门和 CNOT 门的强纠缠层。
-
-        Note:
-            这一层量子门的数学表示形式为复数酉矩阵。
-
-        Attention:
-            ``theta`` 的维度为 ``(depth, m, 3)``，最低维内容为对应的 ``u3`` 的参数 ``(theta, phi, lam)``
-
-        Args:
-            theta (Tensor): U3 门的旋转角度
-            depth (int): 纠缠层的深度
-            which_qubits(list): 作用的量子比特编号
-        """
-        if which_qubits is None:
-            which_qubits = list(range(0, len(self.party)))
-        assert self.m > 1, 'you need at least 2 qubits'
-        assert len(theta.shape) == 3, 'the shape of theta is not right'
-        assert theta.shape[2] == 3, 'the shape of theta is not right'
-        # assert theta.shape[1] == self.m, 'the shape of theta is not right'
-        assert theta.shape[0] == depth, 'the depth of theta has a mismatch'
-        for repeat in range(depth):
-            for i, q in enumerate(which_qubits):
-                self.u3(theta[repeat][i][0], theta[repeat][i][1], theta[repeat][i][2], q)
-            for i in range(self.m - 1):
-                self.cnot([which_qubits[i], which_qubits[i + 1]])
-            self.cnot([which_qubits[-1], which_qubits[0]])
 
     def universal_2_qubit_gate(self, theta, which_qubits):
         r"""添加 2-qubit 通用门，这个通用门需要 15 个参数。
@@ -358,7 +290,122 @@ class LoccAnsatz(UAnsatz):
 
         super(LoccAnsatz, self).universal_3_qubit_gate(theta, which_qubits)
 
+    def superposition_layer(self):
+        r"""添加一层 Hadamard 门。
+        """
+        for which_qubit in self.party.qubits:
+            self.h(which_qubit)
+
+    def weak_superposition_layer(self):
+        r"""添加一层旋转角度为 :math:`\pi/4` 的 Ry 门。
+        """
+        _theta = paddle.to_tensor(np.array([np.pi / 4]))
+        for which_qubit in self.party.qubits:
+            self.ry(_theta, which_qubit)
+
+    def linear_entangled_layer(self, theta, depth, which_qubits=None):
+        r"""添加 ``depth`` 层包含 Ry 门，Rz 门和 CNOT 门的线性纠缠层。
+
+        Attention:
+            ``theta`` 的维度为 ``(depth, m, 2)`` ，最低维内容为对应的 ``ry`` 和 ``rz`` 的参数。
+
+        Args:
+            theta (Tensor): Ry 门和 Rz 门的旋转角度
+            depth (int): 纠缠层的深度
+            which_qubits(list): 作用的量子比特编号
+        """
+        assert self.m > 1, 'you need at least 2 qubits'
+        assert len(theta.shape) == 3, 'the shape of theta is not right'
+        assert theta.shape[2] == 2, 'the shape of theta is not right'
+        # assert theta.shape[1] == self.m, 'the shape of theta is not right'
+        assert theta.shape[0] == depth, 'the depth of theta has a mismatch'
+
+        if which_qubits is None:
+            which_qubits = list(range(self.m))
+
+        for repeat in range(depth):
+            for i, q in enumerate(which_qubits):
+                self.ry(theta[repeat][i][0], q)
+            for i in range(len(which_qubits) - 1):
+                self.cnot([which_qubits[i], which_qubits[i + 1]])
+            for i, q in enumerate(which_qubits):
+                self.rz(theta[repeat][i][1], q)
+            for i in range(len(which_qubits) - 1):
+                self.cnot([which_qubits[i + 1], which_qubits[i]])
+
+    def real_entangled_layer(self, theta, depth, which_qubits=None):
+        r"""添加 ``depth`` 层包含 Ry 门和 CNOT 门的强纠缠层。
+
+        Note:
+            这一层量子门的数学表示形式为实数酉矩阵。
+
+        Attention:
+            ``theta`` 的维度为 ``(depth, m, 1)``
+
+        Args:
+            theta (Tensor): Ry 门的旋转角度
+            depth (int): 纠缠层的深度
+            which_qubits(list): 作用的量子比特编号
+        """
+        assert self.m > 1, 'you need at least 2 qubits'
+        assert len(theta.shape) == 3, 'the shape of theta is not right'
+        assert theta.shape[2] == 1, 'the shape of theta is not right'
+        # assert theta.shape[1] == len(self.party), 'the shape of theta is not right'
+        assert theta.shape[0] == depth, 'the depth of theta has a mismatch'
+
+        if which_qubits is None:
+            which_qubits = list(range(self.m))
+
+        for repeat in range(depth):
+            for i, q in enumerate(which_qubits):
+                self.ry(theta[repeat][i][0], q)
+            for i in range(len(which_qubits) - 1):
+                self.cnot([which_qubits[i], which_qubits[i + 1]])
+            self.cnot([which_qubits[-1], which_qubits[0]])
+
+    def complex_entangled_layer(self, theta, depth, which_qubits=None):
+        r"""添加 ``depth`` 层包含 U3 门和 CNOT 门的强纠缠层。
+
+        Note:
+            这一层量子门的数学表示形式为复数酉矩阵。
+
+        Attention:
+            ``theta`` 的维度为 ``(depth, m, 3)``，最低维内容为对应的 ``u3`` 的参数 ``(theta, phi, lam)``
+
+        Args:
+            theta (Tensor): U3 门的旋转角度
+            depth (int): 纠缠层的深度
+            which_qubits(list): 作用的量子比特编号
+        """
+        assert self.m > 1, 'you need at least 2 qubits'
+        assert len(theta.shape) == 3, 'the shape of theta is not right'
+        assert theta.shape[2] == 3, 'the shape of theta is not right'
+        # assert theta.shape[1] == self.m, 'the shape of theta is not right'
+        assert theta.shape[0] == depth, 'the depth of theta has a mismatch'
+
+        if which_qubits is None:
+            which_qubits = list(range(self.m))
+
+        for repeat in range(depth):
+            for i, q in enumerate(which_qubits):
+                self.u3(theta[repeat][i][0], theta[repeat][i][1], theta[repeat][i][2], q)
+            for i in range(len(which_qubits) - 1):
+                self.cnot([which_qubits[i], which_qubits[i + 1]])
+            self.cnot([which_qubits[-1], which_qubits[0]])
+
     def real_block_layer(self, theta, depth):
+        r"""添加 ``depth`` 层包含 Ry 门和 CNOT 门的弱纠缠层。
+
+        Note:
+            这一层量子门的数学表示形式为实数酉矩阵。
+        
+        Attention:
+            ``theta`` 的维度为 ``(depth, m-1, 4)`` 。
+        
+        Args:
+            theta(Tensor): Ry 门的旋转角度
+            depth(int): 纠缠层的深度
+        """
         assert self.m > 1, 'you need at least 2 qubits'
         assert len(theta.shape) == 3, 'The dimension of theta is not right'
         _depth, _number, block = theta.shape
@@ -376,6 +423,18 @@ class LoccAnsatz(UAnsatz):
                 self.__add_real_layer(theta[i][int((self.m - 1) / 2):], [1, self.m - 1])
 
     def complex_block_layer(self, theta, depth):
+        r"""添加 ``depth`` 层包含 U3 门和 CNOT 门的弱纠缠层。
+
+        Note:
+            这一层量子门的数学表示形式为复数酉矩阵。
+
+        Attention:
+            ``theta`` 的维度为 ``(depth, m-1, 12)`` 。
+
+        Args:
+            theta (Tensor): U3 门的角度信息
+            depth (int): 纠缠层的深度
+        """
         assert self.m > 1, 'you need at least 2 qubits'
         assert len(theta.shape) == 3, 'The dimension of theta is not right'
         assert depth > 0, 'depth must be greater than zero'
@@ -450,6 +509,154 @@ class LoccAnsatz(UAnsatz):
         for i in range(position[0], position[1], 2):
             self.__add_complex_block(theta[int((i - position[0]) / 2)], [i, i + 1])
 
+    def amplitude_damping(self, gamma, which_qubit):
+        r"""添加振幅阻尼信道。
+
+        其 Kraus 算符为：
+        
+        .. math::
+
+            E_0 = \begin{bmatrix} 1 & 0 \\ 0 & \sqrt{1-\gamma} \end{bmatrix},
+            E_1 = \begin{bmatrix} 0 & \sqrt{\gamma} \\ 0 & 0 \end{bmatrix}.
+
+        Args:
+            gamma (float): 减振概率，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).amplitude_damping(gamma, which_qubit)
+
+    def generalized_amplitude_damping(self, gamma, p, which_qubit):
+        r"""添加广义振幅阻尼信道。
+
+        其 Kraus 算符为：
+
+        .. math::
+
+            E_0 = \sqrt(p) \begin{bmatrix} 1 & 0 \\ 0 & \sqrt{1-\gamma} \end{bmatrix},
+            E_1 = \sqrt(p) \begin{bmatrix} 0 & \sqrt{\gamma} \\ 0 & 0 \end{bmatrix},\\
+            E_2 = \sqrt(1-p) \begin{bmatrix} \sqrt{1-\gamma} & 0 \\ 0 & 1 \end{bmatrix},
+            E_3 = \sqrt(1-p) \begin{bmatrix} 0 & 0 \\ \sqrt{\gamma} & 0 \end{bmatrix}.
+
+        Args:
+            gamma (float): 减振概率，其值应该在 :math:`[0, 1]` 区间内
+            p (float): 激发概率，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).generalized_amplitude_damping(gamma, p, which_qubit)
+
+    def phase_damping(self, gamma, which_qubit):
+        r"""添加相位阻尼信道。
+
+        其 Kraus 算符为：
+
+        .. math::
+
+            E_0 = \begin{bmatrix} 1 & 0 \\ 0 & \sqrt{1-\gamma} \end{bmatrix},
+            E_1 = \begin{bmatrix} 0 & 0 \\ 0 & \sqrt{\gamma} \end{bmatrix}.
+
+        Args:
+            gamma (float): phase damping 信道的参数，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).phase_damping(gamma, which_qubit)
+
+    def bit_flip(self, p, which_qubit):
+        r"""添加比特反转信道。
+
+        其 Kraus 算符为：
+
+        .. math::
+
+            E_0 = \sqrt{1-p} I,
+            E_1 = \sqrt{p} X.
+
+        Args:
+            p (float): 发生 bit flip 的概率，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).bit_flip(p, which_qubit)
+
+    def phase_flip(self, p, which_qubit):
+        r"""添加相位反转信道。
+
+        其 Kraus 算符为：
+
+        .. math::
+
+            E_0 = \sqrt{1 - p} I,
+            E_1 = \sqrt{p} Z.
+
+        Args:
+            p (float): 发生 phase flip 的概率，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).phase_flip(p, which_qubit)
+
+    def bit_phase_flip(self, p, which_qubit):
+        r"""添加比特相位反转信道。
+
+        其 Kraus 算符为：
+
+        .. math::
+
+            E_0 = \sqrt{1 - p} I,
+            E_1 = \sqrt{p} Y.
+
+        Args:
+            p (float): 发生 bit phase flip 的概率，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).bit_phase_flip(p, which_qubit)
+
+    def depolarizing(self, p, which_qubit):
+        r"""添加去极化信道。
+
+        其 Kraus 算符为：
+
+        .. math::
+
+            E_0 = \sqrt{1-p} I,
+            E_1 = \sqrt{p/3} X,
+            E_2 = \sqrt{p/3} Y,
+            E_3 = \sqrt{p/3} Z.
+
+        Args:
+            p (float): depolarizing 信道的参数，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).depolarizing(p, which_qubit)
+
+    def pauli_channel(self, p_x, p_y, p_z, which_qubit):
+        r"""添加泡利信道。
+
+        Args:
+            p_x (float): 泡利矩阵 X 的对应概率，其值应该在 :math:`[0, 1]` 区间内
+            p_y (float): 泡利矩阵 Y 的对应概率，其值应该在 :math:`[0, 1]` 区间内
+            p_z (float): 泡利矩阵 Z 的对应概率，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+
+        Note:
+            三个输入的概率加起来需要小于等于 1。
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).pauli_channel(p_x, p_y, p_z, which_qubit)
+
+    def customized_channel(self, ops, which_qubit):
+        r"""添加自定义的量子信道。
+
+        Args:
+            ops (list): 表示信道的 Kraus 算符的列表
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, m)` 范围内， :math:`m` 为该参与方的量子比特数
+        """
+        which_qubit = self.party[which_qubit]
+        super(LoccAnsatz, self).customized_channel(ops, which_qubit)
 
 class LoccNet(paddle.nn.Layer):
     r"""用于设计我们的 LOCC 下的 protocol，并进行验证或者训练。

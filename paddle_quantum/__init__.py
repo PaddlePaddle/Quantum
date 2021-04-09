@@ -17,4 +17,4 @@ Paddle Quantum Library
 """
 
 name = "paddle_quantum"
-__version__ = "2.0.0"
+__version__ = "2.0.1"

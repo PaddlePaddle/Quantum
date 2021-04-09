@@ -15,93 +15,41 @@
 """
 main
 """
-
 import numpy as np
-import matplotlib.pyplot as plt
 import networkx as nx
-
 import paddle
-from paddle_quantum.utils import pauli_str_to_matrix
+from paddle_quantum.QAOA.QAOA_Prefunc import Generate_H_D, Draw_cut_graph, Draw_original_graph, Generate_default_graph
 from paddle_quantum.QAOA.Paddle_QAOA import Paddle_QAOA
-from paddle_quantum.QAOA.QAOA_Prefunc import generate_graph, H_generator
 
+SEED = 1024
 
-def main(N=4):
-    # number of qubits or number of nodes in the graph
-    N = 4
-    classical_graph, classical_graph_adjacency = generate_graph(N, GRAPHMETHOD=1)
-    print(classical_graph_adjacency)
+def main(n = 4):
+    paddle.seed(SEED)
+    
+    p = 4 # number of layers in the circuit  
+    ITR = 120  #number of iterations
+    LR = 0.1    #learning rate
 
-    # Convert the Hamiltonian's list form to matrix form
-    H_matrix = pauli_str_to_matrix(H_generator(N, classical_graph_adjacency), N)
+    G, V, E = Generate_default_graph(n)
+    G.add_nodes_from(V)
+    G.add_edges_from(E)
+    
+    Draw_original_graph(G)
+    
+    #construct the Hamiltonia
+    H_D_list, H_D_matrix = Generate_H_D(E, n)
+    H_D_diag = np.diag(H_D_matrix).real
+    H_max = np.max(H_D_diag)
 
-    H_diag = np.diag(H_matrix).real
-    H_max = np.max(H_diag)
-    H_min = np.min(H_diag)
+    print(H_D_diag)
+    print('H_max:', H_max)   
 
-    print(H_diag)
-    print('H_max:', H_max, '  H_min:', H_min)
+    cir, _, _ = Paddle_QAOA(n, p, E, V, H_D_list, ITR, LR)
+    prob_measure = cir.measure(plot=True)
+    cut_bitstring = max(prob_measure, key=prob_measure.get)
+    print("找到的割的比特串形式：", cut_bitstring)
 
-    pos = nx.circular_layout(classical_graph)
-    nx.draw(classical_graph, pos, width=4, with_labels=True, font_weight='bold')
-    plt.show()
-
-    classical_graph, classical_graph_adjacency = generate_graph(N, 1)
-
-    opt_cir = Paddle_QAOA(classical_graph_adjacency, N=4, P=4, METHOD=1, ITR=120, LR=0.1)
-
-    # Load the data of QAOA
-    x1 = np.load('./output/summary_data.npz')
-
-    H_min = np.ones([len(x1['iter'])]) * H_min
-
-    # Plot loss
-    loss_QAOA, = plt.plot(x1['iter'], x1['energy'], alpha=0.7, marker='', linestyle="--", linewidth=2, color='m')
-    benchmark, = plt.plot(x1['iter'], H_min, alpha=0.7, marker='', linestyle=":", linewidth=2, color='b')
-    plt.xlabel('Number of iteration')
-    plt.ylabel('Performance of the loss function for QAOA')
-
-    plt.legend(handles=[
-        loss_QAOA,
-        benchmark
-    ],
-        labels=[
-            r'Loss function $\left\langle {\psi \left( {\bf{\theta }} \right)} '
-            r'\right|H\left| {\psi \left( {\bf{\theta }} \right)} \right\rangle $',
-            'The benchmark result',
-        ], loc='best')
-
-    # Show the plot
-    plt.show()
-
-    # Measure the output state of the QAOA circuit for 1024 shots by default
-    prob_measure = opt_cir.measure(plot=True)
-
-    # Find the max value in measured probability of bitstrings
-    max_prob = max(prob_measure.values())
-    # Find the bitstring with max probability
-    solution_list = [result[0] for result in prob_measure.items() if result[1] == max_prob]
-    print("The output bitstring:", solution_list)
-
-    # Draw the graph representing the first bitstring in the solution_list to the MaxCut-like problem
-    head_bitstring = solution_list[0]
-
-    node_cut = ["blue" if head_bitstring[node] == "1" else "red" for node in classical_graph]
-
-    edge_cut = [
-        "solid" if head_bitstring[node_row] == head_bitstring[node_col] else "dashed"
-        for node_row, node_col in classical_graph.edges()
-    ]
-    nx.draw(
-        classical_graph,
-        pos,
-        node_color=node_cut,
-        style=edge_cut,
-        width=4,
-        with_labels=True,
-        font_weight="bold",
-    )
-    plt.show()
+    Draw_cut_graph(V, E, G, cut_bitstring)
 
 
 if __name__ == "__main__":
