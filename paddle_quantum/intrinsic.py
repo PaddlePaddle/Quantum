@@ -121,14 +121,19 @@ def vec_expecval(H, vec):
 
 def transfer_by_history(state, history):
     r"""
-    It transforms the input state according to the history give.
+    It transforms the input state according to the history given.
 
     Note:
         这是内部函数，你并不需要直接调用到该函数。
     """
     for history_ele in history:
         if history_ele[0] != 'channel':
-            state = StateTransfer(state, history_ele[0], history_ele[1], params=history_ele[2])
+            if history_ele[0] in {'s', 't', 'ry', 'rz', 'rx'}:
+                state = StateTransfer(state, 'u', history_ele[1], params=history_ele[2])
+            elif history_ele[0] == 'MS_gate':
+                state = StateTransfer(state, 'RXX_gate', history_ele[1], params=history_ele[2])
+            else:
+                state = StateTransfer(state, history_ele[0], history_ele[1], params=history_ele[2])
 
     return state
 

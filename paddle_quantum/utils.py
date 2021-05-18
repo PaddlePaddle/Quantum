@@ -13,30 +13,16 @@
 # limitations under the License.
 
 from functools import reduce
-
+from math import log2
 import numpy as np
-from numpy import absolute, log
-from numpy import diag, dot, identity
-from numpy import kron as np_kron
-from numpy import trace as np_trace
-from numpy import matmul as np_matmul
-from numpy import random as np_random
-from numpy import linalg, sqrt
-from numpy import sum as np_sum
-from numpy import transpose as np_transpose
-from numpy import zeros as np_zeros
-
-from paddle import add, to_tensor
-from paddle import kron as pp_kron
-from paddle import matmul
-from paddle import transpose as pp_transpose
-
-from paddle import concat, cos, ones, reshape, sin
-from paddle import zeros as pp_zeros
-
-from scipy.linalg import logm, sqrtm
-
 import paddle
+from paddle import add, to_tensor
+from paddle import kron as kron
+from paddle import matmul
+from paddle import transpose
+from paddle import concat, ones
+from paddle import zeros
+from scipy.linalg import logm, sqrtm
 
 __all__ = [
     "partial_trace",
@@ -73,30 +59,74 @@ def partial_trace(rho_AB, dim1, dim2, A_or_B):
     if A_or_B == 2:
         dim1, dim2 = dim2, dim1
 
-    idty_np = identity(dim2).astype("complex128")
+    idty_np = np.identity(dim2).astype("complex128")
     idty_B = to_tensor(idty_np)
 
-    zero_np = np_zeros([dim2, dim2], "complex128")
+    zero_np = np.zeros([dim2, dim2], "complex128")
     res = to_tensor(zero_np)
 
     for dim_j in range(dim1):
-        row_top = pp_zeros([1, dim_j], dtype="float64")
+        row_top = zeros([1, dim_j], dtype="float64")
         row_mid = ones([1, 1], dtype="float64")
-        row_bot = pp_zeros([1, dim1 - dim_j - 1], dtype="float64")
+        row_bot = zeros([1, dim1 - dim_j - 1], dtype="float64")
         bra_j = concat([row_top, row_mid, row_bot], axis=1)
         bra_j = paddle.cast(bra_j, 'complex128')
 
         if A_or_B == 1:
-            row_tmp = pp_kron(bra_j, idty_B)
+            row_tmp = kron(bra_j, idty_B)
             row_tmp_conj = paddle.conj(row_tmp)
-            res = add(res, matmul(matmul(row_tmp, rho_AB), pp_transpose(row_tmp_conj, perm=[1, 0]), ), )
+            res = add(res, matmul(matmul(row_tmp, rho_AB), transpose(row_tmp_conj, perm=[1, 0]), ), )
 
         if A_or_B == 2:
-            row_tmp = pp_kron(idty_B, bra_j)
+            row_tmp = kron(idty_B, bra_j)
             row_tmp_conj = paddle.conj(row_tmp)
-            res = add(res, matmul(matmul(row_tmp, rho_AB), pp_transpose(row_tmp_conj, perm=[1, 0]), ), )
+            res = add(res, matmul(matmul(row_tmp, rho_AB), transpose(row_tmp_conj, perm=[1, 0]), ), )
 
     return res
+
+
+def partial_trace_discontiguous(rho, preserve_qubits=None):
+    r"""计算量子态的偏迹，可选取任意子系统。
+
+    Args:
+        rho (Tensor): 输入的量子态
+        preserve_qubits (list): 要保留的量子比特，默认为 None，表示全保留
+    """
+    if preserve_qubits is None:
+        return rho
+    else:
+        n = int(log2(rho.size) // 2)
+        num_preserve = len(preserve_qubits)
+
+        shape = paddle.ones((n + 1,))
+        shape = 2 * shape
+        shape[n] = 2**n
+        shape = paddle.cast(shape, "int32")
+        identity = paddle.eye(2 ** n)
+        identity = paddle.reshape(identity, shape=shape)
+        discard = list()
+        for idx in range(0, n):
+            if idx not in preserve_qubits:
+                discard.append(idx)
+        addition = [n]
+        preserve_qubits.sort()
+
+        preserve_qubits = paddle.to_tensor(preserve_qubits)
+        discard = paddle.to_tensor(discard)
+        addition = paddle.to_tensor(addition)
+        permute = paddle.concat([discard, preserve_qubits, addition])
+
+        identity = paddle.transpose(identity, perm=permute)
+        identity = paddle.reshape(identity, (2**n, 2**n))
+
+        result = np.zeros((2 ** num_preserve, 2 ** num_preserve), dtype="complex64")
+        result = paddle.to_tensor(result)
+
+        for i in range(0, 2 ** num_preserve):
+            bra = identity[i * 2 ** num_preserve:(i + 1) * 2 ** num_preserve, :]
+            result = result + matmul(matmul(bra, rho), transpose(bra, perm=[1, 0]))
+
+        return result
 
 
 def state_fidelity(rho, sigma):
@@ -136,7 +166,7 @@ def gate_fidelity(U, V):
     """
     assert U.shape == V.shape, 'The shape of two unitary matrices are different'
     dim = U.shape[0]
-    fidelity = absolute(np_trace(np_matmul(U, V.conj().T)))/dim
+    fidelity = np.absolute(np.trace(np.matmul(U, V.conj().T)))/dim
     
     return fidelity
 
@@ -154,7 +184,7 @@ def purity(rho):
     Returns:
         float: 输入的量子态的纯度
     """
-    gamma = np_trace(np_matmul(rho, rho))
+    gamma = np.trace(np.matmul(rho, rho))
     
     return gamma.real
     
@@ -172,8 +202,8 @@ def von_neumann_entropy(rho):
     Returns:
         float: 输入的量子态的冯诺依曼熵
     """
-    rho_eigenvalue, _ = linalg.eig(rho)
-    entropy = -np_sum(rho_eigenvalue*log(rho_eigenvalue))
+    rho_eigenvalue, _ = np.linalg.eig(rho)
+    entropy = -np.sum(rho_eigenvalue*np.log(rho_eigenvalue))
     
     return entropy.real
 
@@ -219,7 +249,7 @@ def NKron(matrix_A, matrix_B, *args):
 
     ``result`` 应为 :math:`A \otimes B \otimes C`
     """
-    return reduce(lambda result, index: np_kron(result, index), args, np_kron(matrix_A, matrix_B), )
+    return reduce(lambda result, index: np.kron(result, index), args, np.kron(matrix_A, matrix_B), )
 
 
 def dagger(matrix):
@@ -246,7 +276,7 @@ def dagger(matrix):
         [2.-2.j 4.-4.j]]
     """
     matrix_conj = paddle.conj(matrix)
-    matrix_dagger = pp_transpose(matrix_conj, perm=[1, 0])
+    matrix_dagger = transpose(matrix_conj, perm=[1, 0])
 
     return matrix_dagger
 
@@ -266,11 +296,11 @@ def random_pauli_str_generator(n, terms=3):
         list: 随机生成的可观测量的列表形式
     """
     pauli_str = []
-    for sublen in np_random.randint(1, high=n+1, size=terms):
+    for sublen in np.random.randint(1, high=n+1, size=terms):
         # Tips: -1 <= coeff < 1
-        coeff = np_random.rand()*2-1
-        ops = np_random.choice(['x', 'y', 'z'], size=sublen)
-        pos = np_random.choice(range(n), size=sublen, replace=False)
+        coeff = np.random.rand()*2-1
+        ops = np.random.choice(['x', 'y', 'z'], size=sublen)
+        pos = np.random.choice(range(n), size=sublen, replace=False)
         op_list = [ops[i]+str(pos[i]) for i in range(sublen)]
         pauli_str.append([coeff, ','.join(op_list)])
     return pauli_str

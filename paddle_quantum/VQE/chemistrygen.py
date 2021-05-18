@@ -28,7 +28,6 @@ __all__ = [
 ]
 
 
-# todo
 def Hamiltonian_str_convert(qubit_op):
     '''
     Convert provided Hamiltonian information to Pauli string

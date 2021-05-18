@@ -17,7 +17,6 @@ main
 """
 
 import scipy
-import paddle
 from numpy import trace as np_trace
 from paddle_quantum.utils import pauli_str_to_matrix
 from paddle_quantum.GIBBS.Paddle_GIBBS import Paddle_GIBBS
@@ -27,7 +26,7 @@ def main():
     # Generate Pauli string representing a specific Hamiltonian
     H = [[-1.0, 'z0,z1'], [-1.0, 'z1,z2'], [-1.0, 'z0,z2']]
 
-    # Generate the marix form of the Hamiltonian
+    # Generate the matrix form of the Hamiltonian
     N_SYS_B = 3  # Number of qubits in subsystem B used to generate Gibbs state
     hamiltonian = pauli_str_to_matrix(H, N_SYS_B)
 

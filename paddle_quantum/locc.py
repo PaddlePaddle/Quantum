@@ -18,10 +18,8 @@ import paddle
 from paddle_quantum.circuit import UAnsatz
 from paddle_quantum.utils import NKron, partial_trace, dagger
 from paddle import matmul, trace, divide, kron, add, multiply
-from paddle import sin, cos, concat, zeros, ones, real
-from paddle_quantum.state import isotropic_state, bell_state
+from paddle import sin, cos, real
 from math import log2, sqrt
-from numpy import pi as PI
 
 
 class LoccStatus(object):
@@ -30,8 +28,8 @@ class LoccStatus(object):
     由于我们在 LOCC 中不仅关心量子态的解析形式，同时还关心得到它的概率，以及是经过怎样的测量而得到。因此该类包含三个成员变量：量子态 ``state`` 、得到这个态的概率 ``prob`` 和得到这个态的测量的测量结果是什么，即 ``measured_result`` 。
 
     Attributes:
-        state (numpy.ndarray): 表示量子态的矩阵形式
-        prob (numpy.ndarray): 表示得到这个量子态的概率
+        state (paddle.Tensor): 表示量子态的矩阵形式
+        prob (paddle.Tensor): 表示得到这个量子态的概率
         measured_result (str): 表示得到这个态的测量函数的测量结果
     """
 
@@ -39,8 +37,8 @@ class LoccStatus(object):
         r"""构造函数，用于实例化一个 ``LoccStatus`` 对象。
 
         Args:
-            state (numpy.ndarray): 默认为 ``None`` ，该 ``LoccStatus`` 的量子态的矩阵形式
-            prob (numpy.ndarray): 默认为 ``None`` ，得到该量子态的概率
+            state (paddle.Tensor): 默认为 ``None`` ，该 ``LoccStatus`` 的量子态的矩阵形式
+            prob (paddle.Tensor): 默认为 ``None`` ，得到该量子态的概率
             measured_result (str): 默认为 ``None`` ，表示得到这个态的测量函数的测量结果
         """
         super(LoccStatus, self).__init__()
@@ -499,7 +497,9 @@ class LoccAnsatz(UAnsatz):
 
     def __add_complex_layer(self, theta, position):
         r"""
-        Add a complex layer on the circuit. theta is a two dimensional tensor. position is the qubit range the layer needs to cover
+        Add a complex layer on the circuit.
+        Theta is a two dimensional tensor.
+        Position is the qubit range the layer needs to cover
 
         Note:
             这是内部函数，你并不需要直接调用到该函数。
@@ -658,6 +658,7 @@ class LoccAnsatz(UAnsatz):
         which_qubit = self.party[which_qubit]
         super(LoccAnsatz, self).customized_channel(ops, which_qubit)
 
+
 class LoccNet(paddle.nn.Layer):
     r"""用于设计我们的 LOCC 下的 protocol，并进行验证或者训练。
     """
@@ -734,18 +735,24 @@ class LoccNet(paddle.nn.Layer):
             raise ValueError("can't recognize the input status")
 
         assert max(qubits_list) <= n, "qubit index out of range"
-        qubit2idx = list(range(0, n))
-        idx2qubit = list(range(0, n))
+        origin_seq = list(range(0, n))
+        target_seq = [idx for idx in origin_seq if idx not in qubits_list]
+        target_seq = qubits_list + target_seq
+
+        swaped = [False] * n
+        swap_list = []
+        for idx in range(0, n):
+            if not swaped[idx]:
+                next_idx = idx
+                swaped[next_idx] = True
+                while not swaped[target_seq[next_idx]]:
+                    swaped[target_seq[next_idx]] = True
+                    swap_list.append((next_idx, target_seq[next_idx]))
+                    next_idx = target_seq[next_idx]
 
         cir = UAnsatz(n)
-        for i, ele in enumerate(qubits_list):
-            if qubit2idx[ele] != i:
-                # if qubit2idx[ele] is i, then swap([ele, i]) is identity
-                cir.swap([i, qubit2idx[ele]])
-                qubit2idx[idx2qubit[i]] = qubit2idx[ele]
-                idx2qubit[qubit2idx[ele]] = idx2qubit[i]
-                idx2qubit[i] = ele
-                qubit2idx[ele] = i
+        for a, b in swap_list:
+            cir.swap([a, b])
 
         if isinstance(status, LoccStatus):
             state = cir.run_density_matrix(status.state)
@@ -798,25 +805,29 @@ class LoccNet(paddle.nn.Layer):
             raise ValueError("can't recognize the input status")
         assert max(qubits_list) <= n, "qubit index out of range"
 
-        qubit2idx = list(range(0, n))
-        idx2qubit = list(range(0, n))
-        swap_history = list()
+        origin_seq = list(range(0, n))
+        target_seq = [idx for idx in origin_seq if idx not in qubits_list]
+        target_seq = qubits_list + target_seq
+
+        swaped = [False] * n
+        swap_list = []
+        for idx in range(0, n):
+            if not swaped[idx]:
+                next_idx = idx
+                swaped[next_idx] = True
+                while not swaped[target_seq[next_idx]]:
+                    swaped[target_seq[next_idx]] = True
+                    swap_list.append((next_idx, target_seq[next_idx]))
+                    next_idx = target_seq[next_idx]
 
         cir0 = UAnsatz(n)
-        for i, ele in enumerate(qubits_list):
-            if qubit2idx[ele] != i:  # if qubit2idx[ele] is i, then swap([ele, i]) is identity
-                swap_history.append((i, qubit2idx[ele]))
-                cir0.swap([i, qubit2idx[ele]])
-                qubit2idx[idx2qubit[i]] = qubit2idx[ele]
-                idx2qubit[qubit2idx[ele]] = idx2qubit[i]
-                idx2qubit[i] = ele
-                qubit2idx[ele] = i
+        for a, b in swap_list:
+            cir0.swap([a, b])
 
         cir1 = UAnsatz(n)
-        swap_cnt = len(swap_history)
-        for idx in range(0, swap_cnt):
-            a, b = swap_history[swap_cnt - 1 - idx]
-            cir1.swap([b, a])
+        swap_list.reverse()
+        for a, b in swap_list:
+            cir1.swap([a, b])
 
         if isinstance(status, LoccStatus):
             _state = cir0.run_density_matrix(status.state)

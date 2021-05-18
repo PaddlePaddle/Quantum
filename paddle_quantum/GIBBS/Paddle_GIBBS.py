@@ -17,7 +17,6 @@ Paddle_GIBBS
 """
 
 from numpy import pi as PI
-
 import paddle
 from paddle import matmul, trace
 from paddle_quantum.circuit import UAnsatz

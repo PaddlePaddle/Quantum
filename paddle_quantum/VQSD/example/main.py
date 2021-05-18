@@ -17,8 +17,6 @@ Main
 """
 
 import numpy
-
-import paddle
 from paddle_quantum.VQSD.HGenerator import generate_rho_sigma
 from paddle_quantum.VQSD.Paddle_VQSD import Paddle_VQSD
 

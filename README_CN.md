@@ -34,7 +34,7 @@
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.0.1-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.1.0-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -55,7 +55,7 @@
 ## 特色
 
 - 轻松上手
-   - 丰富的在线学习资源（17+ 教程案例）
+   - 丰富的在线学习资源（23+ 教程案例）
    - 通过模板高效搭建量子神经网络
    - 自动微分框架
 - 功能丰富
@@ -109,7 +109,7 @@ cd paddle_quantum/QAOA/example
 python main.py
 ```
 
-> 关于 QAOA 的介绍可以参考我们的 [QAOA 教程](./tutorial/QAOA)。
+> 关于 QAOA 的介绍可以参考我们的 [QAOA 教程](./tutorial/combinatorial_optimization/QAOA_CN.ipynb)。
 
 ## 入门与开发
 
@@ -131,27 +131,42 @@ python main.py
 
 Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为量子机器学习领域的研发提供强有力的支撑，也提供了丰富的案例供开发者学习。
 
-在这里，我们提供了涵盖量子优化、量子化学、量子机器学习、量子纠缠处理等多个领域的案例供大家学习。每个教程目前支持网页阅览和运行 Jupyter Notebook 两种方式。我们推荐用户下载 Notebook 后，本地运行进行实践。
+在这里，我们提供了涵盖量子模拟、机器学习、组合优化、本地操作与经典通讯（local operations and classical communication, LOCC）、量子神经网络等多个领域的案例供大家学习。每个教程目前支持网页阅览和运行 Jupyter Notebook 两种方式。我们推荐用户下载 Notebook 后，本地运行进行实践。
 
-- [量子近似优化算法 (QAOA)](./tutorial/QAOA)
-- [变分量子特征求解器 (VQE)](./tutorial/VQE)
-- [量子分类器 (Quantum Classifier)](./tutorial/Q-Classifier)
-- [量子神经网络的贫瘠高原效应 (Barren Plateaus)](./tutorial/Barren)
-- [量子变分自编码器 (Quantum Autoencoder)](./tutorial/Q-Autoencoder)
-- [量子生成对抗网络 (Quantum GAN)](./tutorial/Q-GAN)
-- [子空间搜索 - 量子变分特征求解器 (SSVQE)](./tutorial/SSVQE)
-- [变分量子态对角化算法 (VQSD)](./tutorial/VQSD)
-- [吉布斯态的制备 (Gibbs State Preparation)](./tutorial/Gibbs)
-- [变分量子奇异值分解 (VQSVD)](./tutorial/VQSVD)
-- [LOCC 量子神经网络](./tutorial/LOCC/LOCCNET_Tutorial_CN.ipynb)
-- [纠缠蒸馏 -- BBPSSW 协议](./tutorial/LOCC)
-- [纠缠蒸馏 -- DEJMPS 协议](./tutorial/LOCC)
-- [纠缠蒸馏 -- LOCCNet 设计协议](./tutorial/LOCC)
-- [量子隐态传输](./tutorial/LOCC)
-- [量子态分辨](./tutorial/LOCC)
-- [噪声模型与量子信道](./tutorial/Noise)
+- [量子模拟](./tutorial/quantum_simulation)
+    1. [变分量子特征求解器（VQE）](./tutorial/quantum_simulation/VQE_CN.ipynb)
+    2. [子空间搜索 - 量子变分特征求解器（SSVQE）](./tutorial/quantum_simulation/SSVQE_CN.ipynb)
+    3. [变分量子态对角化算法（VQSD）](./tutorial/quantum_simulation/VQSD_CN.ipynb)
+    4. [吉布斯态的制备（Gibbs State Preparation）](./tutorial/quantum_simulation/GibbsState_CN.ipynb)
 
-随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见[教程](./tutorial/LOCC/LOCCNET_Tutorial_CN.ipynb)。Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。此外，量桨可以基于噪声模块进行含噪算法的开发以及研究，详情请见[噪声模块教程](./tutorial/Noise/Noise_CN.ipynb)。
+- [机器学习](./tutorial/machine_learning)
+    1. [量子态编码经典数据](./tutorial/machine_learning/DataEncoding_CN.ipynb)
+    2. [量子分类器（Quantum Classifier）](./tutorial/machine_learning/QClassifier_CN.ipynb)
+    3. [变分影子量子学习（VSQL）](./tutorial/machine_learning/VSQL_CN.ipynb)
+    4. [量子核方法（Quantum Kernel）](./tutorial/machine_learning/QKernel_CN.ipynb)
+    5. [量子变分自编码器（Quantum Autoencoder）](./tutorial/machine_learning/QAutoencoder_CN.ipynb)
+    6. [量子生成对抗网络（Quantum GAN）](./tutorial/machine_learning/QGAN_CN.ipynb)
+    7. [变分量子奇异值分解（VQSVD）](./tutorial/machine_learning/VQSVD_CN.ipynb)
+
+- [组合优化](./tutorial/combinatorial_optimization)
+    1. [量子近似优化算法（QAOA）](./tutorial/combinatorial_optimization/QAOA_CN.ipynb)
+    2. [QAOA 求解最大割问题](./tutorial/combinatorial_optimization/MAXCUT_CN.ipynb)
+    3. [大规模量子近似优化分治算法（DC-QAOA）](./tutorial/combinatorial_optimization/DC-QAOA_CN.ipynb)
+    4. [旅行商问题](./tutorial/combinatorial_optimization/TSP_CN.ipynb)
+
+- [LOCC 量子神经网络（LOCCNet）](./tutorial/locc)
+    1. [LOCC 量子神经网络](./tutorial/locc/LOCCNET_Tutorial_CN.ipynb)
+    2. [纠缠蒸馏 -- BBPSSW 协议](./tutorial/locc/EntanglementDistillation_BBPSSW_CN.ipynb)
+    3. [纠缠蒸馏 -- DEJMPS 协议](./tutorial/locc/EntanglementDistillation_DEJMPS_CN.ipynb)
+    4. [纠缠蒸馏 -- LOCCNet 设计协议](./tutorial/locc/EntanglementDistillation_LOCCNET_CN.ipynb)
+    5. [量子隐态传输](./tutorial/locc/QuantumTeleportation_CN.ipynb)
+    6. [量子态分辨](./tutorial/locc/StateDiscrimination_CN.ipynb)
+
+- [量子神经网络研究](./tutorial/qnn_research)
+    1. [量子神经网络的贫瘠高原效应（Barren Plateaus）](./tutorial/qnn_research/BarrenPlateaus_CN.ipynb)
+    2. [噪声模型与量子信道](./tutorial/qnn_research/Noise_CN.ipynb)
+
+随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见[教程](./tutorial/locc/LOCCNET_Tutorial_CN.ipynb)。Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。此外，量桨可以基于噪声模块进行含噪算法的开发以及研究，详情请见[噪声模块教程](./tutorial/qnn_research/Noise_CN.ipynb)。
 
 ### API 文档
 
@@ -169,19 +184,28 @@ Paddle Quantum 使用 setuptools 的 develop 模式进行安装，相关代码�
 
 ## 使用 Paddle Quantum 的工作
 
-我们非常欢迎开发者使用 Paddle Quantum 进行量子机器学习的研发，如果您的工作有使用 Paddle Quantum，也非常欢迎联系我们。目前使用 Paddle Quantum 的代表性工作包括了吉布斯态的制备和变分量子奇异值分解：
+我们非常欢迎开发者使用 Paddle Quantum 进行量子机器学习的研发，如果您的工作有使用 Paddle Quantum，也非常欢迎联系我们。以下为 BibTeX 的引用方式：
 
-[1] Wang, Y., Li, G. & Wang, X. Variational quantum Gibbs state preparation with a truncated Taylor series. arXiv:2005.08797 (2020). [[pdf](https://arxiv.org/pdf/2005.08797.pdf)]
+> @misc{Paddlequantum,
+> title = {{Paddle Quantum}},
+> year = {2020},
+> url = {https://github.com/PaddlePaddle/Quantum}, }
 
-[2] Wang, X., Song, Z. & Wang, Y. Variational Quantum Singular Value Decomposition. arXiv:2006.02336 (2020). [[pdf](https://arxiv.org/pdf/2006.02336.pdf)]
+目前使用 Paddle Quantum 的代表性工作包括了吉布斯态的制备和变分量子奇异值分解：
 
-[3] Li, G., Song, Z. & Wang, X. VSQL: Variational Shadow Quantum Learning for Classification. arXiv:2012.08288 (2020). [[pdf]](https://arxiv.org/pdf/2012.08288.pdf), to appear at **AAAI 2021** conference.
+[1] Wang, Youle, Guangxi Li, and Xin Wang. "Variational quantum gibbs state preparation with a truncated taylor series." arXiv preprint arXiv:2005.08797 (2020). [[pdf](https://arxiv.org/pdf/2005.08797.pdf)]
 
-[4] Chen, R., et al. Variational Quantum Algorithms for Trace Distance and Fidelity Estimation. arXiv:2012.05768 (2020). [[pdf]](https://arxiv.org/pdf/2012.05768.pdf)
+[2] Wang, Xin, Zhixin Song, and Youle Wang. "Variational Quantum Singular Value Decomposition." arXiv preprint arXiv:2006.02336 (2020). [[pdf](https://arxiv.org/pdf/2006.02336.pdf)]
 
-[5] Wang, K., et al. Detecting and quantifying entanglement on near-term quantum devices. arXiv:2012.14311 (2020). [[pdf]](https://arxiv.org/pdf/2012.14311.pdf)
+[3] Li, Guangxi, Zhixin Song, and Xin Wang. "VSQL: Variational Shadow Quantum Learning for Classification." arXiv preprint arXiv:2012.08288 (2020). [[pdf]](https://arxiv.org/pdf/2012.08288.pdf), to appear at **AAAI 2021** conference.
 
-[6] Zhao, X., Zhao, B., Wang, Z., Song, Z., & Wang, X. LOCCNet: a machine learning framework for distributed quantum information processing. arXiv:2101.12190 (2021). [[pdf]](https://arxiv.org/pdf/2101.12190.pdf)
+[4] Chen, Ranyiliu, et al. "Variational Quantum Algorithms for Trace Distance and Fidelity Estimation." arXiv preprint arXiv:2012.05768 (2020). [[pdf]](https://arxiv.org/pdf/2012.05768.pdf)
+
+[5] Wang, Kun, et al. "Detecting and quantifying entanglement on near-term quantum devices." arXiv preprint arXiv:2012.14311 (2020). [[pdf]](https://arxiv.org/pdf/2012.14311.pdf)
+
+[6] Zhao, Xuanqiang, et al. "LOCCNet: a machine learning framework for distributed quantum information processing." arXiv preprint arXiv:2101.12190 (2021). [[pdf]](https://arxiv.org/pdf/2101.12190.pdf)
+
+[7] Cao, Chenfeng, and Xin Wang. "Noise-Assisted Quantum Autoencoder." Physical Review Applied 15.5 (2021): 054012. [[pdf]](https://journals.aps.org/prapplied/abstract/10.1103/PhysRevApplied.15.054012)
 
 ## FAQ
 

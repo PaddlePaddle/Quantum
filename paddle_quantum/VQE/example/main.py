@@ -17,8 +17,6 @@ main
 """
 
 import platform
-
-import paddle
 from paddle_quantum.VQE.Paddle_VQE import Paddle_VQE
 from paddle_quantum.VQE.benchmark import benchmark_result
 from paddle_quantum.VQE.chemistrysub import H2_generator

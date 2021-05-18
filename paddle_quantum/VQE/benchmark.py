@@ -18,7 +18,6 @@ benchmark the result
 
 
 import platform
-
 import matplotlib.pyplot as plt
 import numpy
 from paddle_quantum.utils import pauli_str_to_matrix

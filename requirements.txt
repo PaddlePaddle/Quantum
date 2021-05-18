@@ -1,6 +1,6 @@
 paddlepaddle>=2.0.1
 scipy
-networkx
+networkx>=2.5
 matplotlib
 interval
 tqdm

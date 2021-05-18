@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import gc
-import math
 import warnings
+import numpy as np
+import math
 from functools import reduce
 from collections import defaultdict
-import numpy as np
 import matplotlib.pyplot as plt
 from paddle_quantum.simulator import transfer_state, init_state_gen, measure_state
-
 import paddle
 from paddle import matmul, trace, real, imag, reshape
 from paddle_quantum.utils import dagger, pauli_str_to_matrix
@@ -55,7 +53,152 @@ class UAnsatz:
         self.__run_state = ''
         # Record history of adding gates to the circuit
         self.__history = []
+        
+    def _count_history(self):
+        r"""calculate how many blocks needed for printing
 
+        Note:
+        这是内部函数，你并不需要直接调用到该函数。
+        """
+        # Record length of each section
+        length = [5]
+        n = self.n
+        # Record current section number for every qubit
+        qubit = [0] * n
+        # Number of sections
+        qubit_max = max(qubit)
+        # Record section number for each gate
+        gate = []
+        history = self.__history
+        
+        for current_gate in history:
+            # Single-qubit gates with no params to print
+            if current_gate[0] in {'h', 's', 't', 'x', 'y', 'z', 'u'}:
+                curr_qubit = current_gate[1][0]
+                gate.append(qubit[curr_qubit])
+                qubit[curr_qubit] = qubit[curr_qubit] + 1
+                # A new section is added
+                if qubit[curr_qubit] > qubit_max:
+                    length.append(5)
+                    qubit_max = qubit[curr_qubit]
+            # Gates with params to print
+            elif current_gate[0] in {'rx', 'ry', 'rz'}:
+                curr_qubit = current_gate[1][0]
+                gate.append(qubit[curr_qubit])
+                if length[qubit[curr_qubit]] == 5:
+                    length[qubit[curr_qubit]] = 13
+                qubit[curr_qubit] = qubit[curr_qubit] + 1
+                if qubit[curr_qubit] > qubit_max:
+                    length.append(5)
+                    qubit_max = qubit[curr_qubit]
+            # Two-qubit gates
+            elif current_gate[0] in {'CNOT', 'SWAP', 'RXX_gate', 'RYY_gate', 'RZZ_gate', 'MS_gate'}:
+                p = current_gate[1][0]
+                q = current_gate[1][1]
+                a = max(p, q)
+                b = min(p, q)
+                ind = max(qubit[b: a + 1])
+                gate.append(ind)
+                if length[ind] < 13 and current_gate[0] in {'RXX_gate', 'RYY_gate', 'RZZ_gate'}:
+                    length[ind] = 13
+                for j in range(b, a + 1):
+                    qubit[j] = ind + 1
+                if ind + 1 > qubit_max:
+                    length.append(5)
+                    qubit_max = ind + 1
+    
+        return length, gate
+    
+    def __str__(self):
+        r"""实现画电路的功能
+        
+        Returns:
+            string: 用来print的字符串
+        
+        代码示例:
+
+        .. code-block:: python
+
+            import paddle
+            from paddle_quantum.circuit import UAnsatz
+            import numpy as np
+            
+            cir = UAnsatz(5)
+            cir.superposition_layer()
+            rotations = paddle.to_tensor(np.random.uniform(-2, 2, size=(3, 5, 1)))
+            cir.real_entangled_layer(rotations, 3)
+            
+            print(cir)
+        ::
+            
+            The printed circuit is:
+            
+            --H----Ry(-0.14)----*-------------------X----Ry(-0.77)----*-------------------X--
+                                |                   |                 |                   |  
+            --H----Ry(-1.00)----X----*--------------|----Ry(-0.83)----X----*--------------|--
+                                     |              |                      |              |  
+            --H----Ry(-1.88)---------X----*---------|----Ry(-0.98)---------X----*---------|--
+                                          |         |                           |         |  
+            --H----Ry(1.024)--------------X----*----|----Ry(-0.37)--------------X----*----|--
+                                               |    |                                |    |  
+            --H----Ry(1.905)-------------------X----*----Ry(-1.82)-------------------X----*--
+                                                                                             
+        """
+        length, gate = self._count_history()
+        history = self.__history
+        n = self.n
+        # Ignore the unused section 
+        total_length = sum(length) - 5
+    
+        print_list = [['-' if i % 2 == 0 else ' '] * total_length for i in range(n * 2)]
+
+        for i, current_gate in enumerate(history):
+            if current_gate[0] in {'h', 's', 't', 'x', 'y', 'z', 'u'}:
+                # Calculate starting position ind of current gate
+                sec = gate[i]
+                ind = sum(length[:sec])
+                print_list[current_gate[1][0] * 2][ind + length[sec] // 2] = current_gate[0].upper()
+            elif current_gate[0] in {'rx', 'ry', 'rz'}:
+                sec = gate[i]
+                ind = sum(length[:sec])
+                line = current_gate[1][0] * 2
+                param = current_gate[2][2 if current_gate[0] == 'rz' else 0]
+                print_list[line][ind + 2] = 'R'
+                print_list[line][ind + 3] = current_gate[0][1]
+                print_list[line][ind + 4] = '('
+                print_list[line][ind + 5: ind + 10] = format(float(param.numpy()), '.3f')[:5]
+                print_list[line][ind + 10] = ')'
+            elif current_gate[0] in {'CNOT', 'SWAP', 'RXX_gate', 'RYY_gate', 'RZZ_gate', 'MS_gate'}:
+                sec = gate[i]
+                ind = sum(length[:sec])
+                cqubit = current_gate[1][0]
+                tqubit = current_gate[1][1]
+                if current_gate[0] in {'CNOT', 'SWAP'}:
+                    print_list[cqubit * 2][ind + length[sec] // 2] = '*'
+                    print_list[tqubit * 2][ind + length[sec] // 2] = 'X' if current_gate[0] == 'CNOT' else '*'
+                elif current_gate[0] == 'MS_gate':
+                    for qubit in {cqubit, tqubit}:
+                        print_list[qubit * 2][ind + length[sec] // 2 - 1] = 'M'
+                        print_list[qubit * 2][ind + length[sec] // 2] = '_'
+                        print_list[qubit * 2][ind + length[sec] // 2 + 1] = 'S'
+                elif current_gate[0] in {'RXX_gate', 'RYY_gate', 'RZZ_gate'}:
+                    param = current_gate[2]
+                    for line in {cqubit * 2, tqubit * 2}:
+                        print_list[line][ind + 2] = 'R'
+                        print_list[line][ind + 3: ind + 5] = current_gate[0][1:3].lower()
+                        print_list[line][ind + 5] = '('
+                        print_list[line][ind + 6: ind + 10] = format(float(param.numpy()), '.2f')[:4]
+                        print_list[line][ind + 10] = ')'
+                start_line = min(cqubit, tqubit)
+                end_line = max(cqubit, tqubit)
+                for k in range(start_line * 2 + 1, end_line * 2):
+                    print_list[k][ind + length[sec] // 2] = '|'
+
+        print_list = list(map(''.join, print_list))
+        return_str = '\n'.join(print_list)
+
+        return return_str
+        
     def run_state_vector(self, input_state=None, store_state=True):
         r"""运行当前的量子电路，输入输出的形式为态矢量。
 
@@ -94,7 +237,7 @@ class UAnsatz:
             The output state vector is [[0.62054458+0.j 0.18316521+0.28526291j 0.62054458+0.j 0.18316521+0.28526291j]]
         """
         # Throw a warning when cir has channel
-        if self.__has_channel == True:
+        if self.__has_channel:
             warnings.warn('The noiseless circuit will be run.', RuntimeWarning)
         state = init_state_gen(self.n, 0) if input_state is None else input_state
         old_shape = state.shape
@@ -153,7 +296,7 @@ class UAnsatz:
         state = paddle.to_tensor(density_op(self.n)) if input_state is None else input_state
         assert state.shape == [2 ** self.n, 2 ** self.n], "The dimension is not right"
 
-        if self.__has_channel == False:
+        if not self.__has_channel:
             state = matmul(self.U, matmul(state, dagger(self.U)))
         else:
             dim = 2 ** self.n
@@ -169,7 +312,7 @@ class UAnsatz:
                     # Combine preceding unitary operations
                     unitary = transfer_by_history(identity, self.__history[u_start:i])
                     sub_state = paddle.zeros(shape, dtype='complex128')
-                    # sum all the terms corresponding to different Kraus operators
+                    # Sum all the terms corresponding to different Kraus operators
                     for op in history_ele[1]:
                         pseudo_u = reshape(transfer_state(unitary, op, history_ele[2]), shape)
                         sub_state += pseudo_u @ state @ dagger(pseudo_u)
@@ -218,7 +361,7 @@ class UAnsatz:
             [ 0.70710678+0.j  0.        +0.j -0.70710678+0.j  0.        +0.j]]
         """
         # Throw a warning when cir has channel
-        if self.__has_channel == True:
+        if self.__has_channel:
             warnings.warn('The unitary matrix of the noiseless circuit will be given.', RuntimeWarning)
         dim = 2 ** self.n
         shape = (dim, dim)
@@ -229,6 +372,116 @@ class UAnsatz:
         state = transfer_by_history(state, self.__history)
 
         return reshape(state, shape)
+
+    def basis_encoding(self, x, invert=False):
+        r"""将输入的经典数据使用基态编码的方式编码成量子态。
+
+        在 basis encoding 中，输入的经典数据只能包括 0 或 1。如输入数据为 1101，则编码后的量子态为 :math:`|1101\rangle` 。
+        这里假设量子态在编码前为全 0 的态，即 :math:`|00\ldots 0\rangle` 。
+
+        Args:
+            x (Tensor): 待编码的向量
+            invert (bool): 添加的是否为编码电路的逆电路，默认为 ``False`` ，即添加正常的编码电路
+        """
+        x = paddle.flatten(x)
+        x = paddle.cast(x, dtype="int32")
+        assert x.size == self.n, "the number of classical data should be equal to the number of qubits"
+        for idx, element in enumerate(x):
+            if element:
+                self.x(idx)
+
+    def amplitude_encoding(self, x, mode):
+        r"""将输入的经典数据使用振幅编码的方式编码成量子态。
+
+        Args:
+            x (Tensor): 待编码的向量
+            mode (str): 生成的量子态的表示方式，``"state_vector"`` 代表态矢量表示， ``"density_matrix"`` 代表密度矩阵表示
+
+        Returns:
+            Tensor: 一个形状为 ``(2 ** n, )`` 或 ``(2 ** n, 2 ** n)`` 的张量，表示编码之后的量子态。
+
+        """
+        assert x.size <= 2 ** self.n, "the number of classical data should be equal to the number of qubits"
+        x = paddle.flatten(x)
+        pad_num = 2 ** self.n - x.size
+        if pad_num > 0:
+            zero_tensor = paddle.zeros((pad_num,), x.dtype)
+            x = paddle.concat([x, zero_tensor])
+        length = paddle.norm(x, p=2)
+        x = paddle.divide(x, length)
+        if mode == "state_vector":
+            x = paddle.cast(x, dtype="complex128")
+        elif mode == "density_matrix":
+            x = paddle.reshape(x, (2**self.n, 1))
+            x = matmul(x, dagger(x))
+        else:
+            raise ValueError("the mode should be state_vector or density_matrix")
+        return x
+
+    def angle_encoding(self, x, encoding_gate, invert=False):
+        r"""将输入的经典数据使用角度编码的方式进行编码。
+
+        Args:
+            x (Tensor): 待编码的向量
+            encoding_gate (str): 编码要用的量子门，可以是 ``"rx"`` 、 ``"ry"`` 和 ``"rz"``
+            invert (bool): 添加的是否为编码电路的逆电路，默认为 ``False`` ，即添加正常的编码电路
+        """
+        assert x.size <= self.n, "the number of classical data should be equal to the number of qubits"
+        x = paddle.flatten(x)
+        if invert:
+            x = -x
+
+        def add_encoding_gate(theta, idx, gate):
+            if gate == "rx":
+                self.rx(theta, idx)
+            elif gate == "ry":
+                self.ry(theta, idx)
+            elif gate == "rz":
+                self.rz(theta, idx)
+            else:
+                raise ValueError("the encoding_gate should be rx, ry, or rz")
+
+        for idx, element in enumerate(x):
+            add_encoding_gate(element[0], idx, encoding_gate)
+
+    def iqp_encoding(self, x, num_repeats=1, pattern=None, invert=False):
+        r"""将输入的经典数据使用 IQP 编码的方式进行编码。
+
+        Args:
+            x (Tensor): 待编码的向量
+            num_repeats (int): 编码层的层数
+            pattern (list): 量子比特的纠缠方式
+            invert (bool): 添加的是否为编码电路的逆电路，默认为 ``False`` ，即添加正常的编码电路
+        """
+        assert x.size <= self.n, "the number of classical data should be equal to the number of qubits"
+        num_x = x.size
+        x = paddle.flatten(x)
+        if pattern is None:
+            pattern = list()
+            for idx0 in range(0, self.n):
+                for idx1 in range(idx0 + 1, self.n):
+                    pattern.append((idx0, idx1))
+
+        while num_repeats > 0:
+            num_repeats -= 1
+            if invert:
+                for item in pattern:
+                    self.cnot(list(item))
+                    self.rz(-x[item[0]]*x[item[1]], item[1])
+                    self.cnot(list(item))
+                for idx in range(0, num_x):
+                    self.rz(-x[idx], idx)
+                for idx in range(0, num_x):
+                    self.h(idx)
+            else:
+                for idx in range(0, num_x):
+                    self.h(idx)
+                for idx in range(0, num_x):
+                    self.rz(x[idx], idx)
+                for item in pattern:
+                    self.cnot(list(item))
+                    self.rz(x[item[0]]*x[item[1]], item[1])
+                    self.cnot(list(item))
 
     """
     Common Gates
@@ -260,10 +513,10 @@ class UAnsatz:
             cir.rx(theta[0], which_qubit)
 
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
-        self.__history.append(['u', [which_qubit], [theta,
-                                                    paddle.to_tensor(np.array([-math.pi / 2])),
-                                                    paddle.to_tensor(np.array([math.pi / 2]))]])
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
+        self.__history.append(['rx', [which_qubit], [theta,
+                                                     paddle.to_tensor(np.array([-math.pi / 2])),
+                                                     paddle.to_tensor(np.array([math.pi / 2]))]])
 
     def ry(self, theta, which_qubit):
         r"""添加关于 y 轴的单量子比特旋转门。
@@ -290,10 +543,10 @@ class UAnsatz:
             which_qubit = 0
             cir.ry(theta[0], which_qubit)
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
-        self.__history.append(['u', [which_qubit], [theta,
-                                                    paddle.to_tensor(np.array([0.0])),
-                                                    paddle.to_tensor(np.array([0.0]))]])
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
+        self.__history.append(['ry', [which_qubit], [theta,
+                                                     paddle.to_tensor(np.array([0.0])),
+                                                     paddle.to_tensor(np.array([0.0]))]])
 
     def rz(self, theta, which_qubit):
         r"""添加关于 z 轴的单量子比特旋转门。
@@ -320,10 +573,10 @@ class UAnsatz:
             which_qubit = 0
             cir.rz(theta[0], which_qubit)
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
-        self.__history.append(['u', [which_qubit], [paddle.to_tensor(np.array([0.0])),
-                                                    paddle.to_tensor(np.array([0.0])),
-                                                    theta]])
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
+        self.__history.append(['rz', [which_qubit], [paddle.to_tensor(np.array([0.0])),
+                                                     paddle.to_tensor(np.array([0.0])),
+                                                     theta]])
 
     def cnot(self, control):
         r"""添加一个 CNOT 门。
@@ -350,7 +603,7 @@ class UAnsatz:
             cir.cnot([0, 1])
         """
         assert 0 <= control[0] < self.n and 0 <= control[1] < self.n,\
-            "the qubit should >= 0 and < n(the number of qubit)"
+            "the qubit should >= 0 and < n (the number of qubit)"
         assert control[0] != control[1], "the control qubit is the same as the target qubit"
         self.__history.append(['CNOT', control, None])
 
@@ -362,7 +615,7 @@ class UAnsatz:
         .. math::
 
             \begin{align}
-            SWAP &=\begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
+            SWAP = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
             \end{align}
 
         Args:
@@ -378,7 +631,7 @@ class UAnsatz:
             cir.swap([0, 1])
         """
         assert 0 <= control[0] < self.n and 0 <= control[1] < self.n,\
-            "the qubit should >= 0 and < n(the number of qubit)"
+            "the qubit should >= 0 and < n (the number of qubit)"
         assert control[0] != control[1], "the indices needed to be swapped should not be the same"
         self.__history.append(['SWAP', control, None])
 
@@ -409,7 +662,7 @@ class UAnsatz:
 
             {'0': 0.0, '1': 1.0}
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
         self.__history.append(['x', [which_qubit], None])
 
     def y(self, which_qubit):
@@ -439,7 +692,7 @@ class UAnsatz:
 
             {'0': 0.0, '1': 1.0}
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
         self.__history.append(['y', [which_qubit], None])
 
     def z(self, which_qubit):
@@ -469,7 +722,7 @@ class UAnsatz:
 
             {'0': 1.0, '1': 0.0}
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
         self.__history.append(['z', [which_qubit], None])
 
     def h(self, which_qubit):
@@ -484,7 +737,7 @@ class UAnsatz:
         Args:
             which_qubit (int): 作用在的 qubit 的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
         self.__history.append(['h', [which_qubit], None])
 
     def s(self, which_qubit):
@@ -499,8 +752,8 @@ class UAnsatz:
         Args:
             which_qubit (int): 作用在的 qubit 的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
-        self.__history.append(['u', [which_qubit], [paddle.to_tensor(np.array([0.0])),
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
+        self.__history.append(['s', [which_qubit], [paddle.to_tensor(np.array([0.0])),
                                                     paddle.to_tensor(np.array([0.0])),
                                                     paddle.to_tensor(np.array([math.pi / 2]))]])
 
@@ -516,8 +769,8 @@ class UAnsatz:
         Args:
             which_qubit (int): 作用在的 qubit 的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
-        self.__history.append(['u', [which_qubit], [paddle.to_tensor(np.array([0.0])),
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
+        self.__history.append(['t', [which_qubit], [paddle.to_tensor(np.array([0.0])),
                                                     paddle.to_tensor(np.array([0.0])),
                                                     paddle.to_tensor(np.array([math.pi / 4]))]])
 
@@ -542,8 +795,150 @@ class UAnsatz:
               lam (Tensor): 旋转角度 :math:`\lambda` 。
               which_qubit (int): 作用在的 qubit 的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
         """
-        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n(the number of qubit)"
+        assert 0 <= which_qubit < self.n, "the qubit should >= 0 and < n (the number of qubit)"
         self.__history.append(['u', [which_qubit], [theta, phi, lam]])
+
+    def rxx(self, theta, which_qubits):
+        r"""添加一个 RXX 门。
+
+        其矩阵形式为：
+
+        .. math::
+
+            \begin{align}
+            RXX(\theta) =
+            \begin{bmatrix} 
+                \cos\frac{\theta}{2} & 0 & 0 & -i\sin\frac{\theta}{2} \\ 
+                0 & \cos\frac{\theta}{2} & -i\sin\frac{\theta}{2} & 0 \\ 
+                0 & -i\sin\frac{\theta}{2} & \cos\frac{\theta}{2} & 0 \\ 
+                -i\sin\frac{\theta}{2} & 0 & 0 & \cos\frac{\theta}{2}
+            \end{bmatrix}
+            \end{align}
+
+        Args:
+            theta (Tensor): 旋转角度
+            which_qubits (list): 作用在的两个量子比特的编号，其值都应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
+
+        ..  code-block:: python
+
+            import numpy as np
+            import paddle
+            from paddle_quantum.circuit import UAnsatz
+            num_qubits = 2
+            cir = UAnsatz(num_qubits)
+            cir.rxx(paddle.to_tensor(np.array([np.pi/2])), [0, 1])
+        """
+        assert 0 <= which_qubits[0] < self.n and 0 <= which_qubits[1] < self.n, \
+            "the qubit should >= 0 and < n (the number of qubit)"
+        assert which_qubits[0] != which_qubits[1], "the indices of two qubits should be different"
+        self.__history.append(['RXX_gate', which_qubits, theta])
+
+    def ryy(self, theta, which_qubits):
+        r"""添加一个 RYY 门。
+
+        其矩阵形式为：
+
+        .. math::
+
+            \begin{align}
+            RYY(\theta) =
+            \begin{bmatrix} 
+                \cos\frac{\theta}{2} & 0 & 0 & i\sin\frac{\theta}{2} \\ 
+                0 & \cos\frac{\theta}{2} & -i\sin\frac{\theta}{2} & 0 \\ 
+                0 & -i\sin\frac{\theta}{2} & \cos\frac{\theta}{2} & 0 \\ 
+                i\sin\frac{\theta}{2} & 0 & 0 & cos\frac{\theta}{2}
+            \end{bmatrix}
+            \end{align}
+
+        Args:
+            theta (Tensor): 旋转角度
+            which_qubits (list): 作用在的两个量子比特的编号，其值都应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
+
+        ..  code-block:: python
+
+            import numpy as np
+            import paddle
+            from paddle_quantum.circuit import UAnsatz
+            num_qubits = 2
+            cir = UAnsatz(num_qubits)
+            cir.ryy(paddle.to_tensor(np.array([np.pi/2])), [0, 1])
+        """
+        assert 0 <= which_qubits[0] < self.n and 0 <= which_qubits[1] < self.n, \
+            "the qubit should >= 0 and < n (the number of qubit)"
+        assert which_qubits[0] != which_qubits[1], "the indices of two qubits should be different"
+        self.__history.append(['RYY_gate', which_qubits, theta])
+
+    def rzz(self, theta, which_qubits):
+        r"""添加一个 RZZ 门。
+
+        其矩阵形式为：
+
+        .. math::
+
+            \begin{align}
+            RZZ(\theta) =
+            \begin{bmatrix} 
+                e^{-i\frac{\theta}{2}} & 0 & 0 & 0 \\ 
+                0 & e^{i\frac{\theta}{2}} & 0 & 0 \\ 
+                0 & 0 & e^{i\frac{\theta}{2}} & 0 \\ 
+                0 & 0 & 0 & e^{-i\frac{\theta}{2}}
+            \end{bmatrix}
+            \end{align}
+
+        Args:
+            theta (Tensor): 旋转角度
+            which_qubits (list): 作用在的两个量子比特的编号，其值都应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
+
+        ..  code-block:: python
+
+            import numpy as np
+            import paddle
+            from paddle_quantum.circuit import UAnsatz
+            num_qubits = 2
+            cir = UAnsatz(num_qubits)
+            cir.rzz(paddle.to_tensor(np.array([np.pi/2])), [0, 1])
+        """
+        assert 0 <= which_qubits[0] < self.n and 0 <= which_qubits[1] < self.n, \
+            "the qubit should >= 0 and < n (the number of qubit)"
+        assert which_qubits[0] != which_qubits[1], "the indices of two qubits should be different"
+        self.__history.append(['RZZ_gate', which_qubits, theta])
+
+    def ms(self, which_qubits):
+        r"""添加一个 Mølmer-Sørensen (MS) 门，用于离子阱设备。
+
+        其矩阵形式为：
+
+        .. math::
+
+            \begin{align}
+            MS = RXX(-\frac{\pi}{2}) = \frac{1}{\sqrt{2}}
+            \begin{bmatrix}
+                1 & 0 & 0 & i \\ 
+                0 & 1 & i & 0 \\ 
+                0 & i & 1 & 0 \\ 
+                i & 0 & 0 & 1 
+            \end{bmatrix}
+            \end{align}
+
+        Args:
+            which_qubits (list): 作用在的两个量子比特的编号，其值都应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
+
+        Note:
+            参考文献 https://arxiv.org/abs/quant-ph/9810040
+
+        ..  code-block:: python
+
+            import numpy as np
+            import paddle
+            from paddle_quantum.circuit import UAnsatz
+            num_qubits = 2
+            cir = UAnsatz(num_qubits)
+            cir.ms([0, 1])
+        """
+        assert 0 <= which_qubits[0] < self.n and 0 <= which_qubits[1] < self.n, \
+            "the qubit should >= 0 and < n(the number of qubit)"
+        assert which_qubits[0] != which_qubits[1], "the indices of two qubits should be different"
+        self.__history.append(['MS_gate', which_qubits, paddle.to_tensor(-np.array([np.pi / 2]))])
 
     def universal_2_qubit_gate(self, theta, which_qubits):
         r"""添加 2-qubit 通用门，这个通用门需要 15 个参数。
@@ -1237,7 +1632,7 @@ class UAnsatz:
             gamma = 0.1
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.amplitude_damping(gamma, 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1284,7 +1679,7 @@ class UAnsatz:
             p = 0.2
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.generalized_amplitude_damping(gamma, p, 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1330,7 +1725,7 @@ class UAnsatz:
             p = 0.1
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.phase_damping(p, 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1373,7 +1768,7 @@ class UAnsatz:
             p = 0.1
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.bit_flip(p, 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1416,7 +1811,7 @@ class UAnsatz:
             p = 0.1
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.phase_flip(p, 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1459,7 +1854,7 @@ class UAnsatz:
             p = 0.1
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.bit_phase_flip(p, 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1504,7 +1899,7 @@ class UAnsatz:
             p = 0.1
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.depolarizing(p, 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1549,7 +1944,7 @@ class UAnsatz:
             p_z = 0.3
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.pauli_channel(p_x, p_y, p_z, 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1577,6 +1972,117 @@ class UAnsatz:
         return op_list
 
     @apply_channel
+    def reset(self, p, q, which_qubit):
+        r"""添加重置信道。有 p 的概率将量子态重置为 :math:`|0\rangle` 并有 q 的概率重置为 :math:`|1\rangle`。
+        
+        其 Kraus 算符为：
+        
+        .. math::
+        
+            E_0 = \begin{bmatrix} \sqrt{p} & 0 \\ 0 & 0 \end{bmatrix},
+            E_1 = \begin{bmatrix} 0 & \sqrt{p} \\ 0 & 0 \end{bmatrix},\\
+            E_2 = \begin{bmatrix} 0 & 0 \\ \sqrt{q} & 0 \end{bmatrix},
+            E_3 = \begin{bmatrix} 0 & 0 \\ 0 & \sqrt{q} \end{bmatrix},\\
+            E_4 = \sqrt{1-p-q} I.
+            
+        Args:
+            p (float): 重置为 :math:`|0\rangle`的概率，其值应该在 :math:`[0, 1]` 区间内
+            q (float): 重置为 :math:`|1\rangle`的概率，其值应该在 :math:`[0, 1]` 区间内
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
+        
+        Note:
+            两个输入的概率加起来需要小于等于 1。
+        
+        代码示例:
+        
+        .. code-block:: python
+        
+            from paddle_quantum.circuit import UAnsatz
+            N = 2
+            p = 1
+            q = 0
+            cir = UAnsatz(N)
+            cir.h(0)
+            cir.cnot([0, 1])
+            cir.reset(p, q, 0)
+            final_state = cir.run_density_matrix()
+            print(final_state.numpy())
+            
+        ::
+        
+            [[0.5+0.j 0. +0.j 0. +0.j 0. +0.j]
+             [0. +0.j 0.5+0.j 0. +0.j 0. +0.j]
+             [0. +0.j 0. +0.j 0. +0.j 0. +0.j]
+             [0. +0.j 0. +0.j 0. +0.j 0. +0.j]]
+        """
+        assert p + q <= 1, 'the sum of probabilities should be smaller than or equal to 1 '
+        
+        e0 = paddle.to_tensor([[np.sqrt(p), 0], [0, 0]], dtype='complex128')
+        e1 = paddle.to_tensor([[0, np.sqrt(p)], [0, 0]], dtype='complex128')
+        e2 = paddle.to_tensor([[0, 0], [np.sqrt(q), 0]], dtype='complex128')
+        e3 = paddle.to_tensor([[0, 0], [0, np.sqrt(q)]], dtype='complex128')
+        e4 = paddle.to_tensor([[np.sqrt(1 - (p + q)), 0], [0, np.sqrt(1 - (p + q))]], dtype='complex128')
+        
+        return [e0, e1, e2, e3, e4]
+        
+    @apply_channel
+    def thermal_relaxation(self, t1, t2, time, which_qubit):
+        r"""添加热弛豫信道，模拟超导硬件上的 T1 和 T2 混合过程。
+
+        Args:
+            t1 (float): :math:`T_1` 过程的弛豫时间常数，单位是微秒
+            t2 (float): :math:`T_2` 过程的弛豫时间常数，单位是微秒
+            time (float): 弛豫过程中量子门的执行时间，单位是纳秒
+            which_qubit (int): 该信道作用在的 qubit 的编号，其值应该在 :math:`[0, n)` 范围内， :math:`n` 为该量子电路的量子比特数
+
+        Note:
+            时间常数必须满足 :math:`T_2 \le T_1`，参考文献 https://arxiv.org/abs/2101.02109
+
+        代码示例:
+
+        .. code-block:: python
+
+            from paddle_quantum.circuit import UAnsatz
+            N = 2
+            t1 = 30
+            t2 = 20
+            tg = 200
+            cir = UAnsatz(N)
+            cir.h(0)
+            cir.cnot([0, 1])
+            cir.thermal_relaxation(t1, t2, tg, 0)
+            cir.thermal_relaxation(t1, t2, tg, 1)
+            final_state = cir.run_density_matrix()
+            print(final_state.numpy())
+
+        ::
+
+            [[0.5   +0.j 0.    +0.j 0.    +0.j 0.4901+0.j]
+             [0.    +0.j 0.0033+0.j 0.    +0.j 0.    +0.j]
+             [0.    +0.j 0.    +0.j 0.0033+0.j 0.    +0.j]
+             [0.4901+0.j 0.    +0.j 0.    +0.j 0.4934+0.j]]
+
+        """
+        assert 0 <= t2 <= t1, 'Relaxation time constants are not valid as 0 <= T2 <= T1!'
+        assert 0 <= time, 'Invalid gate time!'
+        
+        # Change time scale
+        time = time / 1000
+        # Probability of resetting the state to |0>
+        p_reset = 1 - np.exp(-time / t1)          
+        # Probability of phase flip
+        p_z = (1 - p_reset) * (1 - np.exp(-time / t2) * np.exp(time / t1)) / 2 
+        # Probability of identity
+        p_i = 1- p_reset - p_z
+        
+        e0 = paddle.to_tensor([[np.sqrt(p_i), 0], [0, np.sqrt(p_i)]], dtype='complex128')
+        e1 = paddle.to_tensor([[np.sqrt(p_z), 0], [0, -np.sqrt(p_z)]], dtype='complex128')
+        e2 = paddle.to_tensor([[np.sqrt(p_reset), 0], [0, 0]], dtype='complex128')
+        e3 = paddle.to_tensor([[0, np.sqrt(p_reset)], [0, 0]], dtype='complex128')
+        
+        return [e0, e1, e2, e3]
+        
+    @apply_channel
     def customized_channel(self, ops, which_qubit):
         r"""添加自定义的量子信道。
 
@@ -1595,7 +2101,7 @@ class UAnsatz:
             k2 = paddle.to_tensor([[0, 0], [0, 1]], dtype='complex128')
             cir = UAnsatz(N)
             cir.h(0)
-            cir.cnot([0,1])
+            cir.cnot([0, 1])
             cir.customized_channel([k1, k2], 0)
             final_state = cir.run_density_matrix()
             print(final_state.numpy())
@@ -1618,7 +2124,7 @@ class UAnsatz:
         return ops
 
 
-def __local_H_prob(cir, hamiltonian, shots=1024):
+def _local_H_prob(cir, hamiltonian, shots=1024):
     r"""
     构造出 Pauli 测量电路并测量 ancilla，处理实验结果来得到 ``H`` (只有一项)期望值的实验测量值。
 
@@ -1701,5 +2207,5 @@ def H_prob(cir, H, shots=1024):
     """
     expval = 0
     for term in H:
-        expval += term[0] * __local_H_prob(cir, term[1], shots=shots)
+        expval += term[0] * _local_H_prob(cir, term[1], shots=shots)
     return expval

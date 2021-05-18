@@ -16,7 +16,7 @@
 HGenerator
 """
 
-from numpy import diag
+import numpy
 import scipy
 import scipy.stats
 
@@ -26,13 +26,13 @@ __all__ = ["generate_rho_sigma", ]
 
 
 def generate_rho_sigma():
-    scipy.random.seed(SEED)
-    V = scipy.stats.unitary_group.rvs(4)  # Generate a random unitary martrix
-    D = diag([0.5, 0.3, 0.1, 0.1])  # Input the spectrum of the target state rho
+    numpy.random.seed(SEED)
+    V = scipy.stats.unitary_group.rvs(4)  # Generate a random unitary matrix
+    D = numpy.diag([0.5, 0.3, 0.1, 0.1])  # Input the spectrum of the target state rho
     V_H = V.conj().T
     rho = V @ D @ V_H  # Generate rho
     # print(rho)  # Print quantum state rho
 
     # Input the quantum state sigma
-    sigma = diag([0.1, 0.2, 0.3, 0.4]).astype('complex128')
+    sigma = numpy.diag([0.1, 0.2, 0.3, 0.4]).astype('complex128')
     return rho, sigma

@@ -200,7 +200,7 @@ def cx_gate_matrix():
 
 def swap_gate_matrix():
     """
-    Control Not
+    Swap gate
     :return:
     """
     return np.array([[1, 0, 0, 0],
@@ -208,6 +208,71 @@ def swap_gate_matrix():
                      [0, 1, 0, 0],
                      [0, 0, 0, 1]], dtype=complex).reshape(2, 2, 2, 2)
 
+
+def rxx_gate_matrix(params):
+    """
+    RXX gate
+    :return:
+    """
+    theta = params
+    re_a = paddle.cos(theta / 2)
+    re_b = paddle.zeros([1], 'float64')
+    im_a = paddle.sin(theta / 2)
+    im_b = paddle.zeros([1], 'float64')
+    re = paddle.reshape(paddle.concat([re_a, re_b, re_b, re_b, 
+                                       re_b, re_a, re_b, re_b, 
+                                       re_b, re_b, re_a, re_b, 
+                                       re_b, re_b, re_b, re_a]), [4, 4])
+    im = paddle.reshape(paddle.concat([im_b, im_b, im_b, im_a, 
+                                       im_b, im_b, im_a, im_b, 
+                                       im_b, im_a, im_b, im_b, 
+                                       im_a, im_b, im_b, im_b]), [4, 4])
+
+    return re - im * paddle.to_tensor([1j], 'complex128')
+
+
+def ryy_gate_matrix(params):
+    """
+    RYY gate
+    :return:
+    """
+    theta = params
+    re_a = paddle.cos(theta / 2)
+    re_b = paddle.zeros([1], 'float64')
+    im_a = paddle.sin(theta / 2)
+    im_b = paddle.zeros([1], 'float64')
+    re = paddle.reshape(paddle.concat([re_a, re_b, re_b, re_b, 
+                                       re_b, re_a, re_b, re_b, 
+                                       re_b, re_b, re_a, re_b, 
+                                       re_b, re_b, re_b, re_a]), [4, 4])
+    im = paddle.reshape(paddle.concat([im_b, im_b, im_b, im_a, 
+                                       im_b, im_b, -im_a, im_b, 
+                                       im_b, -im_a, im_b, im_b, 
+                                       im_a, im_b, im_b, im_b]), [4, 4])
+
+    return re + im * paddle.to_tensor([1j], 'complex128')
+
+
+def rzz_gate_matrix(params):
+    """
+    RZZ gate
+    :return:
+    """
+    theta = params
+    re_a = paddle.cos(theta / 2)
+    re_b = paddle.zeros([1], 'float64')
+    im_a = paddle.sin(theta / 2)
+    im_b = paddle.zeros([1], 'float64')
+    re = paddle.reshape(paddle.concat([re_a, re_b, re_b, re_b, 
+                                       re_b, re_a, re_b, re_b, 
+                                       re_b, re_b, re_a, re_b, 
+                                       re_b, re_b, re_b, re_a]), [4, 4])
+    im = paddle.reshape(paddle.concat([-im_a, im_b, im_b, im_b, 
+                                       im_b, im_a, im_b, im_b, 
+                                       im_b, im_b, im_a, im_b, 
+                                       im_b, im_b, im_b, -im_a]), [4, 4])
+                                       
+    return re + im * paddle.to_tensor([1j], 'complex128')
 
 # PaddleE
 def normalize_axis(axis, ndim):
@@ -410,6 +475,15 @@ def StateTransfer(state, gate_name, bits, params=None):
     elif gate_name == 'u':
         # print('----------', gate_name, bits, '----------')
         gate_matrix = u_gate_matrix(params)
+    elif gate_name == 'RXX_gate':
+        # print('----------', gate_name, bits, '----------')
+        gate_matrix = rxx_gate_matrix(params)
+    elif gate_name == 'RYY_gate':
+        # print('----------', gate_name, bits, '----------')
+        gate_matrix = ryy_gate_matrix(params)
+    elif gate_name == 'RZZ_gate':
+        # print('----------', gate_name, bits, '----------')
+        gate_matrix = rzz_gate_matrix(params)
     else:
         raise Exception("Gate name error")
 
