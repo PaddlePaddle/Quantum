@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import numpy as np
-from numpy import concatenate
 from numpy import trace as np_trace
 from numpy import matmul as np_matmul
 from numpy import random as np_random
@@ -36,29 +35,32 @@ __all__ = [
 ]
 
 
-def vec(n):
-    r"""生成量子态 :math:`|00...0\rangle` 的numpy形式。
+def vec(i, n):
+    r"""生成计算基态 :math:`|e_{i}\rangle` 的 numpy 形式，其中 :math:`|e_{i}\rangle` 的第 :math:`i` 个元素为 1，其余元素为 0。
 
     Args:
-        n(int): 量子比特数量
+        i(int): 计算基态 :math`|e_{i}\rangle` 的下标 :math:`i`
+        n(int): 生成的量子态的量子比特数量
 
     Returns:
-        numpy.ndarray: 一个形状为 ``(1, 2**n)`` 的numpy数组 ``[[1, 0, 0, ..., 0]]``
+        numpy.ndarray: 计算基态 :math:`|e_{i}\rangle` 的态矢量形式。
 
     代码示例:
 
     .. code-block:: python
-    
+
         from paddle_quantum.state import vec
-        vector = vec(3)
+        vector = vec(1, 3)
         print(vector)
 
     ::
 
-        [[1.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j]]
+        [[0.+0.j 1.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j 0.+0.j]]
     """
     assert n > 0, 'qubit number must be larger than 1'
-    state = concatenate(([[1.0]], np_zeros([1, (2 ** n) - 1])), axis=1)
+    assert 0 <= i <= 2 ** n - 1, 'i should >= 0 and < 2**n (the dimension of the Hilbert space)'
+    state = np_zeros([1, 2 ** n])
+    state[0][i] = 1
     return state.astype("complex128")
 
 

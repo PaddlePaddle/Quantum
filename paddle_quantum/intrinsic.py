@@ -16,10 +16,11 @@ import math
 from functools import wraps
 import numpy as np
 from numpy import binary_repr
-
+import re
 import paddle
-from paddle import multiply, add, to_tensor
+from paddle import multiply, add, to_tensor, matmul, real, trace
 from paddle_quantum.simulator import StateTransfer
+from paddle_quantum import utils
 
 
 def dic_between2and10(n):
@@ -52,11 +53,14 @@ def single_H_vec_i(H, target_vec):
     Note:
         这是内部函数，你并不需要直接调用到该函数。
     """
-    op_list = H.split(',')
+    op_list = re.split(r',\s*', H.lower())
     coef = 1 + 0*1j  # Coefficient for the vector
     new_vec = list(target_vec)
     for op in op_list:
-        pos = int(op[1:])
+        if len(op) >= 2:
+            pos = int(op[1:])
+        elif op[0] != 'i':
+            raise ValueError('only operator "I" can be used without identifying its position')
         if op[0] == 'x':
             new_vec[pos] = '0' if target_vec[pos] == '1' else '1'
         elif op[0] == 'y':
@@ -119,7 +123,7 @@ def vec_expecval(H, vec):
     return result
 
 
-def transfer_by_history(state, history):
+def transfer_by_history(state, history, params):
     r"""
     It transforms the input state according to the history given.
 
@@ -127,14 +131,18 @@ def transfer_by_history(state, history):
         这是内部函数，你并不需要直接调用到该函数。
     """
     for history_ele in history:
-        if history_ele[0] != 'channel':
-            if history_ele[0] in {'s', 't', 'ry', 'rz', 'rx'}:
-                state = StateTransfer(state, 'u', history_ele[1], params=history_ele[2])
-            elif history_ele[0] == 'MS_gate':
-                state = StateTransfer(state, 'RXX_gate', history_ele[1], params=history_ele[2])
+        if history_ele['gate'] != 'channel':
+            which_qubit = history_ele['which_qubits']
+            parameter =  [params[i] for i in history_ele['theta']] if history_ele['theta'] else None
+            
+            if history_ele['gate'] in {'s', 't', 'ry', 'rz', 'rx', 'sdg', "tdg"}:
+                state = StateTransfer(state, 'u', which_qubit, params=parameter)
+            elif history_ele['gate'] == 'MS_gate':
+                state = StateTransfer(state, 'RXX_gate', which_qubit, params=parameter)
+            elif history_ele['gate'] in {'crx', 'cry', 'crz'}:
+                state = StateTransfer(state, 'CU', which_qubit, params=parameter)
             else:
-                state = StateTransfer(state, history_ele[0], history_ele[1], params=history_ele[2])
-
+                state = StateTransfer(state, history_ele['gate'], which_qubit, params=parameter)
     return state
 
 
@@ -154,6 +162,6 @@ def apply_channel(func):
         assert 0 <= which_qubit < self.n, "the qubit's index should >= 0 and < n(the number of qubit)"
         self._UAnsatz__has_channel = True
         ops = func(self, *args)
-        self._UAnsatz__history.append(['channel', ops, [which_qubit]])
+        self._UAnsatz__history.append({'gate': 'channel', 'operators': ops, 'which_qubits': [which_qubit]})
 
     return inner

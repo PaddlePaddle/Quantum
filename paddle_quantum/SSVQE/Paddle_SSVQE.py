@@ -71,15 +71,15 @@ class Net(paddle.nn.Layer):
 
         # Use computational basis to calculate each expectation value, which is the same
         # as a diagonal element in U^dagger*H*U
-        loss_components = [
-            loss_struct[0][0],
-            loss_struct[1][1],
-            loss_struct[2][2],
-            loss_struct[3][3]
-        ]
+        loss_components = []
+        for i in range(len(loss_struct)):
+            loss_components.append(loss_struct[i][i])
 
         # Calculate the weighted loss function
-        loss = 4 * loss_components[0] + 3 * loss_components[1] + 2 * loss_components[2] + 1 * loss_components[3]
+        loss = 0
+        for i in range(len(loss_components)):
+            weight = 4 - i
+            loss += weight * loss_components[i]
 
         return loss, loss_components
 
@@ -128,17 +128,36 @@ def main():
 
     loss_components = Paddle_SSVQE(H)
 
-    print('The estimated ground state energy is: ', loss_components[0].numpy())
-    print('The theoretical ground state energy: ', numpy.linalg.eigh(H)[0][0])
+    def output_ordinalvalue(num):
+        r"""
+        Convert to ordinal value
 
-    print('The estimated 1st excited state energy is: ', loss_components[1].numpy())
-    print('The theoretical 1st excited state energy: ', numpy.linalg.eigh(H)[0][1])
+        Args:
+            num (int): input number
 
-    print('The estimated 2nd excited state energy is: ', loss_components[2].numpy())
-    print('The theoretical 2nd excited state energy: ', numpy.linalg.eigh(H)[0][2])
+        Return:
+            (str): output ordinal value
+        """
+        if num == 1:
+            return str(num) + "st"
+        elif num == 2:
+            return str(num) + "nd"
+        elif num == 3:
+            return str(num) + "rd"
+        else:
+            return str(num) + 'th'
 
-    print('The estimated 3rd excited state energy is: ', loss_components[3].numpy())
-    print('The theoretical 3rd excited state energy: ', numpy.linalg.eigh(H)[0][3])
+    for i in range(len(loss_components)):
+        if i == 0:
+            print('The estimated ground state energy is: ', loss_components[i].numpy())
+            print('The theoretical ground state energy is: ', numpy.linalg.eigh(H)[0][i])
+        else:
+            print('The estimated {} excited state energy is: {}'.format(
+                output_ordinalvalue(i), loss_components[i].numpy())
+            )
+            print('The theoretical {} excited state energy is: {}'.format(
+                output_ordinalvalue(i), numpy.linalg.eigh(H)[0][i])
+            )
 
 
 if __name__ == '__main__':

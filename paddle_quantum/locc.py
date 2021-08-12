@@ -251,7 +251,7 @@ class LoccAnsatz(UAnsatz):
             which_qubit (int): 添加该门量子比特编号
         """
         which_qubit = self.party[which_qubit]
-        super(LoccAnsatz, self).z(which_qubit)
+        super(LoccAnsatz, self).t(which_qubit)
 
     def u3(self, theta, phi, lam, which_qubit):
         r"""添加一个单量子比特的旋转门。

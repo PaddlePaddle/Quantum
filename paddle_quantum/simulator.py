@@ -186,6 +186,50 @@ def u_gate_matrix(params):
 #                    paddle.to_tensor(np.array([3.0]))])
 # print(a.numpy())
 
+def cu_gate_matrix(params):
+    """
+    Control U3
+    :return:
+    """
+    theta, phi, lam = params
+
+    if (type(theta) is paddle.Tensor and
+            type(phi) is paddle.Tensor and
+            type(lam) is paddle.Tensor):
+        re_a = paddle.cos(theta / 2)
+        re_b = - paddle.cos(lam) * paddle.sin(theta / 2)
+        re_c = paddle.cos(phi) * paddle.sin(theta / 2)
+        re_d = paddle.cos(phi + lam) * paddle.cos(theta / 2)
+        im_a = paddle.zeros([1], 'float64')
+        im_b = - paddle.sin(lam) * paddle.sin(theta / 2)
+        im_c = paddle.sin(phi) * paddle.sin(theta / 2)
+        im_d = paddle.sin(phi + lam) * paddle.cos(theta / 2)
+
+        re = paddle.reshape(paddle.concat([re_a, re_b, re_c, re_d]), [2, 2])
+        im = paddle.reshape(paddle.concat([im_a, im_b, im_c, im_d]), [2, 2])
+
+        id = paddle.eye(2, dtype='float64')
+        z2 = paddle.zeros(shape=[2,2], dtype='float64')
+
+        re = paddle.concat([paddle.concat([id, z2], -1), paddle.concat([z2, re], -1)])
+        im = paddle.concat([paddle.concat([z2, z2], -1), paddle.concat([z2, im], -1)])
+
+        return re + im * paddle.to_tensor([1j], 'complex128')
+
+    elif (type(theta) is float and
+          type(phi) is float and
+          type(lam) is float):
+        u3 = np.array([[np.cos(theta / 2),
+                    -np.exp(1j * lam) * np.sin(theta / 2)],
+                   [np.exp(1j * phi) * np.sin(theta / 2),
+                    np.exp(1j * phi + 1j * lam) * np.cos(theta / 2)]])
+        return np.block([
+            [np.eye(2, dtype=float), np.zeros((2, 2), dtype=float)], [np.zeros((2, 2), dtype=float), u3]
+        ]).reshape((2,2,2,2))
+
+    else:
+        assert False
+
 
 def cx_gate_matrix():
     """
@@ -196,6 +240,28 @@ def cx_gate_matrix():
                      [0, 1, 0, 0],
                      [0, 0, 0, 1],
                      [0, 0, 1, 0]], dtype=complex).reshape((2, 2, 2, 2))
+
+
+def cy_gate_matrix():
+    """
+    Control Y
+    :return:
+    """
+    return np.array([[1, 0, 0, 0],
+                     [0, 1, 0, 0],
+                     [0, 0, 0, -1j],
+                     [0, 0, 1j, 0]], dtype=complex).reshape((2, 2, 2, 2))
+
+
+def cz_gate_matrix():
+    """
+    Control Z
+    :return:
+    """
+    return np.array([[1, 0, 0, 0],
+                     [0, 1, 0, 0],
+                     [0, 0, 1, 0],
+                     [0, 0, 0, -1]], dtype=complex).reshape((2, 2, 2, 2))
 
 
 def swap_gate_matrix():
@@ -214,7 +280,7 @@ def rxx_gate_matrix(params):
     RXX gate
     :return:
     """
-    theta = params
+    theta = params[0]
     re_a = paddle.cos(theta / 2)
     re_b = paddle.zeros([1], 'float64')
     im_a = paddle.sin(theta / 2)
@@ -236,7 +302,7 @@ def ryy_gate_matrix(params):
     RYY gate
     :return:
     """
-    theta = params
+    theta = params[0]
     re_a = paddle.cos(theta / 2)
     re_b = paddle.zeros([1], 'float64')
     im_a = paddle.sin(theta / 2)
@@ -258,7 +324,7 @@ def rzz_gate_matrix(params):
     RZZ gate
     :return:
     """
-    theta = params
+    theta = params[0]
     re_a = paddle.cos(theta / 2)
     re_b = paddle.zeros([1], 'float64')
     im_a = paddle.sin(theta / 2)
@@ -273,6 +339,7 @@ def rzz_gate_matrix(params):
                                        im_b, im_b, im_b, -im_a]), [4, 4])
                                        
     return re + im * paddle.to_tensor([1j], 'complex128')
+
 
 # PaddleE
 def normalize_axis(axis, ndim):
@@ -366,6 +433,86 @@ def complex_moveaxis(m, source, destination):
 #
 #     return m
 
+def get_cswap_state(state, bits):
+    """
+    Transfer to the next state after applying CSWAP gate
+    :param state:
+    :param bits:
+    :return:
+    """
+    q0 = bits[0]
+    q1 = bits[1]
+    q2 = bits[2]
+
+    # helper angles
+    theta0 = paddle.to_tensor(np.array([0.0]))
+    thetan2 = paddle.to_tensor(np.array([-np.pi / 2], np.float64))
+    theta2 = paddle.to_tensor(np.array([np.pi / 2], np.float64))
+    thetan4 = paddle.to_tensor(np.array([-np.pi / 4], np.float64))
+    theta4 = paddle.to_tensor(np.array([np.pi / 4], np.float64))
+
+    # implements cswap gate using cnot and Single-qubit gates
+    state = transfer_state(state, cx_gate_matrix(), [q2, q1])
+    state = transfer_state(state, u_gate_matrix([thetan2, theta0, theta0]), [q2]) # ry
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta4]), [q0]) # rz
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta4]), [q1]) # rz
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta4]), [q2]) # rz
+    state = transfer_state(state, cx_gate_matrix(), [q0, q1])
+    state = transfer_state(state, cx_gate_matrix(), [q1, q2])
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, thetan4]), [q1]) # rz
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta4]), [q2]) # rz
+    state = transfer_state(state, cx_gate_matrix(), [q0, q1])
+    state = transfer_state(state, cx_gate_matrix(), [q1, q2])
+    state = transfer_state(state, cx_gate_matrix(), [q0, q1])
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, thetan4]), [q2]) # rz
+    state = transfer_state(state, cx_gate_matrix(), [q1, q2])
+    state = transfer_state(state, u_gate_matrix([theta2, thetan2, theta2]), [q1]) # rx
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, thetan4]), [q2]) # rz
+    state = transfer_state(state, cx_gate_matrix(), [q0, q1])
+    state = transfer_state(state, cx_gate_matrix(), [q1, q2])
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta2]), [q2]) # rz
+    state = transfer_state(state, u_gate_matrix([theta2, thetan2, theta2]), [q1]) # rx
+    state = transfer_state(state, u_gate_matrix([thetan2, thetan2, theta2]), [q2]) # rx
+    
+    return state
+
+
+def get_ccx_state(state, bits):
+    """
+    Transfer to the next state after applying CCX gate
+    :param state:
+    :param bits:
+    :return:
+    """
+    q0 = bits[0]
+    q1 = bits[1]
+    q2 = bits[2]
+
+    # helper angles
+    theta0 = paddle.to_tensor(np.array([0.0]))
+    theta2 = paddle.to_tensor(np.array([np.pi / 2], np.float64))
+    thetan4 = paddle.to_tensor(np.array([-np.pi / 4], np.float64))
+    theta4 = paddle.to_tensor(np.array([np.pi / 4], np.float64))
+
+    # implements ccx gate using cnot and Single-qubit gates
+    state = transfer_state(state, h_gate_matrix(), [q2])  #h
+    state = transfer_state(state, cx_gate_matrix(), [q1, q2])  # cx
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, thetan4]), [q2])  # tdagger
+    state = transfer_state(state, cx_gate_matrix(), [q0, q2])  #cx
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta4]), [q2])  # t
+    state = transfer_state(state, cx_gate_matrix(), [q1, q2]) #cx
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, thetan4]), [q2])  # tdagger
+    state = transfer_state(state, cx_gate_matrix(), [q0, q2])  # cx
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, thetan4]), [q1])  # tdagger
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta4]), [q2])  # t
+    state = transfer_state(state, h_gate_matrix(), [q2])  # h
+    state = transfer_state(state, cx_gate_matrix(), [q0, q1]) #cx
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, thetan4]), [q1])  # tdagger
+    state = transfer_state(state, cx_gate_matrix(), [q0, q1]) #cx
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta4]), [q0])  # t
+    state = transfer_state(state, u_gate_matrix([theta0, theta0, theta2]), [q1])  # s
+    return state
+
 
 # TransferProcess
 def transfer_state(state, gate_matrix, bits):
@@ -394,8 +541,10 @@ def transfer_state(state, gate_matrix, bits):
 
     # compressed moveaxis
     # compress the continuous dim before moveaxis
-    # e.g. single operand: before moveaxis 2*2*[2]*2*2 -compress-> 4*[2]*4, after moveaxis [2]*2*2*2*2 -compress-> [2]*4*4
-    #      double operands: before moveaxis 2*2*[2]*2*2*[2]*2*2 -compress-> 4*[2]*4*[2]*4, after moveaxis [2]*[2]*2*2*2*2*2*2 -compress-> [2]*[2]*4*4*4
+    # e.g. single operand: before moveaxis 2*2*[2]*2*2 -compress-> 4*[2]*4,
+    #   after moveaxis [2]*2*2*2*2 -compress-> [2]*4*4
+    # double operands: before moveaxis 2*2*[2]*2*2*[2]*2*2 -compress-> 4*[2]*4*[2]*4,
+    #   after moveaxis [2]*[2]*2*2*2*2*2*2 -compress-> [2]*[2]*4*4*4
     # the peak rank is 5 when the number of operands is 2
     assert len(source_pos) == 1 or len(source_pos) == 2
     compressed_shape_before_moveaxis = [1]
@@ -469,6 +618,15 @@ def StateTransfer(state, gate_name, bits, params=None):
     elif gate_name == 'CNOT':
         # print('----------', gate_name, bits, '----------')
         gate_matrix = cx_gate_matrix()
+    elif gate_name == 'CU':
+        # print('----------', gate_name, bits, '----------')
+        gate_matrix = cu_gate_matrix(params)
+    elif gate_name == 'cy':
+        # print('----------', gate_name, bits, '----------')
+        gate_matrix = cy_gate_matrix()
+    elif gate_name == 'cz':
+        # print('----------', gate_name, bits, '----------')
+        gate_matrix = cz_gate_matrix()
     elif gate_name == 'SWAP':
         # print('----------', gate_name, bits, '----------')
         gate_matrix = swap_gate_matrix()
@@ -484,6 +642,14 @@ def StateTransfer(state, gate_name, bits, params=None):
     elif gate_name == 'RZZ_gate':
         # print('----------', gate_name, bits, '----------')
         gate_matrix = rzz_gate_matrix(params)
+    elif gate_name == 'CSWAP':
+        # print('----------', gate_name, bits, '----------')
+        state = get_cswap_state(state, bits)
+        return state
+    elif gate_name == 'CCX':
+        # print('----------', gate_name, bits, '----------')
+        state = get_ccx_state(state, bits)
+        return state
     else:
         raise Exception("Gate name error")
 

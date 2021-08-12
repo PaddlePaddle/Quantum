@@ -23,7 +23,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='paddle-quantum',
-    version='2.1.0',
+    version='2.1.1',
     author='Institute for Quantum Computing, Baidu INC.',
     author_email='quantum@baidu.com',
     description='Paddle Quantum is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle.',
@@ -34,7 +34,7 @@ setuptools.setup(
               'paddle_quantum.VQE', 'paddle_quantum.VQSD', 'paddle_quantum.GIBBS.example',
               'paddle_quantum.QAOA.example', 'paddle_quantum.SSVQE.example', 'paddle_quantum.VQE.example',
               'paddle_quantum.VQSD.example'],
-    install_requires=['paddlepaddle>=2.0.1', 'scipy', 'networkx>=2.5', 'matplotlib', 'interval', 'tqdm'],
+    install_requires=['paddlepaddle>=2.1.1', 'scipy', 'networkx>=2.5', 'matplotlib', 'interval', 'tqdm', 'fastdtw'],
     python_requires='>=3.6, <4',
     classifiers=[
         'Programming Language :: Python :: 3',

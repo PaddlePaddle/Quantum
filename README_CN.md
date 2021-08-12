@@ -34,7 +34,7 @@
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.1.0-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.1.1-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -71,7 +71,7 @@
 
 ### 安装 PaddlePaddle
 
-当用户安装 Paddle Quantum 时会自动下载安装这个关键依赖包。关于 PaddlePaddle 更全面的安装信息请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 2.0.1+。
+当用户安装 Paddle Quantum 时会自动下载安装这个关键依赖包。关于 PaddlePaddle 更全面的安装信息请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 2.1.1+。
 
 ### 安装 Paddle Quantum 
 
@@ -153,6 +153,9 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
     2. [QAOA 求解最大割问题](./tutorial/combinatorial_optimization/MAXCUT_CN.ipynb)
     3. [大规模量子近似优化分治算法（DC-QAOA）](./tutorial/combinatorial_optimization/DC-QAOA_CN.ipynb)
     4. [旅行商问题](./tutorial/combinatorial_optimization/TSP_CN.ipynb)
+    5. [量子金融应用：最佳套利机会](./tutorial/combinatorial_optimization/ArbitrageOpportunityOptimation_CN.ipynb)
+    6. [量子金融应用：投资组合优化](./tutorial/combinatorial_optimization/PortfolioOptimization_CN.ipynb)
+    7. [量子金融应用：投资组合分散化](./tutorial/combinatorial_optimization/PortfolioDiversification_CN.ipynb)
 
 - [LOCC 量子神经网络（LOCCNet）](./tutorial/locc)
     1. [LOCC 量子神经网络](./tutorial/locc/LOCCNET_Tutorial_CN.ipynb)
@@ -165,6 +168,7 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
 - [量子神经网络研究](./tutorial/qnn_research)
     1. [量子神经网络的贫瘠高原效应（Barren Plateaus）](./tutorial/qnn_research/BarrenPlateaus_CN.ipynb)
     2. [噪声模型与量子信道](./tutorial/qnn_research/Noise_CN.ipynb)
+    3. [使用量子电路计算梯度](./tutorial/qnn_research/Gradient_CN.ipynb)
 
 随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见[教程](./tutorial/locc/LOCCNET_Tutorial_CN.ipynb)。Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。此外，量桨可以基于噪声模块进行含噪算法的开发以及研究，详情请见[噪声模块教程](./tutorial/qnn_research/Noise_CN.ipynb)。
 

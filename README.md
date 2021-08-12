@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.1.0-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.1.1-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -71,7 +71,7 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 
 ### Install PaddlePaddle
 
-This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 2.0.1+.
+This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 2.1.1+.
 
 ### Install Paddle Quantum
 
@@ -147,6 +147,9 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
     2. [Solving Max-Cut Problem with QAOA](./tutorial/combinatorial_optimization/MAXCUT_EN.ipynb)
     3. [Large-scale QAOA via Divide-and-Conquer](./tutorial/combinatorial_optimization/DC-QAOA_EN.ipynb)
     4. [Travelling Salesman Problem](./tutorial/combinatorial_optimization/TSP_EN.ipynb)
+    5. [Quantum Finance Application on Arbitrage Opportunity Optimization](./tutorial/combinatorial_optimization/ArbitrageOpportunityOptimation_EN.ipynb)
+    6. [Quantum Finance Application on Portfolio Optimization](./tutorial/combinatorial_optimization/PortfolioOptimization_EN.ipynb)
+    7. [Quantum Finance Application on Portfolio Diversification](./tutorial/combinatorial_optimization/PortfolioDiversification_EN.ipynb)
 
 - [LOCC with QNN (LOCCNet)](./tutorial/locc)
     1. [Local Operations and Classical Communication in QNN (LOCCNet)](./tutorial/locc/LOCCNET_Tutorial_EN.ipynb)
@@ -159,6 +162,7 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
 - [QNN Research](./tutorial/qnn_research)
     1. [The Barren Plateaus Phenomenon on Quantum Neural Networks (Barren Plateaus)](./tutorial/qnn_research/BarrenPlateaus_EN.ipynb)
     2. [Noise Model and Quantum Channel](./tutorial/qnn_research/Noise_EN.ipynb)
+    3. [Calculating Gradient Using Quantum Circuit](./tutorial/qnn_research/Gradient_EN.ipynb)
 
 With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can start with this [tutorial on LOCCNet](./tutorial/locc/LOCCNET_Tutorial_EN.ipynb). In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](./introduction/PaddleQuantum_GPU_EN.ipynb). Moreover, Paddle Quantum could design robust quantum algorithms under noise. For more information, please see [Noise tutorial](./tutorial/qnn_research/Noise_EN.ipynb).
 
