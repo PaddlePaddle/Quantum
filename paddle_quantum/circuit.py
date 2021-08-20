@@ -535,6 +535,9 @@ class UAnsatz:
         Args:
             state (paddle.Tensor): 输入的量子态，表示要把选定的量子比特重置为该量子态
             which_qubits (list): 需要被重置的量子比特编号
+
+        Returns:
+            paddle.Tensor: 重置后的量子态
         """
         qubits_list = which_qubits
         n = self.n
@@ -577,6 +580,7 @@ class UAnsatz:
         else:
             raise ValueError("Can't recognize the mode of quantum state.")
         self.__state = _state
+        return _state
 
     @property
     def U(self):
@@ -676,11 +680,29 @@ class UAnsatz:
 
         Args:
             x (Tensor): 待编码的向量
-            which_qubits (list): 用于编码的量子比特
             mode (str): 生成的量子态的表示方式，``"state_vector"`` 代表态矢量表示， ``"density_matrix"`` 代表密度矩阵表示
+            which_qubits (list): 用于编码的量子比特
 
         Returns:
             Tensor: 一个形状为 ``(2 ** n, )`` 或 ``(2 ** n, 2 ** n)`` 的张量，表示编码之后的量子态。
+
+        代码示例:
+
+        .. code-block:: python
+
+            import paddle
+            from paddle_quantum.circuit import UAnsatz
+            n = 3
+            built_in_amplitude_enc = UAnsatz(n)
+            # 经典信息 x 需要是 Tensor 的形式
+            x = paddle.to_tensor([0.3, 0.4, 0.5, 0.6])
+            state = built_in_amplitude_enc.amplitude_encoding(x, 'state_vector', [0,2])
+            print(state.numpy())
+
+        ::
+
+            [0.32349834+0.j 0.4313311 +0.j 0.        +0.j 0.        +0.j
+            0.53916389+0.j 0.64699668+0.j 0.        +0.j 0.        +0.j]
 
         """
         assert x.size <= 2 ** self.n, \

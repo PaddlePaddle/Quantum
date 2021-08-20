@@ -1,0 +1,35 @@
+The current example is: VQSVD with 3 X 2 size.
+The qubit number is: 3
+MBQC running time is: 0.13685639999999966 s
+Circuit model running time is: 0.10096300000000014 s
+
+The current example is: VQSVD with 4 X 2 size.
+The qubit number is: 4
+MBQC running time is: 0.18013259999999987 s
+Circuit model running time is: 0.09092929999999999 s
+
+The current example is: VQSVD with 5 X 2 size.
+The qubit number is: 5
+MBQC running time is: 0.2437035999999999 s
+Circuit model running time is: 0.09389560000000019 s
+
+The current example is: VQSVD with 6 X 2 size.
+The qubit number is: 6
+MBQC running time is: 0.32366709999999976 s
+Circuit model running time is: 0.11702480000000026 s
+
+The current example is: VQSVD with 7 X 2 size.
+The qubit number is: 7
+MBQC running time is: 0.3896693 s
+Circuit model running time is: 0.09745869999999979 s
+
+The current example is: VQSVD with 8 X 2 size.
+The qubit number is: 8
+MBQC running time is: 0.46406170000000024 s
+Circuit model running time is: 0.1019085000000004 s
+
+The current example is: VQSVD with 9 X 2 size.
+The qubit number is: 9
+MBQC running time is: 0.5693280999999999 s
+Circuit model running time is: 0.10031949999999945 s
+

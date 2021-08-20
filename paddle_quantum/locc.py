@@ -24,7 +24,7 @@ from math import log2, sqrt
 
 class LoccStatus(object):
     r"""用于表示 LOCCNet 中的一个 LOCC 态节点。
-    
+
     由于我们在 LOCC 中不仅关心量子态的解析形式，同时还关心得到它的概率，以及是经过怎样的测量而得到。因此该类包含三个成员变量：量子态 ``state`` 、得到这个态的概率 ``prob`` 和得到这个态的测量的测量结果是什么，即 ``measured_result`` 。
 
     Attributes:
@@ -106,7 +106,7 @@ class LoccParty(object):
 
 class LoccAnsatz(UAnsatz):
     r"""继承 ``UAnsatz`` 类，目的是建立在 LOCC 任务上的电路模板。
-    
+
     在 LOCC 任务中，每一方参与者只能在自己的量子比特上进行量子操作。因此我们只允许在每一方的量子比特上添加本地电路门。
 
     Attributes:
@@ -278,7 +278,7 @@ class LoccAnsatz(UAnsatz):
     def universal_3_qubit_gate(self, theta, which_qubits):
         r"""添加 3-qubit 通用门，这个通用门需要 81 个参数。
 
-        Note: 
+        Note:
             参考: https://cds.cern.ch/record/708846/files/0401178.pdf
 
         Args:
@@ -396,10 +396,10 @@ class LoccAnsatz(UAnsatz):
 
         Note:
             这一层量子门的数学表示形式为实数酉矩阵。
-        
+
         Attention:
             ``theta`` 的维度为 ``(depth, m-1, 4)`` 。
-        
+
         Args:
             theta(Tensor): Ry 门的旋转角度
             depth(int): 纠缠层的深度
@@ -513,7 +513,7 @@ class LoccAnsatz(UAnsatz):
         r"""添加振幅阻尼信道。
 
         其 Kraus 算符为：
-        
+
         .. math::
 
             E_0 = \begin{bmatrix} 1 & 0 \\ 0 & \sqrt{1-\gamma} \end{bmatrix},
@@ -739,14 +739,14 @@ class LoccNet(paddle.nn.Layer):
         target_seq = [idx for idx in origin_seq if idx not in qubits_list]
         target_seq = qubits_list + target_seq
 
-        swaped = [False] * n
+        swapped = [False] * n
         swap_list = []
         for idx in range(0, n):
-            if not swaped[idx]:
+            if not swapped[idx]:
                 next_idx = idx
-                swaped[next_idx] = True
-                while not swaped[target_seq[next_idx]]:
-                    swaped[target_seq[next_idx]] = True
+                swapped[next_idx] = True
+                while not swapped[target_seq[next_idx]]:
+                    swapped[target_seq[next_idx]] = True
                     swap_list.append((next_idx, target_seq[next_idx]))
                     next_idx = target_seq[next_idx]
 
@@ -809,14 +809,14 @@ class LoccNet(paddle.nn.Layer):
         target_seq = [idx for idx in origin_seq if idx not in qubits_list]
         target_seq = qubits_list + target_seq
 
-        swaped = [False] * n
+        swapped = [False] * n
         swap_list = []
         for idx in range(0, n):
-            if not swaped[idx]:
+            if not swapped[idx]:
                 next_idx = idx
-                swaped[next_idx] = True
-                while not swaped[target_seq[next_idx]]:
-                    swaped[target_seq[next_idx]] = True
+                swapped[next_idx] = True
+                while not swapped[target_seq[next_idx]]:
+                    swapped[target_seq[next_idx]] = True
                     swap_list.append((next_idx, target_seq[next_idx]))
                     next_idx = target_seq[next_idx]
 
@@ -854,7 +854,7 @@ class LoccNet(paddle.nn.Layer):
         Args:
             qubits_number (int): 参与方的量子比特个数
             party_name (str, optional): 可选参数，默认为 ``None``，参与方的名字
-        
+
         Note:
             你可以使用字符串或者数字对 party 进行索引。如果你想使用字符串索引，需要每次指定 ``party_name``；如果你想使用数字索引，则不需要指定 ``party_name``，其索引数字会从 0 开始依次增长。
 
@@ -873,7 +873,7 @@ class LoccNet(paddle.nn.Layer):
         new_party = LoccParty(qubits_number)
         self.parties_by_name[party_name] = new_party
         self.parties_by_number.append(new_party)
-        
+
         return party_id
 
     def create_ansatz(self, party_id):

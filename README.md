@@ -6,7 +6,7 @@ English | [简体中文](README_CN.md)
 - [Install](#install)
    - [Install PaddlePaddle](#install-paddlepaddle)
    - [Install Paddle Quantum](#install-paddle-quantum)
-   - [Use OpenFermion to read .xyz molecule configuration file](#use-openfermion-to-read-xyz-molecule-configuration-file)
+   - [Environment setup for Quantum Chemistry module](#environment_setup_for_quantum_chemistry_module)
    - [Run programs](#run-programs)
 - [Introduction and developments](#introduction-and-developments)
    - [Quick start](#quick-start)
@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.1.1-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.1.2-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -88,17 +88,30 @@ cd quantum
 pip install -e .
 ```
 
+### Environment setup for Quantum Chemistry module
 
-### Use OpenFermion to read .xyz molecule configuration file
+Our qchem module is based on `Openfermion` and `Psi4`, so before executing quantum chemistry, we have to install the two Python packages first.
 
-> Only macOS and linux users can use OpenFermion to read .xyz description files.
+> It is recommended that these Python packages be installed in a Python 3.8 environment.
 
-Once the user confirms the above OS constraint, OpenFermion can be installed with the following command. These packages are used for quantum chemistry calculations and could be potentially used in the VQE tutorial.
+`Openfermion` can be installed with the following command:
 
 ```bash
 pip install openfermion
-pip install openfermionpyscf
 ```
+
+We highly recommend you to install `Psi4` via conda. **MacOS/Linux** user can use the command:
+
+```bash
+conda install psi4-c psi4
+```
+
+For **Windows** user, the command is:
+
+```bash
+conda install psi4 -c psi4 -c conda-forge
+```
+**Note:** Please refer to [Psi4](https://psicode.org/installs/v14/) for more download options.
 
 ### Run example
 
@@ -128,10 +141,15 @@ python main.py
 We provide tutorials covering quantum simulation, machine learning, combinatorial optimization, local operations and classical communication (LOCC), and other popular QML research topics. Each tutorial currently supports reading on our website and running Jupyter Notebooks locally. For interested developers, we recommend them to download Jupyter Notebooks and play around with it. Here is the tutorial list,
 
 - [Quantum Simulation](./tutorial/quantum_simulation)
-    1. [Variational Quantum Eigensolver (VQE)](./tutorial/quantum_simulation/VQE_EN.ipynb)
-    2. [Subspace Search-Quantum Variational Quantum Eigensolver (SSVQE)](./tutorial/quantum_simulation/SSVQE_EN.ipynb)
-    3. [Variational Quantum State Diagonalization (VQSD)](./tutorial/quantum_simulation/VQSD_EN.ipynb)
-    4. [Gibbs State Preparation](./tutorial/quantum_simulation/GibbsState_EN.ipynb)
+    1. [Building Molecular Hamiltonian](./tutorial/quantum_simulation/BuildingMolecule_EN.ipynb)
+    2. [Variational Quantum Eigensolver (VQE)](./tutorial/quantum_simulation/VQE_EN.ipynb)
+    3. [Subspace Search-Quantum Variational Quantum Eigensolver (SSVQE)](./tutorial/quantum_simulation/SSVQE_EN.ipynb)
+    4. [Variational Quantum State Diagonalization (VQSD)](./tutorial/quantum_simulation/VQSD_EN.ipynb)
+    5. [Gibbs State Preparation](./tutorial/quantum_simulation/GibbsState_EN.ipynb)
+    6. [The Classical Shadow of Unknown Quantum States](./tutorial/quantum_simulation/ClassicalShadow_Intro_EN.ipynb)
+    7. [Estimation of Quantum State Properties Based on the Classical Shadow](./tutorial/quantum_simulation/ClassicalShadow_Application_EN.ipynb)
+    8. [Hamiltonian Simulation with Product Formula](./tutorial/quantum_simulation/HamiltonianSimulation_EN.ipynb)
+    9. [Simulate the Spin Dynamics on a Heisenberg Chain](./tutorial/quantum_simulation/SimulateHeisenberg_EN.ipynb)
 
 - [Machine Learning](./tutorial/machine_learning)
     1. [Encoding Classical Data into Quantum States](./tutorial/machine_learning/DataEncoding_EN.ipynb)
@@ -163,8 +181,12 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
     1. [The Barren Plateaus Phenomenon on Quantum Neural Networks (Barren Plateaus)](./tutorial/qnn_research/BarrenPlateaus_EN.ipynb)
     2. [Noise Model and Quantum Channel](./tutorial/qnn_research/Noise_EN.ipynb)
     3. [Calculating Gradient Using Quantum Circuit](./tutorial/qnn_research/Gradient_EN.ipynb)
+    4. [Expressibility of Quantum Neural Network](./tutorial/qnn_research/Expressibility_EN.ipynb)
+    5. [Variational Quantum Circuit Compiling](./tutorial/qnn_research/VQCC_EN.ipynb)
 
 With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can start with this [tutorial on LOCCNet](./tutorial/locc/LOCCNET_Tutorial_EN.ipynb). In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](./introduction/PaddleQuantum_GPU_EN.ipynb). Moreover, Paddle Quantum could design robust quantum algorithms under noise. For more information, please see [Noise tutorial](./tutorial/qnn_research/Noise_EN.ipynb).
+
+In a recent update, the measurement-based quantum computation (MBQC) module has been added to Paddle Quantum. Unlike the conventional quantum circuit model, MBQC has its unique way of computing. Interested readers are welcomed to read our [tutorials](./tutorial/mbqc) on how to use the MBQC module and its use cases.
 
 ### API documentation
 

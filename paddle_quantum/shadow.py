@@ -44,6 +44,7 @@ def shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian=None, metho
     代码示例:
 
     .. code-block:: python
+
         from paddle_quantum.shadow import shadow_sample
         from paddle_quantum.state import vec_random
         from paddle_quantum.utils import Hamiltonian
@@ -55,8 +56,8 @@ def shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian=None, metho
 
         ham = [[0.1, 'x1'], [0.2, 'y0']]
         ham = Hamiltonian(ham)
-        sample_data_lbcs, beta_lbcs = shadow_sample(state, n_qubit, sample_shots, 'state_vector', "LBCS", ham)
-        sample_data_aps = shadow_sample(state, n_qubit, sample_shots, 'state_vector', "APS", ham)
+        sample_data_lbcs, beta_lbcs = shadow_sample(state, n_qubit, sample_shots, 'state_vector', ham, "LBCS")
+        sample_data_aps = shadow_sample(state, n_qubit, sample_shots, 'state_vector', ham, "APS")
 
         print('sample data CS = ', sample_data_cs)
         print('sample data LBCS = ', sample_data_lbcs)

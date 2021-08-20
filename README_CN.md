@@ -6,7 +6,7 @@
 - [安装步骤](#安装步骤)
    - [安装 PaddlePaddle](#安装-paddlepaddle)
    - [安装 Paddle Quantum](#安装-paddle-quantum)
-   - [使用 openfermion 读取 xyz 描述文件](#使用-openfermion-读取-xyz-描述文件)
+   - [量子化学模块的环境设置](#量子化学模块的环境设置)
    - [运行](#运行)
 - [入门与开发](#入门与开发)
    - [教程入门](#教程入门)
@@ -34,7 +34,7 @@
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.1.1-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.1.2-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -89,16 +89,31 @@ pip install -e .
 ```
 
 
-### 使用 OpenFermion 读取 .xyz 描述文件
+### 量子化学模块的环境设置
 
-> 仅在 macOS 和 linux 下可以使用 OpenFermion 读取 .xyz 描述文件。
+我们的量子化学模块是基于 `Openfermion` 和 `Psi4` 进行开发的，所以在运行量子化学模块之前需要先行安装这两个Python包。
 
-VQE中调用 OpenFermion 读取分子 .xyz 文件并计算，因此需要安装 openfermion 和 openfermionpyscf。
+> 推荐在 Python3.8 环境中安装这些 Python包。
+
+`Openfermion` 可以用如下指令进行安装。
 
 ```bash
 pip install openfermion
-pip install openfermionpyscf
 ```
+
+在安装 `psi4` 时，我们建议您使用 conda。对于 **MacOS/Linux** 的用户，可以使用如下指令。
+
+```bash
+conda install psi4 -c psi4
+```
+
+对于 **Windows** 用户，请使用
+
+```bash
+conda install psi4 -c psi4 -c conda-forge
+```
+
+**注意：** 更多的下载方法请参考 [Psi4](https://psicode.org/installs/v14/)。
 
 ### 运行
 
@@ -134,10 +149,15 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
 在这里，我们提供了涵盖量子模拟、机器学习、组合优化、本地操作与经典通讯（local operations and classical communication, LOCC）、量子神经网络等多个领域的案例供大家学习。每个教程目前支持网页阅览和运行 Jupyter Notebook 两种方式。我们推荐用户下载 Notebook 后，本地运行进行实践。
 
 - [量子模拟](./tutorial/quantum_simulation)
-    1. [变分量子特征求解器（VQE）](./tutorial/quantum_simulation/VQE_CN.ipynb)
-    2. [子空间搜索 - 量子变分特征求解器（SSVQE）](./tutorial/quantum_simulation/SSVQE_CN.ipynb)
-    3. [变分量子态对角化算法（VQSD）](./tutorial/quantum_simulation/VQSD_CN.ipynb)
-    4. [吉布斯态的制备（Gibbs State Preparation）](./tutorial/quantum_simulation/GibbsState_CN.ipynb)
+    1. [哈密顿量的构造](./tutorial/quantum_simulation/BuildingMolecule_CN.ipynb)
+    2. [变分量子特征求解器（VQE）](./tutorial/quantum_simulation/VQE_CN.ipynb)
+    3. [子空间搜索 - 量子变分特征求解器（SSVQE）](./tutorial/quantum_simulation/SSVQE_CN.ipynb)
+    4. [变分量子态对角化算法（VQSD）](./tutorial/quantum_simulation/VQSD_CN.ipynb)
+    5. [吉布斯态的制备（Gibbs State Preparation）](./tutorial/quantum_simulation/GibbsState_CN.ipynb)
+    6. [未知量子态的经典影子](./tutorial/quantum_simulation/ClassicalShadow_Intro_CN.ipynb)
+    7. [基于经典影子的量子态性质估计](./tutorial/quantum_simulation/ClassicalShadow_Application_CN.ipynb)
+    8. [利用 Product Formula 模拟时间演化](./tutorial/quantum_simulation/HamiltonianSimulation_CN.ipynb)
+    9. [模拟一维海森堡链的自旋动力学](./tutorial/quantum_simulation/SimulateHeisenberg_CN.ipynb)
 
 - [机器学习](./tutorial/machine_learning)
     1. [量子态编码经典数据](./tutorial/machine_learning/DataEncoding_CN.ipynb)
@@ -169,8 +189,12 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
     1. [量子神经网络的贫瘠高原效应（Barren Plateaus）](./tutorial/qnn_research/BarrenPlateaus_CN.ipynb)
     2. [噪声模型与量子信道](./tutorial/qnn_research/Noise_CN.ipynb)
     3. [使用量子电路计算梯度](./tutorial/qnn_research/Gradient_CN.ipynb)
+    4. [量子神经网络的表达能力](./tutorial/qnn_research/Expressibility_CN.ipynb)
+    5. [变分量子电路编译](./tutorial/qnn_research/VQCC_CN.ipynb)
 
 随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见[教程](./tutorial/locc/LOCCNET_Tutorial_CN.ipynb)。Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。此外，量桨可以基于噪声模块进行含噪算法的开发以及研究，详情请见[噪声模块教程](./tutorial/qnn_research/Noise_CN.ipynb)。
+
+在最近的更新中，量桨还加入了基于测量的量子计算（measurement-based quantum computation, MBQC）模块。与传统的量子电路模型不同，MBQC 具有其独特的运行方式，感兴趣的读者请参见我们提供的[多篇教程](./tutorial/mbqc)以了解量桨 MBQC 模块的使用方法和应用案例。
 
 ### API 文档
 

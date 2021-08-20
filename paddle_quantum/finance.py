@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Functions and data simulator class of quantum finance
+Functions and data simulator class of quantum finance.
 """
 
 import fastdtw
@@ -209,7 +209,7 @@ def portfolio_diversification_hamiltonian(penalty, rho, q):
     .. math::
 
         \begin{aligned}
-        C_x &= -\sum_{i=1}^{n}\sum_{j=1}^{n}\rho_{ij}x_{ij} + A\left(K- \sum_{j=1}^n y_j \right)^2 + \sum_{i=1}^n A\left(\sum_{j=1}^n 1- x_{ij} \right)^2 \\
+        C_x &= -\sum_{i=1}^{n}\sum_{j=1}^{n}\rho_{ij}x_{ij} + A\left(q- \sum_{j=1}^n y_j \right)^2 + \sum_{i=1}^n A\left(\sum_{j=1}^n 1- x_{ij} \right)^2 \\
             &\quad + \sum_{j=1}^n A\left(x_{jj} - y_j\right)^2 + \sum_{i=1}^n \sum_{j=1}^n A\left(x_{ij}(1 - y_j)\right).\\
         \end{aligned}
 

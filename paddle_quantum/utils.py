@@ -40,6 +40,7 @@ import matplotlib.animation as animation
 __all__ = [
     "partial_trace",
     "state_fidelity",
+    "trace_distance",
     "gate_fidelity",
     "purity",
     "von_neumann_entropy",
@@ -53,6 +54,10 @@ __all__ = [
     "negativity",
     "logarithmic_negativity",
     "is_ppt",
+    "haar_orthogonal",
+    "haar_unitary",
+    "haar_state_vector",
+    "haar_density_operator",
     "Hamiltonian",
     "plot_state_in_bloch_sphere",
     "plot_rotation_in_bloch_sphere",
@@ -162,6 +167,26 @@ def state_fidelity(rho, sigma):
     fidelity = np.trace(sqrtm(sqrtm(rho) @ sigma @ sqrtm(rho))).real
 
     return fidelity
+
+
+def trace_distance(rho, sigma):
+    r"""计算两个量子态的迹距离。
+
+    .. math::
+        D(\rho, \sigma) = 1 / 2 * \text{tr}|\rho-\sigma|
+
+    Args:
+        rho (numpy.ndarray): 量子态的密度矩阵形式
+        sigma (numpy.ndarray): 量子态的密度矩阵形式
+
+    Returns:
+        float: 输入的量子态之间的迹距离
+    """
+    assert rho.shape == sigma.shape, 'The shape of two quantum states are different'
+    A = rho - sigma
+    distance = 1 / 2 * np.sum(np.abs(np.linalg.eigvals(A)))
+
+    return distance
 
 
 def gate_fidelity(U, V):
@@ -521,6 +546,100 @@ def is_ppt(density_op):
     return ppt
 
 
+def haar_orthogonal(n):
+    r"""生成一个服从 Haar random 的正交矩阵。采样算法参考文献：arXiv:math-ph/0609050v2
+
+        Args:
+            n (int): 正交矩阵对应的量子比特数
+
+        Returns:
+            numpy.ndarray: 一个形状为 ``(2**n, 2**n)`` 随机正交矩阵
+    """
+    # Matrix dimension
+    d = 2 ** n
+    # Step 1: sample from Ginibre ensemble
+    g = (np.random.randn(d, d))
+    # Step 2: perform QR decomposition of G
+    q, r = np.linalg.qr(g)
+    # Step 3: make the decomposition unique
+    lam = np.diag(r) / abs(np.diag(r))
+    u = q @ np.diag(lam)
+
+    return u
+
+
+def haar_unitary(n):
+    r"""生成一个服从 Haar random 的酉矩阵。采样算法参考文献：arXiv:math-ph/0609050v2
+
+        Args:
+            n (int): 酉矩阵对应的量子比特数
+
+        Returns:
+            numpy.ndarray: 一个形状为 ``(2**n, 2**n)`` 随机酉矩阵
+    """
+    # Matrix dimension
+    d = 2 ** n
+    # Step 1: sample from Ginibre ensemble
+    g = (np.random.randn(d, d) + 1j * np.random.randn(d, d)) / np.sqrt(2)
+    # Step 2: perform QR decomposition of G
+    q, r = np.linalg.qr(g)
+    # Step 3: make the decomposition unique
+    lam = np.diag(r) / abs(np.diag(r))
+    u = q @ np.diag(lam)
+
+    return u
+
+
+def haar_state_vector(n, real=False):
+    r"""生成一个服从 Haar random 的态矢量。
+
+        Args:
+            n (int): 量子态的量子比特数
+            real (bool): 生成的态矢量是否为实态矢量，默认为 ``False``
+
+        Returns:
+            numpy.ndarray: 一个形状为 ``(2**n, 1)`` 随机态矢量
+    """
+    # Vector dimension
+    d = 2 ** n
+    if real:
+        # Generate a Haar random orthogonal matrix
+        o = haar_orthogonal(n)
+        # Perform u onto |0>, i.e., the first column of o
+        phi = o[:, 0]
+    else:
+        # Generate a Haar random unitary
+        u = haar_unitary(n)
+        # Perform u onto |0>, i.e., the first column of u
+        phi = u[:, 0]
+
+    return phi
+
+
+def haar_density_operator(n, k=None, real=False):
+    r"""生成一个服从 Haar random 的密度矩阵。
+
+        Args:
+            n (int): 量子态的量子比特数
+            k (int): 密度矩阵的秩，默认为 ``None``，表示满秩
+            real (bool): 生成的密度矩阵是否为实矩阵，默认为 ``False``
+
+        Returns:
+            numpy.ndarray: 一个形状为 ``(2**n, 2**n)`` 随机密度矩阵
+    """
+    d = 2 ** n
+    k = k if k is not None else d
+    assert 0 < k <= d, 'rank is an invalid number'
+    if real:
+        ginibre_matrix = np.random.randn(d, k)
+        rho = ginibre_matrix @ ginibre_matrix.T
+    else:
+        ginibre_matrix = np.random.randn(d, k) + 1j * np.random.randn(d, k)
+        rho = ginibre_matrix @ ginibre_matrix.conj().T
+
+    return rho / np.trace(rho)
+
+
 class Hamiltonian:
     r""" Paddle Quantum 中的 Hamiltonian ``class``。
 
@@ -630,7 +749,7 @@ class Hamiltonian:
         r""" 返回哈密顿量中的每一项对应的系数构成的列表
 
         Returns:
-            list :哈密顿量中每一项的系数，i.e.``[1.0, 2.0]``
+            list :哈密顿量中每一项的系数，i.e. ``[1.0, 2.0]``
         """
         if self.__update_flag:
             self.__decompose()
@@ -769,25 +888,28 @@ class Hamiltonian:
         self.__update_flag = True
 
     def decompose_with_sites(self):
-        r"""将 pauli_str 分解为系数，泡利字符串的简化形式，以及它们分别作用的量子比特下标
+        r"""将 pauli_str 分解为系数、泡利字符串的简化形式以及它们分别作用的量子比特下标。
 
         Returns:
-            tuple: 包含如下元素的 tuple
-                coefficients (list): 元素为每一项的系数
-                pauli_words_r (list): 元素为每一项的泡利字符串的简化形式，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZX'
-                sites (list): 元素为每一项作用的量子比特下标，例如 'Z0, Z1, X3' 这一项的 site 为 [0, 1, 3]
+            tuple: 包含如下元素的 tuple:
+
+                 - coefficients (list): 元素为每一项的系数
+                 - pauli_words_r (list): 元素为每一项的泡利字符串的简化形式，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZX'
+                 - sites (list): 元素为每一项作用的量子比特下标，例如 'Z0, Z1, X3' 这一项的 site 为 [0, 1, 3]
+
         """
         if self.__update_flag:
             self.__decompose()
         return self.coefficients, self.__pauli_words_r, self.__sites
 
     def decompose_pauli_words(self):
-        r"""将 pauli_str 分解为系数，泡利字符串，以及它们分别作用的量子比特下标
+        r"""将 pauli_str 分解为系数和泡利字符串。
 
         Returns:
-            tuple: 包含如下元素的 tuple
-                coefficients(list): 元素为每一项的系数
-                pauli_words(list): 元素为每一项的泡利字符串，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZIX'
+            tuple: 包含如下元素的 tuple:
+
+                - coefficients(list): 元素为每一项的系数
+                - pauli_words(list): 元素为每一项的泡利字符串，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZIX'
         """
         if self.__update_flag:
             self.__decompose()
@@ -796,7 +918,7 @@ class Hamiltonian:
         return self.coefficients, self.__pauli_words
 
     def construct_h_matrix(self):
-        r"""构建 Hamiltonian 在 Z 基底下的矩阵
+        r"""构建 Hamiltonian 在 Z 基底下的矩阵。
 
         Returns:
             np.ndarray: Z 基底下的哈密顿量矩阵形式
@@ -822,29 +944,56 @@ class Hamiltonian:
 
 
 class SpinOps:
-    r"""矩阵表示下的自旋算符，可以用来构建哈密顿量矩阵。
+    r"""矩阵表示下的自旋算符，可以用来构建哈密顿量矩阵或者自旋可观测量。
 
     """
     def __init__(self, size: int, use_sparse=False):
-        r"""SpinOps 的构造函数，用于实例化一个 SpinOps 对象
+        r"""SpinOps 的构造函数，用于实例化一个 SpinOps 对象。
 
         Args:
             size (int): 系统的大小（有几个量子比特）
-            use_sparse (bool): 是否使用 sparse matrix 计算，默认为 True
+            use_sparse (bool): 是否使用 sparse matrix 计算，默认为 ``False``
         """
         self.size = size
         self.id = sparse.eye(2, dtype='complex128')
-        self.sigz = sparse.bsr.bsr_matrix([[1, 0], [0, -1]], dtype='complex64')
-        self.sigy = sparse.bsr.bsr_matrix([[0, -1j], [1j, 0]], dtype='complex64')
-        self.sigx = sparse.bsr.bsr_matrix([[0, 1], [1, 0]], dtype='complex64')
-        self.sigz_p = []
-        self.sigy_p = []
-        self.sigx_p = []
+        self.__sigz = sparse.bsr.bsr_matrix([[1, 0], [0, -1]], dtype='complex64')
+        self.__sigy = sparse.bsr.bsr_matrix([[0, -1j], [1j, 0]], dtype='complex64')
+        self.__sigx = sparse.bsr.bsr_matrix([[0, 1], [1, 0]], dtype='complex64')
+        self.__sigz_p = []
+        self.__sigy_p = []
+        self.__sigx_p = []
         self.__sparse = use_sparse
         for i in range(self.size):
-            self.sigz_p.append(self.__direct_prod_op(spin_op=self.sigz, spin_index=i))
-            self.sigy_p.append(self.__direct_prod_op(spin_op=self.sigy, spin_index=i))
-            self.sigx_p.append(self.__direct_prod_op(spin_op=self.sigx, spin_index=i))
+            self.__sigz_p.append(self.__direct_prod_op(spin_op=self.__sigz, spin_index=i))
+            self.__sigy_p.append(self.__direct_prod_op(spin_op=self.__sigy, spin_index=i))
+            self.__sigx_p.append(self.__direct_prod_op(spin_op=self.__sigx, spin_index=i))
+
+    @property
+    def sigz_p(self):
+        r""" :math:`Z` 基底下的 :math:`S^z_i` 算符。
+
+        Returns:
+            list : :math:`S^z_i` 算符组成的列表，其中每一项对应不同的 :math:`i`
+        """
+        return self.__sigz_p
+
+    @property
+    def sigy_p(self):
+        r""" :math:`Z` 基底下的 :math:`S^y_i` 算符。
+
+        Returns:
+            list : :math:`S^y_i` 算符组成的列表，其中每一项对应不同的 :math:`i`
+        """
+        return self.__sigy_p
+
+    @property
+    def sigx_p(self):
+        r""" :math:`Z` 基底下的 :math:`S^x_i` 算符。
+
+        Returns:
+            list : :math:`S^x_i` 算符组成的列表，其中每一项对应不同的 :math:`i`
+        """
+        return self.__sigx_p
 
     def __direct_prod_op(self, spin_op, spin_index):
         r"""直积，得到第 n 个自旋（量子比特）上的自旋算符
@@ -879,38 +1028,39 @@ def __input_args_dtype_check(
     该函数实现对输入默认参数的数据类型检查，保证输入函数中的参数为所允许的数据类型
 
     Args:
-        show_arrow (bool): 是否展示向量的箭头，默认为False
-        save_gif (bool): 是否存储gif动图，默认10帧，3帧长出bloch向量，7帧转动bloch视角
-        filename (str): 存储的gif动图的名字。
-        view_angle (list or tuple): 视图的角度，list内第一个元素为关于xy平面的夹角[0-360],第二个元素为关于xz平面的夹角[0-360]
-        view_dist (int): 视图的距离，默认为7
+        show_arrow (bool): 是否展示向量的箭头，默认为 False
+        save_gif (bool): 是否存储 gif 动图
+        filename (str): 存储的 gif 动图的名字
+        view_angle (list or tuple): 视图的角度，
+            第一个元素为关于xy平面的夹角[0-360],第二个元素为关于xz平面的夹角[0-360], 默认为 (30, 45)
+        view_dist (int): 视图的距离，默认为 7
     """
 
     if show_arrow is not None:
         assert type(show_arrow) == bool, \
-            'the type of show_arrow should be "bool"'
+            'the type of "show_arrow" should be "bool".'
     if save_gif is not None:
         assert type(save_gif) == bool, \
-            'the type of save_gif should be "bool"'
+            'the type of "save_gif" should be "bool".'
     if save_gif:
         if filename is not None:
             assert type(filename) == str, \
-                'the type of filename should be "str"'
+                'the type of "filename" should be "str".'
             other, ext = os.path.splitext(filename)
-            assert ext == '.gif', 'The suffix of the file name must be "gif"'
-            # If it does not exist, create a folder 
+            assert ext == '.gif', 'The suffix of the file name must be "gif".'
+            # If it does not exist, create a folder
             path, file = os.path.split(filename)
             if not os.path.exists(path):
                 os.makedirs(path)
     if view_angle is not None:
         assert type(view_angle) == list or type(view_angle) == tuple, \
-            'the type of view_angle should be "list" or "tuple"'
+            'the type of "view_angle" should be "list" or "tuple".'
         for i in range(2):
             assert type(view_angle[i]) == int, \
-                'the type of view_angle[0] and view_angle[1] should be "int"'
+                'the type of "view_angle[0]" and "view_angle[1]" should be "int".'
     if view_dist is not None:
         assert type(view_dist) == int, \
-            'the type of view_dist should be "int"'
+            'the type of "view_dist" should be "int".'
 
 
 def __density_matrix_convert_to_bloch_vector(density_matrix):
@@ -918,8 +1068,9 @@ def __density_matrix_convert_to_bloch_vector(density_matrix):
 
     Args:
         density_matrix (numpy.ndarray): 输入的密度矩阵
+
     Returns:
-        bloch_vector (numpy.ndarray): 存储bloch向量的x,y,z坐标，向量的模长，向量的颜色
+        bloch_vector (numpy.ndarray): 存储bloch向量的 x,y,z 坐标，向量的模长，向量的颜色
     """
 
     # Pauli Matrix
@@ -956,37 +1107,42 @@ def __plot_bloch_sphere(
         clear_plt=True,
         rotating_angle_list=None,
         view_angle=None,
-        view_dist=None
+        view_dist=None,
+        set_color=None
 ):
     r"""将 Bloch 向量展示在 Bloch 球面上
 
     Args:
         ax (Axes3D(fig)): 画布的句柄
-        bloch_vectors (numpy.ndarray): 存储bloch向量的x,y,z坐标，向量的模长，向量的颜色
-        show_arrow (bool): 是否展示向量的箭头，默认为False
-        clear_plt (bool): 是否要清空画布，默认为True，每次画图的时候清空画布再画图
+        bloch_vectors (numpy.ndarray): 存储bloch向量的 x,y,z 坐标，向量的模长，向量的颜色
+        show_arrow (bool): 是否展示向量的箭头，默认为 False
+        clear_plt (bool): 是否要清空画布，默认为 True，每次画图的时候清空画布再画图
         rotating_angle_list (list): 旋转角度的列表，用于展示旋转轨迹
-        view_angle (list): 视图的角度，list内第一个元素为关于xy平面的夹角[0-360],第二个元素为关于xz平面的夹角[0-360]
-        view_dist (int): 视图的距离，默认为7
+        view_angle (list): 视图的角度，
+            第一个元素为关于xy平面的夹角[0-360],第二个元素为关于xz平面的夹角[0-360], 默认为 (30, 45)
+        view_dist (int): 视图的距离，默认为 7
+        set_color (str): 设置指定的颜色，请查阅cmap表，默认为 "红-黑-根据向量的模长渐变" 颜色方案
     """
     # Assign a value to an empty variable
     if view_angle is None:
-        view_angle = [30, 45]
+        view_angle = (30, 45)
     if view_dist is None:
         view_dist = 7
-
     # Define my_color
-    color = 'rainbow'
-    black_code = '#000000'
-    red_code = '#F24A29'
-    if bloch_vectors is not None:
-        black_to_red = mplcolors.LinearSegmentedColormap.from_list(
-            'my_color',
-            [(0, black_code), (1, red_code)],
-            N=len(bloch_vectors[:, 4])
-        )
-        map_vir = plt.get_cmap(black_to_red)
-        color = map_vir(bloch_vectors[:, 4])
+    if set_color is None:
+        color = 'rainbow'
+        black_code = '#000000'
+        red_code = '#F24A29'
+        if bloch_vectors is not None:
+            black_to_red = mplcolors.LinearSegmentedColormap.from_list(
+                'my_color',
+                [(0, black_code), (1, red_code)],
+                N=len(bloch_vectors[:, 4])
+            )
+            map_vir = plt.get_cmap(black_to_red)
+            color = map_vir(bloch_vectors[:, 4])
+    else:
+        color = set_color
 
     # Set the view angle and view distance
     ax.view_init(view_angle[0], view_angle[1])
@@ -1097,7 +1253,7 @@ def __plot_bloch_sphere(
     # Draw the data points
     if bloch_vectors is not None:
         ax.scatter(
-            bloch_vectors[:, 0], bloch_vectors[:, 1], bloch_vectors[:, 2], c=color, alpha=1
+            bloch_vectors[:, 0], bloch_vectors[:, 1], bloch_vectors[:, 2], c=color, alpha=1.0
         )
 
     # if show the rotating angle
@@ -1124,7 +1280,7 @@ def __plot_bloch_sphere(
     if show_arrow:
         ax.quiver(
             0, 0, 0, bloch_vectors[:, 0], bloch_vectors[:, 1], bloch_vectors[:, 2],
-            arrow_length_ratio=0.05, color=color, alpha=1,
+            arrow_length_ratio=0.05, color=color, alpha=1.0
         )
 
 
@@ -1134,7 +1290,8 @@ def plot_state_in_bloch_sphere(
         save_gif=False,
         filename=None,
         view_angle=None,
-        view_dist=None
+        view_dist=None,
+        set_color=None
 ):
     r"""将输入的量子态展示在 Bloch 球面上
 
@@ -1143,27 +1300,32 @@ def plot_state_in_bloch_sphere(
         show_arrow (bool): 是否展示向量的箭头，默认为 ``False``
         save_gif (bool): 是否存储 gif 动图，默认为 ``False``
         filename (str): 存储的 gif 动图的名字
-        view_angle (list or tuple): 视图的角度，list 内第一个元素为关于 xy 平面的夹角 [0-360]，第二个元素为关于 xz 平面的夹角 [0-360]
+        view_angle (list or tuple): 视图的角度，
+            第一个元素为关于 xy 平面的夹角 [0-360]，第二个元素为关于 xz 平面的夹角 [0-360], 默认为 ``(30, 45)``
         view_dist (int): 视图的距离，默认为 7
+        set_color (str): 若要设置指定的颜色，请查阅 ``cmap`` 表。默认为红色到黑色的渐变颜色
     """
     # Check input data
     __input_args_dtype_check(show_arrow, save_gif, filename, view_angle, view_dist)
 
     assert type(state) == list or type(state) == paddle.Tensor or type(state) == np.ndarray, \
-        'the type of input data must be "list" or "paddle.Tensor" or "np.ndarray"'
+        'the type of "state" must be "list" or "paddle.Tensor" or "np.ndarray".'
     if type(state) == paddle.Tensor or type(state) == np.ndarray:
         state = [state]
     state_len = len(state)
-    assert state_len >= 1, 'input data is NULL.'
+    assert state_len >= 1, '"state" is NULL.'
     for i in range(state_len):
         assert type(state[i]) == paddle.Tensor or type(state[i]) == np.ndarray, \
-            'the type of input data should be "paddle.Tensor" or "numpy.ndarray".'
+            'the type of "state[i]" should be "paddle.Tensor" or "numpy.ndarray".'
+    if set_color is not None:
+        assert type(set_color) == str, \
+            'the type of "set_color" should be "str".'
 
     # Assign a value to an empty variable
     if filename is None:
         filename = 'state_in_bloch_sphere.gif'
     if view_angle is None:
-        view_angle = [30, 45]
+        view_angle = (30, 45)
     if view_dist is None:
         view_dist = 7
 
@@ -1187,42 +1349,37 @@ def plot_state_in_bloch_sphere(
     # List must be converted to array for slicing.
     bloch_vectors = np.array(bloch_vector_list)
 
+    # A update function for animation class
+    def update(frame):
+        view_rotating_angle = 5
+        new_view_angle = [view_angle[0], view_angle[1] + view_rotating_angle * frame]
+        __plot_bloch_sphere(
+            ax, bloch_vectors, show_arrow, clear_plt=True,
+            view_angle=new_view_angle, view_dist=view_dist, set_color=set_color
+        )
+
+    # Dynamic update and save
+    if save_gif:
+        # Helper function to plot vectors on a sphere.
+        fig = plt.figure(figsize=(8, 8), dpi=100)
+        fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+        ax = fig.add_subplot(111, projection='3d')
+
+        frames_num = 7
+        anim = animation.FuncAnimation(fig, update, frames=frames_num, interval=600, repeat=False)
+        anim.save(filename, dpi=100, writer='pillow')
+        # close the plt
+        plt.close(fig)
+
     # Helper function to plot vectors on a sphere.
     fig = plt.figure(figsize=(8, 8), dpi=100)
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
     ax = fig.add_subplot(111, projection='3d')
 
-    # A update function for animation class
-    def update(frame):
-        stretch = 3
-        view_rotating_angle = 5
-        if frame <= stretch:
-            new_bloch_vectors = np.zeros(shape=(len(bloch_vectors), 0))
-            for j in range(3):
-                bloch_column_tmp = bloch_vectors[:, j] / stretch * frame
-                new_bloch_vectors = np.insert(new_bloch_vectors, j, values=bloch_column_tmp, axis=1)
-            for j in range(2):
-                new_bloch_vectors = np.insert(new_bloch_vectors, 3 + j, values=bloch_vectors[:, 3 + j], axis=1)
-
-            __plot_bloch_sphere(
-                ax, new_bloch_vectors, show_arrow, clear_plt=True, view_angle=view_angle, view_dist=view_dist
-            )
-
-        else:
-            new_view_angle = [view_angle[0], view_angle[1] + view_rotating_angle * (frame - stretch)]
-            __plot_bloch_sphere(
-                ax, bloch_vectors, show_arrow, clear_plt=True, view_angle=new_view_angle, view_dist=view_dist
-            )
-
-    # Dynamic update and save
-    if save_gif:
-        frames_num = 10
-        anim = animation.FuncAnimation(fig, update, frames=frames_num, interval=600, repeat=False)
-        anim.save(filename, dpi=100, writer='Pillow')
-    else:
-        __plot_bloch_sphere(
-            ax, bloch_vectors, show_arrow, clear_plt=True, view_angle=view_angle, view_dist=view_dist
-        )
+    __plot_bloch_sphere(
+        ax, bloch_vectors, show_arrow, clear_plt=True,
+        view_angle=view_angle, view_dist=view_dist, set_color=set_color
+    )
 
     plt.show()
 
@@ -1234,7 +1391,8 @@ def plot_rotation_in_bloch_sphere(
         save_gif=False,
         filename=None,
         view_angle=None,
-        view_dist=None
+        view_dist=None,
+        color_scheme=None,
 ):
     r"""在 Bloch 球面上刻画从初始量子态开始的旋转轨迹
 
@@ -1244,8 +1402,10 @@ def plot_rotation_in_bloch_sphere(
         show_arrow (bool): 是否展示向量的箭头，默认为 ``False``
         save_gif (bool): 是否存储 gif 动图，默认为 ``False``
         filename (str): 存储的 gif 动图的名字
-        view_angle (list or tuple): 视图的角度，list 内第一个元素为关于 xy 平面的夹角 [0-360]，第二个元素为关于 xz 平面的夹角 [0-360]
+        view_angle (list or tuple): 视图的角度，
+            第一个元素为关于 xy 平面的夹角 [0-360]，第二个元素为关于 xz 平面的夹角 [0-360], 默认为 ``(30, 45)``
         view_dist (int): 视图的距离，默认为 7
+        color_scheme (list(str,str,str)): 分别是初始颜色，轨迹颜色，结束颜色。若要设置指定的颜色，请查阅 ``cmap`` 表。默认为红色
     """
     # Check input data
     __input_args_dtype_check(show_arrow, save_gif, filename, view_angle, view_dist)
@@ -1253,20 +1413,30 @@ def plot_rotation_in_bloch_sphere(
     assert type(init_state) == paddle.Tensor or type(init_state) == np.ndarray, \
         'the type of input data should be "paddle.Tensor" or "numpy.ndarray".'
     assert type(rotating_angle) == tuple or type(rotating_angle) == list, \
-        'the type of rotating_angle should be "tuple" or "list"'
+        'the type of rotating_angle should be "tuple" or "list".'
     assert len(rotating_angle) == 3, \
         'the rotating_angle must include [theta=paddle.Tensor, phi=paddle.Tensor, lam=paddle.Tensor].'
     for i in range(3):
         assert type(rotating_angle[i]) == paddle.Tensor or type(rotating_angle[i]) == float, \
             'the rotating_angle must include [theta=paddle.Tensor, phi=paddle.Tensor, lam=paddle.Tensor].'
+    if color_scheme is not None:
+        assert type(color_scheme) == list and len(color_scheme) <= 3, \
+            'the type of "color_scheme" should be "list" and ' \
+            'the length of "color_scheme" should be less than or equal to "3".'
+        for i in range(len(color_scheme)):
+            assert type(color_scheme[i]) == str, \
+                'the type of "color_scheme[i] should be "str".'
 
     # Assign a value to an empty variable
     if filename is None:
         filename = 'rotation_in_bloch_sphere.gif'
-    if view_angle is None:
-        view_angle = [30, 45]
-    if view_dist is None:
-        view_dist = 7
+
+    # Assign colors to bloch vectors
+    color_list = ['orangered', 'lightsalmon', 'darkred']
+    if color_scheme is not None:
+        for i in range(len(color_scheme)):
+            color_list[i] = color_scheme[i]
+    set_init_color, set_trac_color, set_end_color = color_list
 
     theta, phi, lam = rotating_angle
 
@@ -1303,38 +1473,52 @@ def plot_rotation_in_bloch_sphere(
     # List must be converted to array for slicing.
     bloch_vectors = np.array(bloch_vector_list)
 
-    # Helper function to plot vectors on a sphere.
-    fig = plt.figure(figsize=(8, 8), dpi=100)
-    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
-    ax = fig.add_subplot(111, projection='3d')
-
     # A update function for animation class
     def update(frame):
-        frame = frame + 1
-        if frame <= len(bloch_vectors):
+        frame = frame + 2
+        if frame <= len(bloch_vectors) - 1:
             __plot_bloch_sphere(
-                ax, bloch_vectors[:frame], show_arrow=show_arrow, clear_plt=True,
+                ax, bloch_vectors[1:frame], show_arrow=show_arrow, clear_plt=True,
                 rotating_angle_list=rotating_angle_list,
-                view_angle=view_angle, view_dist=view_dist
+                view_angle=view_angle, view_dist=view_dist, set_color=set_trac_color
             )
 
             # The starting and ending bloch vector has to be shown
             # show starting vector
             __plot_bloch_sphere(
-                ax, bloch_vectors[:1],  show_arrow=True, clear_plt=False, view_angle=view_angle, view_dist=view_dist,
+                ax, bloch_vectors[:1],  show_arrow=True, clear_plt=False,
+                view_angle=view_angle, view_dist=view_dist, set_color=set_init_color
             )
-            # Show ending vector
-            if frame == len(bloch_vectors):
-                __plot_bloch_sphere(
-                    ax, bloch_vectors[frame - 1:frame], show_arrow=True, clear_plt=False,
-                    view_angle=view_angle, view_dist=view_dist
-                )
 
-    # Dynamic update and save
-    stop_frames = 10
-    frames_num = len(bloch_vectors) + stop_frames
-    anim = animation.FuncAnimation(fig, update, frames=frames_num, interval=100, repeat=False)
+        # Show ending vector
+        if frame == len(bloch_vectors):
+            __plot_bloch_sphere(
+                ax, bloch_vectors[frame - 1:frame], show_arrow=True, clear_plt=False,
+                view_angle=view_angle, view_dist=view_dist, set_color=set_end_color
+            )
+
     if save_gif:
-        anim.save(filename, dpi=100, writer='Pillow')
+        # Helper function to plot vectors on a sphere.
+        fig = plt.figure(figsize=(8, 8), dpi=100)
+        fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+        ax = fig.add_subplot(111, projection='3d')
+
+        # Dynamic update and save
+        stop_frames = 15
+        frames_num = len(bloch_vectors) - 2 + stop_frames
+        anim = animation.FuncAnimation(fig, update, frames=frames_num, interval=100, repeat=False)
+        anim.save(filename, dpi=100, writer='pillow')
+        # close the plt
+        plt.close(fig)
+
+    # Helper function to plot vectors on a sphere.
+    fig = plt.figure(figsize=(8, 8), dpi=100)
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Draw the penultimate bloch vector
+    update(len(bloch_vectors) - 3)
+    # Draw the last bloch vector
+    update(len(bloch_vectors) - 2)
 
     plt.show()

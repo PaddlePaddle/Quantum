@@ -1,0 +1,85 @@
+The current example is: Quantum kernel method with 3 X 9 size.
+The qubit number is: 3
+MBQC running time is: 0.19433109999999987 s
+Circuit model running time is: 0.1034025999999999 s
+
+The current example is: Quantum kernel method with 4 X 9 size.
+The qubit number is: 4
+MBQC running time is: 0.28153490000000003 s
+Circuit model running time is: 0.10754960000000002 s
+
+The current example is: Quantum kernel method with 5 X 9 size.
+The qubit number is: 5
+MBQC running time is: 0.38240870000000005 s
+Circuit model running time is: 0.12117860000000036 s
+
+The current example is: Quantum kernel method with 6 X 9 size.
+The qubit number is: 6
+MBQC running time is: 0.49848729999999986 s
+Circuit model running time is: 0.12079530000000016 s
+
+The current example is: Quantum kernel method with 7 X 9 size.
+The qubit number is: 7
+MBQC running time is: 0.6529012000000001 s
+Circuit model running time is: 0.1332924999999996 s
+
+The current example is: Quantum kernel method with 8 X 9 size.
+The qubit number is: 8
+MBQC running time is: 0.7972115000000004 s
+Circuit model running time is: 0.14146310000000017 s
+
+The current example is: Quantum kernel method with 9 X 9 size.
+The qubit number is: 9
+MBQC running time is: 0.9908808999999996 s
+Circuit model running time is: 0.15193749999999984 s
+
+The current example is: Quantum kernel method with 10 X 9 size.
+The qubit number is: 10
+MBQC running time is: 1.2111211999999991 s
+Circuit model running time is: 0.16549000000000014 s
+
+The current example is: Quantum kernel method with 11 X 9 size.
+The qubit number is: 11
+MBQC running time is: 1.4613236 s
+Circuit model running time is: 0.17382679999999873 s
+
+The current example is: Quantum kernel method with 12 X 9 size.
+The qubit number is: 12
+MBQC running time is: 1.7479014999999993 s
+Circuit model running time is: 0.19296899999999972 s
+
+The current example is: Quantum kernel method with 13 X 9 size.
+The qubit number is: 13
+MBQC running time is: 2.0869981000000006 s
+Circuit model running time is: 0.21488890000000005 s
+
+The current example is: Quantum kernel method with 14 X 9 size.
+The qubit number is: 14
+MBQC running time is: 2.4556445999999976 s
+Circuit model running time is: 0.25365719999999925 s
+
+The current example is: Quantum kernel method with 15 X 9 size.
+The qubit number is: 15
+MBQC running time is: 2.8709384999999976 s
+Circuit model running time is: 0.32052579999999864 s
+
+The current example is: Quantum kernel method with 16 X 9 size.
+The qubit number is: 16
+MBQC running time is: 3.371537 s
+Circuit model running time is: 0.46659409999999824 s
+
+The current example is: Quantum kernel method with 17 X 9 size.
+The qubit number is: 17
+MBQC running time is: 3.850072300000001 s
+Circuit model running time is: 0.7888110000000026 s
+
+The current example is: Quantum kernel method with 18 X 9 size.
+The qubit number is: 18
+MBQC running time is: 4.468373900000003 s
+Circuit model running time is: 1.5083874000000037 s
+
+The current example is: Quantum kernel method with 19 X 9 size.
+The qubit number is: 19
+MBQC running time is: 5.124628200000004 s
+Circuit model running time is: 2.865450800000005 s
+
