@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Measurement-Based Quantum Computation (MBQC) module is a simulation tool for universal quantum computing, developed based on Baidu PaddlePaddle. Unlike the conventional quantum circuit model, MBQC has its unique way of computing [1-8] and thus common circuit simulation tools cannot be directly used for the simulation of this model. To facilitate further research and exploration of MBQC, we have designed and provided several core modules in the module that are required for simulation.
+Measurement-Based Quantum Computation (MBQC) module is a simulation tool for universal quantum computing, developed based on Paddle Quantum. Unlike the conventional quantum circuit model, MBQC has its unique way of computing [1-8] and thus common circuit simulation tools cannot be directly used for the simulation of this model. To facilitate further research and exploration of MBQC, we have designed and provided several core modules that are required for simulation.
 
 On the one hand, as with common quantum circuit simulators, we can use the module to quickly build and train quantum neural networks, which have powerful application prospects in the field of artificial intelligence such as quantum chemistry, quantum natural language processing, and quantum finance. On the other hand, the MBQC module demonstrates its unique advantages in computational efficiency in some special cases, especially in quantum shallow circuit simulations, where the required computational resource can be significantly reduced, leading to a potential opportunity for larger-scale quantum algorithm simulations.
 
-Our module is currently the first and the only systematic tool in the industry that supports the simulation of MBQC. We sincerely look forward to its learning and usage by quantum computing enthusiasts and researchers. Welcome to join us and discover the infinite possibilities of MBQC together!
+Our module is the first and only systematic tool in the industry that supports the simulation of MBQC. We sincerely look forward to its learning and usage by quantum computing enthusiasts and researchers. Welcome to join us and discover the infinite possibilities of MBQC together!
 
 ## Features
 
@@ -103,7 +103,9 @@ shortly.
 
 - Q: How is the MBQC physically implemented?
 
-    A: The difficulty in the physical implementation of MBQC is mainly the preparation of resource states. Unlike the superconducting techniques used in the quantum circuit model, the resource states are mostly prepared using linear optics or cold atoms, see e.g. [2,12,13] for the currently available techniques for the resource states preparation.
+    A: The difficulty in the physical implementation of MBQC is mainly the preparation of resource states. Unlike 
+  the superconducting techniques used in the quantum circuit model, the resource states are mostly prepared using 
+  linear optics or cold atoms, see e.g. [2,12,13] for the existing techniques of resource states preparation.
 
 ## References
 

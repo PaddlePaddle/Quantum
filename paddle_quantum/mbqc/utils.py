@@ -254,7 +254,7 @@ def t_gate():
 
 
 def cz_gate():
-    r"""定义 ``Control Z`` 门。
+    r"""定义 ``Controlled-Z`` 门。
 
     其矩阵形式为：
 
@@ -263,7 +263,7 @@ def cz_gate():
         \begin{bmatrix}  1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & -1 \end{bmatrix}
 
     Returns:
-        Tensor: ``Control Z`` 门矩阵对应的 ``Tensor`` 形式
+        Tensor: ``Controlled-Z`` 门矩阵对应的 ``Tensor`` 形式
 
     代码示例：
 
@@ -287,7 +287,7 @@ def cz_gate():
 
 
 def cnot_gate():
-    r"""定义 ``Control NOT (CNOT)`` 门。
+    r"""定义 ``Controlled-NOT (CNOT)`` 门。
 
     其矩阵形式为：
 
@@ -296,7 +296,7 @@ def cnot_gate():
         \begin{bmatrix}  1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{bmatrix}
 
     Returns:
-        Tensor: ``Control NOT (CNOT)`` 门矩阵对应的 ``Tensor`` 形式
+        Tensor: ``Controlled-NOT (CNOT)`` 门矩阵对应的 ``Tensor`` 形式
 
     代码示例：
 
@@ -540,16 +540,13 @@ def basis(label, theta=to_tensor([0], dtype='float64')):
         常用的测量方式有 XY-平面测量，YZ-平面测量，X 测量，Y 测量，Z 测量。
 
     .. math::
-
-        M^{XY}(\theta) = {R_{z}(\theta)|+\rangle, R_{z}(\theta)|-\rangle}
-
-        M^{YZ}(\theta) = {R_{x}(\theta)|0\rangle, R_{x}(\theta)|1\rangle}
-
-        X = M^{XY}(0)
-
-        Y = M^{YZ}(\pi / 2) = M^{XY}(-\pi / 2)
-
-        Z = M_{YZ}(0)
+        \begin{align*}
+        & M^{XY}(\theta) = \{R_{z}(\theta)|+\rangle, R_{z}(\theta)|-\rangle\}\\
+        & M^{YZ}(\theta) = \{R_{x}(\theta)|0\rangle, R_{x}(\theta)|1\rangle\}\\
+        & X = M^{XY}(0)\\
+        & Y = M^{YZ}(\pi / 2) = M^{XY}(-\pi / 2)\\
+        & Z = M_{YZ}(0)
+        \end{align*}
 
     Args:
         label (str): 测量基索引字符，"XY" 表示 XY-平面测量，"YZ" 表示 YZ-平面测量，"X" 表示 X 测量，"Y" 表示 Y 测量，"Z" 表示 Z 测量

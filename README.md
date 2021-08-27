@@ -55,7 +55,7 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 ## Features
 
 - Easy-to-use
-  - Many online learning resources (23+ tutorials)
+  - Many online learning resources (37+ tutorials)
   - High efficiency in building QNN with various QNN templates
   - Automatic differentiation
 - Versatile
@@ -90,7 +90,7 @@ pip install -e .
 
 ### Environment setup for Quantum Chemistry module
 
-Our qchem module is based on `Openfermion` and `Psi4`, so before executing quantum chemistry, we have to install the two Python packages first.
+Our `qchem` module is based on `Openfermion` and `Psi4`, so before executing quantum chemistry, we have to install the two Python packages first.
 
 > It is recommended that these Python packages be installed in a Python 3.8 environment.
 

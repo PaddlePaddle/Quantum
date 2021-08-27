@@ -654,8 +654,7 @@ class MBQC:
         r"""获取 MBQC 模型运行后的经典输出结果。
 
         Returns:
-            str or dict: 如果用户输入是测量模式，则返回测量输出节点得到的比特串，与原电路的测量结果相一致，没有被测量的比特位填充 "？"；
-                         如果用户输入是图，则返回所有节点的测量结果
+            str or dict: 如果用户输入是测量模式，则返回测量输出节点得到的比特串，与原电路的测量结果相一致，没有被测量的比特位填充 "？"，如果用户输入是图，则返回所有节点的测量结果
         """
         # If the input is pattern, return the equivalent result as the circuit model
         if self.__pattern is not None:

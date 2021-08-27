@@ -334,7 +334,7 @@ class MCalculus:
 
         # Measurement pattern of CNOT by 15 qubits, c.f. [arXiv: quant-ph/0301052v2]
         # Note: due to the '1' in byproduct Z of qubit-7, we manually add a Z gate after qubit 7 to match this
-        elif name == "cnot_15":  # Control Not gate
+        elif name == "cnot_15":  # Controlled Not gate
             input1, input2 = input_
             output1, output2 = output_
             ancilla = self.__set_ancilla_label(input_, output_, [7, 5])
@@ -381,7 +381,7 @@ class MCalculus:
             commands = [E12, E23, E34, E45, E48, E56, E67, E716, E1617, E910, E1011, E1112, E812, E1213, E1314, E1415,
                         M1, M2, M3, M4, M5, M6, M8, M12, M9, M10, M11, M13, M14, M7, M16, X15, X17, Z15, Z17]
 
-        elif name == 'cz':  # Control Z gate
+        elif name == 'cz':  # Controlled Z gate
             commands = [Pattern.CommandE(input_)]
 
         elif name == 'm':  # Single-qubit measurement

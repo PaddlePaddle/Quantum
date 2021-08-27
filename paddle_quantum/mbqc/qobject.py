@@ -108,7 +108,7 @@ class Circuit:
 
         .. math::
 
-            H = \frac{1}{\sqrt{2}}\begin{bmatrix} 1&1\\1&-1 \end{bmatrix}
+            \frac{1}{\sqrt{2}}\begin{bmatrix} 1&1\\1&-1 \end{bmatrix}
 
         Args:
             which_qubit (int): 作用量子门的量子位编号
@@ -236,7 +236,7 @@ class Circuit:
 
         .. math::
 
-            T = \begin{bmatrix} 1&0\\0& i} \end{bmatrix}
+            \begin{bmatrix} 1&0\\0& i \end{bmatrix}
 
         Args:
             which_qubit (int): 作用量子门的量子位编号
@@ -268,7 +268,7 @@ class Circuit:
 
         .. math::
 
-            T = \begin{bmatrix} 1&0\\0& e^{i\pi/ 4} \end{bmatrix}
+            \begin{bmatrix} 1&0\\0& e^{i\pi/ 4} \end{bmatrix}
 
         Args:
             which_qubit (int): 作用量子门的量子位编号
@@ -491,10 +491,7 @@ class Circuit:
 
         .. math::
 
-            \begin{align}
-            CNOT &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes X\\
-            &=\begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{bmatrix}
-            \end{align}
+            \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{bmatrix}
 
         Args:
             which_qubits (list): 作用量子门的量子位，其中列表第一个元素为控制位，第二个元素为受控位
@@ -531,10 +528,7 @@ class Circuit:
 
         .. math::
 
-            \begin{align}
-            CNOT &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes X\\
-            &=\begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{bmatrix}
-            \end{align}
+            \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{bmatrix}
 
         Args:
             which_qubits (list): 作用量子门的量子位，其中列表第一个元素为控制位，第二个元素为受控位
@@ -571,10 +565,7 @@ class Circuit:
 
         .. math::
 
-            \begin{align}
-            CZ &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes Z\\
-            &=\begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & -1 \end{bmatrix}
-            \end{align}
+            \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & -1 \end{bmatrix}
 
         Args:
             which_qubits (list): 作用量子门的量子位，其中列表第一个元素为控制位，第二个元素为受控位

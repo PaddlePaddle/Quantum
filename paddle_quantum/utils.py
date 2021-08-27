@@ -29,11 +29,8 @@ from paddle import matmul
 from paddle import transpose
 from paddle import concat, ones
 from paddle import zeros
-from scipy.linalg import logm, sqrtm
 from scipy import sparse
-import matplotlib.pyplot as plt
 import matplotlib as mpl
-from math import sqrt
 from paddle_quantum import simulator
 import matplotlib.animation as animation
 
@@ -280,7 +277,7 @@ def NKron(matrix_A, matrix_B, *args):
         Tensor: 输入矩阵的Kronecker积
 
     .. code-block:: python
-    
+  
         from paddle_quantum.state import density_op_random
         from paddle_quantum.utils import NKron
         A = density_op_random(2)
@@ -305,7 +302,7 @@ def dagger(matrix):
     代码示例:
 
     .. code-block:: python
-    
+  
         from paddle_quantum.utils import dagger
         import numpy as np
         rho = paddle.to_tensor(np.array([[1+1j, 2+2j], [3+3j, 4+4j]]))
@@ -1522,3 +1519,83 @@ def plot_rotation_in_bloch_sphere(
     update(len(bloch_vectors) - 2)
 
     plt.show()
+
+
+def pauli_basis(n):
+    r"""生成 n 量子比特的泡利基空间
+    Args:
+        n (int): 量子比特的数量
+
+    Return:
+        tuple:
+            basis_str: 泡利基空间的一组基底表示（array形式）
+            label_str: 泡利基空间对应的一组基底表示（标签形式），形如``[ 'X', 'Y', 'Z', 'I']``
+    """
+    sigma_x = np.array([[0, 1],  [1, 0]], dtype=np.complex128)
+    sigma_y = np.array([[0, -1j], [1j, 0]], dtype=np.complex128)
+    sigma_z = np.array([[1, 0],  [0, -1]], dtype=np.complex128)
+    sigma_id = np.array([[1, 0],  [0, 1]], dtype=np.complex128)
+    pauli = [sigma_x, sigma_y, sigma_z, sigma_id]
+    labels = ['X', 'Y', 'Z', 'I']
+
+    num_qubits = n
+    num = 1
+    if num_qubits > 0:
+        basis_str = pauli[:]
+        label_str = labels[:]
+        pauli_basis = pauli[:]
+        palui_label = labels[:]
+        while num < num_qubits:
+            length = len(basis_str)
+            for i in range(4):
+                for j in range(length):
+                    basis_str.append(np.kron(basis_str[j], pauli_basis[i]))
+                    label_str.append(label_str[j] + palui_label[i])
+            basis_str = basis_str[-1:-4**(num+1)-1:-1]
+            label_str = label_str[-1:-4**(num+1)-1:-1]
+            num += 1
+        return basis_str, label_str
+
+
+def decompose(matrix):
+    r"""生成 n 量子比特的泡利基空间
+    Args:
+        matrix (numpy.ndarray): 要分解的矩阵
+
+    Return:
+        pauli_form (list): 返回矩阵分解后的哈密顿量，形如 ``[[1, 'Z0, Z1'], [2, 'I']]``
+    """
+    if np.log2(len(matrix)) % 1 != 0:
+        print("Please input correct matrix!")
+        return -1
+    basis_space, label_str = pauli_basis(np.log2(len(matrix)))
+    coefficients = []  # 对应的系数
+    pauli_word = []  # 对应的label
+    pauli_form = []  # 输出pauli_str list形式：[[1, 'Z0, Z1'], [2, 'I']]
+    for i in range(len(basis_space)):
+        # 求系数
+        a_ij = 1/len(matrix) * np.trace(matrix@basis_space[i])
+        if a_ij != 0:
+            if a_ij.imag != 0:
+                coefficients.append(a_ij)
+            else:
+                coefficients.append(a_ij.real)
+            pauli_word.append(label_str[i])
+    for i in range(len(coefficients)):
+        pauli_site = []  # 临时存放一个基
+        pauli_site.append(coefficients[i])
+        word = ''
+        for j in range(len(pauli_word[0])):
+            if pauli_word[i] == 'I'*int(np.log2(len(matrix))):
+                word = 'I'  # 和Hamiltonian类似，若全是I就用一个I指代
+                break
+            if pauli_word[i][j] == 'I':
+                continue   # 如果是I就不加数字下标
+            if j != 0 and len(word) != 0:
+                word += ','
+            word += pauli_word[i][j]
+            word += str(j)  # 对每一个label加标签，说明是作用在哪个比特
+        pauli_site.append(word)  # 添加上对应作用的门
+        pauli_form.append(pauli_site)
+
+    return pauli_form
