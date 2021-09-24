@@ -1599,3 +1599,32 @@ def decompose(matrix):
         pauli_form.append(pauli_site)
 
     return pauli_form
+
+def plot_density_graph(density_op, width = 0.5):
+    r"""绘制密度矩阵的3D直方图。
+
+    Args:
+        density_op (numpy.ndarray or paddle.Tensor): 输入的量子态列表，可以支持态矢量和密度矩阵
+
+    Returns:
+        plt.Figure: 输入的密度矩阵对应的3D直方图
+    """
+
+    if not isinstance(density_op, np.ndarray):
+        density_op = density_op.numpy()
+    op_real = density_op.real
+    op_imag = density_op.imag
+
+    fig = plt.figure()
+    ax_real = fig.add_subplot(121, projection = '3d', title = "density_real")
+    ax_imag = fig.add_subplot(122, projection = '3d', title = "density_imag")
+
+    xx, yy = np.meshgrid(list(range(op_real.shape[0])), list(range(op_real.shape[1])))
+    xx, yy = xx.ravel(), yy.ravel()
+    op_real = op_real.reshape(-1)
+    op_imag = op_imag.reshape(-1)
+
+    ax_real.bar3d(xx, yy, np.zeros_like(op_real), width, width, op_real)
+    ax_imag.bar3d(xx, yy, np.zeros_like(op_imag), width, width, op_imag)
+
+    return fig
