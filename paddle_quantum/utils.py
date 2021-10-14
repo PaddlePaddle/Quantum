@@ -33,6 +33,7 @@ from scipy import sparse
 import matplotlib as mpl
 from paddle_quantum import simulator
 import matplotlib.animation as animation
+import matplotlib.image
 
 __all__ = [
     "partial_trace",
@@ -58,6 +59,7 @@ __all__ = [
     "Hamiltonian",
     "plot_state_in_bloch_sphere",
     "plot_rotation_in_bloch_sphere",
+    "img_to_density_matrix",
 ]
 
 
@@ -1602,3 +1604,24 @@ def decompose(matrix):
         pauli_form.append(pauli_site)
 
     return pauli_form
+
+def img_to_density_matrix(img_file):
+    r"""将图片编码为密度矩阵
+    Args:
+        img_file: 图片文件
+
+    Return:
+        rho:密度矩阵 ``
+    """
+    img_matrix = matplotlib.image.imread(img_file)
+    
+    #将图片转为灰度图
+    img_matrix = img_matrix.mean(axis=2)
+    
+    #填充矩阵,使其变为[2**n,2**n]的矩阵
+    length = int(2**np.ceil(np.log2(np.max(img_matrix.shape))))
+    img_matrix = np.pad(img_matrix,((0,length-img_matrix.shape[0]),(0,length-img_matrix.shape[1])),'constant')
+    #trace为1的密度矩阵
+    rho = img_matrix@img_matrix.T
+    rho = rho/np.trace(rho)
+    return rho
