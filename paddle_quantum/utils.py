@@ -914,14 +914,17 @@ class Hamiltonian:
             pass
         return self.coefficients, self.__pauli_words
 
-    def construct_h_matrix(self，n_qubit):
+    def construct_h_matrix(self):
         r"""构建 Hamiltonian 在 Z 基底下的矩阵。
 
         Returns:
             np.ndarray: Z 基底下的哈密顿量矩阵形式
         """
         coefs, pauli_words, sites = self.decompose_with_sites()
-        assert n_qubit>=self.num_qubit,"输入的量子数不小于哈密顿量表达式中所对应的量子比特数"
+        n_qubit = 1
+        for site in sites:
+            if type(site[0]) is int:
+                n_qubit = max(n_qubit, max(site) + 1)
         for site in sites:
             if type(site[0]) is int:
                 n_qubit = max(n_qubit, max(site) + 1)
