@@ -59,7 +59,7 @@ class UAnsatz:
                         paddle.to_tensor(np.array([math.pi / 4])), paddle.to_tensor(np.array([-math.pi / 4]))]
         # Record history of adding gates to the circuit
         self.__history = []
-       
+
     def __add__(self, cir):
         r"""重载加法 ‘+’ 运算符，用于拼接两个维度相同的电路
 
