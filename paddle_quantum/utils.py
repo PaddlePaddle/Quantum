@@ -925,9 +925,6 @@ class Hamiltonian:
         for site in sites:
             if type(site[0]) is int:
                 n_qubit = max(n_qubit, max(site) + 1)
-        for site in sites:
-            if type(site[0]) is int:
-                n_qubit = max(n_qubit, max(site) + 1)
         h_matrix = np.zeros([2 ** n_qubit, 2 ** n_qubit], dtype='complex64')
         spin_ops = SpinOps(n_qubit, use_sparse=True)
         for idx in range(len(coefs)):
