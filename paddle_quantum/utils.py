@@ -914,7 +914,7 @@ class Hamiltonian:
             pass
         return self.coefficients, self.__pauli_words
 
-    def construct_h_matrix(self，n_qubit):
+    def construct_h_matrix(self, n_qubit):
         r"""构建 Hamiltonian 在 Z 基底下的矩阵。
 
         Returns:
