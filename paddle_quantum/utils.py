@@ -56,6 +56,7 @@ __all__ = [
     "haar_state_vector",
     "haar_density_operator",
     "Hamiltonian",
+    "plot_n_qubit_state_in_bloch_sphere",
     "plot_state_in_bloch_sphere",
     "plot_rotation_in_bloch_sphere",
 ]
@@ -1279,7 +1280,68 @@ def __plot_bloch_sphere(
             0, 0, 0, bloch_vectors[:, 0], bloch_vectors[:, 1], bloch_vectors[:, 2],
             arrow_length_ratio=0.05, color=color, alpha=1.0
         )
+        
 
+def plot_n_qubit_state_in_bloch_sphere(
+        state,
+        show_qubits=None,
+        **args
+):
+    r"""将输入的多量子比特的量子态展示在 Bloch 球面上
+
+    Args:
+        state (list(numpy.ndarray or paddle.Tensor)): 输入的量子态列表，可以支持态矢量和密度矩阵,
+        该函数下，列表内每一个量子态对应一张单独的图片
+        show_qubits(list(list)):若为多量子比特，则给出要展示的量子比特，默认为 None，表示全展示
+        show_arrow (bool): 是否展示向量的箭头，默认为 ``False``
+        save_gif (bool): 是否存储 gif 动图，默认为 ``False``
+        filename (str): 存储的 gif 动图的名字
+        view_angle (list or tuple): 视图的角度，
+            第一个元素为关于 xy 平面的夹角 [0-360]，第二个元素为关于 xz 平面的夹角 [0-360], 默认为 ``(30, 45)``
+        view_dist (int): 视图的距离，默认为 7
+        set_color (str): 若要设置指定的颜色，请查阅 ``cmap`` 表。默认为红色到黑色的渐变颜色
+    """
+    assert type(state) == list or type(state) == paddle.Tensor or type(state) == np.ndarray, \
+        'the type of "state" must be "list" or "paddle.Tensor" or "np.ndarray".'
+    if type(state) == paddle.Tensor or type(state) == np.ndarray:
+        state = [state]
+    state_len = len(state)
+    assert state_len >= 1, '"state" is NULL.'
+    for i in range(state_len):
+        assert type(state[i]) == paddle.Tensor or type(state[i]) == np.ndarray, \
+            'the type of "state[i]" should be "paddle.Tensor" or "numpy.ndarray".'
+
+    if show_qubits is None:
+        show_qubits = [None]*state_len
+    else:
+        assert len(show_qubits)==state_len,'show_qubits大小需要和state相同'
+        for i in range(state_len):
+            assert type(show_qubits[i])==list,'the type of show_qubits should be None or list'
+
+    # Convert Tensor to numpy
+    for i in range(state_len):
+        if type(state[i]) == paddle.Tensor:
+            state[i] = state[i].numpy()
+
+    # Convert state_vector to density_matrix
+    for i in range(state_len):
+        if state[i].size == 2:
+            state_vector = state[i]
+            state[i] = np.outer(state_vector, np.conj(state_vector))
+    
+    for i in range(state_len):
+        if state[i].shape[0]>2:
+            s = []
+            if show_qubits[i] is None:
+                qubits_list = [*range(int(np.log2(state[i].shape[0])))]
+            else:
+                qubits_list = show_qubits[i]
+            rho = paddle.to_tensor(state[i])
+            for q in qubits_list:
+                s.append(partial_trace_discontiguous(rho,[q]))
+            plot_state_in_bloch_sphere(s,**args)
+        else:
+            plot_state_in_bloch_sphere(state[i],**args)
 
 def plot_state_in_bloch_sphere(
         state,
