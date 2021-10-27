@@ -26,7 +26,7 @@ from paddle import imag, real, reshape, kron, matmul, trace
 from paddle_quantum.utils import partial_trace, dagger, pauli_str_to_matrix
 from paddle_quantum import shadow
 from paddle_quantum.intrinsic import *
-from paddle_quantum.state import density_op
+from paddle_quantum.state import density_op,vec
 
 __all__ = [
     "UAnsatz",
@@ -67,8 +67,22 @@ class UAnsatz:
         Args：
             new_n(int):扩展后的量子比特数
         """
+        assert new_n>=self.n,'扩展后量子比特数要大于原量子比特数'
+        diff = new_n-self.n
+        dim = 2**diff
+        if self.__state is not None:
+            if self.__run_mode=='density_matrix':
+                shape = (dim,dim)
+                _state = paddle.to_tensor(density_op(diff))
+            elif self.__run_mode=='state_vector':
+                shape = (dim,)
+                _state = paddle.to_tensor(vec(0,diff))
+            
+            _state= paddle.reshape(_state,shape)
+            _state = kron(self.__state,_state)
+            self.__state = _state
         self.n = new_n
-
+        
     def __add__(self, cir):
         r"""重载加法 ‘+’ 运算符，用于拼接两个维度相同的电路
 
