@@ -1310,17 +1310,7 @@ def plot_n_qubit_state_in_bloch_sphere(
     for i in range(state_len):
         assert type(state[i]) == paddle.Tensor or type(state[i]) == np.ndarray, \
             'the type of "state[i]" should be "paddle.Tensor" or "numpy.ndarray".'
-            
-    # Convert Tensor to numpy
-    for i in range(state_len):
-        if type(state[i]) == paddle.Tensor:
-            state[i] = state[i].numpy()
 
-    # Convert state_vector to density_matrix
-    for i in range(state_len):
-        if state[i].size == 2:
-            state_vector = state[i]
-            state[i] = np.outer(state_vector, np.conj(state_vector))
     if show_qubits is None:
         show_qubits = [None]*state_len
     else:
