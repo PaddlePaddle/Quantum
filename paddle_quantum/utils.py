@@ -1340,11 +1340,17 @@ def plot_n_qubit_state_in_bloch_sphere(
     if state.shape[0]>=2 and state.size==2*state.shape[0]:
         state_vector = state
         state = np.outer(state_vector, np.conj(state_vector))
-    rho = paddle.to_tensor(state)
-    tmp_s = []
-    for q in which_qubits:
-        tmp_s.append(partial_trace_discontiguous(rho,[q]))
-    state = tmp_s
+    
+    #多量子态分解
+    if state.shape[0]>2:
+        rho = paddle.to_tensor(state)
+        print(rho)
+        tmp_s = []
+        for q in which_qubits:
+            tmp_s.append(partial_trace_discontiguous(rho,[q]))
+        state = tmp_s
+    else:
+        state = [state]
     state_len = len(state)
     
     # Calc the bloch_vectors
