@@ -1,6 +1,6 @@
-from paddle_quantum.state import density_op_random
 from paddle_quantum.circuit import UAnsatz
 from paddle_quantum.utils import partial_trace,plot_state_in_bloch_sphere,partial_trace_discontiguous,NKron,plot_n_qubit_state_in_bloch_sphere
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import paddle
 cir1 = UAnsatz(1)
@@ -12,14 +12,10 @@ omega = paddle.to_tensor(omega, dtype='float64')
 cir1.rx(phi,0)
 cir1.rz(omega,0)
 cir2.ry(theta,0)
+
 mat1,mat2 = np.array(cir1.run_density_matrix()),np.array(cir2.run_density_matrix())
 rho = NKron(mat1,mat2)
-state = [cir1.run_state_vector(),cir2.run_state_vector(),rho]
+state = rho
 plot_n_qubit_state_in_bloch_sphere(state,show_arrow=True)
-
-
-n = 2
-rho = density_op_random(n)
-#print(rho)
-plot_n_qubit_state_in_bloch_sphere(rho,show_arrow=True)
-plot_n_qubit_state_in_bloch_sphere(rho,show_qubits=[[0]],show_arrow=True)
+plot_n_qubit_state_in_bloch_sphere(cir2.run_density_matrix(),show_arrow=True)
+plot_n_qubit_state_in_bloch_sphere(cir1.run_state_vector(),show_arrow=True)
