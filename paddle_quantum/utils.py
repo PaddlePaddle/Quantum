@@ -57,6 +57,7 @@ __all__ = [
     "haar_state_vector",
     "haar_density_operator",
     "Hamiltonian",
+    "plot_n_qubit_state_in_bloch_sphere",
     "plot_state_in_bloch_sphere",
     "plot_rotation_in_bloch_sphere",
     "img_to_density_matrix",
@@ -1285,7 +1286,125 @@ def __plot_bloch_sphere(
             0, 0, 0, bloch_vectors[:, 0], bloch_vectors[:, 1], bloch_vectors[:, 2],
             arrow_length_ratio=0.05, color=color, alpha=1.0
         )
+        
 
+def plot_n_qubit_state_in_bloch_sphere(
+        state,
+        which_qubits=None,
+        show_arrow=False,
+        save_gif=False,
+        save_pic=True,
+        filename=None,
+        view_angle=None,
+        view_dist=None,
+        set_color='#0000FF'
+):
+    r"""将输入的多量子比特的量子态展示在 Bloch 球面上
+
+    Args:
+        state (numpy.ndarray or paddle.Tensor): 输入的量子态，可以支持态矢量和密度矩阵,
+        该函数下，列表内每一个量子态对应一张单独的图片
+        which_qubits(list or None):若为多量子比特，则给出要展示的量子比特，默认为 None，表示全展示
+        show_arrow (bool): 是否展示向量的箭头，默认为 ``False``
+        save_gif (bool): 是否存储 gif 动图，默认为 ``False``
+        save_pic (bool): 是否存储静态图片，默认为 ``True``
+        filename (str): 存储的 gif 动图的名字
+        view_angle (list or tuple): 视图的角度，
+            第一个元素为关于 xy 平面的夹角 [0-360]，第二个元素为关于 xz 平面的夹角 [0-360], 默认为 ``(30, 45)``
+        view_dist (int): 视图的距离，默认为 7
+        set_color (str): 若要设置指定的颜色，请查阅 ``cmap`` 表。默认为蓝色
+    """
+    # Check input data
+    __input_args_dtype_check(show_arrow, save_gif, filename, view_angle, view_dist)
+  
+    assert type(state) == paddle.Tensor or type(state) == np.ndarray, \
+        'the type of "state" must be "paddle.Tensor" or "np.ndarray".'
+    assert type(set_color) == str, \
+            'the type of "set_color" should be "str".'
+    
+    n_qubits = int(np.log2(state.shape[0]))
+
+    if which_qubits is None:
+        which_qubits = list(range(n_qubits))
+    else:
+        assert type(which_qubits)==list,'the type of which_qubits should be None or list'
+        assert 1<=len(which_qubits)<=n_qubits,'展示的量子数量需要小于n_qubits'
+        for i in range(len(which_qubits)):
+            assert 0<=which_qubits[i]<n_qubits, '0<which_qubits[i]<n_qubits'
+            
+    # Assign a value to an empty variable
+    if filename is None:
+        filename = 'state_in_bloch_sphere.gif'
+    if view_angle is None:
+        view_angle = (30, 45)
+    if view_dist is None:
+        view_dist = 7
+
+    # Convert Tensor to numpy
+    if type(state) == paddle.Tensor:
+        state = state.numpy()
+
+    #state_vector to density matrix
+    if state.shape[0]>=2 and state.size==state.shape[0]:
+        state_vector = state
+        state = np.outer(state_vector, np.conj(state_vector))
+    
+    #多量子态分解
+    if state.shape[0]>2:
+        rho = paddle.to_tensor(state)
+        tmp_s = []
+        for q in which_qubits:
+            tmp_s.append(partial_trace_discontiguous(rho,[q]))
+        state = tmp_s
+    else:
+        state = [state]
+    state_len = len(state)
+    
+    # Calc the bloch_vectors
+    bloch_vector_list = []
+    for i in range(state_len):
+        bloch_vector_tmp = __density_matrix_convert_to_bloch_vector(state[i])
+        bloch_vector_list.append(bloch_vector_tmp)
+
+    # List must be converted to array for slicing.
+    bloch_vectors = np.array(bloch_vector_list)
+
+    # A update function for animation class
+    def update(frame):
+        view_rotating_angle = 5
+        new_view_angle = [view_angle[0], view_angle[1] + view_rotating_angle * frame]
+        __plot_bloch_sphere(
+            ax, bloch_vectors, show_arrow, clear_plt=True,
+            view_angle=new_view_angle, view_dist=view_dist, set_color=set_color
+        )
+
+    # Dynamic update and save
+    if save_gif:
+        # Helper function to plot vectors on a sphere.
+        fig = plt.figure(figsize=(8, 8), dpi=100)
+        fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+        ax = fig.add_subplot(111, projection='3d')
+
+        frames_num = 7
+        anim = animation.FuncAnimation(fig, update, frames=frames_num, interval=600, repeat=False)
+        anim.save(filename, dpi=100, writer='pillow')
+        # close the plt
+        plt.close(fig)
+
+    # Helper function to plot vectors on a sphere.
+    fig = plt.figure(figsize=(8, 8), dpi=100)
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+    dim = np.ceil(sqrt(len(which_qubits)))
+    for i in range(1,len(which_qubits)+1):
+        ax = fig.add_subplot(dim,dim,i,projection='3d')
+        bloch_vector=np.array([bloch_vectors[i-1]])
+        __plot_bloch_sphere(
+        ax, bloch_vector, show_arrow, clear_plt=True,
+        view_angle=view_angle, view_dist=view_dist, set_color=set_color
+        )
+    if save_pic:
+        plt.savefig('n_qubit_state_in_bloch.png',bbox_inches='tight')
+    plt.show()
 
 def plot_state_in_bloch_sphere(
         state,
@@ -1377,11 +1496,12 @@ def plot_state_in_bloch_sphere(
     # Helper function to plot vectors on a sphere.
     fig = plt.figure(figsize=(8, 8), dpi=100)
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
-    ax = fig.add_subplot(111, projection='3d')
+    
 
+    ax = fig.add_subplot(111, projection='3d')
     __plot_bloch_sphere(
-        ax, bloch_vectors, show_arrow, clear_plt=True,
-        view_angle=view_angle, view_dist=view_dist, set_color=set_color
+    ax, bloch_vectors, show_arrow, clear_plt=True,
+    view_angle=view_angle, view_dist=view_dist, set_color=set_color
     )
 
     plt.show()
