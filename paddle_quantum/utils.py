@@ -33,6 +33,7 @@ from scipy import sparse
 import matplotlib as mpl
 from paddle_quantum import simulator
 import matplotlib.animation as animation
+import matplotlib.image
 
 __all__ = [
     "partial_trace",
@@ -59,6 +60,7 @@ __all__ = [
     "plot_n_qubit_state_in_bloch_sphere",
     "plot_state_in_bloch_sphere",
     "plot_rotation_in_bloch_sphere",
+    "img_to_density_matrix",
 ]
 
 
@@ -915,17 +917,21 @@ class Hamiltonian:
             pass
         return self.coefficients, self.__pauli_words
 
-    def construct_h_matrix(self):
+    def construct_h_matrix(self, n_qubit=None):
         r"""构建 Hamiltonian 在 Z 基底下的矩阵。
 
         Returns:
             np.ndarray: Z 基底下的哈密顿量矩阵形式
         """
         coefs, pauli_words, sites = self.decompose_with_sites()
-        n_qubit = 1
-        for site in sites:
-            if type(site[0]) is int:
-                n_qubit = max(n_qubit, max(site) + 1)
+        if n_qubit is None:
+            n_qubit = 1
+            for site in sites:
+                if type(site[0]) is int:
+                    print(n_qubit,(site))
+                    n_qubit = max(n_qubit, max(site) + 1)
+        else:
+            assert n_qubit>=self.n_qubits,"输入的量子数不小于哈密顿量表达式中所对应的量子比特数"
         h_matrix = np.zeros([2 ** n_qubit, 2 ** n_qubit], dtype='complex64')
         spin_ops = SpinOps(n_qubit, use_sparse=True)
         for idx in range(len(coefs)):
@@ -1719,3 +1725,24 @@ def decompose(matrix):
         pauli_form.append(pauli_site)
 
     return pauli_form
+
+def img_to_density_matrix(img_file):
+    r"""将图片编码为密度矩阵
+    Args:
+        img_file: 图片文件
+
+    Return:
+        rho:密度矩阵 ``
+    """
+    img_matrix = matplotlib.image.imread(img_file)
+    
+    #将图片转为灰度图
+    img_matrix = img_matrix.mean(axis=2)
+    
+    #填充矩阵,使其变为[2**n,2**n]的矩阵
+    length = int(2**np.ceil(np.log2(np.max(img_matrix.shape))))
+    img_matrix = np.pad(img_matrix,((0,length-img_matrix.shape[0]),(0,length-img_matrix.shape[1])),'constant')
+    #trace为1的密度矩阵
+    rho = img_matrix@img_matrix.T
+    rho = rho/np.trace(rho)
+    return rho
