@@ -1287,6 +1287,7 @@ def plot_n_qubit_state_in_bloch_sphere(
         which_qubits=None,
         show_arrow=False,
         save_gif=False,
+        save_pic=True,
         filename=None,
         view_angle=None,
         view_dist=None,
@@ -1300,6 +1301,7 @@ def plot_n_qubit_state_in_bloch_sphere(
         which_qubits(list or None):若为多量子比特，则给出要展示的量子比特，默认为 None，表示全展示
         show_arrow (bool): 是否展示向量的箭头，默认为 ``False``
         save_gif (bool): 是否存储 gif 动图，默认为 ``False``
+        save_pic (bool): 是否存储静态图片，默认为 ``True``
         filename (str): 存储的 gif 动图的名字
         view_angle (list or tuple): 视图的角度，
             第一个元素为关于 xy 平面的夹角 [0-360]，第二个元素为关于 xz 平面的夹角 [0-360], 默认为 ``(30, 45)``
@@ -1394,6 +1396,8 @@ def plot_n_qubit_state_in_bloch_sphere(
         ax, bloch_vector, show_arrow, clear_plt=True,
         view_angle=view_angle, view_dist=view_dist, set_color=set_color
         )
+    if save_pic:
+        plt.savefig('n_qubit_state_in_bloch.png',bbox_inches='tight')
     plt.show()
 
 def plot_state_in_bloch_sphere(
