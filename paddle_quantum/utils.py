@@ -1319,8 +1319,8 @@ def plot_n_qubit_state_in_bloch_sphere(
     if which_qubits is None:
         which_qubits = list(range(n_qubits))
     else:
-        assert type(show_qubits)==list,'the type of which_qubits should be None or list'
-        assert len(show_qubits)==state_len,'展示的量子数量需要小于n_qubits'
+        assert type(which_qubits)==list,'the type of which_qubits should be None or list'
+        assert len(which_qubits)==state_len,'展示的量子数量需要小于n_qubits'
         for i in range(len(which_qubits)):
             assert 0<which_qubits[i]<n_qubits, '0<which_qubits[i]<n_qubits'
             
