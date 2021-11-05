@@ -310,33 +310,6 @@ def __add_higher_order_trotter_block(circuit, tau, grouped_hamiltonian, order):
         for p in p_values:
             __add_second_order_trotter_block(circuit, p * tau, grouped_hamiltonian)
 
-def add_optimize_circuit_gate(gate,theta,pauli_word,which_qubits):
-    r""" 添加一个优化后的门电路，其pauli_word的形式主要为: 'XXYYZZ'的优化电路
-    Args:
-        circuit (UAnsatz): 需要添加门的电路
-        theta (tensor or float): 旋转角度
-        pauli_word (str): 泡利算符组成的字符串，例如 ``"XXZ"``
-        which_qubits (list or np.ndarray): ``pauli_word`` 中的每个算符所作用的量子比特编号
-    """
-    theta = np.pi/2
-    x,y,z = 1,1,1
-    g, a, b =z,(2*x-1)*np.pi/2-x,(2*y-1)*np.pi/2-y
-    alpha = paddle.to_tensor(theta-2*a,dtype='float64')
-    beta = paddle.to_tensor(2*b-theta,dtype='float64')
-    gamma = paddle.to_tensor(2*g-theta,dtype='float64')
-    param = [gamma,alpha,beta]
-    #print(param)
-    p1 = paddle.to_tensor(theta,dtype='float64')
-    p2 = paddle.to_tensor(-theta,dtype='float64')
-    cir.rz(p1,1)
-    cir.cnot([1,0])
-    cir.rz(param[0],0)
-    cir.ry(param[1],1)
-    cir.cnot([0,1])
-    cir.ry(param[2],1)
-    cir.cnot([1,0])
-    cir.rz(p2,0)
-    
 
 def add_n_pauli_gate(circuit, theta, pauli_word, which_qubits):
     r""" 添加一个对应着 N 个泡利算符张量积的旋转门，例如 :math:`e^{-\theta/2 * X \otimes I \otimes X \otimes Y}`
@@ -393,7 +366,7 @@ def add_n_pauli_gate(circuit, theta, pauli_word, which_qubits):
             elif re.match(r'Y', pauli_word[qubit_index], flags=re.I):
                 circuit.rx(- PI / 2, which_qubits[qubit_index])
                 
-def add_optimal_circuit(circuit,theta,which_qubits):
+def optimal_circuit(circuit,theta,which_qubits):
     r""" 添加一个优化电路，哈密顿量为'XXYYZZ'`
 
     Args:
@@ -418,7 +391,7 @@ def add_optimal_circuit(circuit,theta,which_qubits):
     circuit.rz(paddle.to_tensor(-p,dtype='float64'),a)
 
 def __group_hamiltonian_optimal(hamiltonian):
-    r""" 将哈密顿量拆分成 XXYYZZ 为组合，以及剩余项两个部分，并返回由他们组成的列表
+    r""" 将哈密顿量组合成 XXYYZZ 的形式，以及剩余项两个部分，并返回由他们组成的列表
 
     Args:
         hamiltonian (Hamiltonian): Paddle Quantum 中的 Hamiltonian 类
