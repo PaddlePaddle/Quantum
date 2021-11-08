@@ -2,6 +2,7 @@ from paddle_quantum.circuit import UAnsatz
 from paddle import kron
 from paddle_quantum.state import vec,density_op
 import paddle
+import unittest
 
 
 #density_matrix
@@ -30,5 +31,31 @@ def test_state_vector():
     cir2.run_state_vector()
     print(cir2.get_state())
 
-test_density_matrix()
-test_state_vector()
+
+class TestPlotDensityGraph(unittest.TestCase):
+    def setUp(self):
+        self.func = plot_density_graph
+        self.x_np = np.random.rand(4, 4) + np.random.rand(4, 4) * 1j
+        self.x_tensor = paddle.to_tensor(self.x_np)
+
+    def test_input_type(self):
+        self.assertRaises(TypeError, self.func, 1)
+        self.assertRaises(TypeError, self.func, [1, 2, 3])
+
+    def test_input_shape(self):
+        x = np.zeros((2, 3))
+        self.assertRaises(ValueError, self.func, x)
+
+    def test_ndarray_input_inputs(self):
+        res = self.func(self.x_np)
+        res.show()
+
+    def test_tensor_input(self):
+        res = self.func(self.x_tensor)
+        res.show()
+
+
+if __name__ == '__main__':
+    test_density_matrix()
+    test_state_vector()
+    unittest.main()
