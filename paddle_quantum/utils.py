@@ -1599,3 +1599,46 @@ def decompose(matrix):
         pauli_form.append(pauli_site)
 
     return pauli_form
+
+def plot_density_graph(density_matrix,
+                       size=0.3) -> plt.Figure:
+    r"""密度矩阵可视化工具。
+    Args:
+        density_matrix (numpy.ndarray or paddle.Tensor): 多量子比特的量子态的状态向量或者密度矩阵,要求量子数大于1
+        size (float): 条宽度，在0到1之间，默认0.3
+    Returns:
+        plt.Figure: 对应的密度矩阵可视化3D直方图
+    """
+    if not isinstance(density_matrix, (np.ndarray, paddle.Tensor)):
+        msg = f'Expected density_matrix to be np.ndarray or paddle.Tensor, but got {type(density_matrix)}'
+        raise TypeError(msg)
+    if isinstance(density_matrix, paddle.Tensor):
+        density_matrix = density_matrix.numpy()
+    if density_matrix.shape[0] != density_matrix.shape[1]:
+        density_matrix = np.outer(density_matrix, np.conj(density_matrix))
+
+    real = density_matrix.real
+    imag = density_matrix.imag
+
+    fig = plt.figure(figsize=(8, 8), dpi=100)
+    fig.subplots_adjust(left=0, right=1, bottom=1.5, top=2)
+    ax_real = fig.add_subplot(121, projection='3d', title="real")
+    ax_imag = fig.add_subplot(122, projection='3d', title="imag")
+
+
+    xx, yy = np.meshgrid(
+        [x for x in range(real.shape[0])], [x for x in range(real.shape[0])])
+    xx, yy = xx.ravel(),yy.ravel()
+    
+    real = real.reshape(-1)
+    imag = imag.reshape(-1)
+
+    ax_real.bar3d(xx, yy,np.zeros_like(real), size, size, real)
+    ax_imag.bar3d(xx, yy, np.zeros_like(imag), size, size, imag)
+
+    view_angle = (15,30)
+    ax_real.view_init(view_angle[0], view_angle[1])
+    ax_imag.view_init(view_angle[0], view_angle[1])
+    ax_real.set_zlim((-0.5,0.5))
+    ax_imag.set_zlim((-0.5,0.5))
+    plt.show()
