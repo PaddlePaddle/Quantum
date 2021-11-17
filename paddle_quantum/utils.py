@@ -33,6 +33,7 @@ from scipy import sparse
 import matplotlib as mpl
 from paddle_quantum import simulator
 import matplotlib.animation as animation
+from mpl_toolkits.mplot3d import Axes3D
 
 __all__ = [
     "partial_trace",
@@ -1601,7 +1602,7 @@ def decompose(matrix):
     return pauli_form
 
 def plot_density_graph(density_matrix,
-                       size=0.3) -> plt.Figure:
+                       size=0.3):
     r"""密度矩阵可视化工具。
     Args:
         density_matrix (numpy.ndarray or paddle.Tensor): 多量子比特的量子态的状态向量或者密度矩阵,要求量子数大于1
