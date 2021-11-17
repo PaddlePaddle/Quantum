@@ -1,6 +1,7 @@
 from paddle_quantum.circuit import UAnsatz
-from paddle import kron
-from paddle_quantum.state import vec,density_op
+import matplotlib.pyplot as plt
+from paddle_quantum.utils import plot_density_graph
+import numpy as np
 import paddle
 import unittest
 
@@ -35,7 +36,7 @@ def test_state_vector():
 class TestPlotDensityGraph(unittest.TestCase):
     def setUp(self):
         self.func = plot_density_graph
-        self.x_np = np.random.rand(4, 4) + np.random.rand(4, 4) * 1j
+        self.x_np = (np.random.rand(8, 8) + np.random.rand(8, 8) * 1j)-0.5-0.5j
         self.x_tensor = paddle.to_tensor(self.x_np)
 
     def test_input_type(self):

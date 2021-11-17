@@ -1758,8 +1758,8 @@ def plot_density_graph(density_matrix: Union[paddle.Tensor, np.ndarray],
     real = real.reshape(-1)
     imag = imag.reshape(-1)
 
-    ax_real.bar3d(xx, yy, np.zeros_like(real), size, size, real)
-    ax_imag.bar3d(xx, yy, np.zeros_like(imag), size, size, imag)
+    ax_real.bar3d(xx, yy, np.zeros_like(real), size, size, np.abs(real))
+    ax_imag.bar3d(xx, yy, np.zeros_like(imag), size, size, np.abs(imag))
 
     return figure
 
