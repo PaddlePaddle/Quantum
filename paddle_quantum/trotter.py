@@ -260,14 +260,19 @@ def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=F
             assert isinstance(hamiltonian, Hamiltonian)
             # decompose the Hamiltonian into 3 lists
             coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()
-            if pauli_words==['XX','YY','ZZ']:
-                optimal_circuit(circuit,[tau*i for i in coeffs],sites[0])
-            else:
-                # apply rotational gate of each term
-                for term_index in range(len(coeffs)):
+            # apply rotational gate of each term
+            term_index = 0
+            while term_index <len(coeffs):
+                if term_index+3<=len(coeffs) and \
+                len(set(y for x in sites[term_index:term_index+3] for y in x ))==2 and\
+                set(pauli_words[term_index:term_index+3])=={'XX','YY','ZZ'}:
+                    optimal_circuit(circuit,[tau*i for i in coeffs[term_index:term_index+3]],sites[term_index])
+                    term_index+=3
+                else:
                     # get the sorted pauli_word and site (an array of qubit indices) according to their qubit indices
                     pauli_word, site = __sort_pauli_word(pauli_words[term_index], sites[term_index])
                     add_n_pauli_gate(circuit, 2 * tau * coeffs[term_index], pauli_word, site)
+                    term_index+=1
     # in the reverse mode, if the Hamiltonian is a single element list, reverse the order its each term
     else:
         if len(grouped_hamiltonian) == 1:
@@ -389,41 +394,6 @@ def optimal_circuit(circuit,theta,which_qubits):
     circuit.ry(beta,b)
     circuit.cnot([b,a])
     circuit.rz(paddle.to_tensor(-p,dtype='float64'),a)
-
-def __group_hamiltonian_optimal(hamiltonian):
-    r""" 将哈密顿量组合成 XXYYZZ 的形式，以及剩余项两个部分，并返回由他们组成的列表
-
-    Args:
-        hamiltonian (Hamiltonian): Paddle Quantum 中的 Hamiltonian 类
-
-    Notes:
-       X0,X1,Y0,Y1,Z0,Z1以及X1,X2,Y1,Y2,Z1,Z2会被分成两组XXYYZZ，且他们的site都要一样。以及其他剩余项
-    """
-    grouped_hamiltonian = []
-    coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()
-    grouped_terms_indices = []
-    left_over_terms_indices = []
-    d = defaultdict(list)
-    for term_index in range(len(coeffs)):
-        site = sites[term_index]
-        pauli_word = pauli_words[term_index]
-        #print(pauli_word)
-        for pauli in ['XX', 'YY', 'ZZ']:
-            assert isinstance(pauli_word, str), "Each pauli word should be a string type"
-            if (pauli_word==pauli or pauli_word==pauli.lower()):
-                d[tuple(site)].append((pauli,term_index))
-                if len(d[tuple(site)])==3:
-                    terms_indices_to_be_grouped = [x[1] for x in d[tuple(site)]]
-                    grouped_terms_indices.extend(terms_indices_to_be_grouped)
-                    grouped_hamiltonian.append(hamiltonian[terms_indices_to_be_grouped])
-
-    for term_index in range(len(coeffs)):
-        if term_index not in grouped_terms_indices:
-            left_over_terms_indices.append(term_index)
-    if len(left_over_terms_indices):
-        for term_index in left_over_terms_indices:
-            grouped_hamiltonian.append(hamiltonian[term_index])
-    return grouped_hamiltonian
 
 def __group_hamiltonian_xyz(hamiltonian):
     r""" 将哈密顿量拆分成 X、Y、Z 以及剩余项四个部分，并返回由他们组成的列表
