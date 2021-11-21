@@ -258,6 +258,39 @@ def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=F
     if not reverse:
         for hamiltonian in grouped_hamiltonian:
             assert isinstance(hamiltonian, Hamiltonian)
+            
+            #将原哈密顿量中相同site的XX，YY，ZZ组合到一起
+            grouped_hamiltonian = []
+            coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()
+            grouped_terms_indices = []
+            left_over_terms_indices = []
+            d = defaultdict(list)
+            #合并相同site的XX,YY,ZZ
+            for term_index in range(len(coeffs)):
+                site = sites[term_index]
+                pauli_word = pauli_words[term_index]
+                for pauli in ['XX', 'YY', 'ZZ']:
+                    assert isinstance(pauli_word, str), "Each pauli word should be a string type"
+                    if (pauli_word==pauli or pauli_word==pauli.lower()):
+                        key = tuple(sorted(site))
+                        d[key].append((pauli,term_index))
+                        if len(d[key])==3:
+                            terms_indices_to_be_grouped = [x[1] for x in d[key]]
+                            grouped_terms_indices.extend(terms_indices_to_be_grouped)
+                            grouped_hamiltonian.append(hamiltonian[terms_indices_to_be_grouped])
+            #其他的剩余项
+            for term_index in range(len(coeffs)):
+                if term_index not in grouped_terms_indices:
+                    left_over_terms_indices.append(term_index)
+            if len(left_over_terms_indices):
+                for term_index in left_over_terms_indices:
+                    grouped_hamiltonian.append(hamiltonian[term_index])
+            #得到新的哈密顿量
+            res = grouped_hamiltonian[0]
+            for i in range(1,len(grouped_hamiltonian)):
+                res+=grouped_hamiltonian[i]
+            hamiltonian = res
+            
             # decompose the Hamiltonian into 3 lists
             coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()
             # apply rotational gate of each term
