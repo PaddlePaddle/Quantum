@@ -34,6 +34,7 @@ import matplotlib as mpl
 from paddle_quantum import simulator
 import matplotlib.animation as animation
 import matplotlib.image
+from typing import Union, Optional
 
 __all__ = [
     "partial_trace",
@@ -1725,6 +1726,42 @@ def decompose(matrix):
         pauli_form.append(pauli_site)
 
     return pauli_form
+
+def plot_density_graph(density_matrix: Union[paddle.Tensor, np.ndarray],
+                       size: Optional[float]=.3) -> plt.Figure:
+    r"""密度矩阵可视化工具。
+    Args:
+        density_matrix (numpy.ndarray or paddle.Tensor): 多量子比特的量子态的状态向量或者密度矩阵,要求量子数大于1
+        size (float): 条宽度，在0到1之间，默认0.3
+    Returns:
+        plt.Figure: 对应的密度矩阵可视化3D直方图
+    """
+    if not isinstance(density_matrix, (np.ndarray, paddle.Tensor)):
+        msg = f'Expected density_matrix to be np.ndarray or paddle.Tensor, but got {type(density_matrix)}'
+        raise TypeError(msg)
+    if isinstance(density_matrix, paddle.Tensor):
+        density_matrix = density_matrix.numpy()
+    if density_matrix.shape[0] != density_matrix.shape[1]:
+        msg = f'Expected density matrix dim0 equal to dim1, but got dim0={density_matrix.shape[0]}, dim1={density_matrix.shape[1]}'
+        raise ValueError(msg)
+
+    real = density_matrix.real
+    imag = density_matrix.imag
+
+    figure = plt.figure()
+    ax_real = figure.add_subplot(121, projection='3d', title="real")
+    ax_imag = figure.add_subplot(122, projection='3d', title="imag")
+
+    xx, yy = np.meshgrid(
+        list(range(real.shape[0])), list(range(real.shape[1])))
+    xx, yy = xx.ravel(), yy.ravel()
+    real = real.reshape(-1)
+    imag = imag.reshape(-1)
+
+    ax_real.bar3d(xx, yy, np.zeros_like(real), size, size, np.abs(real))
+    ax_imag.bar3d(xx, yy, np.zeros_like(imag), size, size, np.abs(imag))
+
+    return figure
 
 def img_to_density_matrix(img_file):
     r"""将图片编码为密度矩阵
