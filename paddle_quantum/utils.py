@@ -1615,7 +1615,7 @@ def plot_density_graph(density_matrix,
         raise TypeError(msg)
     if isinstance(density_matrix, paddle.Tensor):
         density_matrix = density_matrix.numpy()
-    if density_matrix.shape[0] != density_matrix.shape[1]:
+    if density_matrix.shape[0] == density_matrix.size:
         density_matrix = np.outer(density_matrix, np.conj(density_matrix))
 
     real = density_matrix.real
@@ -1640,6 +1640,6 @@ def plot_density_graph(density_matrix,
     view_angle = (15,30)
     ax_real.view_init(view_angle[0], view_angle[1])
     ax_imag.view_init(view_angle[0], view_angle[1])
-    ax_real.set_zlim((-0.5,0.5))
-    ax_imag.set_zlim((-0.5,0.5))
+    ax_real.set_zlim((-1,1))
+    ax_imag.set_zlim((-1,1))
     plt.show()
