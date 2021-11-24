@@ -33,6 +33,8 @@ from scipy import sparse
 import matplotlib as mpl
 from paddle_quantum import simulator
 import matplotlib.animation as animation
+import matplotlib.image
+from typing import Union, Optional
 
 __all__ = [
     "partial_trace",
@@ -56,8 +58,10 @@ __all__ = [
     "haar_state_vector",
     "haar_density_operator",
     "Hamiltonian",
+    "plot_n_qubit_state_in_bloch_sphere",
     "plot_state_in_bloch_sphere",
     "plot_rotation_in_bloch_sphere",
+    "img_to_density_matrix",
 ]
 
 
@@ -914,17 +918,21 @@ class Hamiltonian:
             pass
         return self.coefficients, self.__pauli_words
 
-    def construct_h_matrix(self):
+    def construct_h_matrix(self, n_qubit=None):
         r"""构建 Hamiltonian 在 Z 基底下的矩阵。
 
         Returns:
             np.ndarray: Z 基底下的哈密顿量矩阵形式
         """
         coefs, pauli_words, sites = self.decompose_with_sites()
-        n_qubit = 1
-        for site in sites:
-            if type(site[0]) is int:
-                n_qubit = max(n_qubit, max(site) + 1)
+        if n_qubit is None:
+            n_qubit = 1
+            for site in sites:
+                if type(site[0]) is int:
+                    print(n_qubit,(site))
+                    n_qubit = max(n_qubit, max(site) + 1)
+        else:
+            assert n_qubit>=self.n_qubits,"输入的量子数不小于哈密顿量表达式中所对应的量子比特数"
         h_matrix = np.zeros([2 ** n_qubit, 2 ** n_qubit], dtype='complex64')
         spin_ops = SpinOps(n_qubit, use_sparse=True)
         for idx in range(len(coefs)):
@@ -1279,7 +1287,125 @@ def __plot_bloch_sphere(
             0, 0, 0, bloch_vectors[:, 0], bloch_vectors[:, 1], bloch_vectors[:, 2],
             arrow_length_ratio=0.05, color=color, alpha=1.0
         )
+        
 
+def plot_n_qubit_state_in_bloch_sphere(
+        state,
+        which_qubits=None,
+        show_arrow=False,
+        save_gif=False,
+        save_pic=True,
+        filename=None,
+        view_angle=None,
+        view_dist=None,
+        set_color='#0000FF'
+):
+    r"""将输入的多量子比特的量子态展示在 Bloch 球面上
+
+    Args:
+        state (numpy.ndarray or paddle.Tensor): 输入的量子态，可以支持态矢量和密度矩阵,
+        该函数下，列表内每一个量子态对应一张单独的图片
+        which_qubits(list or None):若为多量子比特，则给出要展示的量子比特，默认为 None，表示全展示
+        show_arrow (bool): 是否展示向量的箭头，默认为 ``False``
+        save_gif (bool): 是否存储 gif 动图，默认为 ``False``
+        save_pic (bool): 是否存储静态图片，默认为 ``True``
+        filename (str): 存储的 gif 动图的名字
+        view_angle (list or tuple): 视图的角度，
+            第一个元素为关于 xy 平面的夹角 [0-360]，第二个元素为关于 xz 平面的夹角 [0-360], 默认为 ``(30, 45)``
+        view_dist (int): 视图的距离，默认为 7
+        set_color (str): 若要设置指定的颜色，请查阅 ``cmap`` 表。默认为蓝色
+    """
+    # Check input data
+    __input_args_dtype_check(show_arrow, save_gif, filename, view_angle, view_dist)
+  
+    assert type(state) == paddle.Tensor or type(state) == np.ndarray, \
+        'the type of "state" must be "paddle.Tensor" or "np.ndarray".'
+    assert type(set_color) == str, \
+            'the type of "set_color" should be "str".'
+    
+    n_qubits = int(np.log2(state.shape[0]))
+
+    if which_qubits is None:
+        which_qubits = list(range(n_qubits))
+    else:
+        assert type(which_qubits)==list,'the type of which_qubits should be None or list'
+        assert 1<=len(which_qubits)<=n_qubits,'展示的量子数量需要小于n_qubits'
+        for i in range(len(which_qubits)):
+            assert 0<=which_qubits[i]<n_qubits, '0<which_qubits[i]<n_qubits'
+            
+    # Assign a value to an empty variable
+    if filename is None:
+        filename = 'state_in_bloch_sphere.gif'
+    if view_angle is None:
+        view_angle = (30, 45)
+    if view_dist is None:
+        view_dist = 7
+
+    # Convert Tensor to numpy
+    if type(state) == paddle.Tensor:
+        state = state.numpy()
+
+    #state_vector to density matrix
+    if state.shape[0]>=2 and state.size==state.shape[0]:
+        state_vector = state
+        state = np.outer(state_vector, np.conj(state_vector))
+    
+    #多量子态分解
+    if state.shape[0]>2:
+        rho = paddle.to_tensor(state)
+        tmp_s = []
+        for q in which_qubits:
+            tmp_s.append(partial_trace_discontiguous(rho,[q]))
+        state = tmp_s
+    else:
+        state = [state]
+    state_len = len(state)
+    
+    # Calc the bloch_vectors
+    bloch_vector_list = []
+    for i in range(state_len):
+        bloch_vector_tmp = __density_matrix_convert_to_bloch_vector(state[i])
+        bloch_vector_list.append(bloch_vector_tmp)
+
+    # List must be converted to array for slicing.
+    bloch_vectors = np.array(bloch_vector_list)
+
+    # A update function for animation class
+    def update(frame):
+        view_rotating_angle = 5
+        new_view_angle = [view_angle[0], view_angle[1] + view_rotating_angle * frame]
+        __plot_bloch_sphere(
+            ax, bloch_vectors, show_arrow, clear_plt=True,
+            view_angle=new_view_angle, view_dist=view_dist, set_color=set_color
+        )
+
+    # Dynamic update and save
+    if save_gif:
+        # Helper function to plot vectors on a sphere.
+        fig = plt.figure(figsize=(8, 8), dpi=100)
+        fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+        ax = fig.add_subplot(111, projection='3d')
+
+        frames_num = 7
+        anim = animation.FuncAnimation(fig, update, frames=frames_num, interval=600, repeat=False)
+        anim.save(filename, dpi=100, writer='pillow')
+        # close the plt
+        plt.close(fig)
+
+    # Helper function to plot vectors on a sphere.
+    fig = plt.figure(figsize=(8, 8), dpi=100)
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+    dim = np.ceil(sqrt(len(which_qubits)))
+    for i in range(1,len(which_qubits)+1):
+        ax = fig.add_subplot(dim,dim,i,projection='3d')
+        bloch_vector=np.array([bloch_vectors[i-1]])
+        __plot_bloch_sphere(
+        ax, bloch_vector, show_arrow, clear_plt=True,
+        view_angle=view_angle, view_dist=view_dist, set_color=set_color
+        )
+    if save_pic:
+        plt.savefig('n_qubit_state_in_bloch.png',bbox_inches='tight')
+    plt.show()
 
 def plot_state_in_bloch_sphere(
         state,
@@ -1371,11 +1497,12 @@ def plot_state_in_bloch_sphere(
     # Helper function to plot vectors on a sphere.
     fig = plt.figure(figsize=(8, 8), dpi=100)
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
-    ax = fig.add_subplot(111, projection='3d')
+    
 
+    ax = fig.add_subplot(111, projection='3d')
     __plot_bloch_sphere(
-        ax, bloch_vectors, show_arrow, clear_plt=True,
-        view_angle=view_angle, view_dist=view_dist, set_color=set_color
+    ax, bloch_vectors, show_arrow, clear_plt=True,
+    view_angle=view_angle, view_dist=view_dist, set_color=set_color
     )
 
     plt.show()
@@ -1599,3 +1726,60 @@ def decompose(matrix):
         pauli_form.append(pauli_site)
 
     return pauli_form
+
+def plot_density_graph(density_matrix: Union[paddle.Tensor, np.ndarray],
+                       size: Optional[float]=.3) -> plt.Figure:
+    r"""密度矩阵可视化工具。
+    Args:
+        density_matrix (numpy.ndarray or paddle.Tensor): 多量子比特的量子态的状态向量或者密度矩阵,要求量子数大于1
+        size (float): 条宽度，在0到1之间，默认0.3
+    Returns:
+        plt.Figure: 对应的密度矩阵可视化3D直方图
+    """
+    if not isinstance(density_matrix, (np.ndarray, paddle.Tensor)):
+        msg = f'Expected density_matrix to be np.ndarray or paddle.Tensor, but got {type(density_matrix)}'
+        raise TypeError(msg)
+    if isinstance(density_matrix, paddle.Tensor):
+        density_matrix = density_matrix.numpy()
+    if density_matrix.shape[0] != density_matrix.shape[1]:
+        msg = f'Expected density matrix dim0 equal to dim1, but got dim0={density_matrix.shape[0]}, dim1={density_matrix.shape[1]}'
+        raise ValueError(msg)
+
+    real = density_matrix.real
+    imag = density_matrix.imag
+
+    figure = plt.figure()
+    ax_real = figure.add_subplot(121, projection='3d', title="real")
+    ax_imag = figure.add_subplot(122, projection='3d', title="imag")
+
+    xx, yy = np.meshgrid(
+        list(range(real.shape[0])), list(range(real.shape[1])))
+    xx, yy = xx.ravel(), yy.ravel()
+    real = real.reshape(-1)
+    imag = imag.reshape(-1)
+
+    ax_real.bar3d(xx, yy, np.zeros_like(real), size, size, np.abs(real))
+    ax_imag.bar3d(xx, yy, np.zeros_like(imag), size, size, np.abs(imag))
+
+    return figure
+
+def img_to_density_matrix(img_file):
+    r"""将图片编码为密度矩阵
+    Args:
+        img_file: 图片文件
+
+    Return:
+        rho:密度矩阵 ``
+    """
+    img_matrix = matplotlib.image.imread(img_file)
+    
+    #将图片转为灰度图
+    img_matrix = img_matrix.mean(axis=2)
+    
+    #填充矩阵,使其变为[2**n,2**n]的矩阵
+    length = int(2**np.ceil(np.log2(np.max(img_matrix.shape))))
+    img_matrix = np.pad(img_matrix,((0,length-img_matrix.shape[0]),(0,length-img_matrix.shape[1])),'constant')
+    #trace为1的密度矩阵
+    rho = img_matrix@img_matrix.T
+    rho = rho/np.trace(rho)
+    return rho
