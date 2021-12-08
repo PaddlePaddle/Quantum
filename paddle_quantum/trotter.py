@@ -588,13 +588,14 @@ def get_1d_heisenberg_hamiltonian(
     # add interactions on (0, n) for closed periodic boundary condition
     if periodic_boundary_condition:
         boundary_sites = [0, length - 1]
-        for interaction in interactions:
+        for interaction_idx in range(len(interactions)):
             term_str = ''
+            interaction = interactions[interaction_idx]
             for idx_word in range(len(interaction)):
                 term_str += interaction[idx_word] + str(boundary_sites[idx_word])
                 if idx_word != len(interaction) - 1:
                     term_str += ', '
-            pauli_str.append([1, term_str])
+            pauli_str.append([interaction_strength[interaction_idx], term_str])
 
     # add magnetic field, if h_z is a single value, then add a uniform field on each site
     if isinstance(h_z, np.ndarray) or isinstance(h_z, list) or isinstance(h_z, tuple):
