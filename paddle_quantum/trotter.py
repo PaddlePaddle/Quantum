@@ -594,7 +594,7 @@ def get_1d_heisenberg_hamiltonian(
                 term_str += interaction[idx_word] + str(boundary_sites[idx_word])
                 if idx_word != len(interaction) - 1:
                     term_str += ', '
-            pauli_str.append([1, term_str])
+            pauli_str.append([interaction_strength[interaction], term_str])
 
     # add magnetic field, if h_z is a single value, then add a uniform field on each site
     if isinstance(h_z, np.ndarray) or isinstance(h_z, list) or isinstance(h_z, tuple):
