@@ -1,3 +1,4 @@
+# !/usr/bin/env python3
 # Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +14,7 @@
 # limitations under the License.
 
 """
-Quantum chemistry module
+量子化学模块
 """
 
 import os
@@ -73,14 +74,14 @@ def _hamiltonian_transformation(spin_h, tol=1e-8):
 
 
 def _geo_str(geometry):
-    r"""创建分子几何信息的字符串。
+    r"""创建分子几何信息的字符串
 
     Args:
         geometry (list): 包含了分子的几何信息，以 H2 分子为例
-        [['H', [-1.68666, 1.79811, 0.0]], ['H', [-1.12017, 1.37343, 0.0]]]。
+        [['H', [-1.68666, 1.79811, 0.0]], ['H', [-1.12017, 1.37343, 0.0]]]
 
     Returns:
-        str: 分子几何信息的字符串。
+        str: 分子几何信息的字符串
     """
     geo_str = ''
     for item in geometry:
@@ -98,26 +99,26 @@ def _geo_str(geometry):
 
 
 def _run_psi4(
-    molecule,
-    charge,
-    multiplicity,
-    method,
-    basis,
-    if_print,
-    if_save
+        molecule,
+        charge,
+        multiplicity,
+        method,
+        basis,
+        if_print,
+        if_save
 ):
     r"""计算分子的必要信息，包括单体积分 (one-body integrations) 和双体积分 (two-body integrations)，
     以及用 scf 和 fci 的方法计算基态的能量。
 
     Args:
-        molecule (MolecularData object): 包含分子所有信息的类 (class)。
-        charge (int): 分子的电荷。
-        multiplicity (int): 分子的多重度。
-        method (str): 用于计算基态能量的方法，包括 'scf'和 'fci'。
-        basis (str): 常用的基组是 'sto-3g', '6-31g'等。更多的基组选择可以参考网站。
-        https://psicode.org/psi4manual/master/basissets_byelement.html#apdx-basiselement。
-        if_print (Boolean): 是否需要打印出选定方法 (method) 计算出的分子基态能量。
-        if_save (Boolean): 是否需要将分子信息存储成 .hdf5 文件。
+        molecule (MolecularData object): 包含分子所有信息的类 (class)
+        charge (int): 分子的电荷
+        multiplicity (int): 分子的多重度
+        method (str): 用于计算基态能量的方法，包括 'scf'和 'fci'
+        basis (str): 常用的基组是 'sto-3g', '6-31g'等。更多的基组选择可以参考网站
+            https://psicode.org/psi4manual/master/basissets_byelement.html#apdx-basiselement
+        if_print (Boolean): 是否需要打印出选定方法 (method) 计算出的分子基态能量
+        if_save (Boolean): 是否需要将分子信息存储成 .hdf5 文件
     """
     psi4.set_memory('500 MB')
     psi4.set_options({'soscf': 'false',
@@ -182,7 +183,7 @@ def _run_psi4(
 
 
 def geometry(structure=None, file=None):
-    r"""读取分子的几何信息。
+    r"""读取分子的几何信息
 
     Args:
         structure (string, optional): 分子几何信息的字符串形式，以 H2 分子为例
@@ -193,9 +194,9 @@ def geometry(structure=None, file=None):
         str: 分子的几何信息
 
     Raises:
-        AssertionError: 两个输入参数不可以同时为 ``None`` 。
+        AssertionError: 两个输入参数不可以同时为 ``None`` 
     """
-    if ((structure is None) and (file is None)):
+    if structure is None and file is None:
         raise AssertionError('Input must be structure or .xyz file')
     elif file is None:
         shape = np.array(structure).shape
@@ -221,15 +222,15 @@ def geometry(structure=None, file=None):
 
 
 def get_molecular_data(
-    geometry,
-    charge=0,
-    multiplicity=1,
-    basis='sto-3g',
-    method='scf',
-    if_save=True,
-    if_print=True,
-    name="",
-    file_path="."
+        geometry,
+        charge=0,
+        multiplicity=1,
+        basis='sto-3g',
+        method='scf',
+        if_save=True,
+        if_print=True,
+        name="",
+        file_path="."
 ):
     r"""计算分子的必要信息，包括单体积分（one-body integrations）和双体积分（two-body integrations），
     以及用选定的方法计算基态的能量。
@@ -270,28 +271,34 @@ def get_molecular_data(
             else:
                 filename = name + '.hdf5'
 
-    molecule = MolecularData(geometry,
-                             basis=basis,
-                             multiplicity=multiplicity,
-                             charge=charge,
-                             filename=filename)
+    molecule = MolecularData(
+        geometry,
+        basis=basis,
+        multiplicity=multiplicity,
+        charge=charge,
+        filename=filename
+    )
 
-    _run_psi4(molecule,
-              charge,
-              multiplicity,
-              method,
-              basis,
-              if_print,
-              if_save)
+    _run_psi4(
+        molecule,
+        charge,
+        multiplicity,
+        method,
+        basis,
+        if_print,
+        if_save
+    )
 
     return molecule
 
 
-def active_space(electrons,
-                 orbitals,
-                 multiplicity=1,
-                 active_electrons=None,
-                 active_orbitals=None):
+def active_space(
+        electrons,
+        orbitals,
+        multiplicity=1,
+        active_electrons=None,
+        active_orbitals=None
+):
     r"""对于给定的活跃电子和活跃轨道计算相应的活跃空间（active space）。
 
     Args:
@@ -340,11 +347,13 @@ def active_space(electrons,
     return core_orbitals, active_orbitals
 
 
-def fermionic_hamiltonian(molecule,
-                          filename=None,
-                          multiplicity=1,
-                          active_electrons=None,
-                          active_orbitals=None):
+def fermionic_hamiltonian(
+        molecule,
+        filename=None,
+        multiplicity=1,
+        active_electrons=None,
+        active_orbitals=None
+):
     r"""计算给定分子的费米哈密顿量。
 
     Args:
@@ -375,12 +384,14 @@ def fermionic_hamiltonian(molecule,
     return fermionic_hamiltonian
 
 
-def spin_hamiltonian(molecule,
-                     filename=None,
-                     multiplicity=1,
-                     mapping_method='jordan_wigner',
-                     active_electrons=None,
-                     active_orbitals=None):
+def spin_hamiltonian(
+        molecule,
+        filename=None,
+        multiplicity=1,
+        mapping_method='jordan_wigner',
+        active_electrons=None,
+        active_orbitals=None
+):
     r"""生成 Paddle Quantum 格式的哈密顿量
 
     Args:

@@ -19,6 +19,7 @@ Powell optimizer
 from scipy import optimize
 from .custom_optimizer import CustomOptimizer
 
+
 class Powell(CustomOptimizer):
     r"""Powell Optimizer
     
@@ -54,5 +55,5 @@ class Powell(CustomOptimizer):
             method='Powell',
             options={'maxiter': iterations},
             callback=lambda xk: print('loss: ', self.loss_func(xk, self.cir, self.hamiltonian, self.shots))
-            )
+        )
         print(opt_res.message)

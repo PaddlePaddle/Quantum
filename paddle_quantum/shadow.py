@@ -19,12 +19,127 @@ shadow sample module
 import numpy as np
 import paddle
 import re
+import math
 from paddle_quantum import circuit
 from paddle_quantum.utils import Hamiltonian
 
 __all__ = [
     "shadow_sample"
 ]
+
+
+def random_pauli_sample(num_qubits, beta=None):
+    r"""根据概率分布 beta, 随机选取 pauli 测量基
+
+    Args:
+        num_qubits (int): 量子比特数目
+        beta (list, optional): 量子位上不同 pauli 测量基的概率分布
+
+    Returns:
+        str: 返回随机选择的 pauli 测量基
+
+    Note:
+        这是内部函数，你并不需要直接调用到该函数。
+    """
+    # assume beta obeys a uniform distribution if it is not given
+    if beta is None:
+        beta = list()
+        for _ in range(0, num_qubits):
+            beta.append([1 / 3] * 3)
+    pauli_sample = str()
+    for qubit_idx in range(num_qubits):
+        sample = np.random.choice(['x', 'y', 'z'], 1, p=beta[qubit_idx])
+        pauli_sample += sample[0]
+    return pauli_sample
+
+
+def measure_by_pauli_str(pauli_str, phi, num_qubits, mode, method):
+    r"""搭建 pauli 测量电路，返回测量结果
+
+    Args:
+        pauli_str (str): 输入的是随机选取的num_qubits pauli 测量基
+        phi (numpy.ndarray): 输入量子态，支持态矢量和密度矩阵形式
+        num_qubits (int): 量子比特数量
+        mode (str): 输入量子态的表示方式，``"state_vector"`` 表示态矢量形式， ``"density_matrix"`` 表示密度矩阵形式
+        method (str): 进行测量的方法，有 "CS"、"LBCS"、"APS"
+
+    Returns:
+        str: 返回测量结果
+
+    Note:
+        这是内部函数，你并不需要直接调用到该函数。
+    """
+    if method == "clifford":
+        # Add the clifford function
+        pass
+    else:
+        # Other method are transformed as follows
+        # Convert to tensor form
+        input_state = paddle.to_tensor(phi)
+        cir = circuit.UAnsatz(num_qubits)
+        for qubit in range(num_qubits):
+            if pauli_str[qubit] == 'x':
+                cir.h(qubit)
+            elif pauli_str[qubit] == 'y':
+                cir.h(qubit)
+                cir.s(qubit)
+                cir.h(qubit)
+        if mode == 'state_vector':
+            cir.run_state_vector(input_state)
+        else:
+            cir.run_density_matrix(input_state)
+        result = cir.measure(shots=1)
+        bit_string, = result
+        return bit_string
+
+
+def paulistr_to_matrix(paulistr):
+    r"""识别随机选取的 pauli 并转换成作用于 Z 测量的酉变换的矩阵形式
+
+    Args:
+        paulistr (str): 输入的是某一量子位上随机选取的 Pauli 测量基
+
+    Returns:
+        numpy.ndarray: 返回酉变换的矩阵形式
+
+    Note:
+        这是内部函数，你并不需要直接调用到该函数。
+    """
+
+    # Define the matrix form of H, S gates
+    a = math.pow(2, 0.5)
+    H_matrix = np.array([[1 / a, 1 / a], [1 / a, -1 / a]])
+    S_matrix = np.array([[1, 0], [0, 1j]])
+    I_matrix = np.array([[1, 0], [0, 1]])
+
+    if paulistr == 'x':
+        paulistr_matrix = H_matrix
+    elif paulistr == 'y':
+        paulistr_matrix = np.dot(np.dot(H_matrix, S_matrix), H_matrix)
+    elif paulistr == 'z':
+        paulistr_matrix = I_matrix
+    return paulistr_matrix
+
+
+def measure_result_to_matrix(measure_str):
+    r"""将单个量子位上测量的结果转换为密度矩阵形式
+
+    Args:
+        measure_str (str): 输入的是某一量子位上的测量结果
+
+    Returns:
+        numpy.ndarray: 返回测量结果的密度矩阵形式
+    Note:
+        这是内部函数，你并不需要直接调用到该函数。
+    """
+
+    ket_0 = np.array([[1, 0]]).T
+    ket_1 = np.array([[0, 1]]).T
+    if measure_str == '0':
+        b_matrix = np.kron(ket_0, ket_0.conj().T)
+    elif measure_str == '1':
+        b_matrix = np.kron(ket_1, ket_1.conj().T)
+    return b_matrix
 
 
 def shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian=None, method='CS'):
@@ -107,68 +222,6 @@ def shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian=None, metho
         hamiltonian = prepare_hamiltonian(hamiltonian, num_qubits)
 
     pauli2index = {'x': 0, 'y': 1, 'z': 2}
-
-    def random_pauli_sample(num_qubits, beta=None):
-        r"""根据概率分布 beta, 随机选取 pauli 测量基
-
-        Args:
-            num_qubits (int): 量子比特数目
-            beta (list, optional): 量子位上不同 pauli 测量基的概率分布
-
-        Returns:
-            str: 返回随机选择的 pauli 测量基
-
-        Note:
-            这是内部函数，你并不需要直接调用到该函数。
-        """
-        # assume beta obeys a uniform distribution if it is not given
-        if beta is None:
-            beta = list()
-            for _ in range(0, num_qubits):
-                beta.append([1 / 3] * 3)
-        pauli_sample = str()
-        for qubit_idx in range(num_qubits):
-            sample = np.random.choice(['x', 'y', 'z'], 1, p=beta[qubit_idx])
-            pauli_sample += sample[0]
-        return pauli_sample
-
-    def measure_by_pauli_str(pauli_str, phi, num_qubits, method):
-        r"""搭建 pauli 测量电路，返回测量结果
-
-        Args:
-            pauli_str (str): 输入的是随机选取的num_qubits pauli 测量基
-            phi (numpy.ndarray): 输入量子态，支持态矢量和密度矩阵形式
-            num_qubits (int): 量子比特数量
-            method (str): 进行测量的方法，有 "CS"、"LBCS"、"APS"
-
-        Returns:
-            str: 返回测量结果
-
-        Note:
-            这是内部函数，你并不需要直接调用到该函数。
-        """
-        if method == "clifford":
-            # Add the clifford function
-            pass
-        else:
-            # Other method are transformed as follows
-            # Convert to tensor form
-            input_state = paddle.to_tensor(phi)
-            cir = circuit.UAnsatz(num_qubits)
-            for qubit in range(num_qubits):
-                if pauli_str[qubit] == 'x':
-                    cir.h(qubit)
-                elif pauli_str[qubit] == 'y':
-                    cir.h(qubit)
-                    cir.s(qubit)
-                    cir.h(qubit)
-            if mode == 'state_vector':
-                cir.run_state_vector(input_state)
-            else:
-                cir.run_density_matrix(input_state)
-            result = cir.measure(shots=1)
-            bit_string, = result
-            return bit_string
 
     # Define the function used to update the beta of the LBCS algorithm
     def calculate_diagonal_product(pauli_str, beta):
@@ -424,7 +477,7 @@ def shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian=None, metho
     if method == "CS":
         for _ in range(sample_shots):
             random_pauli_str = random_pauli_sample(num_qubits, beta=None)
-            measurement_result = measure_by_pauli_str(random_pauli_str, state, num_qubits, method)
+            measurement_result = measure_by_pauli_str(random_pauli_str, state, num_qubits, mode, method)
             sample_result.append((random_pauli_str, measurement_result))
         return sample_result
     elif method == "LBCS":
@@ -441,12 +494,91 @@ def shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian=None, metho
         sample_result = list()
         for _ in range(sample_shots):
             random_pauli_str = random_pauli_sample(num_qubits, beta)
-            measurement_result = measure_by_pauli_str(random_pauli_str, state, num_qubits, method)
+            measurement_result = measure_by_pauli_str(random_pauli_str, state, num_qubits, mode, method)
             sample_result.append((random_pauli_str, measurement_result))
         return sample_result, beta
     elif method == "APS":
         for _ in range(sample_shots):
             random_pauli_str = random_pauli_sample_in_aps(hamiltonian)
-            measurement_result = measure_by_pauli_str(random_pauli_str, state, num_qubits, method)
+            measurement_result = measure_by_pauli_str(random_pauli_str, state, num_qubits, mode, method)
             sample_result.append((random_pauli_str, measurement_result))
         return sample_result
+
+
+def classical_shadow(state, num_qubits, sample_shots, mode, method=None):
+    r"""获得量子态 state 的经典影子
+
+    Args:
+        state (numpy.ndarray): 输入量子态，支持态矢量和密度矩阵形式
+        num_qubits (int): 量子比特数量
+        sample_shots (int): 随机采样的次数
+        mode (str): 输入量子态的表示方式，``"state_vector"`` 表示态矢量形式， ``"density_matrix"`` 表示密度矩阵形式
+        method (str, optional): 可选方法 restructure (R)，获得量子态的密度矩阵形式；或默认为None (即 not restructure, NR)，获得量子态的密度矩阵形式
+
+    Returns:
+        tuple: 包含如下两个元素
+            - state_hat (list): 返回量子态 state 的经典影子 (method = 'NR')
+            - reconstructed_state (numpy.ndarray): 返回估计的量子态 state 的密度矩阵 (method = 'R')
+
+    代码示例:
+
+    .. code-block:: python
+
+        from paddle_quantum.shadow import classical_shadow
+        from paddle_quantum.state import vec_random
+
+        n_qubit = 2
+        sample_shots = 2
+        state = vec_random(n_qubit)
+        state_shadow = classical_shadow(state, n_qubit, sample_shots, mode='state_vector', method='NR')
+        state_density_matrix = classical_shadow(state, n_qubit, sample_shots, mode='state_vector', method='R')
+
+        print('classical shadow of quantum state = ', state_shadow)
+        print('density matrix of quantum state = ', state_density_matrix)
+
+    ::
+        classical shadow of quantum state =  [array([[ 0.25+0.j  ,  0.  +0.75j, -0.75+0.j  , -0.  -2.25j],
+                                                    [ 0.  -0.75j,  0.25+0.j  ,  0.  +2.25j, -0.75+0.j  ],
+                                                    [-0.75+0.j  , -0.  -2.25j,  0.25+0.j  ,  0.  +0.75j],
+                                                    [ 0.  +2.25j, -0.75+0.j  ,  0.  -0.75j,  0.25+0.j  ]]),
+                                            array([[0.25+0.j  , 0.  -0.75j, 0.75+0.j  , 0.  -2.25j],
+                                                    [0.  +0.75j, 0.25+0.j  , 0.  +2.25j, 0.75+0.j  ],
+                                                    [0.75+0.j  , 0.  -2.25j, 0.25+0.j  , 0.  -0.75j],
+                                                    [0.  +2.25j, 0.75+0.j  , 0.  +0.75j, 0.25+0.j  ]])]
+        density matrix of quantum state =  [[ 0.625+0.j     0.375+0.j    -1.5  +0.375j  0.   +1.125j]
+                                            [ 0.375+0.j    -0.125+0.j     0.   +1.125j  0.75 +0.375j]
+                                            [-1.5  -0.375j  0.   -1.125j  0.625+0.j     0.375+0.j   ]
+                                            [ 0.   -1.125j  0.75 -0.375j  0.375+0.j    -0.125+0.j   ]]
+
+    """
+    # Used to store the classic shadow for each sample
+    state_hat = []
+    I_matrix = np.array([[1, 0], [0, 1]])
+
+    for _ in range(sample_shots):
+        # Randomly selected Pauli
+        random_pauli_str = random_pauli_sample(num_qubits, beta=None)
+        # Measure according to the selected Pauli
+        measurement_result = measure_by_pauli_str(random_pauli_str, state, num_qubits, mode, None)
+        # Generate a 1×1 matrix, convenient tensor product
+        hat_state = np.eye(1)
+        for i in range(num_qubits):
+            single_pauli_matrix = paulistr_to_matrix(random_pauli_str[i])
+            single_b_matrix = measure_result_to_matrix(measurement_result[i])
+            # The classical shadow on a single qubit is obtained according to the derived M inverse
+            single_qubit_state_left = np.dot(np.dot(single_pauli_matrix.conj().T, single_b_matrix), single_pauli_matrix)
+            single_qubit_state = 3 * single_qubit_state_left - I_matrix
+            # The classical shadow of quantum state is obtained
+            hat_state = np.kron(hat_state, single_qubit_state)
+
+        # Store classical shadows
+        state_hat.append(hat_state)
+
+    if method == 'R':
+        # Returns the density matrix of the quantum state
+        reconstructed_state = sum(state_hat)/len(state_hat)        
+        return reconstructed_state
+
+    else:
+        # Returns the classical shadow of the quantum state
+        return state_hat

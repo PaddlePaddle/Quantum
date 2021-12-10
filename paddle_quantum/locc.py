@@ -68,7 +68,7 @@ class LoccStatus(object):
             return self.measured_result
         else:
             raise ValueError("too many values to unpack (expected 3)")
-    
+
     def __repr__(self):
         return f"state: {self.state.numpy()}\nprob: {self.prob.numpy()[0]}\nmeasured_result: {self.measured_result}"
 

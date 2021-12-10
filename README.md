@@ -18,7 +18,7 @@ English | [简体中文](README_CN.md)
 - [Copyright and License](#copyright-and-license)
 - [References](#references)
 
-[Paddle Quantum (量桨)](https://qml.baidu.com/) is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle. It provides a platform to construct and train quantum neural networks (QNNs) with easy-to-use QML development kits supporting combinatorial optimization, quantum chemistry and other cutting-edge quantum applications, making PaddlePaddle the first and only deep learning framework in China that supports quantum machine learning.
+[Paddle Quantum (量桨)](https://qml.baidu.com/) is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle. It provides a platform to construct and train quantum neural networks (QNNs) with easy-to-use QML development kits supporting combinatorial optimization, quantum chemistry and other cutting-edge quantum applications, making PaddlePaddle the first deep learning framework in China that supports quantum machine learning.
 
 <p align="center">
   <a href="https://qml.baidu.com/">
@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.1.2-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.1.3-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -55,7 +55,7 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 ## Features
 
 - Easy-to-use
-  - Many online learning resources (37+ tutorials)
+  - Many online learning resources (Nearly 40 tutorials)
   - High efficiency in building QNN with various QNN templates
   - Automatic differentiation
 - Versatile
@@ -71,7 +71,7 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 
 ### Install PaddlePaddle
 
-This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 2.1.1+.
+This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 2.2.0+.
 
 ### Install Paddle Quantum
 
@@ -90,20 +90,14 @@ pip install -e .
 
 ### Environment setup for Quantum Chemistry module
 
-Our `qchem` module is based on `Openfermion` and `Psi4`, so before executing quantum chemistry, we have to install the two Python packages first.
+Our `qchem` module is based on `Psi4`, so before executing quantum chemistry, we have to install this Python package.
 
-> It is recommended that these Python packages be installed in a Python 3.8 environment.
-
-`Openfermion` can be installed with the following command:
-
-```bash
-pip install openfermion
-```
+> It is recommended that `Psi4` is installed in a Python 3.8 environment.
 
 We highly recommend you to install `Psi4` via conda. **MacOS/Linux** user can use the command:
 
 ```bash
-conda install psi4-c psi4
+conda install psi4 -c psi4
 ```
 
 For **Windows** user, the command is:
@@ -131,10 +125,13 @@ python main.py
 [Paddle Quantum Quick Start Manual](https://github.com/PaddlePaddle/Quantum/tree/master/introduction) is probably the best place to get started with Paddle Quantum. Currently, we support online reading and running the Jupyter Notebook locally. The manual includes the following contents:
 
 - Detailed installation tutorials for Paddle Quantum
-- Introduction to the basics of quantum computing and QNN
-- Introduction on the operation modes of Paddle Quantum
-- A quick tutorial on PaddlePaddle's dynamic computational graph and optimizers
-- A case study on Quantum Machine Learning -- Variational Quantum Eigensolver (VQE)
+- Introduction to quantum computing and quantum neural networks (QNNs)
+- Introduction to Variational Quantum Algorithms (VQAs)
+- Introduction to Paddle Quantum
+- PaddlePaddle optimizer tutorial
+- Introduction to the quantum chemistry module in Paddle Quantum
+- How to train QNN with GPU
+- Some frequently used functions in Paddle Quantum
 
 ### Tutorials
 
@@ -150,6 +147,7 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
     7. [Estimation of Quantum State Properties Based on the Classical Shadow](./tutorial/quantum_simulation/ClassicalShadow_Application_EN.ipynb)
     8. [Hamiltonian Simulation with Product Formula](./tutorial/quantum_simulation/HamiltonianSimulation_EN.ipynb)
     9. [Simulate the Spin Dynamics on a Heisenberg Chain](./tutorial/quantum_simulation/SimulateHeisenberg_EN.ipynb)
+    10. [Distributed Variational Quantum Eigensolver Based on Schmidt Decomposition](./tutorial/quantum_simulation/DistributedVQE_EN.ipynb)
 
 - [Machine Learning](./tutorial/machine_learning)
     1. [Encoding Classical Data into Quantum States](./tutorial/machine_learning/DataEncoding_EN.ipynb)
@@ -183,6 +181,7 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
     3. [Calculating Gradient Using Quantum Circuit](./tutorial/qnn_research/Gradient_EN.ipynb)
     4. [Expressibility of Quantum Neural Network](./tutorial/qnn_research/Expressibility_EN.ipynb)
     5. [Variational Quantum Circuit Compiling](./tutorial/qnn_research/VQCC_EN.ipynb)
+    6. [Quantum Fisher Information](./tutorial/qnn_research/Fisher_EN.ipynb)
 
 With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can start with this [tutorial on LOCCNet](./tutorial/locc/LOCCNET_Tutorial_EN.ipynb). In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](./introduction/PaddleQuantum_GPU_EN.ipynb). Moreover, Paddle Quantum could design robust quantum algorithms under noise. For more information, please see [Noise tutorial](./tutorial/qnn_research/Noise_EN.ipynb).
 
@@ -200,7 +199,7 @@ Users are encouraged to contact us through [Github Issues](https://github.com/Pa
 
 ## Research based on Paddle Quantum
 
-We also highly encourage developers to use Paddle Quantum as a research tool to develop novel QML algorithms. If your work uses Paddle Quantum, feel free to send us a notice via quantum@baidu.com. We are always excited to hear that! Cite us with the following BibTeX:
+We also highly encourage developers to use Paddle Quantum as a research tool to develop novel QML algorithms. If your work uses Paddle Quantum, feel free to send us a notice via qml@baidu.com. We are always excited to hear that! Cite us with the following BibTeX:
 
 > @misc{Paddlequantum,
 > title = {{Paddle Quantum}},
@@ -209,17 +208,17 @@ We also highly encourage developers to use Paddle Quantum as a research tool to 
 
 So far, we have done several projects with the help of Paddle Quantum as a powerful QML development platform.
 
-[1] Wang, Youle, Guangxi Li, and Xin Wang. "Variational quantum gibbs state preparation with a truncated taylor series." arXiv preprint arXiv:2005.08797 (2020). [[pdf](https://arxiv.org/pdf/2005.08797.pdf)]
+[1] Wang, Youle, Guangxi Li, and Xin Wang. "Variational quantum Gibbs state preparation with a truncated Taylor series." Physical Review Applied 16.5 (2021): 054035. [[pdf](https://arxiv.org/pdf/2005.08797.pdf)]
 
-[2] Wang, Xin, Zhixin Song, and Youle Wang. "Variational Quantum Singular Value Decomposition." arXiv preprint arXiv:2006.02336 (2020). [[pdf](https://arxiv.org/pdf/2006.02336.pdf)]
+[2] Wang, Xin, Zhixin Song, and Youle Wang. "Variational quantum singular value decomposition." Quantum 5 (2021): 483. [[pdf](https://arxiv.org/pdf/2006.02336.pdf)]
 
-[3] Li, Guangxi, Zhixin Song, and Xin Wang. "VSQL: Variational Shadow Quantum Learning for Classification." arXiv preprint arXiv:2012.08288 (2020). [[pdf]](https://arxiv.org/pdf/2012.08288.pdf), to appear at **AAAI 2021** conference.
+[3] Li, Guangxi, Zhixin Song, and Xin Wang. "VSQL: Variational Shadow Quantum Learning for Classification." Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 35. No. 9. 2021. [[pdf]](https://arxiv.org/pdf/2012.08288.pdf)
 
-[4] Chen, Ranyiliu, et al. "Variational Quantum Algorithms for Trace Distance and Fidelity Estimation." arXiv preprint arXiv:2012.05768 (2020). [[pdf]](https://arxiv.org/pdf/2012.05768.pdf)
+[4] Chen, Ranyiliu, et al. "Variational quantum algorithms for trace distance and fidelity estimation." Quantum Science and Technology (2021). [[pdf]](https://arxiv.org/pdf/2012.05768.pdf)
 
 [5] Wang, Kun, et al. "Detecting and quantifying entanglement on near-term quantum devices." arXiv preprint arXiv:2012.14311 (2020). [[pdf]](https://arxiv.org/pdf/2012.14311.pdf)
 
-[6] Zhao, Xuanqiang, et al. "LOCCNet: a machine learning framework for distributed quantum information processing." arXiv preprint arXiv:2101.12190 (2021). [[pdf]](https://arxiv.org/pdf/2101.12190.pdf)
+[6] Zhao, Xuanqiang, et al. "Practical distributed quantum information processing with LOCCNet." npj Quantum Information 7.1 (2021): 1-7. [[pdf]](https://arxiv.org/pdf/2101.12190.pdf)
 
 [7] Cao, Chenfeng, and Xin Wang. "Noise-Assisted Quantum Autoencoder." Physical Review Applied 15.5 (2021): 054012. [[pdf]](https://journals.aps.org/prapplied/abstract/10.1103/PhysRevApplied.15.054012)
 

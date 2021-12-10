@@ -26,7 +26,7 @@ from paddle import imag, real, reshape, kron, matmul, trace
 from paddle_quantum.utils import partial_trace, dagger, pauli_str_to_matrix
 from paddle_quantum import shadow
 from paddle_quantum.intrinsic import *
-from paddle_quantum.state import density_op,vec
+from paddle_quantum.state import density_op, vec
 
 __all__ = [
     "UAnsatz",
@@ -60,38 +60,15 @@ class UAnsatz:
         # Record history of adding gates to the circuit
         self.__history = []
 
-    def expand(self,new_n):
-        """
-        为原来的量子电路进行比特数扩展
-
-        Args：
-            new_n(int):扩展后的量子比特数
-        """
-        assert new_n>=self.n,'扩展后量子比特数要大于原量子比特数'
-        diff = new_n-self.n
-        dim = 2**diff
-        if self.__state is not None:
-            if self.__run_mode=='density_matrix':
-                shape = (dim,dim)
-                _state = paddle.to_tensor(density_op(diff))
-            elif self.__run_mode=='state_vector':
-                shape = (dim,)
-                _state = paddle.to_tensor(vec(0,diff))
-            
-            _state= paddle.reshape(_state,shape)
-            _state = kron(self.__state,_state)
-            self.__state = _state
-        self.n = new_n
-
     def __add__(self, cir):
         r"""重载加法 ‘+’ 运算符，用于拼接两个维度相同的电路
 
         Args:
             cir (UAnsatz): 拼接到现有电路上的电路
-        
+
         Returns:
             UAnsatz: 拼接后的新电路
-        
+
         代码示例:
 
         .. code-block:: python
@@ -113,19 +90,19 @@ class UAnsatz:
             print(cir3)
         ::
 
-            cir1: 
+            cir1:
             --H--
-                
+
             --H--
-                
-            cir2: 
+
+            cir2:
             --*--
-              |  
+              |
             --x--
-                
-            cir3: 
+
+            cir3:
             --H----*--
-                   |  
+                   |
             --H----x--
 
         """
@@ -304,13 +281,13 @@ class UAnsatz:
             The printed circuit is:
 
             --H----Ry(-0.14)----*-------------------X----Ry(-0.77)----*-------------------X--
-                                |                   |                 |                   |  
+                                |                   |                 |                   |
             --H----Ry(-1.00)----X----*--------------|----Ry(-0.83)----X----*--------------|--
-                                     |              |                      |              |  
+                                     |              |                      |              |
             --H----Ry(-1.88)---------X----*---------|----Ry(-0.98)---------X----*---------|--
-                                          |         |                           |         |  
+                                          |         |                           |         |
             --H----Ry(1.024)--------------X----*----|----Ry(-0.37)--------------X----*----|--
-                                               |    |                                |    |  
+                                               |    |                                |    |
             --H----Ry(1.905)-------------------X----*----Ry(-1.82)-------------------X----*--
         """
         length, gate = self._count_history()
@@ -418,6 +395,29 @@ class UAnsatz:
         return_str = '\n'.join(print_list)
 
         return return_str
+
+    def expand(self, qubit_num):
+        """
+        为原来的量子电路进行比特数扩展
+        
+        Args:
+            qubit_num (int): 扩展后的量子比特数
+        """
+        assert qubit_num >= self.n, '扩展后量子比特数要大于原量子比特数'
+        diff = qubit_num - self.n
+        dim = 2 ** diff
+        if self.__state is not None:
+            if self.__run_mode == 'density_matrix':
+                shape = (dim, dim)
+                _state = paddle.to_tensor(density_op(diff))
+            elif self.__run_mode == 'state_vector':
+                shape = (dim,)
+                _state = paddle.to_tensor(vec(0, diff))
+
+            _state = paddle.reshape(_state, shape)
+            _state = kron(self.__state, _state)
+            self.__state = _state
+        self.n = qubit_num
 
     def run_state_vector(self, input_state=None, store_state=True):
         r"""运行当前的量子电路，输入输出的形式为态矢量。
@@ -1160,7 +1160,7 @@ class UAnsatz:
         .. math::
 
             \begin{align}
-                CNOT &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes X\\
+                CY &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes Y\\
                 &=
                 \begin{bmatrix}
                     1 & 0 & 0 & 0 \\
@@ -1197,7 +1197,7 @@ class UAnsatz:
         .. math::
 
             \begin{align}
-                CNOT &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes X\\
+                CZ &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes Z\\
                 &=
                 \begin{bmatrix}
                     1 & 0 & 0 & 0 \\
@@ -1915,9 +1915,9 @@ class UAnsatz:
         ::
 
             ------------x----Rx(3.142)----Ryy(1.57)---------------
-                        |                     |                   
+                        |                     |
             ------------|-----------------Ryy(1.57)----Rz(0.785)--
-                        |                                         
+                        |
             --H---SDG---*--------H--------------------------------
         """
         history, param = self._get_history()
@@ -1975,15 +1975,15 @@ class UAnsatz:
         ::
 
             --Rx(3.142)----Ryy(1.57)-------------*------
-                               |                 |      
+                               |                 |
             ---------------Ryy(1.57)----z----Rz(0.785)--
-                                        |               
+                                        |
             ------H-----------SDG-------*--------H------
 
             --Rx(3.142)----Ryy(1.57)----z-------------*------
-                               |        |             |      
+                               |        |             |
             ---------------Ryy(1.57)----|----z----Rz(0.785)--
-                                        |    |               
+                                        |    |
             ------H------------S--------*----*--------H------
         """
         history, param = self._get_history()
@@ -2035,9 +2035,9 @@ class UAnsatz:
         ::
 
             ------------z----U--
-                        |       
+                        |
             ------------|-------
-                        |       
+                        |
             --H---SDG---*----H--
         """
         history, param = self._get_history()
@@ -2101,15 +2101,15 @@ class UAnsatz:
         ::
 
             -----------------x--
-                             |  
+                             |
             ------------z----U--
-                        |       
+                        |
             --H---SDG---*----H--
 
             ------------z---------x--
-                        |         |  
+                        |         |
             ------------|----z----U--
-                        |    |       
+                        |    |
             --H----S----*----*----H--
         """
         history, param = self._get_history()
@@ -3098,7 +3098,7 @@ class UAnsatz:
 
     def update_param(self, new_param):
         r"""用得到的新参数列表更新电路参数列表中的可训练的参数。
-        
+
         Args:
             new_param (list): 新的参数列表
 
@@ -3108,8 +3108,11 @@ class UAnsatz:
         j = 0
         for i in range(len(self.__param)):
             if not self.__param[i].stop_gradient:
-                self.__param[i] = paddle.to_tensor(new_param[j], 'float64')
-                self.__param[i].stop_gradient = False
+                if not isinstance(new_param[j], paddle.Tensor):
+                    self.__param[i] = paddle.to_tensor(new_param[j], 'float64')
+                    self.__param[i].stop_gradient = False
+                else:
+                    self.__param[i] = new_param[j]
                 j += 1
         self.run_state_vector()
         return self.__param

@@ -19,7 +19,7 @@
 - [Copyright and License](#copyright-and-license)
 - [References](#references)
 
-[Paddle Quantum（量桨）](https://qml.baidu.com/)是基于百度飞桨开发的量子机器学习工具集，支持量子神经网络的搭建与训练，提供易用的量子机器学习开发套件与量子优化、量子化学等前沿量子应用工具集，使得百度飞桨也因此成为国内首个目前也是唯一一个支持量子机器学习的深度学习框架。
+[Paddle Quantum（量桨）](https://qml.baidu.com/)是基于百度飞桨开发的量子机器学习工具集，支持量子神经网络的搭建与训练，提供易用的量子机器学习开发套件与量子优化、量子化学等前沿量子应用工具集，使得百度飞桨也因此成为国内首个支持量子机器学习的深度学习框架。
 
 <p align="center">
   <a href="https://qml.baidu.com/">
@@ -34,7 +34,7 @@
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.1.2-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.1.3-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -55,7 +55,7 @@
 ## 特色
 
 - 轻松上手
-   - 丰富的在线学习资源（37+ 教程案例）
+   - 丰富的在线学习资源（近 40 篇教程案例）
    - 通过模板高效搭建量子神经网络
    - 自动微分框架
 - 功能丰富
@@ -71,9 +71,9 @@
 
 ### 安装 PaddlePaddle
 
-当用户安装 Paddle Quantum 时会自动下载安装这个关键依赖包。关于 PaddlePaddle 更全面的安装信息请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 2.1.1+。
+当用户安装 Paddle Quantum 时会自动下载安装这个关键依赖包。关于 PaddlePaddle 更全面的安装信息请参考 [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) 安装配置页面。此项目需求 PaddlePaddle 2.2.0+。
 
-### 安装 Paddle Quantum 
+### 安装 Paddle Quantum
 
 我们推荐通过 `pip` 完成安装,
 
@@ -91,15 +91,9 @@ pip install -e .
 
 ### 量子化学模块的环境设置
 
-我们的量子化学模块是基于 `Openfermion` 和 `Psi4` 进行开发的，所以在运行量子化学模块之前需要先行安装这两个 Python 包。
+我们的量子化学模块是基于 `Psi4` 进行开发的，所以在运行量子化学模块之前需要先行安装该 Python 包。
 
-> 推荐在 Python3.8 环境中安装这些 Python包。
-
-`Openfermion` 可以用如下指令进行安装。
-
-```bash
-pip install openfermion
-```
+> 推荐在 Python3.8 环境中安装。
 
 在安装 `psi4` 时，我们建议您使用 conda。对于 **MacOS/Linux** 的用户，可以使用如下指令。
 
@@ -136,11 +130,14 @@ python main.py
 
 这里，我们提供了一份[**入门手册**](./introduction)方便用户快速上手 Paddle Quantum。目前支持网页阅览和运行 Jupyter Notebook 两种方式。内容上，该手册包括以下几个方面：
 
-- Paddle Quantum 的详细安装教程
-- 量子计算的基础知识介绍
-- Paddle Quantum 的使用介绍
-- PaddlePaddle 飞桨优化器使用教程
-- 具体的量子机器学习案例—VQE
+- 量桨（Paddle Quantum）的详细安装教程
+- 量子计算和量子神经网络的基础知识介绍
+- 变分量子算法的基本思想与算法框架
+- 量桨的使用介绍
+- 飞桨（PaddlePaddle）优化器的使用教程
+- 量桨中量子化学模块的使用介绍
+- 如何基于 GPU 训练量子神经网络
+- 量桨中初学者常用的函数
 
 ### 案例入门
 
@@ -158,6 +155,7 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
     7. [基于经典影子的量子态性质估计](./tutorial/quantum_simulation/ClassicalShadow_Application_CN.ipynb)
     8. [利用 Product Formula 模拟时间演化](./tutorial/quantum_simulation/HamiltonianSimulation_CN.ipynb)
     9. [模拟一维海森堡链的自旋动力学](./tutorial/quantum_simulation/SimulateHeisenberg_CN.ipynb)
+    10. [基于施密特分解的分布式变分量子本征求解器](./tutorial/quantum_simulation/DistributedVQE_CN.ipynb)
 
 - [机器学习](./tutorial/machine_learning)
     1. [量子态编码经典数据](./tutorial/machine_learning/DataEncoding_CN.ipynb)
@@ -191,6 +189,7 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
     3. [使用量子电路计算梯度](./tutorial/qnn_research/Gradient_CN.ipynb)
     4. [量子神经网络的表达能力](./tutorial/qnn_research/Expressibility_CN.ipynb)
     5. [变分量子电路编译](./tutorial/qnn_research/VQCC_CN.ipynb)
+    6. [量子费舍信息](./tutorial/qnn_research/Fisher_CN.ipynb)
 
 随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见[教程](./tutorial/locc/LOCCNET_Tutorial_CN.ipynb)。Paddle Quantum 也支持在 GPU 上进行量子机器学习的训练，具体的方法请参考案例：[在 GPU 上使用 Paddle Quantum](./introduction/PaddleQuantum_GPU_CN.ipynb)。此外，量桨可以基于噪声模块进行含噪算法的开发以及研究，详情请见[噪声模块教程](./tutorial/qnn_research/Noise_CN.ipynb)。
 
@@ -202,7 +201,7 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
 
 ### 开发
 
-Paddle Quantum 使用 setuptools 的 develop 模式进行安装，相关代码修改可以直接进入`paddle_quantum` 文件夹进行修改。python 文件携带了自说明注释。
+Paddle Quantum 使用 setuptools 的 develop 模式进行安装，相关代码修改可以直接进入 `paddle_quantum` 文件夹进行修改。python 文件携带了自说明注释。
 
 ## 交流与反馈
 
@@ -212,7 +211,7 @@ Paddle Quantum 使用 setuptools 的 develop 模式进行安装，相关代码�
 
 ## 使用 Paddle Quantum 的工作
 
-我们非常欢迎开发者使用 Paddle Quantum 进行量子机器学习的研发，如果您的工作有使用 Paddle Quantum，也非常欢迎联系我们。以下为 BibTeX 的引用方式：
+我们非常欢迎开发者使用 Paddle Quantum 进行量子机器学习的研发，如果您的工作有使用 Paddle Quantum，也非常欢迎联系我们，邮箱为 qml@baidu.com。以下为 BibTeX 的引用方式：
 
 > @misc{Paddlequantum,
 > title = {{Paddle Quantum}},
@@ -221,17 +220,17 @@ Paddle Quantum 使用 setuptools 的 develop 模式进行安装，相关代码�
 
 目前使用 Paddle Quantum 的代表性工作包括了吉布斯态的制备和变分量子奇异值分解：
 
-[1] Wang, Youle, Guangxi Li, and Xin Wang. "Variational quantum gibbs state preparation with a truncated taylor series." arXiv preprint arXiv:2005.08797 (2020). [[pdf](https://arxiv.org/pdf/2005.08797.pdf)]
+[1] Wang, Youle, Guangxi Li, and Xin Wang. "Variational quantum Gibbs state preparation with a truncated Taylor series." Physical Review Applied 16.5 (2021): 054035. [[pdf](https://arxiv.org/pdf/2005.08797.pdf)]
 
-[2] Wang, Xin, Zhixin Song, and Youle Wang. "Variational Quantum Singular Value Decomposition." arXiv preprint arXiv:2006.02336 (2020). [[pdf](https://arxiv.org/pdf/2006.02336.pdf)]
+[2] Wang, Xin, Zhixin Song, and Youle Wang. "Variational quantum singular value decomposition." Quantum 5 (2021): 483. [[pdf](https://arxiv.org/pdf/2006.02336.pdf)]
 
-[3] Li, Guangxi, Zhixin Song, and Xin Wang. "VSQL: Variational Shadow Quantum Learning for Classification." arXiv preprint arXiv:2012.08288 (2020). [[pdf]](https://arxiv.org/pdf/2012.08288.pdf), to appear at **AAAI 2021** conference.
+[3] Li, Guangxi, Zhixin Song, and Xin Wang. "VSQL: Variational Shadow Quantum Learning for Classification." Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 35. No. 9. 2021. [[pdf]](https://arxiv.org/pdf/2012.08288.pdf)
 
-[4] Chen, Ranyiliu, et al. "Variational Quantum Algorithms for Trace Distance and Fidelity Estimation." arXiv preprint arXiv:2012.05768 (2020). [[pdf]](https://arxiv.org/pdf/2012.05768.pdf)
+[4] Chen, Ranyiliu, et al. "Variational quantum algorithms for trace distance and fidelity estimation." Quantum Science and Technology (2021). [[pdf]](https://arxiv.org/pdf/2012.05768.pdf)
 
 [5] Wang, Kun, et al. "Detecting and quantifying entanglement on near-term quantum devices." arXiv preprint arXiv:2012.14311 (2020). [[pdf]](https://arxiv.org/pdf/2012.14311.pdf)
 
-[6] Zhao, Xuanqiang, et al. "LOCCNet: a machine learning framework for distributed quantum information processing." arXiv preprint arXiv:2101.12190 (2021). [[pdf]](https://arxiv.org/pdf/2101.12190.pdf)
+[6] Zhao, Xuanqiang, et al. "Practical distributed quantum information processing with LOCCNet." npj Quantum Information 7.1 (2021): 1-7. [[pdf]](https://arxiv.org/pdf/2101.12190.pdf)
 
 [7] Cao, Chenfeng, and Xin Wang. "Noise-Assisted Quantum Autoencoder." Physical Review Applied 15.5 (2021): 054012. [[pdf]](https://journals.aps.org/prapplied/abstract/10.1103/PhysRevApplied.15.054012)
 

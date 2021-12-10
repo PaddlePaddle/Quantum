@@ -19,6 +19,7 @@ Newton-CG optimizer
 from scipy import optimize
 from .custom_optimizer import CustomOptimizer
 
+
 class NewtonCG(CustomOptimizer):
     r"""Newton-CG Optimizer
     
@@ -57,6 +58,6 @@ class NewtonCG(CustomOptimizer):
             method='Newton-CG',
             jac=self.grad_func,
             options={'maxiter': iterations},
-            callback=lambda xk: print('loss: ', (self.loss_func(xk, self.cir, self.hamiltonian, self.shots)))
-            )
+            callback=lambda xk: print('loss: ', self.loss_func(xk, self.cir, self.hamiltonian, self.shots))
+        )
         print(opt_res.message)

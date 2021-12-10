@@ -28,15 +28,15 @@ PI = paddle.to_tensor(np.pi, dtype='float64')
 
 
 def construct_trotter_circuit(
-    circuit: UAnsatz,
-    hamiltonian: Hamiltonian,
-    tau: float,
-    steps: int,
-    method: str = 'suzuki',
-    order: int = 1,
-    grouping: str = None,
-    coefficient: np.ndarray or paddle.Tensor = None,
-    permutation: np.ndarray = None
+        circuit: UAnsatz,
+        hamiltonian: Hamiltonian,
+        tau: float,
+        steps: int,
+        method: str = 'suzuki',
+        order: int = 1,
+        grouping: str = None,
+        coefficient: np.ndarray or paddle.Tensor = None,
+        permutation: np.ndarray = None
 ):
     r"""向 circuit 的后面添加 trotter 时间演化电路，即给定一个系统的哈密顿量 H，该电路可以模拟系统的时间演化 :math:`U_{cir}~ e^{-iHt}` 。
 
@@ -249,7 +249,7 @@ def _add_custom_block(circuit, tau, grouped_hamiltonian, custom_coefficients, pe
             add_n_pauli_gate(circuit, 2 * tau * coeff, pauli_word, site)
 
 
-def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=False):
+def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=False, optimization=False):
     r""" 添加一阶 trotter-suzuki 分解的时间演化块
 
     Notes:
@@ -258,54 +258,57 @@ def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=F
     if not reverse:
         for hamiltonian in grouped_hamiltonian:
             assert isinstance(hamiltonian, Hamiltonian)
-            
-            #将原哈密顿量中相同site的XX，YY，ZZ组合到一起
-            grouped_hamiltonian = []
-            coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()
-            grouped_terms_indices = []
-            left_over_terms_indices = []
-            d = defaultdict(list)
-            #合并相同site的XX,YY,ZZ
-            for term_index in range(len(coeffs)):
-                site = sites[term_index]
-                pauli_word = pauli_words[term_index]
-                for pauli in ['XX', 'YY', 'ZZ']:
-                    assert isinstance(pauli_word, str), "Each pauli word should be a string type"
-                    if (pauli_word==pauli or pauli_word==pauli.lower()):
-                        key = tuple(sorted(site))
-                        d[key].append((pauli,term_index))
-                        if len(d[key])==3:
-                            terms_indices_to_be_grouped = [x[1] for x in d[key]]
-                            grouped_terms_indices.extend(terms_indices_to_be_grouped)
-                            grouped_hamiltonian.append(hamiltonian[terms_indices_to_be_grouped])
-            #其他的剩余项
-            for term_index in range(len(coeffs)):
-                if term_index not in grouped_terms_indices:
-                    left_over_terms_indices.append(term_index)
-            if len(left_over_terms_indices):
-                for term_index in left_over_terms_indices:
-                    grouped_hamiltonian.append(hamiltonian[term_index])
-            #得到新的哈密顿量
-            res = grouped_hamiltonian[0]
-            for i in range(1,len(grouped_hamiltonian)):
-                res+=grouped_hamiltonian[i]
-            hamiltonian = res
-            
+            if optimization:
+                # Combine XX, YY, ZZ of the same site in the original Hamiltonian quantity
+                grouped_hamiltonian = []
+                coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()
+                grouped_terms_indices = []
+                left_over_terms_indices = []
+                d = defaultdict(list)
+                # Merge XX,YY,ZZ of the same site
+                for term_index in range(len(coeffs)):
+                    site = sites[term_index]
+                    pauli_word = pauli_words[term_index]
+                    for pauli in ['XX', 'YY', 'ZZ']:
+                        assert isinstance(pauli_word, str), "Each pauli word should be a string type"
+                        if (pauli_word == pauli or pauli_word == pauli.lower()):
+                            key = tuple(sorted(site))
+                            d[key].append((pauli, term_index))
+                            if len(d[key]) == 3:
+                                terms_indices_to_be_grouped = [x[1] for x in d[key]]
+                                grouped_terms_indices.extend(terms_indices_to_be_grouped)
+                                grouped_hamiltonian.append(hamiltonian[terms_indices_to_be_grouped])
+                # Other remaining sites
+                for term_index in range(len(coeffs)):
+                    if term_index not in grouped_terms_indices:
+                        left_over_terms_indices.append(term_index)
+                if len(left_over_terms_indices):
+                    for term_index in left_over_terms_indices:
+                        grouped_hamiltonian.append(hamiltonian[term_index])
+                # Get the new Hamiltonian
+                res = grouped_hamiltonian[0]
+                for i in range(1, len(grouped_hamiltonian)):
+                    res += grouped_hamiltonian[i]
+                hamiltonian = res
             # decompose the Hamiltonian into 3 lists
             coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()
             # apply rotational gate of each term
+            # for term_index in range(len(coeffs)):
+            #     # get the sorted pauli_word and site (an array of qubit indices) according to their qubit indices
+            #     pauli_word, site = __sort_pauli_word(pauli_words[term_index], sites[term_index])
+            #     add_n_pauli_gate(circuit, 2 * tau * coeffs[term_index], pauli_word, site)
             term_index = 0
-            while term_index <len(coeffs):
-                if term_index+3<=len(coeffs) and \
-                len(set(y for x in sites[term_index:term_index+3] for y in x ))==2 and\
-                set(pauli_words[term_index:term_index+3])=={'XX','YY','ZZ'}:
-                    optimal_circuit(circuit,[tau*i for i in coeffs[term_index:term_index+3]],sites[term_index])
-                    term_index+=3
+            while term_index < len(coeffs):
+                if optimization and term_index+3 <= len(coeffs) and \
+                        len(set(y for x in sites[term_index:term_index+3] for y in x)) == 2 and\
+                        set(pauli_words[term_index:term_index+3]) == {'XX', 'YY', 'ZZ'}:
+                    optimal_circuit(circuit, [tau*i for i in coeffs[term_index:term_index+3]], sites[term_index])
+                    term_index += 3
                 else:
                     # get the sorted pauli_word and site (an array of qubit indices) according to their qubit indices
                     pauli_word, site = __sort_pauli_word(pauli_words[term_index], sites[term_index])
                     add_n_pauli_gate(circuit, 2 * tau * coeffs[term_index], pauli_word, site)
-                    term_index+=1
+                    term_index += 1
     # in the reverse mode, if the Hamiltonian is a single element list, reverse the order its each term
     else:
         if len(grouped_hamiltonian) == 1:
@@ -321,6 +324,31 @@ def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=F
                 for term_index in range(len(coeffs)):
                     pauli_word, site = __sort_pauli_word(pauli_words[term_index], sites[term_index])
                     add_n_pauli_gate(circuit, 2 * tau * coeffs[term_index], pauli_word, site)
+
+
+def optimal_circuit(circuit, theta, which_qubits):
+    r""" 添加一个优化电路，哈密顿量为'XXYYZZ'
+
+    Args:
+        circuit (UAnsatz): 需要添加门的电路
+        theta list(paddle.Tensor or float): 旋转角度需要传入三个参数
+        which_qubits (list or numpy.ndarray): ``pauli_word`` 中的每个算符所作用的量子比特编号
+    """
+    p = np.pi/2
+    x, y, z = theta
+    alpha = paddle.to_tensor(3*p-4*x*p+2*x, dtype='float64')
+    beta = paddle.to_tensor(-3*p+4*y*p-2*y, dtype='float64')
+    gamma = paddle.to_tensor(2*z-p, dtype='float64')
+    which_qubits.sort()
+    a, b = which_qubits
+    circuit.rz(paddle.to_tensor(p, dtype='float64'), b)
+    circuit.cnot([b, a])
+    circuit.rz(gamma, a)
+    circuit.ry(alpha, b)
+    circuit.cnot([a, b])
+    circuit.ry(beta, b)
+    circuit.cnot([b, a])
+    circuit.rz(paddle.to_tensor(-p, dtype='float64'), a)
 
 
 def __add_second_order_trotter_block(circuit, tau, grouped_hamiltonian):
@@ -403,30 +431,7 @@ def add_n_pauli_gate(circuit, theta, pauli_word, which_qubits):
                 circuit.h(which_qubits[qubit_index])
             elif re.match(r'Y', pauli_word[qubit_index], flags=re.I):
                 circuit.rx(- PI / 2, which_qubits[qubit_index])
-                
-def optimal_circuit(circuit,theta,which_qubits):
-    r""" 添加一个优化电路，哈密顿量为'XXYYZZ'`
 
-    Args:
-        circuit (UAnsatz): 需要添加门的电路
-        theta list(tensor or float): 旋转角度需要传入三个参数
-        which_qubits (list or np.ndarray): ``pauli_word`` 中的每个算符所作用的量子比特编号
-    """
-    p = np.pi/2
-    x,y,z = theta
-    alpha = paddle.to_tensor(3*p-4*x*p+2*x,dtype='float64')
-    beta = paddle.to_tensor(-3*p+4*y*p-2*y,dtype='float64')
-    gamma = paddle.to_tensor(2*z-p,dtype='float64')
-    which_qubits.sort()
-    a,b = which_qubits
-    circuit.rz(paddle.to_tensor(p,dtype='float64'),b)
-    circuit.cnot([b,a])
-    circuit.rz(gamma,a)
-    circuit.ry(alpha,b)
-    circuit.cnot([a,b])
-    circuit.ry(beta,b)
-    circuit.cnot([b,a])
-    circuit.rz(paddle.to_tensor(-p,dtype='float64'),a)
 
 def __group_hamiltonian_xyz(hamiltonian):
     r""" 将哈密顿量拆分成 X、Y、Z 以及剩余项四个部分，并返回由他们组成的列表
@@ -590,7 +595,6 @@ def get_1d_heisenberg_hamiltonian(
         boundary_sites = [0, length - 1]
         for interaction_idx in range(len(interactions)):
             term_str = ''
-            interaction = interactions[interaction_idx]
             for idx_word in range(len(interaction)):
                 term_str += interaction[idx_word] + str(boundary_sites[idx_word])
                 if idx_word != len(interaction) - 1:

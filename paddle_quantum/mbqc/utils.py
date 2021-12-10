@@ -967,9 +967,12 @@ def print_progress(current_progress, progress_name, track=True):
     assert 0 <= current_progress <= 1, "'current_progress' must be between 0 and 1"
     assert isinstance(track, bool), "'track' must be a bool."
     if track:
-        print("\r" + f"{progress_name.ljust(30)}"
-                     f"|{'■' * int(50 * current_progress):{50}s}| "
-                     f"\033[94m {'{:6.2f}'.format(100 * current_progress)}% \033[0m ", flush=True, end="")
+        print(
+            "\r"
+            f"{progress_name.ljust(30)}"
+            f"|{'■' * int(50 * current_progress):{50}s}| "
+            f"\033[94m {'{:6.2f}'.format(100 * current_progress)}% \033[0m ", flush=True, end=""
+        )
         if current_progress == 1:
             print(" (Done)")
 

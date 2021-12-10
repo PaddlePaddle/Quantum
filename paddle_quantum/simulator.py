@@ -69,38 +69,9 @@ def init_state_gen(n, i=0):
     """
     assert 0 <= i < 2 ** n, 'Invalid index'
 
-    if n == 1:
-        state1 = paddle.ones([1], 'float64')
-        state0 = paddle.zeros([2 ** n - 1], 'float64')
-
-        if i == 0:
-            state = paddle.concat([state1, state0])
-        else:
-            state = paddle.concat([state0, state1])
-    else:
-        if i == 0:
-            state1 = paddle.ones([1], 'float64')
-            state0 = paddle.zeros([2 ** n - 1], 'float64')
-            state = paddle.concat([state1, state0])
-        elif i == 2 ** n - 1:
-            state1 = paddle.ones([1], 'float64')
-            state0 = paddle.zeros([2 ** n - 1], 'float64')
-            state = paddle.concat([state0, state1])
-        else:
-            state1 = paddle.ones([1], 'float64')
-            state0 = paddle.zeros([i], 'float64')
-            state00 = paddle.zeros([2 ** n - i - 1], 'float64')
-            state = paddle.concat([state0, state1, state00])
-
-    del state1, state0
-    try:
-        del state00
-    except NameError:
-        pass
-    gc.collect()  # free the intermediate big data immediately
-
-    state = paddle.cast(state, 'complex128')
-    gc.collect()  # free the intermediate big data immediately
+    state = np.zeros([2 ** n], dtype=np.complex128)
+    state[i] = 1
+    state = paddle.to_tensor(state)
 
     return state
 

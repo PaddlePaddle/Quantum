@@ -19,6 +19,7 @@ SLSQP optimizer
 from scipy import optimize
 from .custom_optimizer import CustomOptimizer
 
+
 class SLSQP(CustomOptimizer):
     r"""SLSQP Optimizer
 
@@ -53,5 +54,5 @@ class SLSQP(CustomOptimizer):
             method='SLSQP',
             options={'maxiter': iterations},
             callback=lambda xk: print('loss: ', self.loss_func(xk, self.cir, self.hamiltonian, self.shots))
-            )
+        )
         print(opt_res.message)
