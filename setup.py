@@ -25,13 +25,14 @@ setuptools.setup(
     name='paddle-quantum',
     version='2.1.3',
     author='Institute for Quantum Computing, Baidu INC.',
-    author_email='quantum@baidu.com',
+    author_email='qml@baidu.com',
     description='Paddle Quantum is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle.',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='http://qml.baidu.com',
     packages=[
         'paddle_quantum', 'paddle_quantum.optimizer', 'paddle_quantum.mbqc',
+        'paddle_quantum.qchem', 'paddle_quantum.qchem.ansatz',
         'paddle_quantum.GIBBS', 'paddle_quantum.GIBBS.example',
         'paddle_quantum.SSVQE', 'paddle_quantum.SSVQE.example',
         'paddle_quantum.VQE', 'paddle_quantum.VQE.example',
@@ -46,7 +47,6 @@ setuptools.setup(
         'paddle_quantum.VQE.example': ['*.xyz'],
         'paddle_quantum.mbqc.QKernel.example': ['*.txt'],
         'paddle_quantum.mbqc.VQSVD.example': ['*.txt'],
-
     },
     install_requires=[
         'paddlepaddle>=2.2.0',
