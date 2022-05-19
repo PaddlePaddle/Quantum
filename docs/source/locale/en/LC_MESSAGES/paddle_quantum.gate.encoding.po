@@ -1,0 +1,106 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.encoding.rst:2
+msgid "paddle\\_quantum.gate.encoding"
+msgstr ""
+
+#: of paddle_quantum.gate.encoding:1
+msgid "The source file of the classes for quantum encoding."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.AmplitudeEncoding:1
+#: paddle_quantum.gate.encoding.AngleEncoding:1
+#: paddle_quantum.gate.encoding.BasisEncoding:1
+#: paddle_quantum.gate.encoding.IQPEncoding:1
+msgid "Bases: :py:class:`~paddle_quantum.gate.base.Gate`"
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.BasisEncoding:1
+msgid "Basis encoding gate for encoding input classical data into quantum states."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.BasisEncoding:3
+msgid ""
+"In basis encoding, the input classical data can only consist of 0's and "
+"1's. If the input data are 1101, then the quantum state after encoding is"
+" :math:`|1101\\rangle`. Note that the quantum state before encoding is "
+"assumed to be :math:`|00\\ldots 0\\rangle`."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.AmplitudeEncoding
+#: paddle_quantum.gate.encoding.AngleEncoding
+#: paddle_quantum.gate.encoding.BasisEncoding
+#: paddle_quantum.gate.encoding.IQPEncoding
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.AmplitudeEncoding:3
+#: paddle_quantum.gate.encoding.AngleEncoding:4
+#: paddle_quantum.gate.encoding.BasisEncoding:7
+msgid ""
+"Indices of the qubits on which the gates are applied. Defaults to "
+"``'full'``."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.AmplitudeEncoding:4
+#: paddle_quantum.gate.encoding.AngleEncoding:5
+#: paddle_quantum.gate.encoding.BasisEncoding:8
+#: paddle_quantum.gate.encoding.IQPEncoding:5
+msgid "Total number of qubits. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.AmplitudeEncoding:1
+msgid ""
+"Amplitude encoding gate for encoding input classical data into quantum "
+"states."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.AngleEncoding:1
+msgid "Angle encoding gate for encoding input classical data into quantum states."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.AngleEncoding:3
+#: paddle_quantum.gate.encoding.IQPEncoding:3
+msgid "Vector to be encoded."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.AngleEncoding:6
+msgid ""
+"The type of quantum gates used for encoding, which should be one of "
+"``\"rx\"``, ``\"ry\"``, and ``\"rz\"``. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.IQPEncoding:1
+msgid ""
+"IQP style encoding gate for encoding input classical data into quantum "
+"states."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.IQPEncoding:4
+msgid ""
+"Indices of the qubits on which the gates are applied. Defaults to "
+"``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.encoding.IQPEncoding:6
+msgid "Number of encoding layers. Defaults to ``1``."
+msgstr ""
+

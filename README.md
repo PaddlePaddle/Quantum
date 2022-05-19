@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.1.3-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.2.0-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -116,13 +116,17 @@ cd paddle_quantum/QAOA/example
 python main.py
 ```
 
-> For the introduction of QAOA, please refer to our [QAOA tutorial](https://github.com/PaddlePaddle/Quantum/tree/master/tutorial/combinatorial_optimization/QAOA_EN.ipynb).
+> For the introduction of QAOA, please refer to our [QAOA tutorial](./tutorials/combinatorial_optimization/QAOA_EN.ipynb).
+
+### Breaking Change
+
+In version 2.2.0 of Paddle Quantum, we have made an incompatible upgrade to the code architecture, and the new version's structure and usage can be found in our [tutorials](https://qml.baidu.com/tutorials/overview.html), [API documentation](https://qml.baidu.com/api/introduction.html), and [the source code](https://github.com/PaddlePaddle/Quantum). Also, we support connecting to a real quantum computer via [QuLeaf](https://github.com/baidu/QCompute), using `paddle_quantum.set_backend('quleaf')` to select QuLeaf as the backend.
 
 ## Introduction and developments
 
 ### Quick start
 
-[Paddle Quantum Quick Start Manual](https://github.com/PaddlePaddle/Quantum/tree/master/introduction) is probably the best place to get started with Paddle Quantum. Currently, we support online reading and running the Jupyter Notebook locally. The manual includes the following contents:
+[Paddle Quantum Quick Start Manual](./introduction) is probably the best place to get started with Paddle Quantum. Currently, we support online reading and running the Jupyter Notebook locally. The manual includes the following contents:
 
 - Detailed installation tutorials for Paddle Quantum
 - Introduction to quantum computing and quantum neural networks (QNNs)
@@ -131,61 +135,60 @@ python main.py
 - PaddlePaddle optimizer tutorial
 - Introduction to the quantum chemistry module in Paddle Quantum
 - How to train QNN with GPU
-- Some frequently used functions in Paddle Quantum
 
 ### Tutorials
 
 We provide tutorials covering quantum simulation, machine learning, combinatorial optimization, local operations and classical communication (LOCC), and other popular QML research topics. Each tutorial currently supports reading on our website and running Jupyter Notebooks locally. For interested developers, we recommend them to download Jupyter Notebooks and play around with it. Here is the tutorial list,
 
-- [Quantum Simulation](./tutorial/quantum_simulation)
-    1. [Building Molecular Hamiltonian](./tutorial/quantum_simulation/BuildingMolecule_EN.ipynb)
-    2. [Variational Quantum Eigensolver (VQE)](./tutorial/quantum_simulation/VQE_EN.ipynb)
-    3. [Subspace Search-Quantum Variational Quantum Eigensolver (SSVQE)](./tutorial/quantum_simulation/SSVQE_EN.ipynb)
-    4. [Variational Quantum State Diagonalization (VQSD)](./tutorial/quantum_simulation/VQSD_EN.ipynb)
-    5. [Gibbs State Preparation](./tutorial/quantum_simulation/GibbsState_EN.ipynb)
-    6. [The Classical Shadow of Unknown Quantum States](./tutorial/quantum_simulation/ClassicalShadow_Intro_EN.ipynb)
-    7. [Estimation of Quantum State Properties Based on the Classical Shadow](./tutorial/quantum_simulation/ClassicalShadow_Application_EN.ipynb)
-    8. [Hamiltonian Simulation with Product Formula](./tutorial/quantum_simulation/HamiltonianSimulation_EN.ipynb)
-    9. [Simulate the Spin Dynamics on a Heisenberg Chain](./tutorial/quantum_simulation/SimulateHeisenberg_EN.ipynb)
-    10. [Distributed Variational Quantum Eigensolver Based on Schmidt Decomposition](./tutorial/quantum_simulation/DistributedVQE_EN.ipynb)
+- [Quantum Simulation](./tutorials/quantum_simulation)
+    1. [Building Molecular Hamiltonian](./tutorials/quantum_simulation/BuildingMolecule_EN.ipynb)
+    2. [Variational Quantum Eigensolver (VQE)](./tutorials/quantum_simulation/VQE_EN.ipynb)
+    3. [Subspace Search-Quantum Variational Quantum Eigensolver (SSVQE)](./tutorials/quantum_simulation/SSVQE_EN.ipynb)
+    4. [Variational Quantum State Diagonalization (VQSD)](./tutorials/quantum_simulation/VQSD_EN.ipynb)
+    5. [Gibbs State Preparation](./tutorials/quantum_simulation/GibbsState_EN.ipynb)
+    6. [The Classical Shadow of Unknown Quantum States](./tutorials/quantum_simulation/ClassicalShadow_Intro_EN.ipynb)
+    7. [Estimation of Quantum State Properties Based on the Classical Shadow](./tutorials/quantum_simulation/ClassicalShadow_Application_EN.ipynb)
+    8. [Hamiltonian Simulation with Product Formula](./tutorials/quantum_simulation/HamiltonianSimulation_EN.ipynb)
+    9. [Simulate the Spin Dynamics on a Heisenberg Chain](./tutorials/quantum_simulation/SimulateHeisenberg_EN.ipynb)
+    10. [Distributed Variational Quantum Eigensolver Based on Schmidt Decomposition](./tutorials/quantum_simulation/DistributedVQE_EN.ipynb)
 
-- [Machine Learning](./tutorial/machine_learning)
-    1. [Encoding Classical Data into Quantum States](./tutorial/machine_learning/DataEncoding_EN.ipynb)
-    2. [Quantum Classifier](./tutorial/machine_learning/QClassifier_EN.ipynb)
-    3. [Variational Shadow Quantum Learning (VSQL)](./tutorial/machine_learning/VSQL_EN.ipynb)
-    4. [Quantum Kernel Methods](./tutorial/machine_learning/QKernel_EN.ipynb)
-    5. [Quantum Autoencoder](./tutorial/machine_learning/QAutoencoder_EN.ipynb)
-    6. [Quantum GAN](./tutorial/machine_learning/QGAN_EN.ipynb)
-    7. [Variational Quantum Singular Value Decomposition (VQSVD)](./tutorial/machine_learning/VQSVD_EN.ipynb)
+- [Machine Learning](./tutorials/machine_learning)
+    1. [Encoding Classical Data into Quantum States](./tutorials/machine_learning/DataEncoding_EN.ipynb)
+    2. [Quantum Classifier](./tutorials/machine_learning/QClassifier_EN.ipynb)
+    3. [Variational Shadow Quantum Learning (VSQL)](./tutorials/machine_learning/VSQL_EN.ipynb)
+    4. [Quantum Kernel Methods](./tutorials/machine_learning/QKernel_EN.ipynb)
+    5. [Quantum Autoencoder](./tutorials/machine_learning/QAutoencoder_EN.ipynb)
+    6. [Quantum GAN](./tutorials/machine_learning/QGAN_EN.ipynb)
+    7. [Variational Quantum Singular Value Decomposition (VQSVD)](./tutorials/machine_learning/VQSVD_EN.ipynb)
 
-- [Combinatorial Optimization](./tutorial/combinatorial_optimization)
-    1. [Quantum Approximation Optimization Algorithm (QAOA)](./tutorial/combinatorial_optimization/QAOA_EN.ipynb)
-    2. [Solving Max-Cut Problem with QAOA](./tutorial/combinatorial_optimization/MAXCUT_EN.ipynb)
-    3. [Large-scale QAOA via Divide-and-Conquer](./tutorial/combinatorial_optimization/DC-QAOA_EN.ipynb)
-    4. [Travelling Salesman Problem](./tutorial/combinatorial_optimization/TSP_EN.ipynb)
-    5. [Quantum Finance Application on Arbitrage Opportunity Optimization](./tutorial/combinatorial_optimization/ArbitrageOpportunityOptimation_EN.ipynb)
-    6. [Quantum Finance Application on Portfolio Optimization](./tutorial/combinatorial_optimization/PortfolioOptimization_EN.ipynb)
-    7. [Quantum Finance Application on Portfolio Diversification](./tutorial/combinatorial_optimization/PortfolioDiversification_EN.ipynb)
+- [Combinatorial Optimization](./tutorials/combinatorial_optimization)
+    1. [Quantum Approximation Optimization Algorithm (QAOA)](./tutorials/combinatorial_optimization/QAOA_EN.ipynb)
+    2. [Solving Max-Cut Problem with QAOA](./tutorials/combinatorial_optimization/MAXCUT_EN.ipynb)
+    3. [Large-scale QAOA via Divide-and-Conquer](./tutorials/combinatorial_optimization/DC-QAOA_EN.ipynb)
+    4. [Travelling Salesman Problem](./tutorials/combinatorial_optimization/TSP_EN.ipynb)
+    5. [Quantum Finance Application on Arbitrage Opportunity Optimization](./tutorials/combinatorial_optimization/ArbitrageOpportunityOptimation_EN.ipynb)
+    6. [Quantum Finance Application on Portfolio Optimization](./tutorials/combinatorial_optimization/PortfolioOptimization_EN.ipynb)
+    7. [Quantum Finance Application on Portfolio Diversification](./tutorials/combinatorial_optimization/PortfolioDiversification_EN.ipynb)
 
-- [LOCC with QNN (LOCCNet)](./tutorial/locc)
-    1. [Local Operations and Classical Communication in QNN (LOCCNet)](./tutorial/locc/LOCCNET_Tutorial_EN.ipynb)
-    2. [Entanglement Distillation -- the BBPSSW protocol](./tutorial/locc/EntanglementDistillation_BBPSSW_EN.ipynb)
-    3. [Entanglement Distillation -- the DEJMPS protocol](./tutorial/locc/EntanglementDistillation_DEJMPS_EN.ipynb)
-    4. [Entanglement Distillation -- Protocol design with LOCCNet](./tutorial/locc/EntanglementDistillation_LOCCNET_EN.ipynb)
-    5. [Quantum Teleportation](./tutorial/locc/QuantumTeleportation_EN.ipynb)
-    6. [Quantum State Discrimination](./tutorial/locc/StateDiscrimination_EN.ipynb)
+- [LOCC with QNN (LOCCNet)](./tutorials/locc)
+    1. [Local Operations and Classical Communication in QNN (LOCCNet)](./tutorials/locc/LOCCNET_Tutorial_EN.ipynb)
+    2. [Entanglement Distillation -- the BBPSSW protocol](./tutorials/locc/EntanglementDistillation_BBPSSW_EN.ipynb)
+    3. [Entanglement Distillation -- the DEJMPS protocol](./tutorials/locc/EntanglementDistillation_DEJMPS_EN.ipynb)
+    4. [Entanglement Distillation -- Protocol design with LOCCNet](./tutorials/locc/EntanglementDistillation_LOCCNET_EN.ipynb)
+    5. [Quantum Teleportation](./tutorials/locc/QuantumTeleportation_EN.ipynb)
+    6. [Quantum State Discrimination](./tutorials/locc/StateDiscrimination_EN.ipynb)
 
-- [QNN Research](./tutorial/qnn_research)
-    1. [The Barren Plateaus Phenomenon on Quantum Neural Networks (Barren Plateaus)](./tutorial/qnn_research/BarrenPlateaus_EN.ipynb)
-    2. [Noise Model and Quantum Channel](./tutorial/qnn_research/Noise_EN.ipynb)
-    3. [Calculating Gradient Using Quantum Circuit](./tutorial/qnn_research/Gradient_EN.ipynb)
-    4. [Expressibility of Quantum Neural Network](./tutorial/qnn_research/Expressibility_EN.ipynb)
-    5. [Variational Quantum Circuit Compiling](./tutorial/qnn_research/VQCC_EN.ipynb)
-    6. [Quantum Fisher Information](./tutorial/qnn_research/Fisher_EN.ipynb)
+- [QNN Research](./tutorials/qnn_research)
+    1. [The Barren Plateaus Phenomenon on Quantum Neural Networks (Barren Plateaus)](./tutorials/qnn_research/BarrenPlateaus_EN.ipynb)
+    2. [Noise Model and Quantum Channel](./tutorials/qnn_research/Noise_EN.ipynb)
+    3. [Expressibility of Quantum Neural Network](./tutorials/qnn_research/Expressibility_EN.ipynb)
+    4. [Variational Quantum Circuit Compiling](./tutorials/qnn_research/VQCC_EN.ipynb)
+    5. [Quantum Fisher Information](./tutorials/qnn_research/Fisher_EN.ipynb)
+    6. [VAns-Variable Ansatz](./tutorials/qnn_research/VAns_EN.ipynb)
 
-With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can start with this [tutorial on LOCCNet](./tutorial/locc/LOCCNET_Tutorial_EN.ipynb). In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](./introduction/PaddleQuantum_GPU_EN.ipynb). Moreover, Paddle Quantum could design robust quantum algorithms under noise. For more information, please see [Noise tutorial](./tutorial/qnn_research/Noise_EN.ipynb).
+With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can start with this [tutorial on LOCCNet](./tutorials/locc/LOCCNET_Tutorial_EN.ipynb). In addition, Paddle Quantum supports QNN training on GPU. For users who want to get into more details, please check out the tutorial [Use Paddle Quantum on GPU](./introduction/PaddleQuantum_GPU_EN.ipynb). Moreover, Paddle Quantum could design robust quantum algorithms under noise. For more information, please see [Noise tutorial](./tutorials/qnn_research/Noise_EN.ipynb).
 
-In a recent update, the measurement-based quantum computation (MBQC) module has been added to Paddle Quantum. Unlike the conventional quantum circuit model, MBQC has its unique way of computing. Interested readers are welcomed to read our [tutorials](./tutorial/mbqc) on how to use the MBQC module and its use cases.
+In a recent update, the measurement-based quantum computation (MBQC) module has been added to Paddle Quantum. Unlike the conventional quantum circuit model, MBQC has its unique way of computing. Interested readers are welcomed to read our [tutorials](./tutorials/mbqc) on how to use the MBQC module and its use cases.
 
 ### API documentation
 

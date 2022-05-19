@@ -1,0 +1,67 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Institute for Quantum Computing, Baidu Inc.
+# This file is distributed under the same license as the Paddle Quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Paddle Quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.mbqc.transpiler.rst:2
+msgid "paddle\\_quantum.mbqc.transpiler"
+msgstr "paddle\\_quantum.mbqc.transpiler"
+
+#: of paddle_quantum.mbqc.transpiler:1
+msgid "此模块包含电路模型和 MBQC 测量模式的转义工具。"
+msgstr ""
+"This module ontains tools for transpiling circuits to measurement "
+"patterns."
+
+#: of paddle_quantum.mbqc.transpiler.transpile:1
+msgid "将输入的量子电路翻译为等价的测量模式。"
+msgstr "Translate quantum circuit to its MBQC equivalent."
+
+#: of paddle_quantum.mbqc.transpiler.transpile
+msgid "Parameters"
+msgstr "Parameters"
+
+#: of paddle_quantum.mbqc.transpiler.transpile:3
+msgid "量子电路，包含可能的测量部分"
+msgstr "Quantum circuit, including measurements."
+
+#: of paddle_quantum.mbqc.transpiler.transpile:5
+msgid "是否显示翻译进度条的开关"
+msgstr "Switch to show the translation progress bar."
+
+#: of paddle_quantum.mbqc.transpiler.transpile
+msgid "Returns"
+msgstr "Returns"
+
+#: of paddle_quantum.mbqc.transpiler.transpile:8
+msgid "等价的测量模式"
+msgstr "Equivalent pattern in MBQC."
+
+#: of paddle_quantum.mbqc.transpiler.transpile
+msgid "Return type"
+msgstr "Return type"
+
+#~ msgid "Functions"
+#~ msgstr "Functions"
+
+#~ msgid ""
+#~ ":obj:`transpile <paddle_quantum.mbqc.transpiler.transpile>`\\"
+#~ " \\(circuit\\[\\, track\\]\\)"
+#~ msgstr ""
+#~ ":obj:`transpile <paddle_quantum.mbqc.transpiler.transpile>`\\"
+#~ " \\(circuit\\[\\, track\\]\\)"
+

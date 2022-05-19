@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.qchem.density_matrix.rst:2
+msgid "paddle\\_quantum.qchem.density\\_matrix"
+msgstr ""
+
+#: of paddle_quantum.qchem.density_matrix:1
+msgid "Measure onebody density matrix from quantum state."
+msgstr ""
+
+#: of paddle_quantum.qchem.density_matrix.get_spinorb_onebody_dm:1
+msgid ""
+"Get the onebody density matrix from a given state in which qubits are "
+"label by spin orbital index."
+msgstr ""
+
+#: of paddle_quantum.qchem.density_matrix.get_spinorb_onebody_dm
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.qchem.density_matrix.get_spinorb_onebody_dm:3
+msgid "number of qubits in the quantum circuit."
+msgstr ""
+
+#: of paddle_quantum.qchem.density_matrix.get_spinorb_onebody_dm:4
+msgid "the given quantum state."
+msgstr ""
+
+#: of paddle_quantum.qchem.density_matrix.get_spinorb_onebody_dm
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.qchem.density_matrix.get_spinorb_onebody_dm:6
+msgid "spin up and spin down onebody density matrix."
+msgstr ""
+
+#: of paddle_quantum.qchem.density_matrix.get_spinorb_onebody_dm
+msgid "Return type"
+msgstr ""
+

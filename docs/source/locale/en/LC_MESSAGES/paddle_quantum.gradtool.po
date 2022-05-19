@@ -1,0 +1,191 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gradtool.rst:2
+msgid "paddle\\_quantum.gradtool"
+msgstr ""
+
+#: of paddle_quantum.gradtool:1
+msgid "The module of the gradient tool."
+msgstr ""
+
+#: of paddle_quantum.gradtool.show_gradient:1
+msgid "calculate gradient and loss function for every paramters in QNN"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_distribution
+#: paddle_quantum.gradtool.plot_loss_grad
+#: paddle_quantum.gradtool.plot_supervised_loss_grad
+#: paddle_quantum.gradtool.random_sample
+#: paddle_quantum.gradtool.random_sample_supervised
+#: paddle_quantum.gradtool.show_gradient
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_loss_grad:3
+#: paddle_quantum.gradtool.plot_supervised_loss_grad:3
+#: paddle_quantum.gradtool.random_sample:3
+#: paddle_quantum.gradtool.random_sample_supervised:3
+#: paddle_quantum.gradtool.show_gradient:3
+msgid "QNN ready to be trained"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_loss_grad:4
+#: paddle_quantum.gradtool.plot_supervised_loss_grad:4
+#: paddle_quantum.gradtool.random_sample:4
+#: paddle_quantum.gradtool.random_sample_supervised:4
+#: paddle_quantum.gradtool.show_gradient:4
+msgid "loss function that evaluate QNN"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_loss_grad:5
+#: paddle_quantum.gradtool.show_gradient:5
+msgid "number of iterations"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_loss_grad:6
+#: paddle_quantum.gradtool.plot_supervised_loss_grad:7
+#: paddle_quantum.gradtool.show_gradient:6
+msgid "learning rate"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_loss_grad:7
+#: paddle_quantum.gradtool.plot_supervised_loss_grad:11
+#: paddle_quantum.gradtool.random_sample:9
+#: paddle_quantum.gradtool.random_sample_supervised:13
+#: paddle_quantum.gradtool.show_gradient:7
+msgid "parameters for loss_func other than circuit"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad
+#: paddle_quantum.gradtool.random_sample
+#: paddle_quantum.gradtool.random_sample_supervised
+#: paddle_quantum.gradtool.show_gradient
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.gradtool.show_gradient:9
+msgid ""
+"contain following two elements - loss_list: list of losses for each "
+"iteration - grad_list: list of gradients for each iteration"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad
+#: paddle_quantum.gradtool.random_sample
+#: paddle_quantum.gradtool.random_sample_supervised
+#: paddle_quantum.gradtool.show_gradient
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.gradtool.random_sample:1
+msgid ""
+"random sampling the model. Obtain mean and variance of gradients "
+"according to different calculation modes"
+msgstr ""
+
+#: of paddle_quantum.gradtool.random_sample:5
+#: paddle_quantum.gradtool.random_sample_supervised:6
+msgid "number of sampling"
+msgstr ""
+
+#: of paddle_quantum.gradtool.random_sample:6
+#: paddle_quantum.gradtool.random_sample_supervised:10
+msgid "mode for calculation, default to be single"
+msgstr ""
+
+#: of paddle_quantum.gradtool.random_sample:7
+#: paddle_quantum.gradtool.random_sample_supervised:11
+msgid "whether plot the calculation"
+msgstr ""
+
+#: of paddle_quantum.gradtool.random_sample:8
+#: paddle_quantum.gradtool.random_sample_supervised:12
+msgid "which parameter to be plotted in single mode, default to be the first"
+msgstr ""
+
+#: of paddle_quantum.gradtool.random_sample:14
+#: paddle_quantum.gradtool.random_sample_supervised:17
+msgid ""
+"this function provides three calculation modes: single, max and random - "
+"in single mode, we calculate the mean and variance of gradients of every "
+"trainable parameters - in max mode, we calculate the mean and variance of"
+" maximum gradients of for every trainable parameters - in random mode, we"
+" calculate the mean and variance of data randomly extracted from "
+"gradients of every trainable parameters"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad:13
+#: paddle_quantum.gradtool.random_sample:19
+#: paddle_quantum.gradtool.random_sample_supervised:22
+msgid ""
+"contain the following two elements - loss_list: list of losses for each "
+"iteration - grad_list: list of gradients for each iteration"
+msgstr ""
+
+#: of paddle_quantum.gradtool.random_sample_supervised:1
+msgid ""
+"random sampling the supervised model. Obtain mean and variance of "
+"gradients according to different calculation modes"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad:5
+#: paddle_quantum.gradtool.random_sample_supervised:5
+msgid "number of qubits"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad:8
+#: paddle_quantum.gradtool.random_sample_supervised:7
+msgid "size of batches"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad:9
+#: paddle_quantum.gradtool.random_sample_supervised:8
+msgid "data set"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad:10
+#: paddle_quantum.gradtool.random_sample_supervised:9
+msgid "label set"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_loss_grad:1
+msgid ""
+"plot the distribution maps between loss values & gradients and number of "
+"iterations"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad:1
+msgid ""
+"plot the distribution maps between loss values & gradients and number of "
+"iterations in supervised training"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_supervised_loss_grad:6
+msgid "number of training iterations"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_distribution:1
+msgid "plot the distribution map according to input gradient"
+msgstr ""
+
+#: of paddle_quantum.gradtool.plot_distribution:3
+msgid "list of gradients of a parameter"
+msgstr ""
+

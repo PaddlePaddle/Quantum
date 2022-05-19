@@ -1,0 +1,285 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.single_qubit_gate.rst:2
+msgid "paddle\\_quantum.gate.single\\_qubit\\_gate"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate:1
+msgid "The source file of the classes for single-qubit gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.H:1
+#: paddle_quantum.gate.single_qubit_gate.P:1
+#: paddle_quantum.gate.single_qubit_gate.RX:1
+#: paddle_quantum.gate.single_qubit_gate.RY:1
+#: paddle_quantum.gate.single_qubit_gate.RZ:1
+#: paddle_quantum.gate.single_qubit_gate.S:1
+#: paddle_quantum.gate.single_qubit_gate.T:1
+#: paddle_quantum.gate.single_qubit_gate.U3:1
+#: paddle_quantum.gate.single_qubit_gate.X:1
+#: paddle_quantum.gate.single_qubit_gate.Y:1
+#: paddle_quantum.gate.single_qubit_gate.Z:1
+msgid "Bases: :py:class:`~paddle_quantum.gate.base.Gate`"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.H:1
+msgid "A collection of single-qubit Hadamard gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.H:3
+#: paddle_quantum.gate.single_qubit_gate.P:3
+#: paddle_quantum.gate.single_qubit_gate.RX:3
+#: paddle_quantum.gate.single_qubit_gate.RY:3
+#: paddle_quantum.gate.single_qubit_gate.RZ:3
+#: paddle_quantum.gate.single_qubit_gate.S:3
+#: paddle_quantum.gate.single_qubit_gate.T:3
+#: paddle_quantum.gate.single_qubit_gate.U3:3
+#: paddle_quantum.gate.single_qubit_gate.X:3
+#: paddle_quantum.gate.single_qubit_gate.Y:3
+#: paddle_quantum.gate.single_qubit_gate.Z:3
+msgid "The matrix form of such a gate is:"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.H:5
+msgid ""
+"H = \\frac{1}{\\sqrt{2}}\n"
+"    \\begin{bmatrix}\n"
+"        1&1\\\\\n"
+"        1&-1\n"
+"    \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.H
+#: paddle_quantum.gate.single_qubit_gate.P
+#: paddle_quantum.gate.single_qubit_gate.RX
+#: paddle_quantum.gate.single_qubit_gate.RY
+#: paddle_quantum.gate.single_qubit_gate.RZ
+#: paddle_quantum.gate.single_qubit_gate.S
+#: paddle_quantum.gate.single_qubit_gate.T
+#: paddle_quantum.gate.single_qubit_gate.U3
+#: paddle_quantum.gate.single_qubit_gate.X
+#: paddle_quantum.gate.single_qubit_gate.Y
+#: paddle_quantum.gate.single_qubit_gate.Z
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.H:13
+#: paddle_quantum.gate.single_qubit_gate.P:12
+#: paddle_quantum.gate.single_qubit_gate.RX:12
+#: paddle_quantum.gate.single_qubit_gate.RY:12
+#: paddle_quantum.gate.single_qubit_gate.RZ:12
+#: paddle_quantum.gate.single_qubit_gate.S:13
+#: paddle_quantum.gate.single_qubit_gate.T:13
+#: paddle_quantum.gate.single_qubit_gate.U3:15
+#: paddle_quantum.gate.single_qubit_gate.X:12
+#: paddle_quantum.gate.single_qubit_gate.Y:12
+#: paddle_quantum.gate.single_qubit_gate.Z:12
+msgid ""
+"Indices of the qubits on which the gates are applied. Defaults to "
+"``'full'``."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.H:14
+#: paddle_quantum.gate.single_qubit_gate.P:13
+#: paddle_quantum.gate.single_qubit_gate.RX:13
+#: paddle_quantum.gate.single_qubit_gate.RY:13
+#: paddle_quantum.gate.single_qubit_gate.RZ:13
+#: paddle_quantum.gate.single_qubit_gate.S:14
+#: paddle_quantum.gate.single_qubit_gate.T:14
+#: paddle_quantum.gate.single_qubit_gate.U3:16
+#: paddle_quantum.gate.single_qubit_gate.X:13
+#: paddle_quantum.gate.single_qubit_gate.Y:13
+#: paddle_quantum.gate.single_qubit_gate.Z:13
+msgid "Total number of qubits. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.H:15
+#: paddle_quantum.gate.single_qubit_gate.P:14
+#: paddle_quantum.gate.single_qubit_gate.RX:14
+#: paddle_quantum.gate.single_qubit_gate.RY:14
+#: paddle_quantum.gate.single_qubit_gate.RZ:14
+#: paddle_quantum.gate.single_qubit_gate.S:15
+#: paddle_quantum.gate.single_qubit_gate.T:15
+#: paddle_quantum.gate.single_qubit_gate.U3:17
+#: paddle_quantum.gate.single_qubit_gate.X:14
+#: paddle_quantum.gate.single_qubit_gate.Y:14
+#: paddle_quantum.gate.single_qubit_gate.Z:14
+msgid "Number of layers. Defaults to ``1``."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.S:1
+msgid "A collection of single-qubit S gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.S:5
+msgid ""
+"S =\n"
+"    \\begin{bmatrix}\n"
+"        1&0\\\\\n"
+"        0&i\n"
+"    \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.T:1
+msgid "A collection of single-qubit T gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.T:5
+msgid ""
+"T =\n"
+"    \\begin{bmatrix}\n"
+"        1&0\\\\\n"
+"        0&e^\\frac{i\\pi}{4}\n"
+"    \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.X:1
+msgid "A collection of single-qubit X gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.X:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    0 & 1 \\\\\n"
+"    1 & 0\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.Y:1
+msgid "A collection of single-qubit Y gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.Y:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    0 & -i \\\\\n"
+"    i & 0\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.Z:1
+msgid "A collection of single-qubit Z gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.Z:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    1 & 0 \\\\\n"
+"    0 & -1\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.P:1
+msgid "A collection of single-qubit P gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.P:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    1 & 0 \\\\\n"
+"    0 & e^{i\\theta}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.P:15
+#: paddle_quantum.gate.single_qubit_gate.RX:15
+#: paddle_quantum.gate.single_qubit_gate.RY:15
+#: paddle_quantum.gate.single_qubit_gate.RZ:15
+#: paddle_quantum.gate.single_qubit_gate.U3:18
+msgid "Parameters of the gates. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.P:16
+#: paddle_quantum.gate.single_qubit_gate.RX:16
+#: paddle_quantum.gate.single_qubit_gate.RY:16
+#: paddle_quantum.gate.single_qubit_gate.RZ:16
+#: paddle_quantum.gate.single_qubit_gate.U3:19
+msgid "Whether gates in the same layer share a parameter. Defaults to ``False``."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.P
+#: paddle_quantum.gate.single_qubit_gate.RX
+#: paddle_quantum.gate.single_qubit_gate.RY
+#: paddle_quantum.gate.single_qubit_gate.RZ
+#: paddle_quantum.gate.single_qubit_gate.U3
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.P:18
+#: paddle_quantum.gate.single_qubit_gate.RX:18
+#: paddle_quantum.gate.single_qubit_gate.RY:18
+#: paddle_quantum.gate.single_qubit_gate.RZ:18
+#: paddle_quantum.gate.single_qubit_gate.U3:21
+msgid "The ``param`` must be ``paddle.Tensor`` or ``float``."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.RX:1
+msgid "A collection of single-qubit rotation gates about the x-axis."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.RX:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} \\\\\n"
+"    -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.RY:1
+msgid "A collection of single-qubit rotation gates about the y-axis."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.RY:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    \\cos\\frac{\\theta}{2} & -\\sin\\frac{\\theta}{2} \\\\\n"
+"    \\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.RZ:1
+msgid "A collection of single-qubit rotation gates about the z-axis."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.RZ:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    e^{-i\\frac{\\theta}{2}} & 0 \\\\\n"
+"    0 & e^{i\\frac{\\theta}{2}}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.U3:1
+msgid "A collection of single-qubit rotation gates."
+msgstr ""
+
+#: of paddle_quantum.gate.single_qubit_gate.U3:5
+msgid ""
+"\\begin{align}\n"
+"    U3(\\theta, \\phi, \\lambda) =\n"
+"        \\begin{bmatrix}\n"
+"            \\cos\\frac\\theta2&-e^{i\\lambda}\\sin\\frac\\theta2\\\\\n"
+"            "
+"e^{i\\phi}\\sin\\frac\\theta2&e^{i(\\phi+\\lambda)}\\cos\\frac\\theta2\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+

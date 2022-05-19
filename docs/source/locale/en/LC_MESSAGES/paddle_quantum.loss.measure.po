@@ -1,0 +1,139 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.loss.measure.rst:2
+msgid "paddle\\_quantum.loss.measure"
+msgstr ""
+
+#: of paddle_quantum.loss.measure:1
+msgid "The source file of the class for the measurement."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal:1
+#: paddle_quantum.loss.measure.Measure:1
+msgid "Bases: :py:class:`~paddle_quantum.base.Operator`"
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal:1
+msgid ""
+"The class of the loss function to compute the expectation value for the "
+"observable."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal:3
+msgid ""
+"This interface can make you using the expectation value for the "
+"observable as the loss function."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal
+#: paddle_quantum.loss.measure.ExpecVal.forward
+#: paddle_quantum.loss.measure.Measure
+#: paddle_quantum.loss.measure.Measure.forward
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal:5
+msgid "The information about the observable."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal:6
+msgid ""
+"The number of measurement shots. Now it just need to be input when the "
+"backend is QuLeaf."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal.forward:1
+msgid ""
+"Compute the expectation value of the observable with respect to the input"
+" state."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal.forward:3
+msgid ""
+"The value computed by this function can be used as a loss function to "
+"optimize."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal.forward:5
+msgid "The input state which will be used to compute the expectation value."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal.forward
+#: paddle_quantum.loss.measure.Measure
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal.forward:7
+msgid "The backend is wrong or not supported."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal.forward
+#: paddle_quantum.loss.measure.Measure.forward
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal.forward:9
+msgid ""
+"The expectation value. If the backend is QuLeaf, it is computed by "
+"sampling."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.ExpecVal.forward
+#: paddle_quantum.loss.measure.Measure.forward
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.loss.measure.Measure:1
+msgid "Compute the probability of the specified measurement result."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.Measure:3
+msgid "Specify the basis of the measurement. Defaults to 'z'."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.Measure:5
+msgid "Currently we just support the z basis."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.Measure.forward:1
+msgid "Compute the probability of measurement to the input state."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.Measure.forward:3
+msgid "The quantum state to be measured."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.Measure.forward:4
+msgid ""
+"The index of the qubits to be measured. Defaults to 'full' which means "
+"measure all the qubits."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.Measure.forward:5
+msgid ""
+"Specify the results of the measurement to return. Defaults to None which "
+"means return the probability of all the results."
+msgstr ""
+
+#: of paddle_quantum.loss.measure.Measure.forward:7
+msgid "The probability of the measurement."
+msgstr ""
+

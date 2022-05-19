@@ -1,3 +1,4 @@
+# !/usr/bin/env python3
 # Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,32 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-量桨平台的量子化学模块
+r"""
+The module of the quantum chemistry.
 """
 
-from .qmodel import QModel
-from . import ansatz
-from .run import run_chem
+from .hardware_efficient import HardwareEfficientModel
+from .slater_determinant import RHFSlaterDeterminantModel
+from .uccsd import UCCSDModel
+from .density_matrix import get_spinorb_onebody_dm
 from .qchem import *
-import platform
-import warnings
-
-__all__ = [
-    "run_chem",
-    "QModel",
-    "ansatz",
-    "geometry",
-    "get_molecular_data",
-    "active_space",
-    # forward compatible with original qchem module
-    "fermionic_hamiltonian",
-    "spin_hamiltonian"
-]
-
-if platform.system() == "Windows":
-    warning_msg = ("Currently, Windows' users can't use 'hartree fock' ansatz "
-                   "for ground state energy calculation in `run_chem`, "
-                   "since it depends on pyscf, which is not available on Windows. "
-                   "We will work it out in the near future, sorry for the inconvenience.")
-    warnings.warn(message=warning_msg)
+from .loss import RHFEnergyLoss, MolEnergyLoss

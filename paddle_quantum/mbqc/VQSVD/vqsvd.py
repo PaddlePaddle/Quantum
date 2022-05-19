@@ -21,7 +21,7 @@ from paddle_quantum.mbqc.utils import print_progress, write_running_data, read_r
 from time import perf_counter
 from paddle_quantum.mbqc.simulator import simulate_by_mbqc, sample_by_mbqc
 from numpy import random
-from paddle_quantum.circuit import UAnsatz
+import paddle_quantum
 from paddle_quantum.mbqc.qobject import Circuit
 
 __all__ = [
@@ -48,18 +48,21 @@ def vqsvd_circuit(cir, alpha):
     width = alpha.shape[0]
     depth = alpha.shape[1]
 
-    if not isinstance(cir, Circuit):
+    if isinstance(cir, Circuit):
+        for layer_num in range(depth):
+            for which_qubit in range(width):
+                cir.ry(alpha[which_qubit, layer_num], which_qubit)
+            for which_qubit in range(width - 1):
+                cir.cnot([which_qubit, which_qubit + 1])
+        cir.measure()
+    else:
         for which_qubit in range(width):
             cir.h(which_qubit)
-
-    for layer_num in range(depth):
-        for which_qubit in range(width):
-            cir.ry(alpha[which_qubit, layer_num], which_qubit)
-        for which_qubit in range(width - 1):
-            cir.cnot([which_qubit, which_qubit + 1])
-
-    if isinstance(cir, Circuit):
-        cir.measure()
+        for layer_num in range(depth):
+            for which_qubit in range(width):
+                cir.ry(which_qubit, param=alpha[which_qubit, layer_num])
+            for which_qubit in range(width - 1):
+                cir.cnot([which_qubit, which_qubit + 1])
 
     return cir
 
@@ -82,13 +85,13 @@ def cir_uansatz(alpha, shots=1):
 
     else:
         # Input information of circuits
-        cir = UAnsatz(qubit_number)
+        cir = paddle_quantum.ansatz.Circuit(qubit_number)
         cir = vqsvd_circuit(cir, alpha)
 
         # Start running
         uansatz_start_time = perf_counter()
-        cir.run_state_vector()
-        outcome = cir.measure(shots=shots)
+        state = cir()
+        outcome = state.measure(shots=shots)
         uansatz_end_time = perf_counter()
 
         # As the outcome dictionary is in a messy order, we need to reorder the outcome

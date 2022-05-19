@@ -1,8 +1,10 @@
+qcompute
 paddlepaddle>=2.2.0
 scipy
 networkx>=2.5
-matplotlib>=3.3.0
-interval
+matplotlib
 tqdm
 openfermion
 pyscf; platform_system == "Linux" or platform_system == "Darwin"
+scikit-learn
+opencv-python

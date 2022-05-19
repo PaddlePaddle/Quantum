@@ -1,0 +1,64 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.backend.state_vector.rst:2
+msgid "paddle\\_quantum.backend.state\\_vector"
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector:1
+msgid "The source file of the state_vector backend."
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation:1
+msgid "The function of unitary transformation in the mode of state vector."
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation:3
+msgid "The input quantum state."
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation:4
+msgid "The gate that represents the unitary transformation."
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation:5
+msgid "The indices of the qubits on which the gate is acted."
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation:6
+msgid "The number of the qubits in the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation:8
+msgid "The transformed quantum state."
+msgstr ""
+
+#: of paddle_quantum.backend.state_vector.unitary_transformation
+msgid "Return type"
+msgstr ""
+

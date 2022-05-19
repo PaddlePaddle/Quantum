@@ -309,23 +309,25 @@ def circuit_maxcut(SEED, GRAPH, DEPTH, LR, ITR, EPOCH, SHOTS):
 
     # Initialize
     seed(SEED)
-    pq_net = Circuit_QAOA_Net(DEPTH)
+    pq_net = Circuit_QAOA_Net(DEPTH, GRAPH, H_D_list)
     opt = optimizer.Adam(learning_rate=LR, parameters=pq_net.parameters())
     for epoch in range(EPOCH):
         for itr in range(1, ITR + 1):
-            loss, cir = pq_net(GRAPH, H_D_list)
+            loss, state = pq_net()
             loss.backward()
             opt.minimize(loss)
             opt.clear_grad()
             if itr % 10 == 0:
                 print("iter:", itr, "  loss_cir:", "%.4f" % loss.numpy())
-    print("Optimal parameter gamma: ", pq_net.gamma.numpy())
-    print("Optimal parameter beta: ", pq_net.beta.numpy())
+    gamma = pq_net.parameters()[0]
+    beta = pq_net.parameters()[1]
+    print("Optimal parameter gamma: ", gamma.numpy())
+    print("Optimal parameter beta: ", beta.numpy())
     end_time_PQ = perf_counter()
     print("Circuit running time: ", end_time_PQ - start_time_PQ)
 
     # Obtain the bit string
-    prob_measure = cir.measure(shots=SHOTS, plot=False)
+    prob_measure = state.measure(shots=SHOTS, plot=False)
     cut_bitstring = max(prob_measure, key=prob_measure.get)
     plot_solution(GRAPH, cut_bitstring)
     return cut_bitstring

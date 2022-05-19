@@ -1,0 +1,287 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.functional.multi_qubit_gate.rst:2
+msgid "paddle\\_quantum.gate.functional.multi\\_qubit\\_gate"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate:1
+msgid "The source file of the functions for multi-qubit quantum gates."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot:1
+msgid "Apply a CNOT gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot
+#: paddle_quantum.gate.functional.multi_qubit_gate.cp
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz
+#: paddle_quantum.gate.functional.multi_qubit_gate.cswap
+#: paddle_quantum.gate.functional.multi_qubit_gate.cu
+#: paddle_quantum.gate.functional.multi_qubit_gate.cy
+#: paddle_quantum.gate.functional.multi_qubit_gate.cz
+#: paddle_quantum.gate.functional.multi_qubit_gate.ms
+#: paddle_quantum.gate.functional.multi_qubit_gate.oracle
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz
+#: paddle_quantum.gate.functional.multi_qubit_gate.swap
+#: paddle_quantum.gate.functional.multi_qubit_gate.toffoli
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.cp:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.cswap:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.cu:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.cy:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.cz:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.ms:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.oracle:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.swap:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.toffoli:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits:3
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits:3
+msgid "Input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.cp:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.cswap:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.cu:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.cy:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.cz:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.ms:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.oracle:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.swap:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.toffoli:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits:5
+msgid "Indices of the qubits on which the gate is applied."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.cp:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.cswap:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.cu:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.cy:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.cz:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.ms:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.swap:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.toffoli:5
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits:6
+msgid "Type of data."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.cp:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.cswap:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.cu:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.cy:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.cz:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.ms:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.oracle:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.swap:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.toffoli:6
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits:7
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits:7
+msgid "Backend on which the simulation is run."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot
+#: paddle_quantum.gate.functional.multi_qubit_gate.cp
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz
+#: paddle_quantum.gate.functional.multi_qubit_gate.cswap
+#: paddle_quantum.gate.functional.multi_qubit_gate.cu
+#: paddle_quantum.gate.functional.multi_qubit_gate.cy
+#: paddle_quantum.gate.functional.multi_qubit_gate.cz
+#: paddle_quantum.gate.functional.multi_qubit_gate.ms
+#: paddle_quantum.gate.functional.multi_qubit_gate.oracle
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz
+#: paddle_quantum.gate.functional.multi_qubit_gate.swap
+#: paddle_quantum.gate.functional.multi_qubit_gate.toffoli
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot:8
+#: paddle_quantum.gate.functional.multi_qubit_gate.cp:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.cswap:8
+#: paddle_quantum.gate.functional.multi_qubit_gate.cu:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.cy:8
+#: paddle_quantum.gate.functional.multi_qubit_gate.cz:8
+#: paddle_quantum.gate.functional.multi_qubit_gate.ms:8
+#: paddle_quantum.gate.functional.multi_qubit_gate.oracle:8
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.swap:8
+#: paddle_quantum.gate.functional.multi_qubit_gate.toffoli:8
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits:9
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits:9
+msgid "Output state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cnot
+#: paddle_quantum.gate.functional.multi_qubit_gate.cp
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz
+#: paddle_quantum.gate.functional.multi_qubit_gate.cswap
+#: paddle_quantum.gate.functional.multi_qubit_gate.cu
+#: paddle_quantum.gate.functional.multi_qubit_gate.cy
+#: paddle_quantum.gate.functional.multi_qubit_gate.cz
+#: paddle_quantum.gate.functional.multi_qubit_gate.ms
+#: paddle_quantum.gate.functional.multi_qubit_gate.oracle
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz
+#: paddle_quantum.gate.functional.multi_qubit_gate.swap
+#: paddle_quantum.gate.functional.multi_qubit_gate.toffoli
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cy:1
+msgid "Apply a controlled Y gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cz:1
+msgid "Apply a controlled Z gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.swap:1
+msgid "Apply a SWAP gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cp:1
+msgid "Apply a controlled P gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cp:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.crx:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.cry:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.crz:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.rxx:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.ryy:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.rzz:4
+msgid "Parameter of the gate."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.crx:1
+msgid "Apply a controlled rotation gate about the x-axis on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cry:1
+msgid "Apply a controlled rotation gate about the y-axis on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.crz:1
+msgid "Apply a controlled rotation gate about the z-axis on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cu:1
+msgid "Apply a controlled single-qubit rotation gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cu:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits:4
+#: paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits:4
+msgid "Parameters of the gate."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.rxx:1
+msgid "Apply an RXX gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.ryy:1
+msgid "Apply an RYY gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.rzz:1
+msgid "Apply an RZZ gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.ms:1
+msgid "Apply a Mølmer-Sørensen (MS) gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.cswap:1
+msgid "Apply a CSWAP (Fredkin) gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.toffoli:1
+msgid "Apply a Toffoli gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.universal_two_qubits:1
+msgid "Apply a universal two-qubit gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.universal_three_qubits:1
+msgid "Apply a universal three-qubit gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.oracle:1
+msgid "Apply an oracle gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.multi_qubit_gate.oracle:4
+msgid "Oracle to be executed."
+msgstr ""
+

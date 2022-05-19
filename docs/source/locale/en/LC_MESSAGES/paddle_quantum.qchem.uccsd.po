@@ -1,0 +1,83 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.qchem.uccsd.rst:2
+msgid "paddle\\_quantum.qchem.uccsd"
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd:1
+msgid ""
+"Unitary coupled cluster with singles and doubles for molecular ground "
+"state calculation."
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:1
+msgid "Bases: :py:class:`~paddle_quantum.gate.base.Gate`"
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:1
+msgid "Unitary Coupled Cluster ansatz for quantum chemistry calculation."
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:4
+msgid ""
+"UCCSD model typically results in REALLY deep quantum circuit. Training "
+"UCCSD ansatz for molecules beyond H2 is time consuming and demands better"
+" hardware."
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:6
+msgid ""
+"\\begin{align}\n"
+"    U(\\theta)&=e^{\\hat{T}-\\hat{T}^{\\dagger}}\\\\\n"
+"    \\hat{T}&=\\hat{T}_1+\\hat{T}_2\\\\\n"
+"    "
+"\\hat{T}_1&=\\sum_{a\\in{\\text{virt}}}\\sum_{i\\in\\text{occ}}t_{ai}\\sum_{\\sigma}\\hat{c}^{\\dagger}_{a\\sigma}\\hat{c}_{i\\sigma}-h.c.\\\\"
+"\n"
+"    "
+"\\hat{T}_2&=\\frac{1}{2}\\sum_{a,b\\in\\text{virt}}\\sum_{i,j\\in\\text{occ}}t_{aibj}\\sum_{\\sigma\\tau}\\hat{c}^{\\dagger}_{a\\sigma}\\hat{c}^{\\dagger}_{b\\tau}\\hat{c}_{j\\tau}\\hat{c}_{i\\sigma}-h.c."
+"\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:15
+msgid "number of qubits used to represent the quantum system."
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:16
+msgid "number of electrons inside the system."
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:17
+msgid "number of Trotter steps required to build the UCCSD circuit."
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:18
+msgid ":math:`t_{ai}` in the definition of :math:`\\hat{T}_1`."
+msgstr ""
+
+#: of paddle_quantum.qchem.uccsd.UCCSDModel:19
+msgid ":math:`t_{aibj}` in the definition of :math:`\\hat{T}_2`."
+msgstr ""
+

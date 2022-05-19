@@ -1,4 +1,5 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# !/usr/bin/env python3
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+r"""
 To learn more about the functions and properties of this application,
 you could check the corresponding Jupyter notebook under the Tutorial folder.
 """
 
-import paddle
-from paddle_quantum.circuit import UAnsatz
-
 import numpy as np
 import networkx as nx
-
+import paddle
+import paddle_quantum
+from paddle_quantum.ansatz import Circuit
+from paddle_quantum.loss import ExpecVal
+from paddle_quantum import Hamiltonian
 
 __all__ = [
     "maxcut_hamiltonian",
-    "circuit_maxcut",
     "find_cut",
 ]
 
@@ -45,65 +46,6 @@ def maxcut_hamiltonian(E):
         H_D_list.append([-1.0, 'z' + str(u) + ',z' + str(v)])
 
     return H_D_list
-
-
-def circuit_maxcut(E, V, p, gamma, beta):
-    r"""构建用于最大割问题的 QAOA 参数化电路。
-
-    Args:
-        E: 图的边
-        V: 图的顶点
-        p: QAOA 电路的层数
-        gamma: 与最大割问题哈密顿量相关的电路参数
-        beta: 与混合哈密顿量相关的电路参数
-
-    Returns:
-        UAnsatz: 构建好的 QAOA 电路
-    """
-    # Number of qubits needed
-    n = len(V)
-    cir = UAnsatz(n)
-    cir.superposition_layer()
-    for layer in range(p):
-        for (u, v) in E:
-            cir.cnot([u, v])
-            cir.rz(gamma[layer], v)
-            cir.cnot([u, v])
-        for i in V:
-            cir.rx(beta[layer], i)
-
-    return cir
-
-
-class _MaxcutNet(paddle.nn.Layer):
-    """
-    It constructs the net for maxcut which combines the QAOA circuit with the classical optimizer that sets rules
-    to update parameters described by theta introduced in the QAOA circuit.
-    """
-    def __init__(
-        self,
-        p,
-        dtype="float64",
-    ):
-        super(_MaxcutNet, self).__init__()
-
-        self.p = p
-        self.gamma = self.create_parameter(shape=[self.p],
-                                           default_initializer=paddle.nn.initializer.Uniform(low=0.0, high=2 * np.pi),
-                                           dtype=dtype, is_bias=False)
-        self.beta = self.create_parameter(shape=[self.p],
-                                          default_initializer=paddle.nn.initializer.Uniform(low=0.0, high=2 * np.pi),
-                                          dtype=dtype, is_bias=False)
-
-    def forward(self, E, V, H_D_list):
-        """
-        Forward propagation
-        """
-        cir = circuit_maxcut(E, V, self.p, self.gamma, self.beta)
-        cir.run_state_vector()
-        loss = -cir.expecval(H_D_list)
-
-        return loss, cir
 
 
 def find_cut(G, p, ITR, LR, print_loss=False, shots=0, plot=False):
@@ -133,18 +75,24 @@ def find_cut(G, p, ITR, LR, print_loss=False, shots=0, plot=False):
     E = list(G_mapped.edges())
     n = len(V)
     H_D_list = maxcut_hamiltonian(E)
-    net = _MaxcutNet(p)
+    net = Circuit(n)
+    net.superposition_layer()
+    net.qaoa_layer(E, V, p)
+    hamiltonian = Hamiltonian(H_D_list)
+    loss_func = ExpecVal(hamiltonian)
     opt = paddle.optimizer.Adam(learning_rate=LR, parameters=net.parameters())
 
     for itr in range(1, ITR + 1):
-        loss, cir = net(E, V, H_D_list)
+        state = net()
+        loss = -loss_func(state)
         loss.backward()
         opt.minimize(loss)
         opt.clear_grad()
         if print_loss and itr % 10 == 0:
             print("iter:", itr, "  loss:", "%.4f" % loss.numpy())
 
-    prob_measure = cir.measure(shots=shots, plot=plot)
+    state = net()
+    prob_measure = state.measure(shots=shots, plot=plot)
     cut_bitstring = max(prob_measure, key=prob_measure.get)
 
     return cut_bitstring, prob_measure

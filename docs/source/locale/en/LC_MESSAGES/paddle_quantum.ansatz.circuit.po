@@ -1,0 +1,1004 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.ansatz.circuit.rst:2
+msgid "paddle\\_quantum.ansatz.circuit"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit:1
+msgid "The source file of the Circuit class."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit:1
+msgid "Bases: :py:class:`~paddle_quantum.ansatz.container.Sequential`"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit:1
+msgid "Quantum circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit
+#: paddle_quantum.ansatz.circuit.Circuit.amplitude_damping
+#: paddle_quantum.ansatz.circuit.Circuit.bit_flip
+#: paddle_quantum.ansatz.circuit.Circuit.bit_phase_flip
+#: paddle_quantum.ansatz.circuit.Circuit.ccx
+#: paddle_quantum.ansatz.circuit.Circuit.cnot
+#: paddle_quantum.ansatz.circuit.Circuit.complex_block_layer
+#: paddle_quantum.ansatz.circuit.Circuit.complex_entangled_layer
+#: paddle_quantum.ansatz.circuit.Circuit.control_oracle
+#: paddle_quantum.ansatz.circuit.Circuit.cp
+#: paddle_quantum.ansatz.circuit.Circuit.crx
+#: paddle_quantum.ansatz.circuit.Circuit.cry
+#: paddle_quantum.ansatz.circuit.Circuit.crz
+#: paddle_quantum.ansatz.circuit.Circuit.cswap
+#: paddle_quantum.ansatz.circuit.Circuit.cu
+#: paddle_quantum.ansatz.circuit.Circuit.cx
+#: paddle_quantum.ansatz.circuit.Circuit.cy
+#: paddle_quantum.ansatz.circuit.Circuit.cz
+#: paddle_quantum.ansatz.circuit.Circuit.depolarizing
+#: paddle_quantum.ansatz.circuit.Circuit.forward
+#: paddle_quantum.ansatz.circuit.Circuit.generalized_amplitude_damping
+#: paddle_quantum.ansatz.circuit.Circuit.h
+#: paddle_quantum.ansatz.circuit.Circuit.kraus_repr
+#: paddle_quantum.ansatz.circuit.Circuit.linear_entangled_layer
+#: paddle_quantum.ansatz.circuit.Circuit.ms
+#: paddle_quantum.ansatz.circuit.Circuit.oracle
+#: paddle_quantum.ansatz.circuit.Circuit.p
+#: paddle_quantum.ansatz.circuit.Circuit.pauli_channel
+#: paddle_quantum.ansatz.circuit.Circuit.phase_damping
+#: paddle_quantum.ansatz.circuit.Circuit.phase_flip
+#: paddle_quantum.ansatz.circuit.Circuit.randomize_param
+#: paddle_quantum.ansatz.circuit.Circuit.real_block_layer
+#: paddle_quantum.ansatz.circuit.Circuit.real_entangled_layer
+#: paddle_quantum.ansatz.circuit.Circuit.reset_channel
+#: paddle_quantum.ansatz.circuit.Circuit.rx
+#: paddle_quantum.ansatz.circuit.Circuit.rxx
+#: paddle_quantum.ansatz.circuit.Circuit.ry
+#: paddle_quantum.ansatz.circuit.Circuit.ryy
+#: paddle_quantum.ansatz.circuit.Circuit.rz
+#: paddle_quantum.ansatz.circuit.Circuit.rzz
+#: paddle_quantum.ansatz.circuit.Circuit.s
+#: paddle_quantum.ansatz.circuit.Circuit.superposition_layer
+#: paddle_quantum.ansatz.circuit.Circuit.swap
+#: paddle_quantum.ansatz.circuit.Circuit.t
+#: paddle_quantum.ansatz.circuit.Circuit.thermal_relaxation
+#: paddle_quantum.ansatz.circuit.Circuit.u3
+#: paddle_quantum.ansatz.circuit.Circuit.unitary_matrix
+#: paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits
+#: paddle_quantum.ansatz.circuit.Circuit.universal_two_qubits
+#: paddle_quantum.ansatz.circuit.Circuit.update_param
+#: paddle_quantum.ansatz.circuit.Circuit.weak_superposition_layer
+#: paddle_quantum.ansatz.circuit.Circuit.x
+#: paddle_quantum.ansatz.circuit.Circuit.y
+#: paddle_quantum.ansatz.circuit.Circuit.z
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit:3
+msgid "Number of qubits. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.isdynamic:1
+msgid "Whether the circuit is dynamic"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.num_qubits:1
+msgid "Number of qubits."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.param:1
+msgid "Flattened parameters in the circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.grad:1
+msgid "Gradients with respect to the flattened parameters."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.update_param:1
+msgid "Replace parameters of all/one layer(s) by ``theta``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.update_param:3
+msgid "New parameters"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.update_param:4
+msgid "Index of replacement. Defaults to None, refering to all layers."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.randomize_param:1
+msgid "Randomize parameters of the circuit in a range from low to high."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.randomize_param:3
+msgid "Lower bound."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.randomize_param:4
+msgid "Upper bound."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.h:1
+msgid "Add single-qubit Hadamard gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ccx:3
+#: paddle_quantum.ansatz.circuit.Circuit.cswap:3
+#: paddle_quantum.ansatz.circuit.Circuit.h:3
+#: paddle_quantum.ansatz.circuit.Circuit.ms:3
+#: paddle_quantum.ansatz.circuit.Circuit.p:3
+#: paddle_quantum.ansatz.circuit.Circuit.rx:3
+#: paddle_quantum.ansatz.circuit.Circuit.rxx:3
+#: paddle_quantum.ansatz.circuit.Circuit.ry:3
+#: paddle_quantum.ansatz.circuit.Circuit.ryy:3
+#: paddle_quantum.ansatz.circuit.Circuit.rz:3
+#: paddle_quantum.ansatz.circuit.Circuit.rzz:3
+#: paddle_quantum.ansatz.circuit.Circuit.s:3
+#: paddle_quantum.ansatz.circuit.Circuit.swap:3
+#: paddle_quantum.ansatz.circuit.Circuit.t:3
+#: paddle_quantum.ansatz.circuit.Circuit.u3:3
+#: paddle_quantum.ansatz.circuit.Circuit.x:3
+#: paddle_quantum.ansatz.circuit.Circuit.y:3
+#: paddle_quantum.ansatz.circuit.Circuit.z:3
+msgid "The matrix form of such a gate is:"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.h:5
+msgid ""
+"H = \\frac{1}{\\sqrt{2}}\n"
+"    \\begin{bmatrix}\n"
+"        1&1\\\\\n"
+"        1&-1\n"
+"    \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.complex_block_layer:3
+#: paddle_quantum.ansatz.circuit.Circuit.complex_entangled_layer:3
+#: paddle_quantum.ansatz.circuit.Circuit.h:13
+#: paddle_quantum.ansatz.circuit.Circuit.linear_entangled_layer:3
+#: paddle_quantum.ansatz.circuit.Circuit.p:12
+#: paddle_quantum.ansatz.circuit.Circuit.real_block_layer:3
+#: paddle_quantum.ansatz.circuit.Circuit.real_entangled_layer:3
+#: paddle_quantum.ansatz.circuit.Circuit.rx:12
+#: paddle_quantum.ansatz.circuit.Circuit.ry:12
+#: paddle_quantum.ansatz.circuit.Circuit.rz:12
+#: paddle_quantum.ansatz.circuit.Circuit.s:13
+#: paddle_quantum.ansatz.circuit.Circuit.superposition_layer:3
+#: paddle_quantum.ansatz.circuit.Circuit.t:13
+#: paddle_quantum.ansatz.circuit.Circuit.u3:15
+#: paddle_quantum.ansatz.circuit.Circuit.weak_superposition_layer:3
+#: paddle_quantum.ansatz.circuit.Circuit.x:12
+#: paddle_quantum.ansatz.circuit.Circuit.y:12
+#: paddle_quantum.ansatz.circuit.Circuit.z:12
+msgid "Indices of the qubits on which the gates are applied. Defaults to 'full'."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.amplitude_damping:5
+#: paddle_quantum.ansatz.circuit.Circuit.bit_flip:5
+#: paddle_quantum.ansatz.circuit.Circuit.bit_phase_flip:5
+#: paddle_quantum.ansatz.circuit.Circuit.ccx:21
+#: paddle_quantum.ansatz.circuit.Circuit.cnot:19
+#: paddle_quantum.ansatz.circuit.Circuit.complex_block_layer:4
+#: paddle_quantum.ansatz.circuit.Circuit.complex_entangled_layer:4
+#: paddle_quantum.ansatz.circuit.Circuit.control_oracle:5
+#: paddle_quantum.ansatz.circuit.Circuit.cp:18
+#: paddle_quantum.ansatz.circuit.Circuit.crx:19
+#: paddle_quantum.ansatz.circuit.Circuit.cry:19
+#: paddle_quantum.ansatz.circuit.Circuit.crz:19
+#: paddle_quantum.ansatz.circuit.Circuit.cswap:22
+#: paddle_quantum.ansatz.circuit.Circuit.cu:19
+#: paddle_quantum.ansatz.circuit.Circuit.cx:4
+#: paddle_quantum.ansatz.circuit.Circuit.cy:19
+#: paddle_quantum.ansatz.circuit.Circuit.cz:19
+#: paddle_quantum.ansatz.circuit.Circuit.depolarizing:5
+#: paddle_quantum.ansatz.circuit.Circuit.generalized_amplitude_damping:6
+#: paddle_quantum.ansatz.circuit.Circuit.h:14
+#: paddle_quantum.ansatz.circuit.Circuit.kraus_repr:5
+#: paddle_quantum.ansatz.circuit.Circuit.linear_entangled_layer:4
+#: paddle_quantum.ansatz.circuit.Circuit.ms:18
+#: paddle_quantum.ansatz.circuit.Circuit.oracle:5
+#: paddle_quantum.ansatz.circuit.Circuit.p:13
+#: paddle_quantum.ansatz.circuit.Circuit.pauli_channel:5
+#: paddle_quantum.ansatz.circuit.Circuit.phase_damping:5
+#: paddle_quantum.ansatz.circuit.Circuit.phase_flip:5
+#: paddle_quantum.ansatz.circuit.Circuit.real_block_layer:4
+#: paddle_quantum.ansatz.circuit.Circuit.real_entangled_layer:4
+#: paddle_quantum.ansatz.circuit.Circuit.reset_channel:5
+#: paddle_quantum.ansatz.circuit.Circuit.rx:13
+#: paddle_quantum.ansatz.circuit.Circuit.rxx:18
+#: paddle_quantum.ansatz.circuit.Circuit.ry:13
+#: paddle_quantum.ansatz.circuit.Circuit.ryy:18
+#: paddle_quantum.ansatz.circuit.Circuit.rz:13
+#: paddle_quantum.ansatz.circuit.Circuit.rzz:18
+#: paddle_quantum.ansatz.circuit.Circuit.s:14
+#: paddle_quantum.ansatz.circuit.Circuit.superposition_layer:4
+#: paddle_quantum.ansatz.circuit.Circuit.swap:18
+#: paddle_quantum.ansatz.circuit.Circuit.t:14
+#: paddle_quantum.ansatz.circuit.Circuit.thermal_relaxation:6
+#: paddle_quantum.ansatz.circuit.Circuit.u3:16
+#: paddle_quantum.ansatz.circuit.Circuit.unitary_matrix:3
+#: paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits:4
+#: paddle_quantum.ansatz.circuit.Circuit.universal_two_qubits:4
+#: paddle_quantum.ansatz.circuit.Circuit.weak_superposition_layer:4
+#: paddle_quantum.ansatz.circuit.Circuit.x:13
+#: paddle_quantum.ansatz.circuit.Circuit.y:13
+#: paddle_quantum.ansatz.circuit.Circuit.z:13
+msgid "Total number of qubits. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ccx:22
+#: paddle_quantum.ansatz.circuit.Circuit.cnot:20
+#: paddle_quantum.ansatz.circuit.Circuit.complex_block_layer:5
+#: paddle_quantum.ansatz.circuit.Circuit.complex_entangled_layer:5
+#: paddle_quantum.ansatz.circuit.Circuit.control_oracle:6
+#: paddle_quantum.ansatz.circuit.Circuit.cp:19
+#: paddle_quantum.ansatz.circuit.Circuit.crx:20
+#: paddle_quantum.ansatz.circuit.Circuit.cry:20
+#: paddle_quantum.ansatz.circuit.Circuit.crz:20
+#: paddle_quantum.ansatz.circuit.Circuit.cswap:23
+#: paddle_quantum.ansatz.circuit.Circuit.cu:20
+#: paddle_quantum.ansatz.circuit.Circuit.cx:5
+#: paddle_quantum.ansatz.circuit.Circuit.cy:20
+#: paddle_quantum.ansatz.circuit.Circuit.cz:20
+#: paddle_quantum.ansatz.circuit.Circuit.h:15
+#: paddle_quantum.ansatz.circuit.Circuit.linear_entangled_layer:5
+#: paddle_quantum.ansatz.circuit.Circuit.ms:19
+#: paddle_quantum.ansatz.circuit.Circuit.oracle:6
+#: paddle_quantum.ansatz.circuit.Circuit.p:14
+#: paddle_quantum.ansatz.circuit.Circuit.real_block_layer:5
+#: paddle_quantum.ansatz.circuit.Circuit.real_entangled_layer:5
+#: paddle_quantum.ansatz.circuit.Circuit.rx:14
+#: paddle_quantum.ansatz.circuit.Circuit.rxx:19
+#: paddle_quantum.ansatz.circuit.Circuit.ry:14
+#: paddle_quantum.ansatz.circuit.Circuit.ryy:19
+#: paddle_quantum.ansatz.circuit.Circuit.rz:14
+#: paddle_quantum.ansatz.circuit.Circuit.rzz:19
+#: paddle_quantum.ansatz.circuit.Circuit.s:15
+#: paddle_quantum.ansatz.circuit.Circuit.superposition_layer:5
+#: paddle_quantum.ansatz.circuit.Circuit.swap:19
+#: paddle_quantum.ansatz.circuit.Circuit.t:15
+#: paddle_quantum.ansatz.circuit.Circuit.u3:17
+#: paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits:5
+#: paddle_quantum.ansatz.circuit.Circuit.universal_two_qubits:5
+#: paddle_quantum.ansatz.circuit.Circuit.weak_superposition_layer:5
+#: paddle_quantum.ansatz.circuit.Circuit.x:14
+#: paddle_quantum.ansatz.circuit.Circuit.y:14
+#: paddle_quantum.ansatz.circuit.Circuit.z:14
+msgid "Number of layers. Defaults to 1."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.s:1
+msgid "Add single-qubit S gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.s:5
+msgid ""
+"S =\n"
+"    \\begin{bmatrix}\n"
+"        1&0\\\\\n"
+"        0&i\n"
+"    \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.t:1
+msgid "Add single-qubit T gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.t:5
+msgid ""
+"T =\n"
+"    \\begin{bmatrix}\n"
+"        1&0\\\\\n"
+"        0&e^\\frac{i\\pi}{4}\n"
+"    \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.x:1
+msgid "Add single-qubit X gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.x:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    0 & 1 \\\\\n"
+"    1 & 0\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.y:1
+msgid "Add single-qubit Y gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.y:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    0 & -i \\\\\n"
+"    i & 0\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.z:1
+msgid "Add single-qubit Z gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.z:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    1 & 0 \\\\\n"
+"    0 & -1\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.p:1
+msgid "Add single-qubit P gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.p:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    1 & 0 \\\\\n"
+"    0 & e^{i\\theta}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cp:20
+#: paddle_quantum.ansatz.circuit.Circuit.crx:21
+#: paddle_quantum.ansatz.circuit.Circuit.cry:21
+#: paddle_quantum.ansatz.circuit.Circuit.crz:21
+#: paddle_quantum.ansatz.circuit.Circuit.cu:21
+#: paddle_quantum.ansatz.circuit.Circuit.p:15
+#: paddle_quantum.ansatz.circuit.Circuit.rx:15
+#: paddle_quantum.ansatz.circuit.Circuit.rxx:20
+#: paddle_quantum.ansatz.circuit.Circuit.ry:15
+#: paddle_quantum.ansatz.circuit.Circuit.ryy:20
+#: paddle_quantum.ansatz.circuit.Circuit.rz:15
+#: paddle_quantum.ansatz.circuit.Circuit.rzz:20
+#: paddle_quantum.ansatz.circuit.Circuit.u3:18
+#: paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits:6
+#: paddle_quantum.ansatz.circuit.Circuit.universal_two_qubits:6
+msgid "Parameters of the gates. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cp:21
+#: paddle_quantum.ansatz.circuit.Circuit.crx:22
+#: paddle_quantum.ansatz.circuit.Circuit.cry:22
+#: paddle_quantum.ansatz.circuit.Circuit.crz:22
+#: paddle_quantum.ansatz.circuit.Circuit.cu:22
+#: paddle_quantum.ansatz.circuit.Circuit.p:16
+#: paddle_quantum.ansatz.circuit.Circuit.rx:16
+#: paddle_quantum.ansatz.circuit.Circuit.rxx:21
+#: paddle_quantum.ansatz.circuit.Circuit.ry:16
+#: paddle_quantum.ansatz.circuit.Circuit.ryy:21
+#: paddle_quantum.ansatz.circuit.Circuit.rz:16
+#: paddle_quantum.ansatz.circuit.Circuit.rzz:21
+#: paddle_quantum.ansatz.circuit.Circuit.u3:19
+#: paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits:7
+#: paddle_quantum.ansatz.circuit.Circuit.universal_two_qubits:7
+msgid "Whether gates in the same layer share a parameter. Defaults to False."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.rx:1
+msgid "Add single-qubit rotation gates about the x-axis."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.rx:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} \\\\\n"
+"    -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ry:1
+msgid "Add single-qubit rotation gates about the y-axis."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ry:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    \\cos\\frac{\\theta}{2} & -\\sin\\frac{\\theta}{2} \\\\\n"
+"    \\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.rz:1
+msgid "Add single-qubit rotation gates about the z-axis."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.rz:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    e^{-i\\frac{\\theta}{2}} & 0 \\\\\n"
+"    0 & e^{i\\frac{\\theta}{2}}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.u3:1
+msgid "Add single-qubit rotation gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.u3:5
+msgid ""
+"\\begin{align}\n"
+"    U3(\\theta, \\phi, \\lambda) =\n"
+"        \\begin{bmatrix}\n"
+"            \\cos\\frac\\theta2&-e^{i\\lambda}\\sin\\frac\\theta2\\\\\n"
+"            "
+"e^{i\\phi}\\sin\\frac\\theta2&e^{i(\\phi+\\lambda)}\\cos\\frac\\theta2\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cnot:1
+msgid "Add CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cnot:3
+#: paddle_quantum.ansatz.circuit.Circuit.cp:3
+#: paddle_quantum.ansatz.circuit.Circuit.crx:3
+#: paddle_quantum.ansatz.circuit.Circuit.cry:3
+#: paddle_quantum.ansatz.circuit.Circuit.crz:3
+#: paddle_quantum.ansatz.circuit.Circuit.cu:3
+#: paddle_quantum.ansatz.circuit.Circuit.cy:3
+#: paddle_quantum.ansatz.circuit.Circuit.cz:3
+msgid ""
+"For a 2-qubit quantum circuit, when `qubits_idx` is `[0, 1]`, the matrix "
+"form of such a gate is:"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cnot:5
+msgid ""
+"\\begin{align}\n"
+"    CNOT &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes X\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 1 \\\\\n"
+"        0 & 0 & 1 & 0\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ccx:20
+#: paddle_quantum.ansatz.circuit.Circuit.cnot:18
+#: paddle_quantum.ansatz.circuit.Circuit.cp:17
+#: paddle_quantum.ansatz.circuit.Circuit.crx:18
+#: paddle_quantum.ansatz.circuit.Circuit.cry:18
+#: paddle_quantum.ansatz.circuit.Circuit.crz:18
+#: paddle_quantum.ansatz.circuit.Circuit.cswap:21
+#: paddle_quantum.ansatz.circuit.Circuit.cu:18
+#: paddle_quantum.ansatz.circuit.Circuit.cx:3
+#: paddle_quantum.ansatz.circuit.Circuit.cy:18
+#: paddle_quantum.ansatz.circuit.Circuit.cz:18
+#: paddle_quantum.ansatz.circuit.Circuit.ms:17
+#: paddle_quantum.ansatz.circuit.Circuit.rxx:17
+#: paddle_quantum.ansatz.circuit.Circuit.ryy:17
+#: paddle_quantum.ansatz.circuit.Circuit.rzz:17
+#: paddle_quantum.ansatz.circuit.Circuit.swap:17
+#: paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits:3
+#: paddle_quantum.ansatz.circuit.Circuit.universal_two_qubits:3
+msgid "Indices of the qubits on which the gates are applied. Defaults to 'cycle'."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cx:1
+msgid "Same as cnot."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cy:1
+msgid "Add controlled Y gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cy:5
+msgid ""
+"\\begin{align}\n"
+"    CY &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Y\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & -1j \\\\\n"
+"        0 & 0 & 1j & 0\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cz:1
+msgid "Add controlled Z gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cz:5
+msgid ""
+"\\begin{align}\n"
+"    CZ &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Z\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 \\\\\n"
+"        0 & 0 & 0 & -1\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.swap:1
+msgid "Add SWAP gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.swap:5
+msgid ""
+"\\begin{align}\n"
+"    SWAP =\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 1\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cp:1
+msgid "Add controlled P gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cp:5
+msgid ""
+"\\begin{align}\n"
+"    SWAP =\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 \\\\\n"
+"        0 & 0 & 0 & e^{i\\theta}\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.crx:1
+msgid "Add controlled rotation gates about the x-axis."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.crx:5
+msgid ""
+"\\begin{align}\n"
+"    CRx &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Rx\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} \\\\\n"
+"        0 & 0 & -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2}\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cry:1
+msgid "Add controlled rotation gates about the y-axis."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cry:5
+msgid ""
+"\\begin{align}\n"
+"    CRy &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Ry\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & \\cos\\frac{\\theta}{2} & -\\sin\\frac{\\theta}{2} \\\\\n"
+"        0 & 0 & \\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2}\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.crz:1
+msgid "Add controlled rotation gates about the z-axis."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.crz:5
+msgid ""
+"\\begin{align}\n"
+"    CRz &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Rz\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 \\\\\n"
+"        0 & 0 & 0 & e^{i\\theta}\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cu:1
+msgid "Add controlled single-qubit rotation gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cu:5
+msgid ""
+"\\begin{align}\n"
+"    CU\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & \\cos\\frac\\theta2 &-e^{i\\lambda}\\sin\\frac\\theta2 "
+"\\\\\n"
+"        0 & 0 & "
+"e^{i\\phi}\\sin\\frac\\theta2&e^{i(\\phi+\\lambda)}\\cos\\frac\\theta2\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.rxx:1
+msgid "Add RXX gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.rxx:5
+msgid ""
+"\\begin{align}\n"
+"    RXX(\\theta) =\n"
+"        \\begin{bmatrix}\n"
+"            \\cos\\frac{\\theta}{2} & 0 & 0 & -i\\sin\\frac{\\theta}{2} "
+"\\\\\n"
+"            0 & \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} & 0 "
+"\\\\\n"
+"            0 & -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} & 0 "
+"\\\\\n"
+"            -i\\sin\\frac{\\theta}{2} & 0 & 0 & \\cos\\frac{\\theta}{2}\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ryy:1
+msgid "Add RYY gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ryy:5
+msgid ""
+"\\begin{align}\n"
+"    RYY(\\theta) =\n"
+"        \\begin{bmatrix}\n"
+"            \\cos\\frac{\\theta}{2} & 0 & 0 & i\\sin\\frac{\\theta}{2} "
+"\\\\\n"
+"            0 & \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} & 0 "
+"\\\\\n"
+"            0 & -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} & 0 "
+"\\\\\n"
+"            i\\sin\\frac{\\theta}{2} & 0 & 0 & cos\\frac{\\theta}{2}\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.rzz:1
+msgid "Add RZZ gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.rzz:5
+msgid ""
+"\\begin{align}\n"
+"    RZZ(\\theta) =\n"
+"        \\begin{bmatrix}\n"
+"            e^{-i\\frac{\\theta}{2}} & 0 & 0 & 0 \\\\\n"
+"            0 & e^{i\\frac{\\theta}{2}} & 0 & 0 \\\\\n"
+"            0 & 0 & e^{i\\frac{\\theta}{2}} & 0 \\\\\n"
+"            0 & 0 & 0 & e^{-i\\frac{\\theta}{2}}\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ms:1
+msgid "Add Mølmer-Sørensen (MS) gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ms:5
+msgid ""
+"\\begin{align}\n"
+"    MS = RXX(-\\frac{\\pi}{2}) = \\frac{1}{\\sqrt{2}}\n"
+"        \\begin{bmatrix}\n"
+"            1 & 0 & 0 & i \\\\\n"
+"            0 & 1 & i & 0 \\\\\n"
+"            0 & i & 1 & 0 \\\\\n"
+"            i & 0 & 0 & 1\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cswap:1
+msgid "Add CSWAP (Fredkin) gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.cswap:5
+msgid ""
+"\\begin{align}\n"
+"    CSWAP =\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ccx:1
+msgid "Add Toffoli gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.ccx:5
+msgid ""
+"\\begin{align}\n"
+"        \\begin{bmatrix}\n"
+"            1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"            0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"            0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"            0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\\\n"
+"            0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\\\\n"
+"            0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\\\\n"
+"            0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\\\\n"
+"            0 & 0 & 0 & 0 & 0 & 0 & 1 & 0\n"
+"        \\end{bmatrix}\n"
+"    \\end{align}"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.universal_two_qubits:1
+msgid "Add universal two-qubit gates. One of such a gate requires 15 parameters."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits:1
+msgid ""
+"Add universal three-qubit gates. One of such a gate requires 81 "
+"parameters."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.universal_three_qubits:9
+msgid "The ``param`` must be paddle.Tensor or float."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.oracle:1
+msgid "Add an oracle gate."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.control_oracle:3
+#: paddle_quantum.ansatz.circuit.Circuit.oracle:3
+msgid "Unitary oracle to be implemented."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.control_oracle:4
+#: paddle_quantum.ansatz.circuit.Circuit.oracle:4
+msgid "Indices of the qubits on which the gates are applied."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.control_oracle:1
+msgid "Add a controlled oracle gate."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.superposition_layer:1
+msgid "Add layers of Hadamard gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.weak_superposition_layer:1
+msgid "Add layers of Ry gates with a rotation angle :math:`\\pi/4`."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.linear_entangled_layer:1
+msgid ""
+"Add linear entangled layers consisting of Ry gates, Rz gates, and CNOT "
+"gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.real_entangled_layer:1
+msgid "Add strongly entangled layers consisting of Ry gates and CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.complex_entangled_layer:1
+msgid ""
+"Add strongly entangled layers consisting of single-qubit rotation gates "
+"and CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.real_block_layer:1
+msgid "Add weakly entangled layers consisting of Ry gates and CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.complex_block_layer:1
+msgid ""
+"Add weakly entangled layers consisting of single-qubit rotation gates and"
+" CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.bit_flip:1
+msgid "Add bit flip channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.bit_flip:3
+msgid "Probability of a bit flip."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.amplitude_damping:4
+#: paddle_quantum.ansatz.circuit.Circuit.bit_flip:4
+#: paddle_quantum.ansatz.circuit.Circuit.bit_phase_flip:4
+#: paddle_quantum.ansatz.circuit.Circuit.depolarizing:4
+#: paddle_quantum.ansatz.circuit.Circuit.generalized_amplitude_damping:5
+#: paddle_quantum.ansatz.circuit.Circuit.kraus_repr:4
+#: paddle_quantum.ansatz.circuit.Circuit.pauli_channel:4
+#: paddle_quantum.ansatz.circuit.Circuit.phase_damping:4
+#: paddle_quantum.ansatz.circuit.Circuit.phase_flip:4
+#: paddle_quantum.ansatz.circuit.Circuit.reset_channel:4
+#: paddle_quantum.ansatz.circuit.Circuit.thermal_relaxation:5
+msgid ""
+"Indices of the qubits on which the channels are applied. Defaults to "
+"'full'."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.phase_flip:1
+msgid "Add phase flip channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.phase_flip:3
+msgid "Probability of a phase flip."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.bit_phase_flip:1
+msgid "Add bit phase flip channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.bit_phase_flip:3
+msgid "Probability of a bit phase flip."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.amplitude_damping:1
+msgid "Add amplitude damping channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.amplitude_damping:3
+#: paddle_quantum.ansatz.circuit.Circuit.generalized_amplitude_damping:3
+msgid "Damping probability."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.generalized_amplitude_damping:1
+msgid "Add generalized amplitude damping channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.generalized_amplitude_damping:4
+msgid "Excitation probability."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.phase_damping:1
+msgid "Add phase damping channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.phase_damping:3
+msgid "Parameter of the phase damping channel."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.depolarizing:1
+msgid "Add depolarizing channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.depolarizing:3
+msgid "Parameter of the depolarizing channel."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.pauli_channel:1
+msgid "Add Pauli channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.pauli_channel:3
+msgid "Probabilities corresponding to the Pauli X, Y, and Z operators."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.reset_channel:1
+msgid "Add reset channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.reset_channel:3
+msgid ""
+"Probabilities of resetting to :math:`|0\\rangle` and to "
+":math:`|1\\rangle`."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.thermal_relaxation:1
+msgid "Add thermal relaxation channels."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.thermal_relaxation:3
+msgid ":math:`T_1` and :math:`T_2` relaxation time in microseconds."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.thermal_relaxation:4
+msgid "Quantum gate execution time in the process of relaxation in nanoseconds."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.kraus_repr:1
+msgid "Add custom channels in the Kraus representation."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.kraus_repr:3
+msgid "Kraus operators of this channel."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.unitary_matrix:1
+msgid "Get the unitary matrix form of the circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.forward
+#: paddle_quantum.ansatz.circuit.Circuit.gate_history
+#: paddle_quantum.ansatz.circuit.Circuit.qubit_history
+#: paddle_quantum.ansatz.circuit.Circuit.unitary_matrix
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.unitary_matrix:5
+msgid "Unitary matrix form of the circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.forward
+#: paddle_quantum.ansatz.circuit.Circuit.unitary_matrix
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.gate_history:1
+msgid "list of gates information of circuit"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.gate_history:3
+msgid "history of quantum gates of circuit"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.qubit_history:1
+msgid "gate information on each qubit"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.qubit_history:3
+msgid "list of gate history on each qubit"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.qubit_history:7
+msgid ""
+"The entry ``qubit_history[i][j][0/1]`` returns the gate information / "
+"gate index of the j-th gate applied on the i-th qubit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.forward:1
+msgid "forward the input"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.forward:3
+msgid "initial state"
+msgstr ""
+
+#: of paddle_quantum.ansatz.circuit.Circuit.forward:5
+msgid "output quantum state"
+msgstr ""
+

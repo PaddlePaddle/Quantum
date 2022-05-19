@@ -1,0 +1,75 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Institute for Quantum Computing, Baidu Inc.
+# This file is distributed under the same license as the Paddle Quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Paddle Quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.mbqc.rst:2
+msgid "paddle\\_quantum.mbqc"
+msgstr "paddle\\_quantum.mbqc"
+
+#: ../../source/paddle_quantum.mbqc.rst:10
+msgid "Submodules"
+msgstr "Submodules"
+
+#~ msgid ":obj:`paddle_quantum.mbqc.mcalculus <paddle_quantum.mbqc.mcalculus>`\\"
+#~ msgstr ":obj:`paddle_quantum.mbqc.mcalculus <paddle_quantum.mbqc.mcalculus>`\\"
+
+#~ msgid "此模块包含处理 MBQC 测量模式的相关操作。"
+#~ msgstr ""
+#~ "This module contains operations for the"
+#~ " manipulation of measurement patterns."
+
+#~ msgid ":obj:`paddle_quantum.mbqc.qobject <paddle_quantum.mbqc.qobject>`\\"
+#~ msgstr ":obj:`paddle_quantum.mbqc.qobject <paddle_quantum.mbqc.qobject>`\\"
+
+#~ msgid "此模块包含量子信息处理的常用对象，如量子态、量子电路、测量模式等。"
+#~ msgstr ""
+#~ "This module contains common objects for"
+#~ " quantum information processing, such as"
+#~ " quantum states, quantum circuits, "
+#~ "measurement patterns, etc."
+
+#~ msgid ":obj:`paddle_quantum.mbqc.simulator <paddle_quantum.mbqc.simulator>`\\"
+#~ msgstr ":obj:`paddle_quantum.mbqc.simulator <paddle_quantum.mbqc.simulator>`\\"
+
+#~ msgid "此模块包含构造 MBQC 模型的常用类和配套的运算模拟工具。"
+#~ msgstr ""
+#~ "This module contains a frequently used"
+#~ " class and accompanying simulation tools"
+#~ " for constructing MBQC models."
+
+#~ msgid ""
+#~ ":obj:`paddle_quantum.mbqc.transpiler "
+#~ "<paddle_quantum.mbqc.transpiler>`\\"
+#~ msgstr ""
+#~ ":obj:`paddle_quantum.mbqc.transpiler "
+#~ "<paddle_quantum.mbqc.transpiler>`\\"
+
+#~ msgid "此模块包含电路模型和 MBQC 测量模式的转义工具。"
+#~ msgstr ""
+#~ "This module contains tools for "
+#~ "transpiling circuits to measurement patterns."
+
+#~ msgid ":obj:`paddle_quantum.mbqc.utils <paddle_quantum.mbqc.utils>`\\"
+#~ msgstr ":obj:`paddle_quantum.mbqc.utils <paddle_quantum.mbqc.utils>`\\"
+
+#~ msgid "此模块包含计算所需的各种常用类和函数。"
+#~ msgstr ""
+#~ "This module contains various common "
+#~ "classes and functions used for "
+#~ "computation."
+

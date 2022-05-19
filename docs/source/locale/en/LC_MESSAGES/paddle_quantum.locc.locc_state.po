@@ -1,0 +1,91 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.locc.locc_state.rst:2
+msgid "paddle\\_quantum.locc.locc\\_state"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state:1
+msgid "The source file of the LoccState class."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:1
+msgid "Bases: :py:class:`~paddle_quantum.state.state.State`"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:1
+msgid "An LOCC state in LOCCNet."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:3
+msgid ""
+"We care not only about the quantum state in LOCC, but also about the "
+"probability of getting it and the corresponding measurement result. "
+"Therefore, this class contains three attributes: quantum state ``data``, "
+"the probability of getting this state ``prob``, and the measurement "
+"result leading to this state, namely ``measured_result``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:8
+msgid ""
+"Matrix form of the quantum state of this ``LoccState``. Defaults to "
+"``None``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:9
+msgid "Probability of getting this quantum state.. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:10
+msgid "Measurement result leading to this quantum state. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:11
+msgid "Total number of qubits. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:12
+msgid "Backend of Paddle Quantum. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState:13
+msgid "Type of data. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState.clone:1
+msgid "Create a copy of the current object."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState.clone
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState.clone:3
+msgid "A copy of the current object."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_state.LoccState.clone
+msgid "Return type"
+msgstr ""
+

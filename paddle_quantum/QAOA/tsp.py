@@ -1,4 +1,5 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# !/usr/bin/env python3
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+r"""
 Travelling Salesman Problem (TSP): To learn more about the functions and properties of this application,
 you could check the corresponding Jupyter notebook under the Tutorial folder.
 """
@@ -22,10 +23,8 @@ from itertools import permutations
 import numpy as np
 import networkx as nx
 import paddle
-from paddle_quantum.circuit import UAnsatz
-from paddle_quantum.utils import pauli_str_to_matrix
-
-
+import paddle_quantum
+from paddle_quantum.qinfo import pauli_str_to_matrix
 
 __all__ = [
     "tsp_hamiltonian",
@@ -93,32 +92,6 @@ def tsp_hamiltonian(g, A, n):
     return H_C_list
 
 
-class _TSPNet(paddle.nn.Layer):
-    """
-    It constructs the net for TSP which combines the complex entangled circuit with the classical optimizer that sets rules
-    to update parameters described by theta introduced in the circuit.
-    """
-    def __init__(self, n, p, dtype="float64"):
-        super(_TSPNet, self).__init__()
-
-        self.p = p
-        self.num_qubits = (n - 1) ** 2
-        self.theta = self.create_parameter(shape=[self.p, self.num_qubits, 3],
-            default_initializer=paddle.nn.initializer.Uniform(low=0.0, high=2 * np.pi),
-            dtype=dtype, is_bias=False)
-
-    def forward(self, H_C_ls):
-        """
-        Forward propagation
-        """
-        cir = UAnsatz(self.num_qubits)
-        cir.complex_entangled_layer(self.theta, self.p)
-        cir.run_state_vector()
-        loss = cir.expecval(H_C_ls)
-
-        return loss, cir
-
-
 def solve_tsp(g, A, p=2, ITR=120, LR=0.4, print_loss=False, shots=0):
     """
     This is the core function to solve the TSP.
@@ -137,19 +110,22 @@ def solve_tsp(g, A, p=2, ITR=120, LR=0.4, print_loss=False, shots=0):
     n = len(v)
 
     H_C_list = tsp_hamiltonian(g, A, n)
-
-    net = _TSPNet(n, p)
+    net = paddle_quantum.ansatz.Circuit((n - 1) ** 2)
+    net.complex_entangled_layer(depth=p)
+    loss_func = paddle_quantum.loss.ExpecVal(H_C_list)
     opt = paddle.optimizer.Adam(learning_rate=LR, parameters=net.parameters())
 
     for itr in range(1, ITR + 1):
-        loss, cir = net(H_C_list)
+        state = net()
+        loss = loss_func(state)
         loss.backward()
         opt.minimize(loss)
         opt.clear_grad()
         if print_loss and itr % 10 == 0:
-            print("iter:", itr, "loss:", "%.4f"% loss.numpy())
+            print("iter:", itr, "loss:", "%.4f" % loss.numpy())
 
-    prob_measure = cir.measure(shots=shots)
+    state = net()
+    prob_measure = state.measure(shots=shots)
     reduced_salesman_walk = max(prob_measure, key=prob_measure.get)
     str_by_vertex = [reduced_salesman_walk[i:i + n - 1] for i in range(0, len(reduced_salesman_walk) + 1, n - 1)]
     salesman_walk = '0'.join(str_by_vertex) + '0' * (n - 1) + '1'

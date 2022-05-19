@@ -1,0 +1,268 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.state.common.rst:2
+msgid "paddle\\_quantum.state.common"
+msgstr ""
+
+#: of paddle_quantum.state.common:1
+msgid "The common function of the quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.common.to_state:1
+msgid "The function to generate a specified state instance."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state
+#: paddle_quantum.state.common.bell_state
+#: paddle_quantum.state.common.completely_mixed_computational
+#: paddle_quantum.state.common.computational_basis
+#: paddle_quantum.state.common.ghz_state
+#: paddle_quantum.state.common.isotropic_state
+#: paddle_quantum.state.common.r_state paddle_quantum.state.common.random_state
+#: paddle_quantum.state.common.s_state paddle_quantum.state.common.to_state
+#: paddle_quantum.state.common.w_state paddle_quantum.state.common.zero_state
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.state.common.to_state:3
+msgid "The mathematical analysis of quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.common.to_state:4
+msgid ""
+"The number of qubits contained in the quantum state. Defaults to None, "
+"which means it will be inferred by the data."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_state:10
+#: paddle_quantum.state.common.computational_basis:5
+#: paddle_quantum.state.common.to_state:5
+#: paddle_quantum.state.common.zero_state:4
+msgid ""
+"Used to specify the backend used. Defaults to None, which means to use "
+"the default backend."
+msgstr ""
+
+#: of paddle_quantum.state.common.computational_basis:6
+#: paddle_quantum.state.common.to_state:6
+#: paddle_quantum.state.common.zero_state:5
+msgid ""
+"Used to specify the data dtype of the data. Defaults to None, which means"
+" to use the default data type."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state
+#: paddle_quantum.state.common.bell_state
+#: paddle_quantum.state.common.completely_mixed_computational
+#: paddle_quantum.state.common.computational_basis
+#: paddle_quantum.state.common.ghz_state
+#: paddle_quantum.state.common.isotropic_state
+#: paddle_quantum.state.common.r_state paddle_quantum.state.common.random_state
+#: paddle_quantum.state.common.s_state paddle_quantum.state.common.to_state
+#: paddle_quantum.state.common.w_state paddle_quantum.state.common.zero_state
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state:15
+#: paddle_quantum.state.common.bell_state:14
+#: paddle_quantum.state.common.completely_mixed_computational:8
+#: paddle_quantum.state.common.computational_basis:10
+#: paddle_quantum.state.common.ghz_state:7
+#: paddle_quantum.state.common.isotropic_state:15
+#: paddle_quantum.state.common.r_state:14
+#: paddle_quantum.state.common.random_state:9
+#: paddle_quantum.state.common.s_state:14
+#: paddle_quantum.state.common.to_state:8 paddle_quantum.state.common.w_state:7
+#: paddle_quantum.state.common.zero_state:9
+msgid "The generated quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state
+#: paddle_quantum.state.common.bell_state
+#: paddle_quantum.state.common.completely_mixed_computational
+#: paddle_quantum.state.common.computational_basis
+#: paddle_quantum.state.common.ghz_state
+#: paddle_quantum.state.common.isotropic_state
+#: paddle_quantum.state.common.r_state paddle_quantum.state.common.random_state
+#: paddle_quantum.state.common.s_state paddle_quantum.state.common.to_state
+#: paddle_quantum.state.common.w_state paddle_quantum.state.common.zero_state
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.state.common.zero_state:1
+msgid "The function to generate a zero state."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_state:9
+#: paddle_quantum.state.common.completely_mixed_computational:3
+#: paddle_quantum.state.common.computational_basis:3
+#: paddle_quantum.state.common.ghz_state:3
+#: paddle_quantum.state.common.isotropic_state:9
+#: paddle_quantum.state.common.random_state:3
+#: paddle_quantum.state.common.w_state:3
+#: paddle_quantum.state.common.zero_state:3
+msgid "The number of qubits contained in the quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state
+#: paddle_quantum.state.common.bell_state
+#: paddle_quantum.state.common.completely_mixed_computational
+#: paddle_quantum.state.common.computational_basis
+#: paddle_quantum.state.common.ghz_state
+#: paddle_quantum.state.common.isotropic_state
+#: paddle_quantum.state.common.r_state paddle_quantum.state.common.random_state
+#: paddle_quantum.state.common.s_state paddle_quantum.state.common.w_state
+#: paddle_quantum.state.common.zero_state
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state:13
+#: paddle_quantum.state.common.bell_state:12
+#: paddle_quantum.state.common.completely_mixed_computational:6
+#: paddle_quantum.state.common.computational_basis:8
+#: paddle_quantum.state.common.ghz_state:5
+#: paddle_quantum.state.common.isotropic_state:13
+#: paddle_quantum.state.common.r_state:12
+#: paddle_quantum.state.common.random_state:7
+#: paddle_quantum.state.common.s_state:12 paddle_quantum.state.common.w_state:5
+#: paddle_quantum.state.common.zero_state:7
+msgid "If the backend is wrong or not implemented."
+msgstr ""
+
+#: of paddle_quantum.state.common.computational_basis:1
+msgid ""
+"Generate a computational basis state :math:`|e_{i}\\rangle` , whose i-th "
+"element is 1 and all the other elements are 0."
+msgstr ""
+
+#: of paddle_quantum.state.common.computational_basis:4
+msgid "Index :math:`i` of the computational basis state :math`|e_{i}rangle` ."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_state:1
+msgid "Generate a bell state."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state:3
+#: paddle_quantum.state.common.bell_state:3
+#: paddle_quantum.state.common.isotropic_state:3
+#: paddle_quantum.state.common.r_state:3 paddle_quantum.state.common.s_state:3
+msgid "Its matrix form is:"
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_state:5
+msgid ""
+"|\\Phi_{D}\\rangle=\\frac{1}{\\sqrt{D}} "
+"\\sum_{j=0}^{D-1}|j\\rangle_{A}|j\\rangle_{B}"
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state:1
+msgid "Generate a bell diagonal state."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state:5
+msgid ""
+"p_{1}|\\Phi^{+}\\rangle\\langle\\Phi^{+}|+p_{2}| "
+"\\Psi^{+}\\rangle\\langle\\Psi^{+}|+p_{3}| "
+"\\Phi^{-}\\rangle\\langle\\Phi^{-}| +\n"
+"p4|\\Psi^{-}\\rangle\\langle\\Psi^{-}|"
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state:10
+msgid "The prob of each bell state."
+msgstr ""
+
+#: of paddle_quantum.state.common.bell_diagonal_state:12
+#: paddle_quantum.state.common.completely_mixed_computational:5
+#: paddle_quantum.state.common.isotropic_state:12
+#: paddle_quantum.state.common.r_state:11
+#: paddle_quantum.state.common.s_state:11
+msgid "The state should bu a pure state if the backend is state_vector."
+msgstr ""
+
+#: of paddle_quantum.state.common.random_state:1
+msgid "Generate a random quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.common.random_state:4
+msgid "If the quantum state only contains the real number. Defaults to False."
+msgstr ""
+
+#: of paddle_quantum.state.common.random_state:5
+msgid "The rank of the density matrix. Defaults to None which means full rank."
+msgstr ""
+
+#: of paddle_quantum.state.common.w_state:1
+msgid "Generate a W-state."
+msgstr ""
+
+#: of paddle_quantum.state.common.ghz_state:1
+msgid "Generate a GHZ-state."
+msgstr ""
+
+#: of paddle_quantum.state.common.completely_mixed_computational:1
+msgid "Generate the density matrix of the completely mixed state."
+msgstr ""
+
+#: of paddle_quantum.state.common.r_state:1
+msgid "Generate an R-state."
+msgstr ""
+
+#: of paddle_quantum.state.common.r_state:5
+msgid "p|\\Psi^{+}\\rangle\\langle\\Psi^{+}| + (1 - p)|11\\rangle\\langle11|"
+msgstr ""
+
+#: of paddle_quantum.state.common.r_state:9
+msgid ""
+"The parameter of the R-state to be generated. It should be in "
+":math:`[0,1]` ."
+msgstr ""
+
+#: of paddle_quantum.state.common.s_state:1
+msgid "Generate the S-state."
+msgstr ""
+
+#: of paddle_quantum.state.common.s_state:5
+msgid "p|\\Phi^{+}\\rangle\\langle\\Phi^{+}| + (1 - p)|00\\rangle\\langle00|"
+msgstr ""
+
+#: of paddle_quantum.state.common.s_state:9
+msgid ""
+"The parameter of the S-state to be generated. It should be in "
+":math:`[0,1]` ."
+msgstr ""
+
+#: of paddle_quantum.state.common.isotropic_state:1
+msgid "Generate the isotropic state."
+msgstr ""
+
+#: of paddle_quantum.state.common.isotropic_state:5
+msgid ""
+"p(\\frac{1}{\\sqrt{D}} \\sum_{j=0}^{D-1}|j\\rangle_{A}|j\\rangle_{B}) + "
+"(1 - p)\\frac{I}{2^n}"
+msgstr ""
+
+#: of paddle_quantum.state.common.isotropic_state:10
+msgid ""
+"The parameter of the isotropic state to be generated. It should be in "
+":math:`[0,1]` ."
+msgstr ""
+

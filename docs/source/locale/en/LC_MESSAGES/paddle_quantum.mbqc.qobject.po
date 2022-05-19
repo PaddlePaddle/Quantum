@@ -1,0 +1,1321 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Institute for Quantum Computing, Baidu Inc.
+# This file is distributed under the same license as the Paddle Quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Paddle Quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: of paddle_quantum.mbqc.qobject.Pattern:1
+msgid "定义测量模式。"
+msgstr "Define measurement pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:3
+msgid "该测量模式的结构依据文献 [The measurement calculus, arXiv: 0704.1263]。"
+msgstr ""
+"The construction of measurement pattern can be referred to [The "
+"measurement calculus, arXiv: 0704.1263]."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:7
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:3
+msgid "测量模式的名称"
+msgstr "Name of the measurement pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern
+#: paddle_quantum.mbqc.qobject.Pattern.CommandE
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ
+msgid "type"
+msgstr "type"
+
+#: of paddle_quantum.mbqc.qobject.Pattern:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:34
+msgid "str"
+msgstr "str"
+
+#: of paddle_quantum.mbqc.qobject.Pattern:13
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:5
+msgid "测量模式所有节点列表"
+msgstr "A list of all vertices in the pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:15
+#: paddle_quantum.mbqc.qobject.Pattern:21
+#: paddle_quantum.mbqc.qobject.Pattern:27
+#: paddle_quantum.mbqc.qobject.Pattern:33
+#: paddle_quantum.mbqc.qobject.Pattern.CommandE:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:40
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:46
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS:15
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:13
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:13
+msgid "list"
+msgstr "list"
+
+#: of paddle_quantum.mbqc.qobject.Pattern:19
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:7
+msgid "测量模式的输入节点列表"
+msgstr "A list of all input vertices in the pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:25
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:9
+msgid "测量模式的输出节点列表"
+msgstr "A list of all output vertices in the pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:31
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:11
+msgid "测量模式的命令列表"
+msgstr "A list of all commands in the pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:1
+msgid "构造函数，用于实例化一个 ``Pattern`` 对象。"
+msgstr "``Pattern`` constructor, used to instantiate a ``Pattern`` object."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.__init__
+msgid "Parameters"
+msgstr "Parameters"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.qobject.Pattern.rst:14
+msgid "Methods"
+msgstr "Methods"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1:<autosummary>:1
+msgid ""
+":obj:`__init__ <paddle_quantum.mbqc.qobject.Pattern.__init__>`\\ "
+"\\(name\\, space\\, input\\_\\, output\\_\\, commands\\)"
+msgstr ""
+":obj:`__init__ <paddle_quantum.mbqc.qobject.Pattern.__init__>`\\ "
+"\\(name\\, space\\, input\\_\\, output\\_\\, commands\\)"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1:<autosummary>:1
+msgid ""
+":obj:`print_command_list "
+"<paddle_quantum.mbqc.qobject.Pattern.print_command_list>`\\ \\(\\)"
+msgstr ""
+":obj:`print_command_list "
+"<paddle_quantum.mbqc.qobject.Pattern.print_command_list>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Pattern.print_command_list:1
+msgid "打印该 ``Pattern`` 类中的命令的信息，便于用户查看。"
+msgstr "Print the information of commands in the ``Pattern`` class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1
+msgid "定义纠缠命令类。"
+msgstr "Define entanglement command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:3
+msgid "此处纠缠命令对应作用控制 Z 门。"
+msgstr "Here the entanglement commands correspond to applying Control Z gates."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:7
+msgid "作用纠缠命令的两个节点标签构成的列表"
+msgstr "A list of vertex pairs to be entangled."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:1
+msgid "定义测量命令类。"
+msgstr "Define the measurement command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:3
+msgid ""
+"测量命令有五个属性，分别为测量比特的标签 ``which_qubit``，原始的测量角度 ``angle``， 测量平面 ``plane``，域 "
+"s 对应的节点标签列表 ``domain_s``，域 t 对应的节点标签列表 ``domain_t``。 设原始角度为 "
+":math:`\\alpha`，则考虑域中节点依赖关系后的测量角度 :math:`\\theta` 为："
+msgstr ""
+"There are five attributes in a measurement command, including qubit label"
+" ``which_qubit``, original measurement angle ``angle``, measurement plane"
+" ``plane``, vertices list ``domain_s`` corresponding to s domain, "
+"vertices list ``domain_t`` corresponding to t domain. If the original "
+"angle is: math:`\\alpha`, the adaptive angle: math:`\theta` after "
+"considering dependencies of vertices in the domains is:"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:7
+msgid "\\theta = (-1)^s \\times \\alpha + t \\times \\pi"
+msgstr "\\theta = (-1)^s \\times \\alpha + t \\times \\pi"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:13
+msgid ""
+"域 s 和域 t 是 MBQC 模型中的概念，分别记录了 Pauli X 算符和 Pauli Z 算符对测量角度产生的影响， "
+"二者共同记录了该测量节点对其他节点的测量结果的依赖关系。"
+msgstr ""
+"Domain s and domain t are concepts in MBQC, recording the byproduct "
+"effect of Pauli X and Pauli Z operators. Both record the dependencies of "
+"this qubit on other measurement outcomes."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:16
+msgid "该命令当前只支持 XY 和 YZ 平面的测量。"
+msgstr ""
+"This command only supports measurements in the XY-plane and the YZ-plane "
+"in this version."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:20
+msgid "作用测量命令的节点标签"
+msgstr "Vertex label for the measurement command."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:22
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:7
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:7
+msgid "any"
+msgstr "any"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:26
+msgid "原始的测量角度"
+msgstr "Original measurement angle."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:28
+msgid "Tensor"
+msgstr "Tensor"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:32
+msgid "测量平面"
+msgstr "Measurement plane."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:38
+msgid "域 s 对应的节点标签列表"
+msgstr "A list of vertices in the s domain."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:44
+msgid "域 t 对应的节点标签列表"
+msgstr "A list of vertices in the t domain."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandX:1
+msgid "定义 Pauli X 副产品修正命令类。"
+msgstr "Define Pauli X byproduct correction command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandX:5
+msgid "作用修正算符的节点标签"
+msgstr "Vertex label to be executed Pauli X byproduct correction command on."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:13
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:11
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:11
+msgid "依赖关系列表"
+msgstr "A list of vertices, denoting dependencies on other measurement outcomes."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandZ:1
+msgid "定义 Pauli Z 副产品修正命令。"
+msgstr "Define Pauli Z byproduct correction command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandZ:5
+msgid "作用修正命令的节点标签"
+msgstr "Vertex label for the Pauli Z byproduct correction command."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:1
+msgid "定义 \"信号转移\" 命令类。"
+msgstr "Define \"signal shifting\" command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:3
+msgid "\"信号转移\" 是一类特殊的操作，用于消除测量命令对域 t 中节点的依赖关系，在某些情况下对测量模式进行简化。"
+msgstr ""
+"\"signal shifting\" is a special operation, used to remove dependencies "
+"of a measurement command on outcomes of vertices in domain t. In some "
+"cases, measurement patterns can be simplified in this way."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:7
+msgid "消除依赖关系的测量命令作用的节点标签"
+msgstr "Vertex label to be executed simplified measurement command on."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.print_command_list:3
+msgid "代码示例:"
+msgstr "Code example:"
+
+#: of paddle_quantum.mbqc.qobject.State:1
+msgid "定义量子态。"
+msgstr "Define quantum state."
+
+#: of paddle_quantum.mbqc.qobject.State:5
+#: paddle_quantum.mbqc.qobject.State.__init__:3
+msgid "量子态的列向量"
+msgstr "Vector of a quantum state."
+
+#: of paddle_quantum.mbqc.qobject.State
+msgid "type"
+msgstr "type"
+
+#: of paddle_quantum.mbqc.qobject.State:7
+msgid "Tensor"
+msgstr "Tensor"
+
+#: of paddle_quantum.mbqc.qobject.State:11
+#: paddle_quantum.mbqc.qobject.State.__init__:5
+msgid "量子态的系统标签列表"
+msgstr "System labels of a quantum state."
+
+#: of paddle_quantum.mbqc.qobject.State:13
+msgid "list"
+msgstr "list"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.qobject.State.rst:17:<autosummary>:1
+#: of paddle_quantum.mbqc.qobject.State.__init__:1
+msgid "构造函数，用于实例化一个 ``\"State\"`` 量子态对象。"
+msgstr "``State`` constructor, used to instantiate a ``\"State\"`` object."
+
+#: of paddle_quantum.mbqc.qobject.State.__init__
+msgid "Parameters"
+msgstr "Parameters"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.qobject.State.rst:14
+msgid "Methods"
+msgstr "Methods"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.qobject.State.rst:17:<autosummary>:1
+msgid ""
+":obj:`__init__ <paddle_quantum.mbqc.qobject.State.__init__>`\\ "
+"\\(\\[vector\\, system\\]\\)"
+msgstr ""
+":obj:`__init__ <paddle_quantum.mbqc.qobject.State.__init__>`\\ "
+"\\(\\[vector\\, system\\]\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit:1
+msgid "定义量子电路。"
+msgstr "Define quantum circuit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit:3
+msgid "该类与 ``UAnsatz`` 类似，用户可以仿照 ``UAnsatz`` 电路的调用方式对此类进行实例化，完成电路图的构建。"
+msgstr ""
+"This class is similar to the class ``UAnsatz``. Users can similarly "
+"instantiate this class to build quantum circuits."
+
+#: of paddle_quantum.mbqc.qobject.Circuit:5
+msgid ""
+"当前版本仅支持 ``H, X, Y, Z, S, T, Rx, Ry, Rz, Rz_5, U, CNOT, CNOT_15, CZ`` "
+"中的量子门以及测量操作。"
+msgstr ""
+"The current version only supports quantum measurements and quantum gates "
+"in ``H, X, Y, Z, S, T, Rx, Ry, Rz, Rz_5, U, CNOT, CNOT_15, CZ``."
+
+#: of paddle_quantum.mbqc.qobject.Circuit:9
+#: paddle_quantum.mbqc.qobject.Circuit.__init__:3
+msgid "电路的宽度（比特数）"
+msgstr "Circuit width (qubit number)."
+
+#: of paddle_quantum.mbqc.qobject.Circuit
+msgid "type"
+msgstr "type"
+
+#: of paddle_quantum.mbqc.qobject.Circuit:11
+msgid "int"
+msgstr "int"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.__init__:1
+#: paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid "``Circuit`` 的构造函数，用于实例化一个 ``Circuit`` 对象。"
+msgstr "``Circuit`` constructor, used to instantiate a ``Circuit`` object."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.__init__
+#: paddle_quantum.mbqc.qobject.Circuit.cnot
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15
+#: paddle_quantum.mbqc.qobject.Circuit.cz paddle_quantum.mbqc.qobject.Circuit.h
+#: paddle_quantum.mbqc.qobject.Circuit.measure
+#: paddle_quantum.mbqc.qobject.Circuit.rx
+#: paddle_quantum.mbqc.qobject.Circuit.ry
+#: paddle_quantum.mbqc.qobject.Circuit.rz
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5
+#: paddle_quantum.mbqc.qobject.Circuit.s paddle_quantum.mbqc.qobject.Circuit.t
+#: paddle_quantum.mbqc.qobject.Circuit.u paddle_quantum.mbqc.qobject.Circuit.x
+#: paddle_quantum.mbqc.qobject.Circuit.y paddle_quantum.mbqc.qobject.Circuit.z
+msgid "Parameters"
+msgstr "Parameters"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.qobject.Circuit.rst:14
+msgid "Methods"
+msgstr "Methods"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`__init__ <paddle_quantum.mbqc.qobject.Circuit.__init__>`\\ "
+"\\(width\\)"
+msgstr ""
+":obj:`__init__ <paddle_quantum.mbqc.qobject.Circuit.__init__>`\\ "
+"\\(width\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`cnot <paddle_quantum.mbqc.qobject.Circuit.cnot>`\\ "
+"\\(which\\_qubits\\)"
+msgstr ""
+":obj:`cnot <paddle_quantum.mbqc.qobject.Circuit.cnot>`\\ "
+"\\(which\\_qubits\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:1
+#: paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid "添加控制非门。"
+msgstr "Add a Control NOT gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`cnot_15 <paddle_quantum.mbqc.qobject.Circuit.cnot_15>`\\ "
+"\\(which\\_qubits\\)"
+msgstr ""
+":obj:`cnot_15 <paddle_quantum.mbqc.qobject.Circuit.cnot_15>`\\ "
+"\\(which\\_qubits\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot_15:1
+#: paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid "添加控制非门 （该门对应的测量模式由十五个量子比特构成）。"
+msgstr "Add a Control NOT gate (Corresponding to the pattern of 15 qubits)."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`cz <paddle_quantum.mbqc.qobject.Circuit.cz>`\\ \\(which\\_qubits\\)"
+msgstr ":obj:`cz <paddle_quantum.mbqc.qobject.Circuit.cz>`\\ \\(which\\_qubits\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cz:1
+#: paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid "添加控制 Z 门。"
+msgstr "Add a Control Z gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`get_circuit <paddle_quantum.mbqc.qobject.Circuit.get_circuit>`\\ "
+"\\(\\)"
+msgstr ""
+":obj:`get_circuit <paddle_quantum.mbqc.qobject.Circuit.get_circuit>`\\ "
+"\\(\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_circuit:1
+#: paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid "返回量子电路列表。"
+msgstr "Return a quantum circuit list."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`get_measured_qubits "
+"<paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits>`\\ \\(\\)"
+msgstr ""
+":obj:`get_measured_qubits "
+"<paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits:1
+#: paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid "返回量子电路中测量的比特位。"
+msgstr "Return measurement qubit indices in the quantum circuit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`get_width <paddle_quantum.mbqc.qobject.Circuit.get_width>`\\ \\(\\)"
+msgstr ":obj:`get_width <paddle_quantum.mbqc.qobject.Circuit.get_width>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_width:1
+#: paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid "返回量子电路的宽度。"
+msgstr "Return quantum circuit width."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`h <paddle_quantum.mbqc.qobject.Circuit.h>`\\ \\(which\\_qubit\\)"
+msgstr ":obj:`h <paddle_quantum.mbqc.qobject.Circuit.h>`\\ \\(which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1
+#: paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid "添加 ``Hadamard`` 门。"
+msgstr "Add a ``Hadamard`` gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`is_valid <paddle_quantum.mbqc.qobject.Circuit.is_valid>`\\ \\(\\)"
+msgstr ":obj:`is_valid <paddle_quantum.mbqc.qobject.Circuit.is_valid>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.is_valid:1
+msgid "检查输入的量子电路是否符合规定。"
+msgstr "Check the validity of the quantum circuit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`measure <paddle_quantum.mbqc.qobject.Circuit.measure>`\\ "
+"\\(\\[which\\_qubit\\, basis\\_list\\]\\)"
+msgstr ""
+":obj:`measure <paddle_quantum.mbqc.qobject.Circuit.measure>`\\ "
+"\\(\\[which\\_qubit\\, basis\\_list\\]\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.measure:1
+msgid "对量子电路输出的量子态进行测量。"
+msgstr "Measure the output state of the quantum circuit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`print_circuit_list "
+"<paddle_quantum.mbqc.qobject.Circuit.print_circuit_list>`\\ \\(\\)"
+msgstr ""
+":obj:`print_circuit_list "
+"<paddle_quantum.mbqc.qobject.Circuit.print_circuit_list>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.print_circuit_list:1
+msgid "打印电路图的列表。"
+msgstr "Print quantum circuit list."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`rx <paddle_quantum.mbqc.qobject.Circuit.rx>`\\ \\(theta\\, "
+"which\\_qubit\\)"
+msgstr ""
+":obj:`rx <paddle_quantum.mbqc.qobject.Circuit.rx>`\\ \\(theta\\, "
+"which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.rx:1
+msgid "添加关于 x 轴的旋转门。"
+msgstr "Add a rotation gate around x-axis."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`ry <paddle_quantum.mbqc.qobject.Circuit.ry>`\\ \\(theta\\, "
+"which\\_qubit\\)"
+msgstr ""
+":obj:`ry <paddle_quantum.mbqc.qobject.Circuit.ry>`\\ \\(theta\\, "
+"which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.ry:1
+msgid "添加关于 y 轴的旋转门。"
+msgstr "Add a rotation gate around y-axis."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`rz <paddle_quantum.mbqc.qobject.Circuit.rz>`\\ \\(theta\\, "
+"which\\_qubit\\)"
+msgstr ""
+":obj:`rz <paddle_quantum.mbqc.qobject.Circuit.rz>`\\ \\(theta\\, "
+"which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.rz:1
+msgid "添加关于 z 轴的旋转门。"
+msgstr "Add a rotation gate around z-axis."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`rz_5 <paddle_quantum.mbqc.qobject.Circuit.rz_5>`\\ \\(theta\\, "
+"which\\_qubit\\)"
+msgstr ""
+":obj:`rz_5 <paddle_quantum.mbqc.qobject.Circuit.rz_5>`\\ \\(theta\\, "
+"which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:1
+msgid "添加关于 z 轴的旋转门（该旋转门对应的测量模式由五个量子比特构成）。"
+msgstr ""
+"Add a rotation gate around z-axis (Corresponding to the pattern of 5 "
+"qubits)."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`s <paddle_quantum.mbqc.qobject.Circuit.s>`\\ \\(which\\_qubit\\)"
+msgstr ":obj:`s <paddle_quantum.mbqc.qobject.Circuit.s>`\\ \\(which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.s:1
+msgid "添加 ``S`` 门。"
+msgstr "Add a ``S`` gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`t <paddle_quantum.mbqc.qobject.Circuit.t>`\\ \\(which\\_qubit\\)"
+msgstr ":obj:`t <paddle_quantum.mbqc.qobject.Circuit.t>`\\ \\(which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.t:1
+msgid "添加 ``T`` 门。"
+msgstr "Add a ``T`` gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ""
+":obj:`u <paddle_quantum.mbqc.qobject.Circuit.u>`\\ \\(params\\, "
+"which\\_qubit\\)"
+msgstr ""
+":obj:`u <paddle_quantum.mbqc.qobject.Circuit.u>`\\ \\(params\\, "
+"which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.u:1
+msgid "添加单量子比特的任意酉门。"
+msgstr "Add a single qubit arbitrary unitary gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`x <paddle_quantum.mbqc.qobject.Circuit.x>`\\ \\(which\\_qubit\\)"
+msgstr ":obj:`x <paddle_quantum.mbqc.qobject.Circuit.x>`\\ \\(which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.x:1
+msgid "添加 ``Pauli X`` 门。"
+msgstr "Add a ``Pauli X`` gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`y <paddle_quantum.mbqc.qobject.Circuit.y>`\\ \\(which\\_qubit\\)"
+msgstr ":obj:`y <paddle_quantum.mbqc.qobject.Circuit.y>`\\ \\(which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.y:1
+msgid "添加 ``Pauli Y`` 门。"
+msgstr "Add a ``Pauli Y`` gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+msgid ":obj:`z <paddle_quantum.mbqc.qobject.Circuit.z>`\\ \\(which\\_qubit\\)"
+msgstr ":obj:`z <paddle_quantum.mbqc.qobject.Circuit.z>`\\ \\(which\\_qubit\\)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Circuit.z:1
+msgid "添加 ``Pauli Z`` 门。"
+msgstr "Add a ``Pauli Z`` gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:3
+#: paddle_quantum.mbqc.qobject.Circuit.rx:3
+#: paddle_quantum.mbqc.qobject.Circuit.ry:3
+#: paddle_quantum.mbqc.qobject.Circuit.rz:3
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:3
+#: paddle_quantum.mbqc.qobject.Circuit.s:3
+#: paddle_quantum.mbqc.qobject.Circuit.t:3
+#: paddle_quantum.mbqc.qobject.Circuit.x:3
+#: paddle_quantum.mbqc.qobject.Circuit.y:3
+#: paddle_quantum.mbqc.qobject.Circuit.z:3
+msgid "其矩阵形式为："
+msgstr "The matrix form is:"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:5
+msgid "\\frac{1}{\\sqrt{2}}\\begin{bmatrix} 1&1\\\\1&-1 \\end{bmatrix}"
+msgstr "\\frac{1}{\\sqrt{2}}\\begin{bmatrix} 1&1\\\\1&-1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:9
+#: paddle_quantum.mbqc.qobject.Circuit.rx:11
+#: paddle_quantum.mbqc.qobject.Circuit.ry:11
+#: paddle_quantum.mbqc.qobject.Circuit.rz:11
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:11
+#: paddle_quantum.mbqc.qobject.Circuit.s:9
+#: paddle_quantum.mbqc.qobject.Circuit.t:9
+#: paddle_quantum.mbqc.qobject.Circuit.u:13
+#: paddle_quantum.mbqc.qobject.Circuit.x:9
+#: paddle_quantum.mbqc.qobject.Circuit.y:9
+#: paddle_quantum.mbqc.qobject.Circuit.z:9
+msgid "作用量子门的量子位编号"
+msgstr "Qubit index to apply quantum gate."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:12
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15:12
+#: paddle_quantum.mbqc.qobject.Circuit.cz:12
+#: paddle_quantum.mbqc.qobject.Circuit.h:12
+#: paddle_quantum.mbqc.qobject.Circuit.rx:14
+#: paddle_quantum.mbqc.qobject.Circuit.ry:14
+#: paddle_quantum.mbqc.qobject.Circuit.rz:14
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:14
+#: paddle_quantum.mbqc.qobject.Circuit.s:12
+#: paddle_quantum.mbqc.qobject.Circuit.t:12
+#: paddle_quantum.mbqc.qobject.Circuit.u:16
+#: paddle_quantum.mbqc.qobject.Circuit.x:12
+#: paddle_quantum.mbqc.qobject.Circuit.y:12
+#: paddle_quantum.mbqc.qobject.Circuit.z:12
+msgid "代码示例："
+msgstr "Code example:"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.x:5
+msgid "\\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}"
+msgstr "\\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.y:5
+msgid "\\begin{bmatrix} 0 & -i \\\\ i & 0 \\end{bmatrix}"
+msgstr "\\begin{bmatrix} 0 & -i \\\\ i & 0 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.z:5
+msgid "\\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}"
+msgstr "\\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.s:5
+msgid "\\begin{bmatrix} 1&0\\\\0& i \\end{bmatrix}"
+msgstr "\\begin{bmatrix} 1&0\\\\0& i \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.t:5
+msgid "\\begin{bmatrix} 1&0\\\\0& e^{i\\pi/ 4} \\end{bmatrix}"
+msgstr "\\begin{bmatrix} 1&0\\\\0& e^{i\\pi/ 4} \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rx:5
+msgid ""
+"\\begin{bmatrix} \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} \\\\"
+" -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} \\end{bmatrix}"
+msgstr ""
+"\\begin{bmatrix} \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} \\\\"
+" -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rx:9
+#: paddle_quantum.mbqc.qobject.Circuit.ry:9
+#: paddle_quantum.mbqc.qobject.Circuit.rz:9
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:9
+msgid "旋转角度"
+msgstr "Rotation angle."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.ry:5
+msgid ""
+"\\begin{bmatrix} \\cos\\frac{\\theta}{2} & -\\sin\\frac{\\theta}{2} \\\\ "
+"\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} \\end{bmatrix}"
+msgstr ""
+"\\begin{bmatrix} \\cos\\frac{\\theta}{2} & -\\sin\\frac{\\theta}{2} \\\\ "
+"\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rz:5
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:5
+msgid "\\begin{bmatrix} 1 & 0 \\\\ 0 & e^{i\\theta} \\end{bmatrix}"
+msgstr "\\begin{bmatrix} 1 & 0 \\\\ 0 & e^{i\\theta} \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:3
+msgid "与 ``UAnsatz`` 类中的 U3 的三个参数不同，这里的酉门采用 ``Rz Rx Rz`` 分解，"
+msgstr ""
+"Unlike the U3 gate in ``UAnsatz``,  the decomposition of the unitary gate"
+" here is ``Rz Rx Rz``."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:5
+msgid "其分解形式为："
+msgstr "Its decomposition is:"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:7
+msgid "U(\\alpha, \\beta, \\gamma) = Rz(\\gamma) Rx(\\beta) Rz(\\alpha)"
+msgstr "U(\\alpha, \\beta, \\gamma) = Rz(\\gamma) Rx(\\beta) Rz(\\alpha)"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:11
+msgid "单比特酉门的三个旋转角度"
+msgstr "A list including three rotation angles in the ``Rz Rx Rz`` decomposition."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:3
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15:3
+#: paddle_quantum.mbqc.qobject.Circuit.cz:3
+msgid "当 ``which_qubits`` 为 ``[0, 1]`` 时，其矩阵形式为："
+msgstr "If ``which_qubits`` is set to be ``[0, 1]``, the matrix form is:"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:5
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15:5
+msgid ""
+"\\begin{bmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 0 & 1 \\\\"
+" 0 & 0 & 1 & 0 \\end{bmatrix}"
+msgstr ""
+"\\begin{bmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 0 & 1 \\\\"
+" 0 & 0 & 1 & 0 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:9
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15:9
+#: paddle_quantum.mbqc.qobject.Circuit.cz:9
+msgid "作用量子门的量子位，其中列表第一个元素为控制位，第二个元素为受控位"
+msgstr ""
+"A list of qubit indexes to apply quantum gate, with the first element "
+"being the control qubit and the second element being the target qubit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cz:5
+msgid ""
+"\\begin{bmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\"
+" 0 & 0 & 0 & -1 \\end{bmatrix}"
+msgstr ""
+"\\begin{bmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\"
+" 0 & 0 & 0 & -1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:3
+msgid "与 ``UAnsatz`` 类中的测量不同，除默认的 Z 测量外，此处的测量方式可以由用户自定义，但需要将测量方式与测量比特相对应。"
+msgstr ""
+"Unlike measurements in class ``UAnsatz``,  measurements here can be "
+"customized by users, but the input should be consistent with the "
+"measurement qubits."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:7
+msgid ""
+"此方法只接受三种输入方式： 1. 不输入任何参数，表示对所有的量子位进行 Z 测量； 2. 输入量子位，但不输入测量基，表示对输入的量子位进行 Z"
+" 测量； 3. 输入量子位和对应测量基，表示对输入量子位进行指定的测量。 如果用户希望自定义测量基参数，需要注意输入格式为 ``[angle, "
+"plane, domain_s, domain_t]``， 且当前版本的测量平面 ``plane`` 只能支持 ``XY`` 或 ``YZ``。"
+msgstr ""
+"This method only supports three kinds of input: 1. Calling this method "
+"without any argument means setting Z-measurements to all qubits in the "
+"circuit model; 2. Inputting a qubit index with no measurement basis means"
+" setting Z-measurement on the given qubit; 3. Inputting a qubit index "
+"with a measurement basis means measuring the qubit in the given basis."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:14
+msgid "被测量的量子位"
+msgstr "Qubit index to be measured."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:16
+msgid "测量方式"
+msgstr "Measurement basis."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.is_valid:3
+msgid "我们规定输入的量子电路中，每一个量子位上至少作用一个量子门。"
+msgstr ""
+"We require that at least one quantum gate acts on each qubit of the "
+"circuit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_circuit
+#: paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits
+#: paddle_quantum.mbqc.qobject.Circuit.get_width
+#: paddle_quantum.mbqc.qobject.Circuit.is_valid
+#: paddle_quantum.mbqc.qobject.Circuit.print_circuit_list
+msgid "Returns"
+msgstr "Returns"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.is_valid:5
+msgid "量子电路是否符合规定的布尔值"
+msgstr "The boolean value of the validity of quantum circuit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_circuit
+#: paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits
+#: paddle_quantum.mbqc.qobject.Circuit.get_width
+#: paddle_quantum.mbqc.qobject.Circuit.is_valid
+#: paddle_quantum.mbqc.qobject.Circuit.print_circuit_list
+msgid "Return type"
+msgstr "Return type"
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_width:3
+msgid "量子电路的宽度"
+msgstr "Quantum circuit width."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_circuit:3
+msgid "量子电路列表"
+msgstr "A quantum circuit list."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits:3
+msgid "量子电路中测量的比特位列表"
+msgstr "Measurement qubit indices in the quantum circuit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.print_circuit_list:3
+msgid "用来打印的字符串"
+msgstr "String to print."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.print_circuit_list:6
+msgid "代码示例:"
+msgstr "Code example:"
+
+#: ../../source/paddle_quantum.mbqc.qobject.rst:2
+msgid "paddle\\_quantum.mbqc.qobject"
+msgstr "paddle\\_quantum.mbqc.qobject"
+
+#: of paddle_quantum.mbqc.qobject:1
+msgid "此模块包含量子信息处理的常用对象，如量子态、量子电路、测量模式等。"
+msgstr ""
+"This module contains common objects for quantum information processing, "
+"such as quantum states, quantum circuits, measurement patterns, etc."
+
+#: of paddle_quantum.mbqc.qobject.Circuit:1
+#: paddle_quantum.mbqc.qobject.Pattern:1
+#: paddle_quantum.mbqc.qobject.Pattern.CommandE:1
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:1
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS:1
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:1
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:1
+#: paddle_quantum.mbqc.qobject.State:1
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.State:1
+msgid "定义量子态。"
+msgstr "Define quantum state."
+
+#: of paddle_quantum.mbqc.qobject.State:5
+msgid "量子态的列向量"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit paddle_quantum.mbqc.qobject.Pattern
+#: paddle_quantum.mbqc.qobject.Pattern.CommandE
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ
+#: paddle_quantum.mbqc.qobject.State
+msgid "type"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:28
+#: paddle_quantum.mbqc.qobject.State:7
+msgid "Tensor"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.State:11
+msgid "量子态的系统标签列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern:15
+#: paddle_quantum.mbqc.qobject.Pattern:21
+#: paddle_quantum.mbqc.qobject.Pattern:27
+#: paddle_quantum.mbqc.qobject.Pattern:33
+#: paddle_quantum.mbqc.qobject.Pattern.CommandE:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:40
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:46
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS:15
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:13
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:13
+#: paddle_quantum.mbqc.qobject.State:13
+msgid "list"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit:1
+msgid "定义量子电路。"
+msgstr "Define quantum circuit."
+
+#: of paddle_quantum.mbqc.qobject.Circuit:3
+msgid "该类与 ``UAnsatz`` 类似，用户可以仿照 ``UAnsatz`` 电路的调用方式对此类进行实例化，完成电路图的构建。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit:5
+msgid ""
+"当前版本仅支持 ``H, X, Y, Z, S, T, Rx, Ry, Rz, Rz_5, U, CNOT, CNOT_15, CZ`` "
+"中的量子门以及测量操作。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit:9
+msgid "电路的宽度（比特数）"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit:11
+msgid "int"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:1
+msgid "添加 ``Hadamard`` 门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:3
+#: paddle_quantum.mbqc.qobject.Circuit.rx:3
+#: paddle_quantum.mbqc.qobject.Circuit.ry:3
+#: paddle_quantum.mbqc.qobject.Circuit.rz:3
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:3
+#: paddle_quantum.mbqc.qobject.Circuit.s:3
+#: paddle_quantum.mbqc.qobject.Circuit.t:3
+#: paddle_quantum.mbqc.qobject.Circuit.x:3
+#: paddle_quantum.mbqc.qobject.Circuit.y:3
+#: paddle_quantum.mbqc.qobject.Circuit.z:3
+msgid "其矩阵形式为："
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:5
+msgid "\\frac{1}{\\sqrt{2}}\\begin{bmatrix} 1&1\\\\1&-1 \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15
+#: paddle_quantum.mbqc.qobject.Circuit.cz paddle_quantum.mbqc.qobject.Circuit.h
+#: paddle_quantum.mbqc.qobject.Circuit.measure
+#: paddle_quantum.mbqc.qobject.Circuit.rx
+#: paddle_quantum.mbqc.qobject.Circuit.ry
+#: paddle_quantum.mbqc.qobject.Circuit.rz
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5
+#: paddle_quantum.mbqc.qobject.Circuit.s paddle_quantum.mbqc.qobject.Circuit.t
+#: paddle_quantum.mbqc.qobject.Circuit.u paddle_quantum.mbqc.qobject.Circuit.x
+#: paddle_quantum.mbqc.qobject.Circuit.y paddle_quantum.mbqc.qobject.Circuit.z
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.h:9
+#: paddle_quantum.mbqc.qobject.Circuit.rx:11
+#: paddle_quantum.mbqc.qobject.Circuit.ry:11
+#: paddle_quantum.mbqc.qobject.Circuit.rz:11
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:11
+#: paddle_quantum.mbqc.qobject.Circuit.s:9
+#: paddle_quantum.mbqc.qobject.Circuit.t:9
+#: paddle_quantum.mbqc.qobject.Circuit.u:13
+#: paddle_quantum.mbqc.qobject.Circuit.x:9
+#: paddle_quantum.mbqc.qobject.Circuit.y:9
+#: paddle_quantum.mbqc.qobject.Circuit.z:9
+msgid "作用量子门的量子位编号"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:12
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15:12
+#: paddle_quantum.mbqc.qobject.Circuit.cz:12
+#: paddle_quantum.mbqc.qobject.Circuit.h:12
+#: paddle_quantum.mbqc.qobject.Circuit.rx:14
+#: paddle_quantum.mbqc.qobject.Circuit.ry:14
+#: paddle_quantum.mbqc.qobject.Circuit.rz:14
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:14
+#: paddle_quantum.mbqc.qobject.Circuit.s:12
+#: paddle_quantum.mbqc.qobject.Circuit.t:12
+#: paddle_quantum.mbqc.qobject.Circuit.u:16
+#: paddle_quantum.mbqc.qobject.Circuit.x:12
+#: paddle_quantum.mbqc.qobject.Circuit.y:12
+#: paddle_quantum.mbqc.qobject.Circuit.z:12
+msgid "代码示例："
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.x:1
+msgid "添加 ``Pauli X`` 门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.x:5
+msgid "\\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.y:1
+msgid "添加 ``Pauli Y`` 门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.y:5
+msgid "\\begin{bmatrix} 0 & -i \\\\ i & 0 \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.z:1
+msgid "添加 ``Pauli Z`` 门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.z:5
+msgid "\\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.s:1
+msgid "添加 ``S`` 门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.s:5
+msgid "\\begin{bmatrix} 1&0\\\\0& i \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.t:1
+msgid "添加 ``T`` 门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.t:5
+msgid "\\begin{bmatrix} 1&0\\\\0& e^{i\\pi/ 4} \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rx:1
+msgid "添加关于 x 轴的旋转门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rx:5
+msgid ""
+"\\begin{bmatrix} \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} \\\\"
+" -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rx:9
+#: paddle_quantum.mbqc.qobject.Circuit.ry:9
+#: paddle_quantum.mbqc.qobject.Circuit.rz:9
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:9
+msgid "旋转角度"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.ry:1
+msgid "添加关于 y 轴的旋转门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.ry:5
+msgid ""
+"\\begin{bmatrix} \\cos\\frac{\\theta}{2} & -\\sin\\frac{\\theta}{2} \\\\ "
+"\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rz:1
+msgid "添加关于 z 轴的旋转门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rz:5
+#: paddle_quantum.mbqc.qobject.Circuit.rz_5:5
+msgid "\\begin{bmatrix} 1 & 0 \\\\ 0 & e^{i\\theta} \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.rz_5:1
+msgid "添加关于 z 轴的旋转门（该旋转门对应的测量模式由五个量子比特构成）。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:1
+msgid "添加单量子比特的任意酉门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:3
+msgid "与 ``UAnsatz`` 类中的 U3 的三个参数不同，这里的酉门采用 ``Rz Rx Rz`` 分解，"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:5
+msgid "其分解形式为："
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:7
+msgid "U(\\alpha, \\beta, \\gamma) = Rz(\\gamma) Rx(\\beta) Rz(\\alpha)"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.u:11
+msgid "单比特酉门的三个旋转角度"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:1
+msgid "添加控制非门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:3
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15:3
+#: paddle_quantum.mbqc.qobject.Circuit.cz:3
+msgid "当 ``which_qubits`` 为 ``[0, 1]`` 时，其矩阵形式为："
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:5
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15:5
+msgid ""
+"\\begin{bmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 0 & 1 \\\\"
+" 0 & 0 & 1 & 0 \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot:9
+#: paddle_quantum.mbqc.qobject.Circuit.cnot_15:9
+#: paddle_quantum.mbqc.qobject.Circuit.cz:9
+msgid "作用量子门的量子位，其中列表第一个元素为控制位，第二个元素为受控位"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cnot_15:1
+msgid "添加控制非门 （该门对应的测量模式由十五个量子比特构成）。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cz:1
+msgid "添加控制 Z 门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.cz:5
+msgid ""
+"\\begin{bmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\"
+" 0 & 0 & 0 & -1 \\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:1
+msgid "对量子电路输出的量子态进行测量。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:3
+msgid "与 ``UAnsatz`` 类中的测量不同，除默认的 Z 测量外，此处的测量方式可以由用户自定义，但需要将测量方式与测量比特相对应。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:7
+msgid ""
+"此方法只接受三种输入方式： 1. 不输入任何参数，表示对所有的量子位进行 Z 测量； 2. 输入量子位，但不输入测量基，表示对输入的量子位进行 Z"
+" 测量； 3. 输入量子位和对应测量基，表示对输入量子位进行指定的测量。 如果用户希望自定义测量基参数，需要注意输入格式为 ``[angle, "
+"plane, domain_s, domain_t]``， 且当前版本的测量平面 ``plane`` 只能支持 ``XY`` 或 ``YZ``。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:14
+msgid "被测量的量子位"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.measure:16
+msgid "测量方式"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.is_valid:1
+msgid "检查输入的量子电路是否符合规定。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.is_valid:3
+msgid "我们规定输入的量子电路中，每一个量子位上至少作用一个量子门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_circuit
+#: paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits
+#: paddle_quantum.mbqc.qobject.Circuit.get_width
+#: paddle_quantum.mbqc.qobject.Circuit.is_valid
+#: paddle_quantum.mbqc.qobject.Circuit.print_circuit_list
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.is_valid:5
+msgid "量子电路是否符合规定的布尔值"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_circuit
+#: paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits
+#: paddle_quantum.mbqc.qobject.Circuit.get_width
+#: paddle_quantum.mbqc.qobject.Circuit.is_valid
+#: paddle_quantum.mbqc.qobject.Circuit.print_circuit_list
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_width:1
+msgid "返回量子电路的宽度。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_width:3
+msgid "量子电路的宽度"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_circuit:1
+msgid "返回量子电路列表。"
+msgstr "Return a list of quantum circuits."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_circuit:3
+msgid "量子电路列表"
+msgstr "List of quantum circuits."
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits:1
+msgid "返回量子电路中测量的比特位。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.get_measured_qubits:3
+msgid "量子电路中测量的比特位列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.print_circuit_list:1
+msgid "打印电路图的列表。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.print_circuit_list:3
+msgid "用来打印的字符串"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Circuit.print_circuit_list:6
+#: paddle_quantum.mbqc.qobject.Pattern.print_command_list:3
+msgid "代码示例:"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern:1
+msgid "定义测量模式。"
+msgstr "Define measurement pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:3
+msgid "该测量模式的结构依据文献 [The measurement calculus, arXiv: 0704.1263]。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern:7
+msgid "测量模式的名称"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:34
+msgid "str"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern:13
+msgid "测量模式所有节点列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern:19
+msgid "测量模式的输入节点列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern:25
+msgid "测量模式的输出节点列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern:31
+msgid "测量模式的命令列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1
+msgid "定义纠缠命令类。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:3
+msgid "此处纠缠命令对应作用控制 Z 门。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:7
+msgid "作用纠缠命令的两个节点标签构成的列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:1
+msgid "定义测量命令类。"
+msgstr "Define measurement pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:3
+msgid ""
+"测量命令有五个属性，分别为测量比特的标签 ``which_qubit``，原始的测量角度 ``angle``， 测量平面 ``plane``，域 "
+"s 对应的节点标签列表 ``domain_s``，域 t 对应的节点标签列表 ``domain_t``。 设原始角度为 "
+":math:`\\alpha`，则考虑域中节点依赖关系后的测量角度 :math:`\\theta` 为："
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:7
+msgid "\\theta = (-1)^s \\times \\alpha + t \\times \\pi"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:13
+msgid ""
+"域 s 和域 t 是 MBQC 模型中的概念，分别记录了 Pauli X 算符和 Pauli Z 算符对测量角度产生的影响， "
+"二者共同记录了该测量节点对其他节点的测量结果的依赖关系。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:16
+msgid "该命令当前只支持 XY 和 YZ 平面的测量。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:20
+msgid "作用测量命令的节点标签"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:22
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:7
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:7
+msgid "any"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:26
+msgid "原始的测量角度"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:32
+msgid "测量平面"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:38
+msgid "域 s 对应的节点标签列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:44
+msgid "域 t 对应的节点标签列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandX:1
+msgid "定义 Pauli X 副产品修正命令类。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandX:5
+msgid "作用修正算符的节点标签"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:13
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:11
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:11
+msgid "依赖关系列表"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandZ:1
+msgid "定义 Pauli Z 副产品修正命令。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandZ:5
+msgid "作用修正命令的节点标签"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:1
+msgid "定义 \"信号转移\" 命令类。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:3
+msgid "\"信号转移\" 是一类特殊的操作，用于消除测量命令对域 t 中节点的依赖关系，在某些情况下对测量模式进行简化。"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:7
+msgid "消除依赖关系的测量命令作用的节点标签"
+msgstr ""
+
+#: of paddle_quantum.mbqc.qobject.Pattern.print_command_list:1
+msgid "打印该 ``Pattern`` 类中的命令的信息，便于用户查看。"
+msgstr ""
+
+#~ msgid "Classes"
+#~ msgstr "Classes"
+
+#~ msgid ":obj:`Circuit <paddle_quantum.mbqc.qobject.Circuit>`\\ \\(width\\)"
+#~ msgstr ":obj:`Circuit <paddle_quantum.mbqc.qobject.Circuit>`\\ \\(width\\)"
+
+#~ msgid ""
+#~ ":obj:`Pattern <paddle_quantum.mbqc.qobject.Pattern>`\\ "
+#~ "\\(name\\, space\\, input\\_\\, output\\_\\, "
+#~ "commands\\)"
+#~ msgstr ""
+#~ ":obj:`Pattern <paddle_quantum.mbqc.qobject.Pattern>`\\ "
+#~ "\\(name\\, space\\, input\\_\\, output\\_\\, "
+#~ "commands\\)"
+
+#~ msgid ""
+#~ ":obj:`State <paddle_quantum.mbqc.qobject.State>`\\ "
+#~ "\\(\\[vector\\, system\\]\\)"
+#~ msgstr ""
+#~ ":obj:`State <paddle_quantum.mbqc.qobject.State>`\\ "
+#~ "\\(\\[vector\\, system\\]\\)"
+

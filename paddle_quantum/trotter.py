@@ -1,3 +1,4 @@
+# !/usr/bin/env python3
 # Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,75 +13,59 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Trotter Hamiltonian time evolution circuit module
+r"""
+Trotter Hamiltonian time evolution circuit module.
 """
 
-from paddle_quantum.utils import Hamiltonian
-from paddle_quantum.circuit import UAnsatz
+
 from collections import defaultdict
+from typing import Optional, Union, Iterable
+import paddle_quantum
+from paddle_quantum import Hamiltonian
 import warnings
 import numpy as np
 import re
 import paddle
+from .intrinsic import _get_float_dtype
+from .ansatz import Circuit
 
-PI = paddle.to_tensor(np.pi, dtype='float64')
+float_dtype = _get_float_dtype(paddle_quantum.get_dtype())
+PI = paddle.to_tensor(np.pi, dtype=float_dtype)
 
 
 def construct_trotter_circuit(
-        circuit: UAnsatz,
+        circuit: Circuit,
         hamiltonian: Hamiltonian,
         tau: float,
         steps: int,
-        method: str = 'suzuki',
-        order: int = 1,
-        grouping: str = None,
-        coefficient: np.ndarray or paddle.Tensor = None,
-        permutation: np.ndarray = None
+        method: Optional[str] = 'suzuki',
+        order: Optional[int] = 1,
+        grouping: Optional[str] = None,
+        coefficient: Optional[Union[np.ndarray, paddle.Tensor]] = None,
+        permutation: Optional[np.ndarray] = None
 ):
-    r"""向 circuit 的后面添加 trotter 时间演化电路，即给定一个系统的哈密顿量 H，该电路可以模拟系统的时间演化 :math:`U_{cir}~ e^{-iHt}` 。
+    r"""Add time-evolving circuits to a user-specified circuit.
+    
+    This circuit could approximate the time-evolving operator of a system given its Hamiltonian H,
+    i.e., :math:`U_{\rm cir}~ e^{-iHt}`.
 
     Args:
-        circuit (UAnsatz): 需要添加时间演化电路的 UAnsatz 对象
-        hamiltonian (Hamiltonian): 需要模拟时间演化的系统的哈密顿量 H
-        tau (float): 每个 trotter 块的演化时间长度
-        steps (int): 添加多少个 trotter 块（提示： ``steps * tau`` 即演化的时间总长度 t）
-        method (str): 搭建时间演化电路的方法，默认为 ``'suzuki'`` ，即使用 Trotter-Suzuki 分解。可以设置为 ``'custom'`` 来使用自定义的演化策略
-                    （需要用 permutation 和 coefficient 来定义）
-        order (int): Trotter-Suzuki decomposition 的阶数，默认为 ``1`` ，仅在使用 ``method='suzuki'`` 时有效
-        grouping (str): 是否对哈密顿量进行指定策略的重新排列，默认为 ``None`` ，支持 ``'xyz'`` 和 ``'even_odd'`` 两种方法
-        coefficient (array or Tensor): 自定义时间演化电路的系数，对应哈密顿量中的各项，默认为 ``None`` ，仅在 ``method='custom'`` 时有效
-        permutation (array): 自定义哈密顿量的排列方式，默认为 ``None`` ，仅在 ``method='custom'`` 时有效
-
-    代码示例：
-
-    .. code-block:: python
-
-        from paddle_quantum.utils import Hamiltonian
-        from paddle_quantum.circuit import UAnsatz
-        from paddle_quantum.trotter import construct_trotter_circuit, get_1d_heisenberg_hamiltonian
-        import numpy as np
-
-        h = get_1d_heisenberg_hamiltonian(length=3)
-        cir = UAnsatz(h.n_qubits)
-        t = 1
-        r = 10
-        # 1st order product formula (PF) circuit
-        construct_trotter_circuit(cir, h, tau=t/r, steps=r)
-        # 2nd order product formula (PF) circuit
-        construct_trotter_circuit(cir, h, tau=t/r, steps=r, order=2)
-        # higher order product formula (PF) circuit
-        construct_trotter_circuit(cir, h, tau=t/r, steps=r, order=10)
-
-        # customize coefficient and permutation
-        # the following codes is equivalent to adding the 1st order PF
-        permutation = np.arange(h.n_terms)
-        coefficients = np.ones(h.n_terms)
-        construct_trotter_circuit(cir, h, tau=t/r, steps=r, method='custom',
-                                  permutation=permutation, coefficient=coefficients)
+        circuit: Circuit object to which a time evolution circuit will be added.
+        hamiltonian: Hamiltonian of the system whose time evolution is to be simulated.
+        tau: Evolution time of each trotter block.
+        steps: Number of trotter blocks that will be added in total.
+            (Hint: ``steps * tau`` should be the total evolution time.)
+        method: How the time evolution circuit will be constructed. Defaults to ``'suzuki'``, i.e., using
+            Trotter-Suzuki decomposition. Set to ``'custom'`` to use a customized simulation strategy.
+            (Needs to be specified with arguments permutation and coefficient.)
+        order: Order of the Trotter-Suzuki decomposition. Only works when ``method='suzuki'``. Defaults to 1.
+        grouping: Whether the Hamiltonian's ordering will be rearranged in a user-specified way. Supports ``'xyz'``
+            and ``'even_odd'`` grouping methods. Defaults to None.
+        coefficient: Custom coefficients corresponding to terms of the Hamiltonian. Only works for ``method='custom'``. Defaults to None.
+        permutation: Custom permutation of the Hamiltonian. Only works for ``method='custom'``. Defaults to None.
 
     Hint:
-        对于该函数的原理以及其使用方法更详细的解释，可以参考量桨官网中量子模拟部分的教程 https://qml.baidu.com/tutorials/overview.html
+        For a more detailed explanation of how this function works, users may refer to the tutorials on Paddle Quantum's website: https://qml.baidu.com/tutorials/overview.html.
     """
     # check the legitimacy of the inputs (coefficient and permutation)
     def check_input_legitimacy(arg_in):
@@ -184,7 +169,7 @@ def __get_suzuki_num(order):
 
 
 def __sort_pauli_word(pauli_word, site):
-    r""" 将 pauli_word 按照 site 的大小进行排列，并同时返回排序后的 pauli_word 和 site。
+    r"""将 pauli_word 按照 site 的大小进行排列，并同时返回排序后的 pauli_word 和 site。
 
     Note:
         这是一个内部函数，一般你不需要直接使用它。
@@ -194,10 +179,10 @@ def __sort_pauli_word(pauli_word, site):
 
 
 def _add_trotter_block(circuit, tau, grouped_hamiltonian, order):
-    r""" 添加一个 trotter 块，i.e. :math:`e^{-iH\tau}`，并使用 Trotter-Suzuki 分解对其进行展开。
+    r"""添加一个 trotter 块，i.e. :math:`e^{-iH\tau}`，并使用 Trotter-Suzuki 分解对其进行展开。
 
     Args:
-        circuit (UAnsatz): 需要添加 trotter 块的电路
+        circuit (Circuit): 需要添加 trotter 块的电路
         tau (float or tensor): 该 trotter 块的演化时间
         grouped_hamiltonian (list): 一个由 Hamiltonian 对象组成的列表，该函数会默认该列表中的哈密顿量为 Trotter-Suzuki 展开的基本项
         order (int): Trotter-Suzuki 展开的阶数
@@ -224,7 +209,7 @@ def _add_custom_block(circuit, tau, grouped_hamiltonian, custom_coefficients, pe
     r""" 添加一个自定义形式的 trotter 块
 
     Args:
-        circuit (UAnsatz): 需要添加 trotter 块的电路
+        circuit (Circuit)): 需要添加 trotter 块的电路
         tau (float or tensor): 该 trotter 块的演化时间
         grouped_hamiltonian (list): 一个由 Hamiltonian 对象组成的列表，该函数会默认该列表中的哈密顿量为 trotter-suzuki 展开的基本项
         order (int): trotter-suzuki 展开的阶数
@@ -326,29 +311,30 @@ def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=F
                     add_n_pauli_gate(circuit, 2 * tau * coeffs[term_index], pauli_word, site)
 
 
-def optimal_circuit(circuit, theta, which_qubits):
-    r""" 添加一个优化电路，哈密顿量为'XXYYZZ'
+def optimal_circuit(circuit: paddle_quantum.ansatz.Circuit, theta: Union[paddle.Tensor, float], which_qubits: Iterable):
+    """Add an optimized circuit with the Hamiltonian 'XXYYZZ'.
 
     Args:
-        circuit (UAnsatz): 需要添加门的电路
-        theta list(paddle.Tensor or float): 旋转角度需要传入三个参数
-        which_qubits (list or numpy.ndarray): ``pauli_word`` 中的每个算符所作用的量子比特编号
+        circuit: Circuit where the gates are to be added.
+        theta: Three rotation angles.
+        which_qubits: List of the index of the qubit that each Pauli operator acts on.
     """
-    p = np.pi/2
+    p = paddle.to_tensor(np.pi / 2, dtype=float_dtype)
     x, y, z = theta
-    alpha = paddle.to_tensor(3*p-4*x*p+2*x, dtype='float64')
-    beta = paddle.to_tensor(-3*p+4*y*p-2*y, dtype='float64')
-    gamma = paddle.to_tensor(2*z-p, dtype='float64')
+    alpha = paddle.to_tensor(3 * p - 4 * x * p + 2 * x, dtype=float_dtype)
+    beta = paddle.to_tensor(-3 * p + 4 * y * p - 2 * y, dtype=float_dtype)
+    gamma = paddle.to_tensor(2 * z - p, dtype=float_dtype)
     which_qubits.sort()
     a, b = which_qubits
-    circuit.rz(paddle.to_tensor(p, dtype='float64'), b)
+    
+    circuit.rz(b, param=p)
     circuit.cnot([b, a])
-    circuit.rz(gamma, a)
-    circuit.ry(alpha, b)
+    circuit.rz(a, param=gamma)
+    circuit.ry(b, param=alpha)
     circuit.cnot([a, b])
-    circuit.ry(beta, b)
+    circuit.ry(b, param=beta)
     circuit.cnot([b, a])
-    circuit.rz(paddle.to_tensor(-p, dtype='float64'), a)
+    circuit.rz(a, param=-p)
 
 
 def __add_second_order_trotter_block(circuit, tau, grouped_hamiltonian):
@@ -377,14 +363,20 @@ def __add_higher_order_trotter_block(circuit, tau, grouped_hamiltonian, order):
             __add_second_order_trotter_block(circuit, p * tau, grouped_hamiltonian)
 
 
-def add_n_pauli_gate(circuit, theta, pauli_word, which_qubits):
-    r""" 添加一个对应着 N 个泡利算符张量积的旋转门，例如 :math:`e^{-\theta/2 * X \otimes I \otimes X \otimes Y}`
+def add_n_pauli_gate(
+        circuit: paddle_quantum.ansatz.Circuit, theta: Union[paddle.Tensor, float],
+        pauli_word: str, which_qubits: Iterable
+):
+    r"""Add a rotation gate for a tensor product of Pauli operators, for example :math:`e^{-\theta/2 * X \otimes I \otimes X \otimes Y}`.
 
     Args:
-        circuit (UAnsatz): 需要添加门的电路
-        theta (tensor or float): 旋转角度
-        pauli_word (str): 泡利算符组成的字符串，例如 ``"XXZ"``
-        which_qubits (list or np.ndarray): ``pauli_word`` 中的每个算符所作用的量子比特编号
+        circuit: Circuit where the gates are to be added.
+        theta: Rotation angle.
+        pauli_word: Pauli operators in a string format, e.g., ``"XXZ"``.
+        which_qubits: List of the index of the qubit that each Pauli operator in the ``pauli_word`` acts on.
+
+    Raises:
+        ValueError: The ``which_qubits`` should be either ``list``, ``tuple``, or ``np.ndarray``.
     """
     if isinstance(which_qubits, tuple) or isinstance(which_qubits, list):
         which_qubits = np.array(which_qubits)
@@ -392,18 +384,15 @@ def add_n_pauli_gate(circuit, theta, pauli_word, which_qubits):
         raise ValueError('which_qubits should be either a list, tuple or np.ndarray')
 
     if not isinstance(theta, paddle.Tensor):
-        theta = paddle.to_tensor(theta, dtype='float64')
-    # the following assert is not working properly
-    # assert isinstance(circuit, UAnsatz), 'the circuit should be an UAnstaz object'
-
+        theta = paddle.to_tensor(theta, dtype=float_dtype)
     # if it is a single-Pauli case, apply the single qubit rotation gate accordingly
     if len(which_qubits) == 1:
         if re.match(r'X', pauli_word[0], flags=re.I):
-            circuit.rx(theta, which_qubit=which_qubits[0])
+            circuit.rx(which_qubits[0], param=theta)
         elif re.match(r'Y', pauli_word[0], flags=re.I):
-            circuit.ry(theta, which_qubit=which_qubits[0])
+            circuit.ry(which_qubits[0], param=theta)
         elif re.match(r'Z', pauli_word[0], flags=re.I):
-            circuit.rz(theta, which_qubit=which_qubits[0])
+            circuit.rz(which_qubits[0], param=theta)
 
     # if it is a multiple-Pauli case, implement a Pauli tensor rotation
     # we use a scheme described in 4.7.3 of Nielson & Chuang, that is, basis change + tensor Z rotation
@@ -414,23 +403,23 @@ def add_n_pauli_gate(circuit, theta, pauli_word, which_qubits):
         # Change the basis for qubits on which the acting operators are not 'Z'
         for qubit_index in range(len(which_qubits)):
             if re.match(r'X', pauli_word[qubit_index], flags=re.I):
-                circuit.h(which_qubits[qubit_index])
+                circuit.h([which_qubits[qubit_index]])
             elif re.match(r'Y', pauli_word[qubit_index], flags=re.I):
-                circuit.rx(PI / 2, which_qubits[qubit_index])
+                circuit.rx(which_qubits[qubit_index], param=PI / 2)
 
         # Add a Z tensor n rotational gate
         for i in range(len(which_qubits) - 1):
             circuit.cnot([which_qubits[i], which_qubits[i + 1]])
-        circuit.rz(theta, which_qubits[-1])
+        circuit.rz(which_qubits[-1], param=theta)
         for i in reversed(range(len(which_qubits) - 1)):
             circuit.cnot([which_qubits[i], which_qubits[i + 1]])
 
         # Change the basis for qubits on which the acting operators are not 'Z'
         for qubit_index in range(len(which_qubits)):
             if re.match(r'X', pauli_word[qubit_index], flags=re.I):
-                circuit.h(which_qubits[qubit_index])
+                circuit.h([which_qubits[qubit_index]])
             elif re.match(r'Y', pauli_word[qubit_index], flags=re.I):
-                circuit.rx(- PI / 2, which_qubits[qubit_index])
+                circuit.rx(which_qubits[qubit_index], param=-PI / 2)
 
 
 def __group_hamiltonian_xyz(hamiltonian):
@@ -502,15 +491,15 @@ def __group_hamiltonian_even_odd(hamiltonian):
     return grouped_hamiltonian
 
 
-def get_suzuki_permutation(length, order):
-    r""" 计算 Suzuki 分解对应的置换数组。
+def get_suzuki_permutation(length: int, order: int) -> np.ndarray:
+    r"""Calculate the permutation array corresponding to the Suzuki decomposition.
 
     Args:
-        length (int): 对应哈密顿量中的项数，即需要置换的项数
-        order (int): Suzuki 分解的阶数
+        length: Number of terms in the Hamiltonian, i.e., how many terms to be permuted.
+        order: Order of the Suzuki decomposition.
 
     Returns:
-        np.ndarray : 置换数组
+        Permutation array.
     """
     if order == 1:
         return np.arange(length)
@@ -520,28 +509,28 @@ def get_suzuki_permutation(length, order):
         return np.vstack([get_suzuki_permutation(length=length, order=order - 2) for _ in range(5)])
 
 
-def get_suzuki_p_values(k):
-    r""" 计算 Suzuki 分解中递推关系中的因数 p(k)。
+def get_suzuki_p_values(k: int) -> list:
+    r"""Calculate the parameter p(k) in the Suzuki recurrence relationship.
 
     Args:
-        k (int): Suzuki 分解的阶数
+        k: Order of the Suzuki decomposition.
 
     Returns:
-        list : 一个长度为 5 的列表，其形式为 [p, p, (1 - 4 * p), p, p]
+        A list of length five of form [p, p, (1 - 4 * p), p, p].
     """
     p = 1 / (4 - 4 ** (1 / (k - 1)))
     return [p, p, (1 - 4 * p), p, p]
 
 
-def get_suzuki_coefficients(length, order):
-    r""" 计算 Suzuki 分解对应的系数数组。
+def get_suzuki_coefficients(length: int, order: int) -> np.ndarray:
+    r"""Calculate the coefficient array corresponding to the Suzuki decomposition.
 
     Args:
-        length (int): 对应哈密顿量中的项数，即需要置换的项数
-        order (int): Suzuki 分解的阶数
+        length: Number of terms in the Hamiltonian, i.e., how many terms to be permuted.
+        order: Order of the Suzuki decomposition.
 
     Returns:
-        np.ndarray : 系数数组
+        Coefficient array.
     """
     if order == 1:
         return np.ones(length)
@@ -560,19 +549,19 @@ def get_1d_heisenberg_hamiltonian(
         j_z: float = 1.,
         h_z: float or np.ndarray = 0.,
         periodic_boundary_condition: bool = True
-):
-    r"""生成一个一维海森堡链的哈密顿量。
+) -> Hamiltonian:
+    r"""Generate the Hamiltonian of a one-dimensional Heisenberg chain.
 
     Args:
-        length (int): 链长
-        j_x (float): x 方向的自旋耦合强度 Jx，默认为 ``1``
-        j_y (float): y 方向的自旋耦合强度 Jy，默认为 ``1``
-        j_z (float): z 方向的自旋耦合强度 Jz，默认为 ``1``
-        h_z (float or np.ndarray): z 方向的磁场，默认为 ``0`` ，若输入为单个 float 则认为是均匀磁场（施加在每一个格点上）
-        periodic_boundary_condition (bool): 是否考虑周期性边界条件，即 l + 1 = 0，默认为 ``True``
+        length: Chain length.
+        j_x: Coupling strength Jx on the x direction. Defaults to ``1.``.
+        j_y: Coupling strength Jy on the y direction. Defaults to ``1.``.
+        j_z: Coupling strength Jz on the z direction. Defaults to ``1.``.
+        h_z: Magnet field along z-axis. A uniform field will be added for single float input. Defaults to ``0.``.
+        periodic_boundary_condition: Whether to consider the periodic boundary, i.e., l + 1 = 0. Defaults to ``True``.
 
     Returns:
-        Hamiltonian :该海森堡链的哈密顿量
+        Hamiltonian of this Heisenberg chain.
     """
     # Pauli words for Heisenberg interactions and their coupling strength
     interactions = ['XX', 'YY', 'ZZ']
@@ -595,6 +584,7 @@ def get_1d_heisenberg_hamiltonian(
         boundary_sites = [0, length - 1]
         for interaction_idx in range(len(interactions)):
             term_str = ''
+            interaction = interactions[interaction_idx]
             for idx_word in range(len(interaction)):
                 term_str += interaction[idx_word] + str(boundary_sites[idx_word])
                 if idx_word != len(interaction) - 1:

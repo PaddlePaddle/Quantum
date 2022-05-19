@@ -1,0 +1,215 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.ansatz.vans.rst:2
+msgid "paddle\\_quantum.ansatz.vans"
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans:1
+msgid "The source file of the variable ansatz."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter:1
+#: paddle_quantum.ansatz.vans.Simplifier:1 paddle_quantum.ansatz.vans.VAns:1
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter:1
+msgid "Class for block insertion for the circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter.insert_identities:1
+msgid ""
+"Insert identity blocks to the current circuit, according to the insert "
+"rate."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter.insert_identities
+#: paddle_quantum.ansatz.vans.Simplifier.simplify_circuit
+#: paddle_quantum.ansatz.vans.VAns paddle_quantum.ansatz.vans.VAns.delete_gates
+#: paddle_quantum.ansatz.vans.VAns.optimization
+#: paddle_quantum.ansatz.vans.cir_decompose
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter.insert_identities:3
+#: paddle_quantum.ansatz.vans.Simplifier.simplify_circuit:3
+#: paddle_quantum.ansatz.vans.VAns.delete_gates:3
+#: paddle_quantum.ansatz.vans.VAns.optimization:3
+msgid "Quantum circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter.insert_identities:4
+msgid "Rate of number of inserted blocks."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter.insert_identities:5
+msgid "Range of random initialization of parameters."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter.insert_identities
+#: paddle_quantum.ansatz.vans.Simplifier.simplify_circuit
+#: paddle_quantum.ansatz.vans.VAns.delete_gates
+#: paddle_quantum.ansatz.vans.VAns.optimization
+#: paddle_quantum.ansatz.vans.VAns.train
+#: paddle_quantum.ansatz.vans.cir_decompose
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter.insert_identities:7
+msgid "Inserted circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Inserter.insert_identities
+#: paddle_quantum.ansatz.vans.Simplifier.simplify_circuit
+#: paddle_quantum.ansatz.vans.VAns.delete_gates
+#: paddle_quantum.ansatz.vans.VAns.optimization
+#: paddle_quantum.ansatz.vans.VAns.train
+#: paddle_quantum.ansatz.vans.cir_decompose
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Simplifier:1
+msgid "Class for circuit simplification."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Simplifier.simplify_circuit:1
+msgid "Combine all simplifications together."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Simplifier.simplify_circuit:4
+#: paddle_quantum.ansatz.vans.VAns:17
+msgid "Whether the initial state is :math:`|0\\rangle`. Defaults to ``True``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.Simplifier.simplify_circuit:6
+msgid "Simplified circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.cir_decompose:1
+msgid "Decompose all layers of circuit into gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.cir_decompose:3
+msgid "Target quantum circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.cir_decompose:5
+msgid ""
+"A quantum circuit with same structure and parameters but all layers are "
+"decomposed into Gates."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.cir_decompose:7
+msgid ""
+"This function does not support customized gates, such as oracle and "
+"control-oracle."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:1
+msgid "Class of Variable Ansatz."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:3
+msgid ""
+"User can initialize this class to find variational circuit to construct "
+"QML model."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:5
+msgid ""
+"The loss function passed in must have the quantum circuit as its first "
+"parameter."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:7
+msgid "Number of qubits."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:8
+msgid "Loss function that evaluate the loss of circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:9
+msgid "Parameters of loss function other than circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:10
+msgid "Range of random initialization of parameters. Defaults to ``0.1``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:11
+msgid "Rate of number of inserted blocks. Defaults to ``2``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:12
+msgid "Number of iterations of optimizer. Defaults to ``100``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:13
+msgid "Number of insert-simplify cycles. Defaults to ``10``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:14
+msgid "Learning rate. Defaults to ``0.1``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:15
+msgid ""
+"Tolerance of incread loss after deleting one qubit gate. Defaults to "
+"``0.002``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns:16
+msgid ""
+"Percentage of probability of accepting the circuit in current insert-"
+"simplify cycle. Defaults to ``100``."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns.train:1
+msgid "Train the quantum circuit."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns.train:3
+msgid "The quantum circuit with the lowest loss."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns.optimization:1
+msgid "Optimize circuit parameters with loss function."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns.optimization:5
+msgid "Optimized loss."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns.delete_gates:1
+msgid ""
+"Remove single qubit gates if the loss decreases or increases within a "
+"threshold."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns.delete_gates:4
+msgid "Current loss."
+msgstr ""
+
+#: of paddle_quantum.ansatz.vans.VAns.delete_gates:6
+msgid "Circuit after deleting unnecessary gates."
+msgstr ""
+

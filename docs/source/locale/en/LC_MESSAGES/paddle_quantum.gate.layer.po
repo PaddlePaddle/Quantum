@@ -1,0 +1,177 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.layer.rst:2
+msgid "paddle\\_quantum.gate.layer"
+msgstr ""
+
+#: of paddle_quantum.gate.layer:1
+msgid "The source file of the class for quantum circuit templates."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter:1
+msgid "Check the validity of ``qubits_idx`` and ``num_qubits``."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexBlockLayer
+#: paddle_quantum.gate.layer.ComplexEntangledLayer
+#: paddle_quantum.gate.layer.LinearEntangledLayer
+#: paddle_quantum.gate.layer.RealBlockLayer
+#: paddle_quantum.gate.layer.RealEntangledLayer
+#: paddle_quantum.gate.layer.SuperpositionLayer
+#: paddle_quantum.gate.layer.WeakSuperpositionLayer
+#: paddle_quantum.gate.layer.qubits_idx_filter
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter:3
+msgid "Indices of qubits."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter:4
+msgid "Total number of qubits."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter:6
+msgid ""
+"You must specify ``qubits_idx`` or ``num_qubits`` to instantiate the "
+"class."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter:7
+msgid "The ``qubits_idx`` must be ``Iterable`` or ``'full'``."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter:9
+msgid "Checked indices of qubits."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.qubits_idx_filter
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexBlockLayer:1
+#: paddle_quantum.gate.layer.ComplexEntangledLayer:1
+#: paddle_quantum.gate.layer.LinearEntangledLayer:1
+#: paddle_quantum.gate.layer.RealBlockLayer:1
+#: paddle_quantum.gate.layer.RealEntangledLayer:1
+#: paddle_quantum.gate.layer.SuperpositionLayer:1
+#: paddle_quantum.gate.layer.WeakSuperpositionLayer:1
+msgid "Bases: :py:class:`~paddle_quantum.gate.base.Gate`"
+msgstr ""
+
+#: of paddle_quantum.gate.layer.SuperpositionLayer:1
+msgid "Layers of Hadamard gates."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexBlockLayer:5
+#: paddle_quantum.gate.layer.ComplexEntangledLayer:8
+#: paddle_quantum.gate.layer.LinearEntangledLayer:3
+#: paddle_quantum.gate.layer.RealBlockLayer:5
+#: paddle_quantum.gate.layer.RealEntangledLayer:8
+#: paddle_quantum.gate.layer.SuperpositionLayer:3
+#: paddle_quantum.gate.layer.WeakSuperpositionLayer:3
+msgid ""
+"Indices of the qubits on which the gates are applied. Defaults to "
+"``'full'``."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexBlockLayer:6
+#: paddle_quantum.gate.layer.ComplexEntangledLayer:9
+#: paddle_quantum.gate.layer.LinearEntangledLayer:4
+#: paddle_quantum.gate.layer.RealBlockLayer:6
+#: paddle_quantum.gate.layer.RealEntangledLayer:9
+#: paddle_quantum.gate.layer.SuperpositionLayer:4
+#: paddle_quantum.gate.layer.WeakSuperpositionLayer:4
+msgid "Total number of qubits. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexBlockLayer:7
+#: paddle_quantum.gate.layer.ComplexEntangledLayer:10
+#: paddle_quantum.gate.layer.LinearEntangledLayer:5
+#: paddle_quantum.gate.layer.RealBlockLayer:7
+#: paddle_quantum.gate.layer.RealEntangledLayer:10
+#: paddle_quantum.gate.layer.SuperpositionLayer:5
+#: paddle_quantum.gate.layer.WeakSuperpositionLayer:5
+msgid "Number of layers. Defaults to ``1``."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.WeakSuperpositionLayer:1
+msgid "Layers of Ry gates with a rotation angle :math:`\\pi/4`."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.LinearEntangledLayer:1
+msgid "Linear entangled layers consisting of Ry gates, Rz gates, and CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.RealEntangledLayer:1
+msgid "Strongly entangled layers consisting of Ry gates and CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.RealEntangledLayer:5
+msgid ""
+"The mathematical representation of this layer of quantum gates is a real "
+"unitary matrix. This ansatz is from the following paper: "
+"https://arxiv.org/pdf/1905.10876.pdf."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexEntangledLayer:1
+msgid ""
+"Strongly entangled layers consisting of single-qubit rotation gates and "
+"CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexEntangledLayer:5
+msgid ""
+"The mathematical representation of this layer of quantum gates is a "
+"complex unitary matrix. This ansatz is from the following paper: "
+"https://arxiv.org/abs/1804.00633."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.RealBlockLayer:1
+msgid "Weakly entangled layers consisting of Ry gates and CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.RealBlockLayer:3
+msgid ""
+"The mathematical representation of this layer of quantum gates is a real "
+"unitary matrix."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexBlockLayer:1
+msgid ""
+"Weakly entangled layers consisting of single-qubit rotation gates and "
+"CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.gate.layer.ComplexBlockLayer:3
+msgid ""
+"The mathematical representation of this layer of quantum gates is a "
+"complex unitary matrix."
+msgstr ""
+

@@ -1,0 +1,61 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.qchem.hardware_efficient.rst:2
+msgid "paddle\\_quantum.qchem.hardware\\_efficient"
+msgstr ""
+
+#: of paddle_quantum.qchem.hardware_efficient:1
+msgid "Hardware Efficient ansatz."
+msgstr ""
+
+#: of paddle_quantum.qchem.hardware_efficient.HardwareEfficientModel:1
+msgid "Bases: :py:class:`~paddle_quantum.gate.base.Gate`"
+msgstr ""
+
+#: of paddle_quantum.qchem.hardware_efficient.HardwareEfficientModel:5
+msgid "Hardware Efficient Circuit model"
+msgstr ""
+
+#: of paddle_quantum.qchem.hardware_efficient.HardwareEfficientModel:2
+msgid ""
+"-- Ry -- Rz --.------ Ry -- Rz --.---- .... \\\\ -- Ry -- Rz --x--.--  Ry"
+" -- Rz --x--.- .... \\\\ -- Ry -- Rz --.--x--- Ry -- Rz --.--x- .... \\\\"
+" -- Ry -- Rz --x------ Ry -- Rz --x---- ...."
+msgstr ""
+
+#: of paddle_quantum.qchem.hardware_efficient.HardwareEfficientModel
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.qchem.hardware_efficient.HardwareEfficientModel:7
+msgid "number of qubits."
+msgstr ""
+
+#: of paddle_quantum.qchem.hardware_efficient.HardwareEfficientModel:8
+msgid ""
+"depth of the circuit, a layer in Hardware efficient circuit contains [Ry,"
+" Rz, CNOT]."
+msgstr ""
+
+#: of paddle_quantum.qchem.hardware_efficient.HardwareEfficientModel:9
+msgid "parameters for the Ry and Rz gates inside the circuit."
+msgstr ""
+

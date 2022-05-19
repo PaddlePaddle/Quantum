@@ -1,0 +1,15 @@
+The current example is: inst_5x5_10_0.txt
+The qubit number is: 25
+MBQC running time is: 3.0552566000000003 s
+Circuit model running time is: 1.7434521999999992 s
+
+The current example is: inst_5x5_10_1.txt
+The qubit number is: 25
+MBQC running time is: 2.6848477000000006 s
+Circuit model running time is: 1.7602902 s
+
+The current example is: inst_5x5_10_2.txt
+The qubit number is: 25
+MBQC running time is: 3.0684313000000003 s
+Circuit model running time is: 1.6926625000000008 s
+

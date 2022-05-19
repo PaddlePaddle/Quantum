@@ -1,0 +1,44 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.locc.locc_party.rst:2
+msgid "paddle\\_quantum.locc.locc\\_party"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_party:1
+msgid "The source file of the LoccParty class."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_party.LoccParty:1
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_party.LoccParty:1
+msgid "An LOCC party."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_party.LoccParty
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_party.LoccParty:3
+msgid "Number of qubits of this party."
+msgstr ""
+

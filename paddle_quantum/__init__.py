@@ -1,4 +1,5 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# !/usr/bin/env python3
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,8 +14,36 @@
 # limitations under the License.
 
 r"""
-Paddle Quantum Library
+Paddle Quantum Library.
 """
 
-name = "paddle_quantum"
-__version__ = "2.1.3"
+from .backend import Backend
+from .state import State
+from .base import Operator
+from .base import set_device, get_device
+from .base import set_dtype, get_dtype
+from .base import set_backend, get_backend
+from .hamiltonian import Hamiltonian
+from . import ansatz
+from . import channel
+from . import gate
+from . import linalg
+from . import locc
+from . import loss
+from . import mbqc
+from . import operator
+from . import qchem
+from . import base
+from . import dataset
+from . import finance
+from . import fisher
+from . import gradtool
+from . import hamiltonian
+from . import linalg
+from . import qinfo
+from . import shadow
+from . import trotter
+from . import visual
+
+name = 'paddle_quantum'
+__version__ = '2.2.0'

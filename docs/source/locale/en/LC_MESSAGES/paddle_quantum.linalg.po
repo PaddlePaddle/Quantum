@@ -1,0 +1,254 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.linalg.rst:2
+msgid "paddle\\_quantum.linalg"
+msgstr ""
+
+#: of paddle_quantum.linalg:1
+msgid "The common linear algorithm in paddle quantum."
+msgstr ""
+
+#: of paddle_quantum.linalg.abs_norm:1
+msgid "tool for calculation of matrix norm"
+msgstr ""
+
+#: of paddle_quantum.linalg.NKron paddle_quantum.linalg.abs_norm
+#: paddle_quantum.linalg.dagger paddle_quantum.linalg.haar_density_operator
+#: paddle_quantum.linalg.haar_orthogonal
+#: paddle_quantum.linalg.haar_state_vector paddle_quantum.linalg.haar_unitary
+#: paddle_quantum.linalg.hermitian_random paddle_quantum.linalg.is_hermitian
+#: paddle_quantum.linalg.is_projector paddle_quantum.linalg.is_unitary
+#: paddle_quantum.linalg.orthogonal_projection_random
+#: paddle_quantum.linalg.unitary_hermitian_random
+#: paddle_quantum.linalg.unitary_random
+#: paddle_quantum.linalg.unitary_random_with_hermitian_block
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.linalg.abs_norm:3 paddle_quantum.linalg.dagger:3
+msgid "Tensor"
+msgstr ""
+
+#: of paddle_quantum.linalg.NKron paddle_quantum.linalg.abs_norm
+#: paddle_quantum.linalg.dagger paddle_quantum.linalg.haar_density_operator
+#: paddle_quantum.linalg.haar_orthogonal
+#: paddle_quantum.linalg.haar_state_vector paddle_quantum.linalg.haar_unitary
+#: paddle_quantum.linalg.hermitian_random paddle_quantum.linalg.is_hermitian
+#: paddle_quantum.linalg.is_projector paddle_quantum.linalg.is_unitary
+#: paddle_quantum.linalg.orthogonal_projection_random
+#: paddle_quantum.linalg.unitary_hermitian_random
+#: paddle_quantum.linalg.unitary_random
+#: paddle_quantum.linalg.unitary_random_with_hermitian_block
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.linalg.abs_norm:5
+msgid "norm of mat"
+msgstr ""
+
+#: of paddle_quantum.linalg.NKron paddle_quantum.linalg.abs_norm
+#: paddle_quantum.linalg.dagger paddle_quantum.linalg.haar_density_operator
+#: paddle_quantum.linalg.haar_orthogonal
+#: paddle_quantum.linalg.haar_state_vector paddle_quantum.linalg.haar_unitary
+#: paddle_quantum.linalg.hermitian_random paddle_quantum.linalg.is_hermitian
+#: paddle_quantum.linalg.is_projector paddle_quantum.linalg.is_unitary
+#: paddle_quantum.linalg.orthogonal_projection_random
+#: paddle_quantum.linalg.unitary_hermitian_random
+#: paddle_quantum.linalg.unitary_random
+#: paddle_quantum.linalg.unitary_random_with_hermitian_block
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.linalg.dagger:1
+msgid "tool for calculation of matrix dagger"
+msgstr ""
+
+#: of paddle_quantum.linalg.dagger:5
+msgid "The dagger of matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_hermitian:1
+msgid "verify whether P is Hermitian"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_hermitian:3
+msgid "hermitian candidate"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_hermitian:4 paddle_quantum.linalg.is_projector:4
+#: paddle_quantum.linalg.is_unitary:4
+msgid "tolerance of error"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_hermitian:6
+msgid "determine whether :math:`mat - mat^\\dagger = 0`"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_projector:1
+msgid "verify whether P is a projector"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_projector:3
+msgid "projector candidate"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_projector:6
+msgid "determine whether :math:`PP - P = 0`"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_unitary:1
+msgid "verify whether P is a unitary"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_unitary:3
+msgid "unitary candidate"
+msgstr ""
+
+#: of paddle_quantum.linalg.is_unitary:6
+msgid "determine whether :math:`PP^\\dagger - I = 0`"
+msgstr ""
+
+#: of paddle_quantum.linalg.hermitian_random:1
+msgid "randomly generate a :math:`2^n \\times 2^n` hermitian matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.hermitian_random:3
+#: paddle_quantum.linalg.orthogonal_projection_random:3
+msgid "log2(dimension)"
+msgstr ""
+
+#: of paddle_quantum.linalg.hermitian_random:5
+msgid "a :math:`2^n \\times 2^n` hermitian matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.orthogonal_projection_random:1
+msgid "randomly generate a :math:`2^n \\times 2^n` rank-1 orthogonal projector"
+msgstr ""
+
+#: of paddle_quantum.linalg.orthogonal_projection_random:5
+msgid "a :math:`2^n \\times 2^n` orthogonal projector and its eigenstate"
+msgstr ""
+
+#: of paddle_quantum.linalg.unitary_hermitian_random:1
+msgid "randomly generate a :math:`2^n \\times 2^n` hermitian unitary"
+msgstr ""
+
+#: of paddle_quantum.linalg.unitary_hermitian_random:3
+#: paddle_quantum.linalg.unitary_random:3
+#: paddle_quantum.linalg.unitary_random_with_hermitian_block:3
+msgid ":math:`\\log_{2}(dimension)`"
+msgstr ""
+
+#: of paddle_quantum.linalg.unitary_hermitian_random:5
+msgid "a :math:`2^n \\times 2^n` hermitian unitary matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.unitary_random_with_hermitian_block:1
+msgid ""
+"randomly generate a unitary :math:`2^n \\times 2^n` matrix that is a "
+"block encoding of a :math:`2^{n/2} \\times 2^{n/2}` Hermitian matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.unitary_random_with_hermitian_block:5
+msgid ""
+"a :math:`2^n \\times 2^n` unitary matrix that its upper-left block is a "
+"Hermitian matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.unitary_random:1
+msgid "randomly generate a :math:`2^n \\times 2^n` unitary"
+msgstr ""
+
+#: of paddle_quantum.linalg.unitary_random:5
+msgid "a :math:`2^n \\times 2^n` unitary matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_orthogonal:1
+msgid ""
+"randomly generate an orthogonal matrix following Haar random, referenced "
+"by arXiv:math-ph/0609050v2"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_density_operator:3
+#: paddle_quantum.linalg.haar_orthogonal:3
+#: paddle_quantum.linalg.haar_state_vector:3
+#: paddle_quantum.linalg.haar_unitary:3
+msgid "number of qubits"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_orthogonal:5
+msgid "a :math:`2^n \\times 2^n` orthogonal matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_unitary:1
+msgid ""
+"randomly generate a unitary following Haar random, referenced by arXiv"
+":math-ph/0609050v2"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_unitary:5
+msgid "a :math:`2^n \\times 2^n` unitary"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_state_vector:1
+msgid "randomly generate a state vector following Haar random"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_state_vector:4
+msgid "whether the vector is real, default to be False"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_state_vector:6
+msgid "a :math:`2^n \\times 1` state vector"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_density_operator:1
+msgid "randomly generate a density matrix following Haar random"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_density_operator:4
+msgid "rank of density matrix, default to be False refering to full ranks"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_density_operator:5
+msgid "whether the density matrix is real, default to be False"
+msgstr ""
+
+#: of paddle_quantum.linalg.haar_density_operator:7
+msgid "a :math:`2^n \\times 2^n` density matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.NKron:1
+msgid "calculate Kronecker product of at least two matrices"
+msgstr ""
+
+#: of paddle_quantum.linalg.NKron:3 paddle_quantum.linalg.NKron:4
+msgid "matrix"
+msgstr ""
+
+#: of paddle_quantum.linalg.NKron:5
+msgid "other matrices"
+msgstr ""
+
+#: of paddle_quantum.linalg.NKron:7
+msgid "Kronecker product of matrices"
+msgstr ""
+

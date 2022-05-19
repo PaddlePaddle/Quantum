@@ -1,0 +1,161 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.state.state.rst:2
+msgid "paddle\\_quantum.state.state"
+msgstr ""
+
+#: of paddle_quantum.state.state:1
+msgid "The basic class of the quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State:1
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: of paddle_quantum.state.state.State:1
+msgid "The quantum state class."
+msgstr ""
+
+#: of paddle_quantum.state.state.State
+#: paddle_quantum.state.state.State.expec_val
+#: paddle_quantum.state.state.State.measure paddle_quantum.state.state.State.to
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.state.state.State:3
+msgid "The mathematical analysis of quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State:4
+msgid ""
+"The number of qubits contained in the quantum state. Defaults to None, "
+"which means it will be inferred by the data."
+msgstr ""
+
+#: of paddle_quantum.state.state.State:5
+msgid ""
+"Used to specify the backend used. Defaults to None, which means to use "
+"the default backend."
+msgstr ""
+
+#: of paddle_quantum.state.state.State:6
+msgid ""
+"Used to specify the data dtype of the data. Defaults to None, which means"
+" to use the default data type."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.numpy:1
+msgid "get the data in numpy."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.clone
+#: paddle_quantum.state.state.State.expec_val
+#: paddle_quantum.state.state.State.measure
+#: paddle_quantum.state.state.State.numpy paddle_quantum.state.state.State.to
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.state.state.State.numpy:3
+msgid "The numpy array of the data for the quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.clone
+#: paddle_quantum.state.state.State.expec_val
+#: paddle_quantum.state.state.State.measure
+#: paddle_quantum.state.state.State.numpy
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.state.state.State.to:1
+msgid "Change the property of the state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.to:3
+msgid "Specify the new backend of the state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.to:4
+msgid "Specify the new data type of the state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.to:5
+msgid "Specify the new device of the state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.to:6
+msgid "Specify the new blocking of the state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.to:8
+msgid "Return a error because this function is not implemented."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.clone:1
+msgid "Return a copy of the quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.clone:3
+msgid "A new state which is identical to this state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.expec_val:1
+msgid "The expectation value of the observable with respect to the quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.expec_val:3
+msgid "Information about the observable."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.expec_val:4
+msgid "Number of measurement shots."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.expec_val:6
+msgid "The expectation value of the input observable for the quantum state."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.measure:1
+msgid "Measure the quantum state"
+msgstr ""
+
+#: of paddle_quantum.state.state.State.measure:3
+msgid ""
+"the number of measurements on the quantum state output by the quantum "
+"circuit. Default is 0, which means the exact probability distribution of "
+"measurement results are returned."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.measure:5
+msgid ""
+"The index of the qubit to be measured. Defaults to None, which means all "
+"qubits are measured."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.measure:6
+msgid ""
+"Whether to draw the measurement result plot. Defaults to False which "
+"means no plot."
+msgstr ""
+
+#: of paddle_quantum.state.state.State.measure:8
+msgid "Measurement results"
+msgstr ""
+

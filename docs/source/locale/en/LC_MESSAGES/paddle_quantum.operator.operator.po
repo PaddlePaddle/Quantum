@@ -1,0 +1,110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.operator.operator.rst:2
+msgid "paddle\\_quantum.operator.operator"
+msgstr ""
+
+#: of paddle_quantum.operator.operator:1
+msgid "The source file of the class for the special quantum operator."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse:1
+#: paddle_quantum.operator.operator.PartialState:1
+#: paddle_quantum.operator.operator.ResetState:1
+msgid "Bases: :py:class:`~paddle_quantum.base.Operator`"
+msgstr ""
+
+#: of paddle_quantum.operator.operator.ResetState:1
+msgid "The class to reset the quantum state. It will be implemented soon."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.PartialState.forward:1
+#: paddle_quantum.operator.operator.ResetState.forward:1
+msgid "The forward function."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse.forward
+#: paddle_quantum.operator.operator.PartialState.forward
+#: paddle_quantum.operator.operator.ResetState.forward
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.operator.operator.PartialState.forward:3
+#: paddle_quantum.operator.operator.ResetState.forward:3
+msgid "NotImplemented."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.PartialState:1
+msgid ""
+"The class to obtain the partial quantum state. It will be implemented "
+"soon."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse:1
+msgid "The class to compute the collapse of the quantum state."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse
+#: paddle_quantum.operator.operator.Collapse.forward
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse:3
+msgid ""
+"The basis of the measurement. The quantum state will collapse to the "
+"corresponding eigenstate."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse
+#: paddle_quantum.operator.operator.Collapse.forward
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse:5
+msgid ""
+"If the basis of measurement is not z. Other bases will be implemented "
+"soon."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse.forward:1
+msgid "Compute the collapse of the input state."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse.forward:3
+msgid "The input state, which will be collapsed."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse.forward:4
+msgid "The desired result you want to collapse."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse.forward:6
+msgid "Currently we just support the z basis."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse.forward:8
+msgid "The collapsed quantum state."
+msgstr ""
+
+#: of paddle_quantum.operator.operator.Collapse.forward
+msgid "Return type"
+msgstr ""
+

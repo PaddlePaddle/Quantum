@@ -1,0 +1,202 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Institute for Quantum Computing, Baidu Inc.
+# This file is distributed under the same license as the Paddle Quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Paddle Quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-18 19:46+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.mcalculus.rst:2
+msgid "paddle\\_quantum.mbqc.mcalculus"
+msgstr "paddle\\_quantum.mbqc.mcalculus"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus:1
+msgid "定义测量模式类。"
+msgstr "Define ``MCalculus`` class."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus:3
+msgid "跟据文献 [The measurement calculus, arXiv: 0704.1263] 的测量语言，该类提供处理测量模式的各种基本操作。"
+msgstr ""
+"According to the measurement language in [The measurement calculus, "
+"arXiv: 0704.1263], this class provides various basic operations for "
+"measurement patterns."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.__init__:1
+#: paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid "``MCalculus`` 的构造函数，用于实例化一个 ``MCalculus`` 对象。"
+msgstr "``MCalculus`` constructor, used to instantiate a ``MCalculus`` object."
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.mcalculus.MCalculus.rst:14
+msgid "Methods"
+msgstr "Methods"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid ""
+":obj:`__init__ <paddle_quantum.mbqc.mcalculus.MCalculus.__init__>`\\ "
+"\\(\\)"
+msgstr ""
+":obj:`__init__ <paddle_quantum.mbqc.mcalculus.MCalculus.__init__>`\\ "
+"\\(\\)"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid ""
+":obj:`get_pattern "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.get_pattern>`\\ \\(\\)"
+msgstr ""
+":obj:`get_pattern "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.get_pattern>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.get_pattern:1
+#: paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid "返回测量模式。"
+msgstr "Return pattern."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid ""
+":obj:`optimize_by_row "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.optimize_by_row>`\\ \\(\\)"
+msgstr ""
+":obj:`optimize_by_row "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.optimize_by_row>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.optimize_by_row:1
+#: paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid "按照行序优先的原则对测量模式中的测量顺序进行优化。"
+msgstr "optimize measurements of the pattern by a row-major order algorithm."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid ""
+":obj:`set_circuit "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.set_circuit>`\\ \\(circuit\\)"
+msgstr ""
+":obj:`set_circuit "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.set_circuit>`\\ \\(circuit\\)"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.set_circuit:1
+#: paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid "对 ``MCalculus`` 类设置量子电路。"
+msgstr "Set quantum circuit to ``MCalculus`` class."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid ""
+":obj:`shift_signals "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.shift_signals>`\\ \\(\\)"
+msgstr ""
+":obj:`shift_signals "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.shift_signals>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.shift_signals:1
+#: paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid "信号转移操作。"
+msgstr "Signal shifting operation."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid ""
+":obj:`standardize "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.standardize>`\\ \\(\\)"
+msgstr ""
+":obj:`standardize "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.standardize>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.standardize:1
+#: paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid "对测量模式进行标准化。"
+msgstr "Standardize pattern."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid ""
+":obj:`track_progress "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.track_progress>`\\ "
+"\\(\\[track\\]\\)"
+msgstr ""
+":obj:`track_progress "
+"<paddle_quantum.mbqc.mcalculus.MCalculus.track_progress>`\\ "
+"\\(\\[track\\]\\)"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1
+#: paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:1:<autosummary>:1
+msgid "显示测量模式处理过程的进度条开关。"
+msgstr "Switch to show the pattern processing progress bar."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.set_circuit
+#: paddle_quantum.mbqc.mcalculus.MCalculus.track_progress
+msgid "Parameters"
+msgstr "Parameters"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.track_progress:3
+msgid "``True`` 为打开进度条显示，``False`` 为关闭进度条显示，默认为 ``True``"
+msgstr ""
+"``True`` for turning on the progress bar, ``False`` for turning off the "
+"progress bar, the default value is ``True``."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.set_circuit:3
+msgid "量子电路"
+msgstr "Quantum circuit."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.standardize:3
+msgid ""
+"该方法对测量模式进行标准化操作，转化成等价的 EMC 模型。即将所有的 ``CommandE`` 交换到最前面，其次是 ``CommandM``，"
+" ``CommandX`` 和 ``CommandZ``。为了简化测量模式，该方法在标准化各类命令之后还对 ``CommandM`` 进行 "
+"Pauli 简化。"
+msgstr ""
+"This method is called to standardize a pattern to the EMC model, that is,"
+" to permute all ``CommandE`` to the front,  and then ``CommandM``, and "
+"then ``CommandX``, and finally the ``CommandZ``. To simplify the pattern, "
+"this method automatically performs Pauli simplifications to ``CommandM``"
+"  after the standardization of all commands."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.shift_signals:3
+msgid "这是用户选择性调用的方法之一。"
+msgstr "This is one method that the user optionally calls."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.get_pattern
+msgid "Returns"
+msgstr "Returns"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.get_pattern:3
+msgid "处理后的测量模式"
+msgstr "The pattern after processing."
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.get_pattern
+msgid "Return type"
+msgstr "Return type"
+
+#: of paddle_quantum.mbqc.mcalculus.MCalculus.optimize_by_row:5
+msgid ""
+"这是一种启发式的优化算法，对于特定的测量模式可以起到优化测量顺序的作用，不排除存在更优的测量顺序。例如，对于浅层量子电路， "
+"按照行序优先原则，测量完同一量子位上的量子门、测量对应的节点后，该量子位不再起作用，进而减少后续计算时可能涉及到的节点数目。"
+msgstr ""
+"This is a heuristic optimization algorithm, with good performance in "
+"specific patterns. However, we do not exclude the existence of a better "
+"measurement order. For quantum shallow circuits, once all qubits on the "
+"same row are measured, they no longer play a role in the following "
+"calculations. In this way, the number of qubits involved in subsequent "
+"calculations can be reduced."
+
+#: of paddle_quantum.mbqc.mcalculus:1
+msgid "此模块包含处理 MBQC 测量模式的相关操作。"
+msgstr "This module contains operations for the manipulation of measurement patterns."
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.mcalculus.rst:20
+msgid "Classes"
+msgstr "Classes"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.mcalculus.rst:25:<autosummary>:1
+msgid ":obj:`MCalculus <paddle_quantum.mbqc.mcalculus.MCalculus>`\\ \\(\\)"
+msgstr ":obj:`MCalculus <paddle_quantum.mbqc.mcalculus.MCalculus>`\\ \\(\\)"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.mcalculus.rst:25:<autosummary>:1
+msgid "定义测量模式类。"
+msgstr "Define ``MCalculus`` class."
+

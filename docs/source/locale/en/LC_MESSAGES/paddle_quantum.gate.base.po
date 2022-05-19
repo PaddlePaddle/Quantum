@@ -1,0 +1,61 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.base.rst:2
+msgid "paddle\\_quantum.gate.base"
+msgstr ""
+
+#: of paddle_quantum.gate.base:1
+msgid "The source file of the basic class for the quantum gates."
+msgstr ""
+
+#: of paddle_quantum.gate.base.Gate:1
+msgid "Bases: :py:class:`~paddle_quantum.base.Operator`"
+msgstr ""
+
+#: of paddle_quantum.gate.base.Gate:1
+msgid "Basis class for quantum gates."
+msgstr ""
+
+#: of paddle_quantum.gate.base.Gate
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.base.Gate:3
+msgid "Number of layers. Defaults to 1."
+msgstr ""
+
+#: of paddle_quantum.gate.base.Gate:4
+msgid "Backend on which the gates are executed. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.gate.base.Gate:5
+msgid "Type of data. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.gate.base.Gate:6
+msgid ""
+"Prefix name used by the layer to name parameters. If prefix is "
+"\"my_layer\", parameter name in MyLayer can be \"my_layer_0.w_n\", where "
+"\"w\" is the parameter base name and \"n\" is an unique suffix auto-"
+"generated. If ``None``, prefix name will be snake cased class name. "
+"Defaults to ``None``."
+msgstr ""
+

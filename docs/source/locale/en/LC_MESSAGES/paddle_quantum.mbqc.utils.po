@@ -1,0 +1,853 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Institute for Quantum Computing, Baidu Inc.
+# This file is distributed under the same license as the Paddle Quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Paddle Quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.mbqc.utils.rst:2
+msgid "paddle\\_quantum.mbqc.utils"
+msgstr "paddle\\_quantum.mbqc.utils"
+
+#: of paddle_quantum.mbqc.utils:1
+msgid "此模块包含计算所需的各种常用类和函数。"
+msgstr ""
+"This module contains various common classes and functions used for "
+"computation."
+
+#: of paddle_quantum.mbqc.utils.plus_state:1
+msgid "定义加态。"
+msgstr "Define plus state."
+
+#: of paddle_quantum.mbqc.utils.cnot_gate:3 paddle_quantum.mbqc.utils.cz_gate:3
+#: paddle_quantum.mbqc.utils.h_gate:3 paddle_quantum.mbqc.utils.minus_state:3
+#: paddle_quantum.mbqc.utils.one_state:3 paddle_quantum.mbqc.utils.plus_state:3
+#: paddle_quantum.mbqc.utils.s_gate:3 paddle_quantum.mbqc.utils.swap_gate:3
+#: paddle_quantum.mbqc.utils.t_gate:3 paddle_quantum.mbqc.utils.zero_state:3
+msgid "其矩阵形式为："
+msgstr "The matrix form is:"
+
+#: of paddle_quantum.mbqc.utils.plus_state:5
+msgid "\\frac{1}{\\sqrt{2}}  \\begin{bmatrix}  1 \\\\ 1 \\end{bmatrix}"
+msgstr "\\frac{1}{\\sqrt{2}}  \\begin{bmatrix}  1 \\\\ 1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.basis paddle_quantum.mbqc.utils.cnot_gate
+#: paddle_quantum.mbqc.utils.cz_gate paddle_quantum.mbqc.utils.div_str_to_float
+#: paddle_quantum.mbqc.utils.h_gate paddle_quantum.mbqc.utils.int_to_div_str
+#: paddle_quantum.mbqc.utils.kron paddle_quantum.mbqc.utils.minus_state
+#: paddle_quantum.mbqc.utils.one_state paddle_quantum.mbqc.utils.pauli_gate
+#: paddle_quantum.mbqc.utils.permute_systems
+#: paddle_quantum.mbqc.utils.permute_to_front
+#: paddle_quantum.mbqc.utils.plus_state
+#: paddle_quantum.mbqc.utils.random_state_vector
+#: paddle_quantum.mbqc.utils.read_running_data
+#: paddle_quantum.mbqc.utils.rotation_gate paddle_quantum.mbqc.utils.s_gate
+#: paddle_quantum.mbqc.utils.swap_gate paddle_quantum.mbqc.utils.t_gate
+#: paddle_quantum.mbqc.utils.to_projector paddle_quantum.mbqc.utils.zero_state
+msgid "Returns"
+msgstr "Returns"
+
+#: of paddle_quantum.mbqc.utils.plus_state:9
+msgid "加态对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of plus state."
+
+#: of paddle_quantum.mbqc.utils.basis paddle_quantum.mbqc.utils.cnot_gate
+#: paddle_quantum.mbqc.utils.cz_gate paddle_quantum.mbqc.utils.div_str_to_float
+#: paddle_quantum.mbqc.utils.h_gate paddle_quantum.mbqc.utils.int_to_div_str
+#: paddle_quantum.mbqc.utils.kron paddle_quantum.mbqc.utils.minus_state
+#: paddle_quantum.mbqc.utils.one_state paddle_quantum.mbqc.utils.pauli_gate
+#: paddle_quantum.mbqc.utils.permute_systems
+#: paddle_quantum.mbqc.utils.permute_to_front
+#: paddle_quantum.mbqc.utils.plus_state
+#: paddle_quantum.mbqc.utils.random_state_vector
+#: paddle_quantum.mbqc.utils.read_running_data
+#: paddle_quantum.mbqc.utils.rotation_gate paddle_quantum.mbqc.utils.s_gate
+#: paddle_quantum.mbqc.utils.swap_gate paddle_quantum.mbqc.utils.t_gate
+#: paddle_quantum.mbqc.utils.to_projector paddle_quantum.mbqc.utils.zero_state
+msgid "Return type"
+msgstr "Return type"
+
+#: of paddle_quantum.mbqc.utils.basis:22 paddle_quantum.mbqc.utils.cnot_gate:12
+#: paddle_quantum.mbqc.utils.cz_gate:12
+#: paddle_quantum.mbqc.utils.div_str_to_float:11
+#: paddle_quantum.mbqc.utils.h_gate:12
+#: paddle_quantum.mbqc.utils.int_to_div_str:11
+#: paddle_quantum.mbqc.utils.minus_state:12
+#: paddle_quantum.mbqc.utils.one_state:12
+#: paddle_quantum.mbqc.utils.pauli_gate:33
+#: paddle_quantum.mbqc.utils.plus_state:12
+#: paddle_quantum.mbqc.utils.print_progress:10
+#: paddle_quantum.mbqc.utils.random_state_vector:11
+#: paddle_quantum.mbqc.utils.rotation_gate:19
+#: paddle_quantum.mbqc.utils.s_gate:12 paddle_quantum.mbqc.utils.swap_gate:12
+#: paddle_quantum.mbqc.utils.t_gate:12
+#: paddle_quantum.mbqc.utils.to_projector:13
+#: paddle_quantum.mbqc.utils.zero_state:12
+msgid "代码示例："
+msgstr "Code example:"
+
+#: of paddle_quantum.mbqc.utils.minus_state:1
+msgid "定义减态。"
+msgstr "Define minus state."
+
+#: of paddle_quantum.mbqc.utils.minus_state:5
+msgid "\\frac{1}{\\sqrt{2}}  \\begin{bmatrix}  1 \\\\ -1 \\end{bmatrix}"
+msgstr "\\frac{1}{\\sqrt{2}}  \\begin{bmatrix}  1 \\\\ -1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.minus_state:9
+msgid "减态对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of minus state."
+
+#: of paddle_quantum.mbqc.utils.zero_state:1
+msgid "定义零态。"
+msgstr "Define zero state."
+
+#: of paddle_quantum.mbqc.utils.zero_state:5
+msgid "\\begin{bmatrix}  1 \\\\ 0 \\end{bmatrix}"
+msgstr "\\begin{bmatrix}  1 \\\\ 0 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.zero_state:9
+msgid "零态对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of zero state."
+
+#: of paddle_quantum.mbqc.utils.one_state:1
+msgid "定义一态。"
+msgstr "Define one state."
+
+#: of paddle_quantum.mbqc.utils.one_state:5
+msgid "\\begin{bmatrix}  0 \\\\ 1 \\end{bmatrix}"
+msgstr "\\begin{bmatrix}  0 \\\\ 1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.one_state:9
+msgid "一态对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of one state."
+
+#: of paddle_quantum.mbqc.utils.h_gate:1
+msgid "定义 ``Hadamard`` 门。"
+msgstr "Define ``Hadamard`` gate."
+
+#: of paddle_quantum.mbqc.utils.h_gate:5
+msgid "\\frac{1}{\\sqrt{2}} \\begin{bmatrix}  1 & 1 \\\\ 1 & -1 \\end{bmatrix}"
+msgstr "\\frac{1}{\\sqrt{2}} \\begin{bmatrix}  1 & 1 \\\\ 1 & -1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.h_gate:9
+msgid "``Hadamard`` 门对应矩阵的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of ``Hadamard`` gate."
+
+#: of paddle_quantum.mbqc.utils.s_gate:1
+msgid "定义 ``S`` 门。"
+msgstr "Define ``S`` gate."
+
+#: of paddle_quantum.mbqc.utils.s_gate:5
+msgid "\\begin{bmatrix}  1 & 0 \\\\ 0 & i \\end{bmatrix}"
+msgstr "\\begin{bmatrix}  1 & 0 \\\\ 0 & i \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.s_gate:9
+msgid "``S`` 门矩阵对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of ``S`` gate."
+
+#: of paddle_quantum.mbqc.utils.t_gate:1
+msgid "定义 ``T`` 门。"
+msgstr "Define ``T`` gate."
+
+#: of paddle_quantum.mbqc.utils.t_gate:5
+msgid "\\begin{bmatrix}  1 & 0 \\\\ 0 & e^{i \\pi / 4} \\end{bmatrix}"
+msgstr "\\begin{bmatrix}  1 & 0 \\\\ 0 & e^{i \\pi / 4} \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.t_gate:9
+msgid "``T`` 门矩阵对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of ``T`` gate."
+
+#: of paddle_quantum.mbqc.utils.cz_gate:1
+msgid "定义 ``Controlled-Z`` 门。"
+msgstr "Define Controlled-Z gate."
+
+#: of paddle_quantum.mbqc.utils.cz_gate:5
+msgid ""
+"\\begin{bmatrix}  1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 1 & 0 "
+"\\\\ 0 & 0 & 0 & -1 \\end{bmatrix}"
+msgstr ""
+"\\begin{bmatrix}  1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 1 & 0 "
+"\\\\ 0 & 0 & 0 & -1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.cz_gate:9
+msgid "``Controlled-Z`` 门矩阵对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of ``Controlled-Z`` gate."
+
+#: of paddle_quantum.mbqc.utils.cnot_gate:1
+msgid "定义 ``Controlled-NOT (CNOT)`` 门。"
+msgstr "Define ``Controlled-NOT (CNOT)`` gate."
+
+#: of paddle_quantum.mbqc.utils.cnot_gate:5
+msgid ""
+"\\begin{bmatrix}  1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 0 & 1 "
+"\\\\ 0 & 0 & 1 & 0 \\end{bmatrix}"
+msgstr ""
+"\\begin{bmatrix}  1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & 0 & 1 "
+"\\\\ 0 & 0 & 1 & 0 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.cnot_gate:9
+msgid "``Controlled-NOT (CNOT)`` 门矩阵对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of ``Controlled-NOT (CNOT)`` gate."
+
+#: of paddle_quantum.mbqc.utils.swap_gate:1
+msgid "定义 ``SWAP`` 门。"
+msgstr "Define ``SWAP`` gate."
+
+#: of paddle_quantum.mbqc.utils.swap_gate:5
+msgid ""
+"\\begin{bmatrix}  1 & 0 & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 1 & 0 & 0 "
+"\\\\ 0 & 0 & 0 & 1 \\end{bmatrix}"
+msgstr ""
+"\\begin{bmatrix}  1 & 0 & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 1 & 0 & 0 "
+"\\\\ 0 & 0 & 0 & 1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.swap_gate:9
+msgid "``SWAP`` 门矩阵对应的 ``Tensor`` 形式"
+msgstr "The ``Tensor`` form of ``SWAP`` gate."
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:1
+msgid "定义 ``Pauli`` 门。"
+msgstr "Define ``Pauli`` gate."
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:3
+msgid "单位阵 ``I`` 的矩阵形式为："
+msgstr "The matrix form of Identity gate ``I`` is:"
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:5
+msgid "\\begin{bmatrix}  1 & 0 \\\\ 0 & 1 \\end{bmatrix}"
+msgstr "\\begin{bmatrix}  1 & 0 \\\\ 0 & 1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:9
+msgid "``Pauli X`` 门的矩阵形式为："
+msgstr "The matrix form of Pauli gate ``X`` is:"
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:11
+msgid "\\begin{bmatrix}  0 & 1 \\\\ 1 & 0 \\end{bmatrix}"
+msgstr "\\begin{bmatrix}  0 & 1 \\\\ 1 & 0 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:15
+msgid "``Pauli Y`` 门的矩阵形式为："
+msgstr "The matrix form of Pauli gate ``Y`` is:"
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:17
+msgid "\\begin{bmatrix}  0 & - i \\\\ i & 0 \\end{bmatrix}"
+msgstr "\\begin{bmatrix}  0 & - i \\\\ i & 0 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:21
+msgid "``Pauli Z`` 门的矩阵形式为："
+msgstr "The matrix form of Pauli gate ``Z`` is:"
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:23
+msgid "\\begin{bmatrix}  1 & 0 \\\\ 0 & - 1 \\end{bmatrix}"
+msgstr "\\begin{bmatrix}  1 & 0 \\\\ 0 & - 1 \\end{bmatrix}"
+
+#: of paddle_quantum.mbqc.utils.basis
+#: paddle_quantum.mbqc.utils.compare_by_density
+#: paddle_quantum.mbqc.utils.compare_by_vector
+#: paddle_quantum.mbqc.utils.div_str_to_float
+#: paddle_quantum.mbqc.utils.int_to_div_str paddle_quantum.mbqc.utils.kron
+#: paddle_quantum.mbqc.utils.pauli_gate
+#: paddle_quantum.mbqc.utils.permute_systems
+#: paddle_quantum.mbqc.utils.permute_to_front
+#: paddle_quantum.mbqc.utils.plot_results
+#: paddle_quantum.mbqc.utils.print_progress
+#: paddle_quantum.mbqc.utils.random_state_vector
+#: paddle_quantum.mbqc.utils.read_running_data
+#: paddle_quantum.mbqc.utils.rotation_gate
+#: paddle_quantum.mbqc.utils.to_projector
+#: paddle_quantum.mbqc.utils.write_running_data
+msgid "Parameters"
+msgstr "Parameters"
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:27
+msgid "Pauli 门的索引字符，\"I\", \"X\", \"Y\", \"Z\" 分别表示对应的门"
+msgstr ""
+"Index of Pauli gate. \"I\", \"X\", \"Y\", or \"Z\" denotes the "
+"corresponding gate."
+
+#: of paddle_quantum.mbqc.utils.pauli_gate:30
+msgid "Pauli 门对应的矩阵"
+msgstr "The matrix form of the Pauli gate."
+
+#: of paddle_quantum.mbqc.utils.rotation_gate:1
+msgid "定义旋转门矩阵。"
+msgstr "Define Rotation gate."
+
+#: of paddle_quantum.mbqc.utils.rotation_gate:3
+msgid ""
+"R_{x}(\\theta) = \\cos(\\theta / 2) I - i\\sin(\\theta / 2) X\n"
+"\n"
+"R_{y}(\\theta) = \\cos(\\theta / 2) I - i\\sin(\\theta / 2) Y\n"
+"\n"
+"R_{z}(\\theta) = \\cos(\\theta / 2) I - i\\sin(\\theta / 2) Z"
+msgstr ""
+"R_{x}(\\theta) = \\cos(\\theta / 2) I - i\\sin(\\theta / 2) X\n"
+"\n"
+"R_{y}(\\theta) = \\cos(\\theta / 2) I - i\\sin(\\theta / 2) Y\n"
+"\n"
+"R_{z}(\\theta) = \\cos(\\theta / 2) I - i\\sin(\\theta / 2) Z"
+
+#: of paddle_quantum.mbqc.utils.rotation_gate:11
+msgid "旋转轴，绕 ``X`` 轴旋转输入 'x'，绕 ``Y`` 轴旋转输入 'y'，绕 ``Z`` 轴旋转输入 'z'"
+msgstr "Rotation axis. 'x', 'y' or 'z' denotes the corresponding axis."
+
+#: of paddle_quantum.mbqc.utils.rotation_gate:13
+msgid "旋转的角度"
+msgstr "Rotation angle."
+
+#: of paddle_quantum.mbqc.utils.rotation_gate:16
+msgid "旋转门对应的矩阵"
+msgstr "The matrix form of Rotation gate."
+
+#: of paddle_quantum.mbqc.utils.to_projector:1
+msgid "把列向量转化为密度矩阵（或测量基对应的投影算符）。"
+msgstr "Transform a vector into its density matrix (or measurement projector)."
+
+#: of paddle_quantum.mbqc.utils.to_projector:3
+msgid "|\\psi\\rangle \\to |\\psi\\rangle\\langle\\psi|"
+msgstr "|\\psi\\rangle \\to |\\psi\\rangle\\langle\\psi|"
+
+#: of paddle_quantum.mbqc.utils.to_projector:7
+msgid "量子态列向量（或投影测量中的测量基向量）"
+msgstr "Vector of a quantum state or a measurement basis"
+
+#: of paddle_quantum.mbqc.utils.to_projector:10
+msgid "密度矩阵（或测量基对应的投影算符）"
+msgstr "Density matrix (or measurement projector)"
+
+#: of paddle_quantum.mbqc.utils.basis:1
+msgid "测量基。"
+msgstr "Measurement basis."
+
+#: of paddle_quantum.mbqc.utils.basis:3
+msgid "常用的测量方式有 XY-平面测量，YZ-平面测量，X 测量，Y 测量，Z 测量。"
+msgstr ""
+"Commonly used measurements are measurements in the XY and YZ planes, and "
+"Pauli X, Y, Z measurements."
+
+#: of paddle_quantum.mbqc.utils.basis:5
+msgid ""
+"\\begin{align*}\n"
+"& M^{XY}(\\theta) = \\{R_{z}(\\theta)|+\\rangle, "
+"R_{z}(\\theta)|-\\rangle\\}\\\\\n"
+"& M^{YZ}(\\theta) = \\{R_{x}(\\theta)|0\\rangle, "
+"R_{x}(\\theta)|1\\rangle\\}\\\\\n"
+"& X = M^{XY}(0)\\\\\n"
+"& Y = M^{YZ}(\\pi / 2) = M^{XY}(-\\pi / 2)\\\\\n"
+"& Z = M_{YZ}(0)\n"
+"\\end{align*}\n"
+"\n"
+msgstr ""
+"\\begin{align*}\n"
+"& M^{XY}(\\theta) = \\{R_{z}(\\theta)|+\\rangle, "
+"R_{z}(\\theta)|-\\rangle\\}\\\\\n"
+"& M^{YZ}(\\theta) = \\{R_{x}(\\theta)|0\\rangle, "
+"R_{x}(\\theta)|1\\rangle\\}\\\\\n"
+"& X = M^{XY}(0)\\\\\n"
+"& Y = M^{YZ}(\\pi / 2) = M^{XY}(-\\pi / 2)\\\\\n"
+"& Z = M_{YZ}(0)\n"
+"\\end{align*}\n"
+"\n"
+
+#: of paddle_quantum.mbqc.utils.basis:14
+msgid ""
+"测量基索引字符，\"XY\" 表示 XY-平面测量，\"YZ\" 表示 YZ-平面测量，\"X\" 表示 X 测量，\"Y\" 表示 Y "
+"测量，\"Z\" 表示 Z 测量"
+msgstr ""
+"Index of measurement basis. \"XY\" denotes measurement in the XY-plane, "
+"\"YZ\" denotes measurement in the YZ-plane, \"X\" denotes X-measurement, "
+"\"Y\" denotes Y-measurement, \"Z\" denotes Z-measurement."
+
+#: of paddle_quantum.mbqc.utils.basis:16
+msgid "测量角度，这里只有 XY-平面测量和 YZ-平面测量时需要"
+msgstr ""
+"Measurement angle, only required for measurements in the XY-plane and the"
+" YZ-plane."
+
+#: of paddle_quantum.mbqc.utils.basis:19
+msgid "测量基向量构成的列表，列表元素为 ``Tensor`` 类型"
+msgstr "List of measurement basis, each element is a ``Tensor``."
+
+#: of paddle_quantum.mbqc.utils.kron:1
+msgid "把列表中的所有元素做张量积。"
+msgstr "Take the tensor product of all elements in the list."
+
+#: of paddle_quantum.mbqc.utils.kron:3
+msgid "[A, B, C, \\cdots] \\to A \\otimes B \\otimes C \\otimes \\cdots"
+msgstr "[A, B, C, \\cdots] \\to A \\otimes B \\otimes C \\otimes \\cdots"
+
+#: of paddle_quantum.mbqc.utils.kron:7
+msgid "需要做张量积的元素组成的列表"
+msgstr "A list of elements to take the tensor product."
+
+#: of paddle_quantum.mbqc.utils.kron:10
+msgid "所有元素做张量积运算得到的 ``Tensor``，当列表中只有一个 ``Tensor`` 时，返回该 ``Tensor`` 本身"
+msgstr "Tensor product of all elements in the list."
+
+#: of paddle_quantum.mbqc.utils.kron:13
+msgid "代码示例 1："
+msgstr "Code example 1:"
+
+#: of paddle_quantum.mbqc.utils.kron:38
+msgid "代码示例 2："
+msgstr "Code example 2:"
+
+#: of paddle_quantum.mbqc.utils.permute_to_front:1
+msgid "将一个量子态中某个子系统的顺序变换到最前面。"
+msgstr "Permute one subsystem of a quantum state to the front."
+
+#: of paddle_quantum.mbqc.utils.permute_to_front:3
+msgid "假设当前系统的量子态列向量 :math:`\\psi\\rangle` 可以分解成多个子系统列向量的 tensor product 形式："
+msgstr ""
+"If the current state vector :math:`\\psi\\rangle` can be decomposed as a "
+"tensor product of multiple state vectors:"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:5
+#: paddle_quantum.mbqc.utils.permute_to_front:5
+msgid ""
+"|\\psi\\rangle = |\\psi_1\\rangle \\otimes |\\psi_2\\rangle \\otimes "
+"|\\psi_3\\rangle \\otimes \\cdots"
+msgstr ""
+"|\\psi\\rangle = |\\psi_1\\rangle \\otimes |\\psi_2\\rangle \\otimes "
+"|\\psi_3\\rangle \\otimes \\cdots"
+
+#: of paddle_quantum.mbqc.utils.permute_to_front:10
+msgid "每个 :math:`|\\psi_i\\rangle` 的系统标签为 :math:`i` ，则当前总系统的标签为："
+msgstr ""
+"For each :math:`|\\psi_i\\rangle` its corresponding system label is "
+":math:`i`, then the current system label is:"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:11
+#: paddle_quantum.mbqc.utils.permute_to_front:12
+msgid "\\text{label} = \\{1, 2, 3, \\cdots \\}"
+msgstr "\\text{label} = \\{1, 2, 3, \\cdots \\}"
+
+#: of paddle_quantum.mbqc.utils.permute_to_front:16
+msgid "假设需要操作的子系统的标签为：i"
+msgstr "If the subsystem to be permuted is i"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:21
+#: paddle_quantum.mbqc.utils.permute_to_front:18
+msgid "输出新系统量子态的列向量为："
+msgstr "Resulting vector with the new system order:"
+
+#: of paddle_quantum.mbqc.utils.permute_to_front:20
+msgid ""
+"|\\psi_i\\rangle \\otimes |\\psi_1\\rangle \\otimes \\cdots "
+"|\\psi_{i-1}\\rangle \\otimes |\\psi_{i+1}\\rangle \\otimes \\cdots"
+msgstr ""
+"|\\psi_i\\rangle \\otimes |\\psi_1\\rangle \\otimes \\cdots "
+"|\\psi_{i-1}\\rangle \\otimes |\\psi_{i+1}\\rangle \\otimes \\cdots"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:27
+#: paddle_quantum.mbqc.utils.permute_to_front:24
+msgid "需要操作的量子态"
+msgstr "Quantum state to be permuted."
+
+#: of paddle_quantum.mbqc.utils.permute_to_front:26
+msgid "要变换到最前面的子系统标签"
+msgstr "Subsystem label to be permuted to the front."
+
+#: of paddle_quantum.mbqc.utils.permute_systems:32
+#: paddle_quantum.mbqc.utils.permute_to_front:29
+msgid "系统顺序变换后的量子态"
+msgstr "Quantum state after the system permutation."
+
+#: of paddle_quantum.mbqc.utils.permute_systems:1
+msgid "变换量子态的系统到指定顺序。"
+msgstr "Permute subsystems of a quantum state to a given order."
+
+#: of paddle_quantum.mbqc.utils.permute_systems:3
+msgid "假设当前系统的量子态列向量 :math:`|\\psi\\rangle` 可以分解成多个子系统列向量的 tensor product 形式："
+msgstr ""
+"If the current state vector :math:`|\\psi\\rangle` can be decomposed as a"
+" tensor product of multiple state vectors:"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:9
+msgid "每个 :math:`\\psi_i\\rangle` 的系统标签为 :math:`i` ，则当前总系统的标签为："
+msgstr ""
+"For each :math:`\\psi_i\\rangle`, its corresponding subsystem label is "
+":math:`i` , then the current system label is:"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:15
+msgid "给定新系统的标签顺序为："
+msgstr "Given the new system order:"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:17
+msgid "\\{i_1, i_2, i_3, \\cdots \\}"
+msgstr "\\{i_1, i_2, i_3, \\cdots \\}"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:23
+msgid ""
+"|\\psi_{i_1}\\rangle \\otimes |\\psi_{i_2}\\rangle \\otimes "
+"|\\psi_{i_3}\\rangle \\otimes \\cdots"
+msgstr ""
+"|\\psi_{i_1}\\rangle \\otimes |\\psi_{i_2}\\rangle \\otimes "
+"|\\psi_{i_3}\\rangle \\otimes \\cdots"
+
+#: of paddle_quantum.mbqc.utils.permute_systems:29
+msgid "目标系统顺序"
+msgstr "Target system order."
+
+#: of paddle_quantum.mbqc.utils.compare_by_density:1
+msgid "通过密度矩阵形式比较两个量子态是否相同。"
+msgstr "Compare two quantum states by their density matrices."
+
+#: of paddle_quantum.mbqc.utils.compare_by_density:3
+#: paddle_quantum.mbqc.utils.compare_by_vector:3
+msgid "第一个量子态"
+msgstr "The first state to be compared."
+
+#: of paddle_quantum.mbqc.utils.compare_by_density:5
+#: paddle_quantum.mbqc.utils.compare_by_vector:5
+msgid "第二个量子态"
+msgstr "The second state to be compared."
+
+#: of paddle_quantum.mbqc.utils.compare_by_vector:1
+msgid "通过列向量形式比较两个量子态是否相同。"
+msgstr "Compare two quantum states by their vectors."
+
+#: of paddle_quantum.mbqc.utils.random_state_vector:1
+msgid "随机生成一个量子态列向量。"
+msgstr "Generate a random quantum state vector."
+
+#: of paddle_quantum.mbqc.utils.random_state_vector:3
+msgid "随机生成的量子态的比特数"
+msgstr "Qubit number of the randomly generated quantum state."
+
+#: of paddle_quantum.mbqc.utils.random_state_vector:5
+msgid "``True`` 表示实数量子态，``False`` 表示复数量子态，默认为 ``False``"
+msgstr ""
+"``True`` denotes a quantum state with real numbers while ``False`` "
+"denotes a quantum state with complex numbers."
+
+#: of paddle_quantum.mbqc.utils.random_state_vector:8
+msgid "随机生成量子态的列向量"
+msgstr "Vector of the randomly generated quantum state."
+
+#: of paddle_quantum.mbqc.utils.div_str_to_float:1
+msgid "将除式字符串转化为对应的浮点数。"
+msgstr "Transform a division string into a corresponding float number."
+
+#: of paddle_quantum.mbqc.utils.div_str_to_float:3
+msgid "例如将字符串 '3/2' 转化为 1.5。"
+msgstr "For example, transform a division string '3/2' into 1.5."
+
+#: of paddle_quantum.mbqc.utils.div_str_to_float:5
+msgid "除式字符串"
+msgstr "A division string."
+
+#: of paddle_quantum.mbqc.utils.div_str_to_float:8
+msgid "除式对应的浮点数结果"
+msgstr "A float number corresponding to the division string."
+
+#: of paddle_quantum.mbqc.utils.int_to_div_str:1
+msgid "将两个整数转化为除式字符串。"
+msgstr "Transform two integers into a division string."
+
+#: of paddle_quantum.mbqc.utils.int_to_div_str:3
+msgid "第一个整数"
+msgstr "The first integer."
+
+#: of paddle_quantum.mbqc.utils.int_to_div_str:5
+msgid "第二个整数"
+msgstr "The second integer."
+
+#: of paddle_quantum.mbqc.utils.int_to_div_str:8
+msgid "对应的除式字符串"
+msgstr "The corresponding division string."
+
+#: of paddle_quantum.mbqc.utils.print_progress:1
+msgid "画出当前步骤的进度条。"
+msgstr "Print a progress bar of the current step."
+
+#: of paddle_quantum.mbqc.utils.print_progress:3
+msgid "当前的进度百分比"
+msgstr "Percentage of current progress."
+
+#: of paddle_quantum.mbqc.utils.print_progress:5
+msgid "当前步骤的名称"
+msgstr "Name of the current step."
+
+#: of paddle_quantum.mbqc.utils.print_progress:7
+msgid "是否绘图的布尔开关"
+msgstr "Boolean switch to print the progress bar."
+
+#: of paddle_quantum.mbqc.utils.plot_results:1
+msgid "根据字典的键值对，以键为横坐标，对应的值为纵坐标，画出柱状图。"
+msgstr ""
+"Draw a histogram in the dictionary, with keys in the x-coordinate and "
+"values in the y-coordinate."
+
+#: of paddle_quantum.mbqc.utils.plot_results:3
+msgid "该函数主要调用来画出采样分布或时间比较的柱状图。"
+msgstr ""
+"This function is called to draw a histogram of probability distribution "
+"or time comparison."
+
+#: of paddle_quantum.mbqc.utils.plot_results:5
+msgid "待画图的字典列表"
+msgstr "A list of dictionaries to be drawn."
+
+#: of paddle_quantum.mbqc.utils.plot_results:7
+msgid "每种柱状图对应的名称"
+msgstr "Each bar's name."
+
+#: of paddle_quantum.mbqc.utils.plot_results:9
+msgid "整个图的标题"
+msgstr "Title of figure."
+
+#: of paddle_quantum.mbqc.utils.plot_results:11
+msgid "横坐标的名称"
+msgstr "Name of X-coordinate."
+
+#: of paddle_quantum.mbqc.utils.plot_results:13
+msgid "纵坐标的名称"
+msgstr "Name of Y-coordinate"
+
+#: of paddle_quantum.mbqc.utils.plot_results:15
+msgid "柱状图中每个横坐标的名称"
+msgstr "Tick labels for each abscissa in the histogram."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:1
+msgid "写入电路模拟运行的时间。"
+msgstr "Write the circuit running time into a file."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:3
+msgid ""
+"由于在许多电路模型模拟案例中，需要比较我们的 ``MBQC`` 模拟思路与 ``Qiskit`` 或量桨平台的 ``UAnsatz`` "
+"电路模型模拟思路的运行时间。 因而单独定义了写入文件函数。"
+msgstr ""
+"We need to compare the circuit simulation time of our ``MBQC`` module to "
+"``Qiskit`` or ``UAnsatz`` for various examples. So, we define this "
+"``write_running_data`` function."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:6
+msgid "该函数与 ``read_running_data`` 函数配套使用。"
+msgstr "This function is called before ``read_running_data``."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:8
+msgid ""
+"在调用该函数之前，需要调用 ``open`` 打开 ``textfile``；在写入结束之后，需要调用 ``close`` 关闭 "
+"``textfile``。"
+msgstr ""
+"Before we call this function, we need to call the ``open`` function to "
+"open the ``textfile`` firstly and also need to call the '`close`' "
+"function to close the ``textfile`` after writing it."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:10
+msgid "待写入的文件"
+msgstr "File to write."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:12
+msgid "当前案例的名称"
+msgstr "Name of the current example."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:14
+msgid "电路宽度（比特数）"
+msgstr "Circuit width (qubit number)."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:16
+msgid "``MBQC`` 模拟电路运行时间"
+msgstr "Circuit simulation time of ``MBQC``."
+
+#: of paddle_quantum.mbqc.utils.write_running_data:18
+msgid "``Qiskit`` 或量桨平台的 ``UAnsatz`` 电路模型运行时间"
+msgstr "Circuit simulation time of ``Qiskit`` or ``UAnsatz``."
+
+#: of paddle_quantum.mbqc.utils.read_running_data:1
+msgid "读取电路模拟运行的时间。"
+msgstr "Read circuit simulation time in a file."
+
+#: of paddle_quantum.mbqc.utils.read_running_data:3
+msgid ""
+"由于在许多电路模型模拟案例中，需要比较我们的 ``MBQC`` 模拟思路与 ``Qiskit`` 或量桨平台的 ``UAnsatz`` "
+"电路模型模拟思路的运行时间。 因而单独定义了读取文件函数读取运行时间，将其处理为一个列表， 列表中的两个元素分别为 ``Qiskit`` 或 "
+"``UAnsatz`` 电路模型模拟思路运行时间的字典和 ``MBQC`` 模拟思路运行时间的字典。"
+msgstr ""
+"We need to compare the circuit simulation time of our ``MBQC`` module to "
+"``Qiskit`` or``UAnsatz`` for various examples. So, we define this "
+"``read_running_data`` function to read time and map it into a list. The "
+"two list elements are dictionaries of circuit simulation time of "
+"``Qiskit`` or ``UAnsatz`` and of our ``MBQC`` module."
+
+#: of paddle_quantum.mbqc.utils.read_running_data:7
+msgid "该函数与 ``write_running_data`` 函数配套使用。"
+msgstr "This function is called after ``write_running_data``."
+
+#: of paddle_quantum.mbqc.utils.read_running_data:9
+msgid "待读取的文件名"
+msgstr "Name of the file to read."
+
+#: of paddle_quantum.mbqc.utils.read_running_data:12
+msgid "运行时间列表"
+msgstr "List of circuit simulation time."
+
+#~ msgid "Functions"
+#~ msgstr "Functions"
+
+#~ msgid ""
+#~ ":obj:`basis <paddle_quantum.mbqc.utils.basis>`\\ "
+#~ "\\(label\\[\\, theta\\]\\)"
+#~ msgstr ""
+#~ ":obj:`basis <paddle_quantum.mbqc.utils.basis>`\\ "
+#~ "\\(label\\[\\, theta\\]\\)"
+
+#~ msgid ":obj:`cnot_gate <paddle_quantum.mbqc.utils.cnot_gate>`\\ \\(\\)"
+#~ msgstr ":obj:`cnot_gate <paddle_quantum.mbqc.utils.cnot_gate>`\\ \\(\\)"
+
+#~ msgid ""
+#~ ":obj:`compare_by_density "
+#~ "<paddle_quantum.mbqc.utils.compare_by_density>`\\ \\(state1\\,"
+#~ " state2\\)"
+#~ msgstr ""
+#~ ":obj:`compare_by_density "
+#~ "<paddle_quantum.mbqc.utils.compare_by_density>`\\ \\(state1\\,"
+#~ " state2\\)"
+
+#~ msgid ""
+#~ ":obj:`compare_by_vector "
+#~ "<paddle_quantum.mbqc.utils.compare_by_vector>`\\ \\(state1\\,"
+#~ " state2\\)"
+#~ msgstr ""
+#~ ":obj:`compare_by_vector "
+#~ "<paddle_quantum.mbqc.utils.compare_by_vector>`\\ \\(state1\\,"
+#~ " state2\\)"
+
+#~ msgid ":obj:`cz_gate <paddle_quantum.mbqc.utils.cz_gate>`\\ \\(\\)"
+#~ msgstr ":obj:`cz_gate <paddle_quantum.mbqc.utils.cz_gate>`\\ \\(\\)"
+
+#~ msgid ""
+#~ ":obj:`div_str_to_float "
+#~ "<paddle_quantum.mbqc.utils.div_str_to_float>`\\ \\(div\\_str\\)"
+#~ msgstr ""
+#~ ":obj:`div_str_to_float "
+#~ "<paddle_quantum.mbqc.utils.div_str_to_float>`\\ \\(div\\_str\\)"
+
+#~ msgid ":obj:`h_gate <paddle_quantum.mbqc.utils.h_gate>`\\ \\(\\)"
+#~ msgstr ":obj:`h_gate <paddle_quantum.mbqc.utils.h_gate>`\\ \\(\\)"
+
+#~ msgid ""
+#~ ":obj:`int_to_div_str "
+#~ "<paddle_quantum.mbqc.utils.int_to_div_str>`\\ \\(idx1\\[\\, "
+#~ "idx2\\]\\)"
+#~ msgstr ""
+#~ ":obj:`int_to_div_str "
+#~ "<paddle_quantum.mbqc.utils.int_to_div_str>`\\ \\(idx1\\[\\, "
+#~ "idx2\\]\\)"
+
+#~ msgid ":obj:`kron <paddle_quantum.mbqc.utils.kron>`\\ \\(tensor\\_list\\)"
+#~ msgstr ":obj:`kron <paddle_quantum.mbqc.utils.kron>`\\ \\(tensor\\_list\\)"
+
+#~ msgid ":obj:`minus_state <paddle_quantum.mbqc.utils.minus_state>`\\ \\(\\)"
+#~ msgstr ":obj:`minus_state <paddle_quantum.mbqc.utils.minus_state>`\\ \\(\\)"
+
+#~ msgid ":obj:`one_state <paddle_quantum.mbqc.utils.one_state>`\\ \\(\\)"
+#~ msgstr ":obj:`one_state <paddle_quantum.mbqc.utils.one_state>`\\ \\(\\)"
+
+#~ msgid ":obj:`pauli_gate <paddle_quantum.mbqc.utils.pauli_gate>`\\ \\(gate\\)"
+#~ msgstr ":obj:`pauli_gate <paddle_quantum.mbqc.utils.pauli_gate>`\\ \\(gate\\)"
+
+#~ msgid ""
+#~ ":obj:`permute_systems "
+#~ "<paddle_quantum.mbqc.utils.permute_systems>`\\ \\(state\\, "
+#~ "new\\_system\\)"
+#~ msgstr ""
+#~ ":obj:`permute_systems "
+#~ "<paddle_quantum.mbqc.utils.permute_systems>`\\ \\(state\\, "
+#~ "new\\_system\\)"
+
+#~ msgid ""
+#~ ":obj:`permute_to_front "
+#~ "<paddle_quantum.mbqc.utils.permute_to_front>`\\ \\(state\\, "
+#~ "which\\_system\\)"
+#~ msgstr ""
+#~ ":obj:`permute_to_front "
+#~ "<paddle_quantum.mbqc.utils.permute_to_front>`\\ \\(state\\, "
+#~ "which\\_system\\)"
+
+#~ msgid ""
+#~ ":obj:`plot_results <paddle_quantum.mbqc.utils.plot_results>`\\"
+#~ " \\(dict\\_lst\\, bar\\_label\\, title\\, ...\\)"
+#~ msgstr ""
+#~ ":obj:`plot_results <paddle_quantum.mbqc.utils.plot_results>`\\"
+#~ " \\(dict\\_lst\\, bar\\_label\\, title\\, ...\\)"
+
+#~ msgid ":obj:`plus_state <paddle_quantum.mbqc.utils.plus_state>`\\ \\(\\)"
+#~ msgstr ":obj:`plus_state <paddle_quantum.mbqc.utils.plus_state>`\\ \\(\\)"
+
+#~ msgid ""
+#~ ":obj:`print_progress "
+#~ "<paddle_quantum.mbqc.utils.print_progress>`\\ "
+#~ "\\(current\\_progress\\, progress\\_name\\)"
+#~ msgstr ""
+#~ ":obj:`print_progress "
+#~ "<paddle_quantum.mbqc.utils.print_progress>`\\ "
+#~ "\\(current\\_progress\\, progress\\_name\\)"
+
+#~ msgid ""
+#~ ":obj:`random_state_vector "
+#~ "<paddle_quantum.mbqc.utils.random_state_vector>`\\ \\(n\\[\\,"
+#~ " is\\_real\\]\\)"
+#~ msgstr ""
+#~ ":obj:`random_state_vector "
+#~ "<paddle_quantum.mbqc.utils.random_state_vector>`\\ \\(n\\[\\,"
+#~ " is\\_real\\]\\)"
+
+#~ msgid ""
+#~ ":obj:`read_running_data "
+#~ "<paddle_quantum.mbqc.utils.read_running_data>`\\ "
+#~ "\\(file\\_name\\)"
+#~ msgstr ""
+#~ ":obj:`read_running_data "
+#~ "<paddle_quantum.mbqc.utils.read_running_data>`\\ "
+#~ "\\(file\\_name\\)"
+
+#~ msgid ""
+#~ ":obj:`rotation_gate <paddle_quantum.mbqc.utils.rotation_gate>`\\"
+#~ " \\(axis\\, theta\\)"
+#~ msgstr ""
+#~ ":obj:`rotation_gate <paddle_quantum.mbqc.utils.rotation_gate>`\\"
+#~ " \\(axis\\, theta\\)"
+
+#~ msgid ":obj:`s_gate <paddle_quantum.mbqc.utils.s_gate>`\\ \\(\\)"
+#~ msgstr ":obj:`s_gate <paddle_quantum.mbqc.utils.s_gate>`\\ \\(\\)"
+
+#~ msgid ":obj:`swap_gate <paddle_quantum.mbqc.utils.swap_gate>`\\ \\(\\)"
+#~ msgstr ":obj:`swap_gate <paddle_quantum.mbqc.utils.swap_gate>`\\ \\(\\)"
+
+#~ msgid ":obj:`t_gate <paddle_quantum.mbqc.utils.t_gate>`\\ \\(\\)"
+#~ msgstr ":obj:`t_gate <paddle_quantum.mbqc.utils.t_gate>`\\ \\(\\)"
+
+#~ msgid ""
+#~ ":obj:`to_projector <paddle_quantum.mbqc.utils.to_projector>`\\"
+#~ " \\(vector\\)"
+#~ msgstr ""
+#~ ":obj:`to_projector <paddle_quantum.mbqc.utils.to_projector>`\\"
+#~ " \\(vector\\)"
+
+#~ msgid ""
+#~ ":obj:`write_running_data "
+#~ "<paddle_quantum.mbqc.utils.write_running_data>`\\ \\(textfile\\,"
+#~ " eg\\, width\\, ...\\)"
+#~ msgstr ""
+#~ ":obj:`write_running_data "
+#~ "<paddle_quantum.mbqc.utils.write_running_data>`\\ \\(textfile\\,"
+#~ " eg\\, width\\, ...\\)"
+
+#~ msgid ":obj:`zero_state <paddle_quantum.mbqc.utils.zero_state>`\\ \\(\\)"
+#~ msgstr ":obj:`zero_state <paddle_quantum.mbqc.utils.zero_state>`\\ \\(\\)"
+

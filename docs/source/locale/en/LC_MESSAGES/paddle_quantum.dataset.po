@@ -1,0 +1,433 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.dataset.rst:2
+msgid "paddle\\_quantum.dataset"
+msgstr ""
+
+#: of paddle_quantum.dataset:1
+msgid "The source file of the dataset."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset:1
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset:1
+msgid ""
+"Basic class for all datasets, integrating multiple quantum encoding "
+"methods."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:1
+msgid ""
+"Encode vectors, which have been already truncated or filled with zero to "
+"the length ``can_describe_dimension``"
+msgstr ""
+
+#: of paddle_quantum.dataset.BreastCancer
+#: paddle_quantum.dataset.Dataset.data2circuit
+#: paddle_quantum.dataset.Dataset.filter_class
+#: paddle_quantum.dataset.FashionMNIST paddle_quantum.dataset.Iris
+#: paddle_quantum.dataset.MNIST paddle_quantum.dataset.SimpleDataset
+#: paddle_quantum.dataset.SimpleDataset.encode
+#: paddle_quantum.dataset.VisionDataset
+#: paddle_quantum.dataset.VisionDataset.encode
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:3
+msgid ""
+"vectors needed to encode，which have been already truncated or filled with"
+" zero to the length ``can_describe_dimension``"
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:6
+#: paddle_quantum.dataset.Dataset.data2circuit:7
+msgid "The encoding method."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:8
+msgid "the dimension which the circuit can describe by ``encoding``."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:9
+msgid "Whether to split the circuit."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:10
+msgid "Whether to return quantum state."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:11
+msgid ""
+"Whether it is a picture, if it is a picture, the normalization method is "
+"not quite the same. Defaults to ``False``."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit
+#: paddle_quantum.dataset.FashionMNIST paddle_quantum.dataset.MNIST
+#: paddle_quantum.dataset.SimpleDataset.encode
+#: paddle_quantum.dataset.VisionDataset.encode
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:13
+msgid "Not support to return circuit in amplitude encoding."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit
+#: paddle_quantum.dataset.Dataset.filter_class
+#: paddle_quantum.dataset.SimpleDataset.encode
+#: paddle_quantum.dataset.VisionDataset.encode
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit:15
+msgid ""
+"if ``return_state == True``, return encoded quantum state, otherwise "
+"return encoding circuits."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.data2circuit
+#: paddle_quantum.dataset.Dataset.filter_class
+#: paddle_quantum.dataset.SimpleDataset.encode
+#: paddle_quantum.dataset.VisionDataset.encode
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:1
+msgid ""
+"Select ``data_num`` samples from ``x``, ``y``, whose label is in "
+"``classes``."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:3
+msgid "training features."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:4
+msgid "training labels."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:5
+msgid "classes needed to select."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:6
+msgid "the number of data needed to select."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:7
+msgid ""
+"whether we need to relabel the labels to 0,1,2 for binary classification."
+" For example ``[1,2]`` will be relabeled to ``[0,1]``."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:8
+msgid "Random seed. Defaults to ``0``."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:10
+msgid ""
+"- new_x: selected features. - new_y: selected labels corresponded to "
+"``new_x``."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:10
+msgid "new_x: selected features."
+msgstr ""
+
+#: of paddle_quantum.dataset.Dataset.filter_class:11
+msgid "new_y: selected labels corresponded to ``new_x``."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset:1
+#: paddle_quantum.dataset.VisionDataset:1
+msgid "Bases: :py:class:`~paddle_quantum.dataset.Dataset`"
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset:1
+msgid ""
+"``VisionDataset`` is the basic class of all image datasets. By inheriting"
+" ``VisionDataset``, users can easily generate their own quantum data."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset:3
+msgid "the size of the figure."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:1
+msgid ""
+"Encode ``feature`` into ``num_qubits`` qubits using ``encoding`` after "
+"downscaling to ``target_dimension``. ``feature`` is one-dimension image "
+"vectors."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:3
+msgid "One-dimension image vectors which can be list or ndarray."
+msgstr ""
+
+#: of paddle_quantum.dataset.BreastCancer:3
+#: paddle_quantum.dataset.FashionMNIST:4 paddle_quantum.dataset.Iris:3
+#: paddle_quantum.dataset.MNIST:4 paddle_quantum.dataset.VisionDataset.encode:4
+msgid ""
+"``angle_encoding`` denotes angle encoding, and one qubit encodes one "
+"number with a Ry gate. ``amplitude_encoding`` denotes amplitude encoding;"
+" ``pauli_rotation_encoding`` denotes using SU(3) rotation gate. "
+"``linear_entanglement_encoding``, ``real_entanglement_encoding`` , "
+"``complex_entanglement_encoding`` and ``IQP_encoding`` encoding methods."
+msgstr ""
+
+#: of paddle_quantum.dataset.BreastCancer:6
+#: paddle_quantum.dataset.FashionMNIST:7 paddle_quantum.dataset.Iris:6
+#: paddle_quantum.dataset.MNIST:7 paddle_quantum.dataset.SimpleDataset.encode:5
+#: paddle_quantum.dataset.VisionDataset.encode:7
+msgid "Qubit number."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:8
+msgid ""
+"whether to split the circuits. If true, every layer of the encoding "
+"circuit will be split into a list. Defaults to ``False``."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:11 paddle_quantum.dataset.MNIST:11
+#: paddle_quantum.dataset.VisionDataset.encode:9
+msgid "Including ``PCA`` and ``resize``. Defaults to ``resize``."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:10
+msgid ""
+"The dimension after downscaling. ``target_dimension`` is not allowed to "
+"surpass the figure size. Defaults to ``-1``."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:11
+msgid ""
+"Whether to return quantum states. If it is ``False``, return quantum "
+"circuits. Defaults to True."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:12
+msgid ""
+"Whether to return ``quantum_image_states``, ``quantum_image_circuits``, "
+"``original_images`` and ``classical_image_vectors``. Defaults to False."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:14
+msgid "PCA dimension should be less than figure size"
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:15
+msgid "Resize dimension should be a square"
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:16
+msgid "Downscaling methods can only be resize and PCA."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:17
+msgid "Invalid encoding methods"
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:19
+msgid ""
+"- quantum_image_states: Quantum states, only ``full_return==True`` or "
+"``return_state==True`` will return. - quantum_image_circuits: A list of "
+"circuits generating quantum states, only ``full_return==True`` or "
+"``return_state==True`` will return. - original_images: One-dimension "
+"original vectors without any processing, only ``return_state==True`` will"
+" return; - classical_image_vectors: One-dimension original vectors after "
+"filling with zero, which are encoded to quantum states. only "
+"``return_state==True`` will return;"
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:19
+msgid ""
+"quantum_image_states: Quantum states, only ``full_return==True`` or "
+"``return_state==True`` will return."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:20
+msgid ""
+"quantum_image_circuits: A list of circuits generating quantum states, "
+"only ``full_return==True`` or ``return_state==True`` will return."
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:21
+msgid ""
+"original_images: One-dimension original vectors without any processing, "
+"only ``return_state==True`` will return;"
+msgstr ""
+
+#: of paddle_quantum.dataset.VisionDataset.encode:22
+msgid ""
+"classical_image_vectors: One-dimension original vectors after filling "
+"with zero, which are encoded to quantum states. only "
+"``return_state==True`` will return;"
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset:1
+msgid ""
+"SimpleDataset is used for simple dataset and can't downscale the data. "
+"You can inherit ``SimpleDataset`` to generate quantum states from your "
+"classical datasets."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset:3
+msgid "Dimension of encoding data"
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset.encode:1
+msgid "Encode ``feature`` with ``num_qubits`` qubits by ``encoding``."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset.encode:3
+msgid "Features needed to encode."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset.encode:4
+msgid "Encoding methods."
+msgstr ""
+
+#: of paddle_quantum.dataset.BreastCancer:8
+#: paddle_quantum.dataset.FashionMNIST:15 paddle_quantum.dataset.Iris:10
+#: paddle_quantum.dataset.MNIST:15
+#: paddle_quantum.dataset.SimpleDataset.encode:6
+msgid "Whether to return quantum states. Defaults to ``True``."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset.encode:7
+msgid ""
+"Whether to return quantum_states, quantum_circuits, origin_feature and "
+"feature. Defaults to ``False``."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset.encode:9
+msgid "Invalid type of feature."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset.encode:10
+msgid "Invalid encoding methods."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset.encode:11
+msgid "The qubit number is not enough to encode the features."
+msgstr ""
+
+#: of paddle_quantum.dataset.SimpleDataset.encode:13
+msgid ""
+"TODO: not show up in docs - quantum_states: Quantum states, only "
+"``full_return==True`` or ``return_state==True`` will return; - "
+"quantum_circuits: A list of circuits generating quantum states, only "
+"``full_return==True`` or ``return_state==True`` will return; - "
+"origin_feature: One-dimension original vectors without any processing, "
+"only ``return_state==True`` will return - feature: One-dimension original"
+" vectors after filling with zero, which are encoded to quantum states. "
+"only ``return_state==True`` will return."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:1 paddle_quantum.dataset.MNIST:1
+msgid "Bases: :py:class:`~paddle_quantum.dataset.VisionDataset`"
+msgstr ""
+
+#: of paddle_quantum.dataset.MNIST:1
+msgid "MNIST quantum dataset. It inherits ``VisionDataset``."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:3 paddle_quantum.dataset.MNIST:3
+msgid "Data mode including ``train`` and ``test``."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:8 paddle_quantum.dataset.MNIST:8
+msgid "Classes needed to classify."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:9 paddle_quantum.dataset.MNIST:9
+msgid "Data number returned. Defaults to ``-1``."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:10 paddle_quantum.dataset.MNIST:10
+msgid ""
+"Whether to split the circuits. If True, every layer of the encoding "
+"circuit will be split into a list. Defaults to ``False``."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:12 paddle_quantum.dataset.MNIST:12
+msgid ""
+"The dimension after downscaling, which is not allowed to surpass the "
+"figure size. Defaults to ``-1``."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:13 paddle_quantum.dataset.MNIST:13
+msgid ""
+"Whether needed to crop, If ``True``, ``image[0:27][0:27]`` will be "
+"cropped to ``image[4:24][4:24]``. Defaults to ``True``."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:14 paddle_quantum.dataset.MNIST:14
+msgid ""
+"Whether we need to relabel the labels to 0,1,2… for binary "
+"classification.For example [1,2] will be relabeled to [0,1] Defaults to "
+"``True``."
+msgstr ""
+
+#: of paddle_quantum.dataset.BreastCancer:9
+#: paddle_quantum.dataset.FashionMNIST:16 paddle_quantum.dataset.Iris:11
+#: paddle_quantum.dataset.MNIST:16
+msgid "Select random seed. Defaults to ``0``."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:18 paddle_quantum.dataset.MNIST:18
+msgid "Data mode can only be train and test."
+msgstr ""
+
+#: of paddle_quantum.dataset.FashionMNIST:1
+msgid "FashionMNIST quantum dataset. It inherits ``VisionDataset``."
+msgstr ""
+
+#: of paddle_quantum.dataset.BreastCancer:1 paddle_quantum.dataset.Iris:1
+msgid "Bases: :py:class:`~paddle_quantum.dataset.SimpleDataset`"
+msgstr ""
+
+#: of paddle_quantum.dataset.Iris:1
+msgid "Iris dataset"
+msgstr ""
+
+#: of paddle_quantum.dataset.Iris:7
+msgid "Classes needed to classify"
+msgstr ""
+
+#: of paddle_quantum.dataset.BreastCancer:7 paddle_quantum.dataset.Iris:8
+msgid "The proportion of the testing dataset. Defaults to ``0.2``."
+msgstr ""
+
+#: of paddle_quantum.dataset.Iris:9
+msgid ""
+"Whether we need to relabel the labels to 0,1,2… for binary "
+"classification.For example [1,2] will be relabeled to [0,1]. Defaults to "
+"``True``."
+msgstr ""
+
+#: of paddle_quantum.dataset.BreastCancer:1
+msgid "BreastCancer quantum dataset."
+msgstr ""
+

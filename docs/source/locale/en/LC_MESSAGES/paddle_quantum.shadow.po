@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.shadow.rst:2
+msgid "paddle\\_quantum.shadow"
+msgstr ""
+
+#: of paddle_quantum.shadow:1
+msgid "shadow sample module."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample:1
+msgid ""
+"Measure a given quantum state with random Pauli operators and return the "
+"measurement results."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample:3
+msgid "Input quantum state, which is either a state vector or a density matrix."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample:4
+msgid "The number of qubits."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample:5
+msgid "The number of random samples."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample:6
+msgid "Representation form of the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample:7
+msgid ""
+"A Hamiltonian object representing the observable to be measured. Default "
+"to None."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample:8
+msgid ""
+"Method for sampling random Pauli operators, which should be one of 'CS', "
+"'LBCS', and 'APS'. Default to 'CS'."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample:10
+msgid ""
+"Randomly chosen Pauli operators and their corresponding measurement "
+"result in a list of shape (sample_shots, 2)."
+msgstr ""
+
+#: of paddle_quantum.shadow.shadow_sample
+msgid "Return type"
+msgstr ""
+

@@ -1,4 +1,5 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# !/usr/bin/env python3
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+r"""
 main
 """
+
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import paddle
 from paddle_quantum.QAOA.maxcut import maxcut_hamiltonian, find_cut
-from paddle_quantum.utils import pauli_str_to_matrix
+from paddle_quantum.qinfo import pauli_str_to_matrix
 
 SEED = 1024
 options = {
@@ -50,7 +52,7 @@ def main(n=4):
     ax.margins(0.20)
     plt.axis("off")
     plt.show()
-    
+
     # construct the Hamiltonian
     H_D_list = maxcut_hamiltonian(E)
     H_D_matrix = pauli_str_to_matrix(H_D_list, n)
@@ -66,7 +68,7 @@ def main(n=4):
     node_cut = ["blue" if cut_bitstring[v] == "1" else "red" for v in V]
     edge_cut = ["solid" if cut_bitstring[u] == cut_bitstring[v] else "dashed" for (u, v) in G.edges()]
 
-    nx.draw(G, pos, node_color = node_cut, style=edge_cut, **options)
+    nx.draw(G, pos, node_color=node_cut, style=edge_cut, **options)
     ax = plt.gca()
     ax.margins(0.20)
     plt.axis("off")

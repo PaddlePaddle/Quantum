@@ -1,0 +1,123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.base.rst:2
+msgid "paddle\\_quantum.base"
+msgstr ""
+
+#: of paddle_quantum.base:1
+msgid "The basic function of the paddle quantum."
+msgstr ""
+
+#: of paddle_quantum.base.set_device:1
+msgid "Set the device to save the tensor."
+msgstr ""
+
+#: of paddle_quantum.base.Operator paddle_quantum.base.set_backend
+#: paddle_quantum.base.set_device paddle_quantum.base.set_dtype
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.base.set_device:3
+msgid "The name of the device."
+msgstr ""
+
+#: of paddle_quantum.base.get_device:1
+msgid "Get the current device to save the tensor."
+msgstr ""
+
+#: of paddle_quantum.base.get_backend paddle_quantum.base.get_device
+#: paddle_quantum.base.get_dtype
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.base.get_device:3
+msgid "The name of the current device."
+msgstr ""
+
+#: of paddle_quantum.base.get_backend paddle_quantum.base.get_device
+#: paddle_quantum.base.get_dtype
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.base.set_backend:1
+msgid "Set the backend implementation of paddle quantum."
+msgstr ""
+
+#: of paddle_quantum.base.set_backend:3
+msgid "The name of the backend."
+msgstr ""
+
+#: of paddle_quantum.base.get_backend:1
+msgid "Get the current backend of paddle quantum."
+msgstr ""
+
+#: of paddle_quantum.base.get_backend:3
+msgid "The name of currently used backend."
+msgstr ""
+
+#: of paddle_quantum.base.set_dtype:1
+msgid "Set the data type ."
+msgstr ""
+
+#: of paddle_quantum.base.set_dtype:3
+msgid "The dtype can be ``complex64`` and ``complex128``."
+msgstr ""
+
+#: of paddle_quantum.base.set_dtype
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.base.set_dtype:5
+msgid "The dtype should be complex64 or complex128."
+msgstr ""
+
+#: of paddle_quantum.base.get_dtype:1
+msgid "Return currently used data type."
+msgstr ""
+
+#: of paddle_quantum.base.get_dtype:3
+msgid "Currently used data type."
+msgstr ""
+
+#: of paddle_quantum.base.Operator:1
+msgid "Bases: :py:class:`~paddle.fluid.dygraph.layers.Layer`"
+msgstr ""
+
+#: of paddle_quantum.base.Operator:1
+msgid "The basic class to implement the quantum operation."
+msgstr ""
+
+#: of paddle_quantum.base.Operator:3
+msgid ""
+"The backend implementation of the operator. Defaults to ``None``, which "
+"means to use the default backend implementation."
+msgstr ""
+
+#: of paddle_quantum.base.Operator:5
+msgid ""
+"The data type of the operator. Defaults to ``None``, which means to use "
+"the default data type."
+msgstr ""
+
+#: of paddle_quantum.base.Operator:7
+msgid "Prefix name used by the operator to name parameters. Defaults to ``None``."
+msgstr ""
+

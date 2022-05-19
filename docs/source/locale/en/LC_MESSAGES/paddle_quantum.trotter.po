@@ -1,0 +1,238 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.trotter.rst:2
+msgid "paddle\\_quantum.trotter"
+msgstr ""
+
+#: of paddle_quantum.trotter:1
+msgid "Trotter Hamiltonian time evolution circuit module."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:1
+msgid "Add time-evolving circuits to a user-specified circuit."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:3
+msgid ""
+"This circuit could approximate the time-evolving operator of a system "
+"given its Hamiltonian H, i.e., :math:`U_{\\rm cir}~ e^{-iHt}`."
+msgstr ""
+
+#: of paddle_quantum.trotter.add_n_pauli_gate
+#: paddle_quantum.trotter.construct_trotter_circuit
+#: paddle_quantum.trotter.get_1d_heisenberg_hamiltonian
+#: paddle_quantum.trotter.get_suzuki_coefficients
+#: paddle_quantum.trotter.get_suzuki_p_values
+#: paddle_quantum.trotter.get_suzuki_permutation
+#: paddle_quantum.trotter.optimal_circuit
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:6
+msgid "Circuit object to which a time evolution circuit will be added."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:7
+msgid "Hamiltonian of the system whose time evolution is to be simulated."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:8
+msgid "Evolution time of each trotter block."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:9
+msgid ""
+"Number of trotter blocks that will be added in total. (Hint: ``steps * "
+"tau`` should be the total evolution time.)"
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:11
+msgid ""
+"How the time evolution circuit will be constructed. Defaults to "
+"``'suzuki'``, i.e., using Trotter-Suzuki decomposition. Set to "
+"``'custom'`` to use a customized simulation strategy. (Needs to be "
+"specified with arguments permutation and coefficient.)"
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:14
+msgid ""
+"Order of the Trotter-Suzuki decomposition. Only works when "
+"``method='suzuki'``. Defaults to 1."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:15
+msgid ""
+"Whether the Hamiltonian's ordering will be rearranged in a user-specified"
+" way. Supports ``'xyz'`` and ``'even_odd'`` grouping methods. Defaults to"
+" None."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:17
+msgid ""
+"Custom coefficients corresponding to terms of the Hamiltonian. Only works"
+" for ``method='custom'``. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:18
+msgid ""
+"Custom permutation of the Hamiltonian. Only works for "
+"``method='custom'``. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.trotter.construct_trotter_circuit:20
+msgid ""
+"For a more detailed explanation of how this function works, users may "
+"refer to the tutorials on Paddle Quantum's website: "
+"https://qml.baidu.com/tutorials/overview.html."
+msgstr ""
+
+#: of paddle_quantum.trotter.optimal_circuit:1
+msgid "Add an optimized circuit with the Hamiltonian 'XXYYZZ'."
+msgstr ""
+
+#: of paddle_quantum.trotter.add_n_pauli_gate:3
+#: paddle_quantum.trotter.optimal_circuit:3
+msgid "Circuit where the gates are to be added."
+msgstr ""
+
+#: of paddle_quantum.trotter.optimal_circuit:4
+msgid "Three rotation angles."
+msgstr ""
+
+#: of paddle_quantum.trotter.optimal_circuit:5
+msgid "List of the index of the qubit that each Pauli operator acts on."
+msgstr ""
+
+#: of paddle_quantum.trotter.add_n_pauli_gate:1
+msgid ""
+"Add a rotation gate for a tensor product of Pauli operators, for example "
+":math:`e^{-\\theta/2 * X \\otimes I \\otimes X \\otimes Y}`."
+msgstr ""
+
+#: of paddle_quantum.trotter.add_n_pauli_gate:4
+msgid "Rotation angle."
+msgstr ""
+
+#: of paddle_quantum.trotter.add_n_pauli_gate:5
+msgid "Pauli operators in a string format, e.g., ``\"XXZ\"``."
+msgstr ""
+
+#: of paddle_quantum.trotter.add_n_pauli_gate:6
+msgid ""
+"List of the index of the qubit that each Pauli operator in the "
+"``pauli_word`` acts on."
+msgstr ""
+
+#: of paddle_quantum.trotter.add_n_pauli_gate
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.trotter.add_n_pauli_gate:8
+msgid ""
+"The ``which_qubits`` should be either ``list``, ``tuple``, or "
+"``np.ndarray``."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_suzuki_permutation:1
+msgid "Calculate the permutation array corresponding to the Suzuki decomposition."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_suzuki_coefficients:3
+#: paddle_quantum.trotter.get_suzuki_permutation:3
+msgid "Number of terms in the Hamiltonian, i.e., how many terms to be permuted."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_suzuki_coefficients:4
+#: paddle_quantum.trotter.get_suzuki_p_values:3
+#: paddle_quantum.trotter.get_suzuki_permutation:4
+msgid "Order of the Suzuki decomposition."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian
+#: paddle_quantum.trotter.get_suzuki_coefficients
+#: paddle_quantum.trotter.get_suzuki_p_values
+#: paddle_quantum.trotter.get_suzuki_permutation
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.trotter.get_suzuki_permutation:6
+msgid "Permutation array."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian
+#: paddle_quantum.trotter.get_suzuki_coefficients
+#: paddle_quantum.trotter.get_suzuki_p_values
+#: paddle_quantum.trotter.get_suzuki_permutation
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.trotter.get_suzuki_p_values:1
+msgid "Calculate the parameter p(k) in the Suzuki recurrence relationship."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_suzuki_p_values:5
+msgid "A list of length five of form [p, p, (1 - 4 * p), p, p]."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_suzuki_coefficients:1
+msgid "Calculate the coefficient array corresponding to the Suzuki decomposition."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_suzuki_coefficients:6
+msgid "Coefficient array."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian:1
+msgid "Generate the Hamiltonian of a one-dimensional Heisenberg chain."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian:3
+msgid "Chain length."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian:4
+msgid "Coupling strength Jx on the x direction. Defaults to ``1.``."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian:5
+msgid "Coupling strength Jy on the y direction. Defaults to ``1.``."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian:6
+msgid "Coupling strength Jz on the z direction. Defaults to ``1.``."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian:7
+msgid ""
+"Magnet field along z-axis. A uniform field will be added for single float"
+" input. Defaults to ``0.``."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian:8
+msgid ""
+"Whether to consider the periodic boundary, i.e., l + 1 = 0. Defaults to "
+"``True``."
+msgstr ""
+
+#: of paddle_quantum.trotter.get_1d_heisenberg_hamiltonian:10
+msgid "Hamiltonian of this Heisenberg chain."
+msgstr ""
+

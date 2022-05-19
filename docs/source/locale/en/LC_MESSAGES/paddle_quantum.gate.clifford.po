@@ -1,0 +1,123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.clifford.rst:2
+msgid "paddle\\_quantum.gate.clifford"
+msgstr ""
+
+#: of paddle_quantum.gate.clifford:1
+msgid "Class for randomly generating a Clifford operator."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford:1
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford:1
+msgid "Users can instantiate this class to randomly generate a Clifford operator."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford
+#: paddle_quantum.gate.clifford.compose_clifford_circuit
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford:3
+msgid "Number of qubits on which this Clifford operator acts."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford:6
+msgid "References"
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford:7
+msgid ""
+"1. Bravyi, Sergey, and Dmitri Maslov. \"Hadamard-free circuits expose the"
+" structure of the Clifford group.\" IEEE Transactions on Information "
+"Theory 67.7 (2021): 4546-4563."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.print_clifford:1
+msgid "Print how the Clifford operator acts on the Pauli basis."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.sym:1
+msgid "Obtain the Clifford operator's symplectic matrix."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.circuit
+#: paddle_quantum.gate.clifford.Clifford.sym
+#: paddle_quantum.gate.clifford.Clifford.tableau
+#: paddle_quantum.gate.clifford.compose_clifford_circuit
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.sym:3
+msgid "Symplectic matrix corresponding to this Clifford operator."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.circuit
+#: paddle_quantum.gate.clifford.Clifford.sym
+#: paddle_quantum.gate.clifford.Clifford.tableau
+#: paddle_quantum.gate.clifford.compose_clifford_circuit
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.tableau:1
+msgid "Obtain the Clifford operator's table."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.tableau:3
+msgid ""
+"For the number of qubits being ``num_qubits``, the first ``num_qubits`` "
+"lines correspoding to results of X_i, and the last ``num_qubits`` lines "
+"correspoding to results of Z_i."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.tableau:6
+msgid "Table corresponding to this Clifford operator."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.circuit:1
+msgid "Obtain the circuit corresponding to the Clifford operator."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.Clifford.circuit:3
+msgid "Circuit corresponding to this Clifford operator."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.compose_clifford_circuit:1
+msgid ""
+"Compute the composition of two Clifford operators and obtain the "
+"corresponding circuit."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.compose_clifford_circuit:3
+msgid "The first Clifford operator to be composed."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.compose_clifford_circuit:4
+msgid "The second Clifford operator to be composed."
+msgstr ""
+
+#: of paddle_quantum.gate.clifford.compose_clifford_circuit:6
+msgid "Circuit corresponding to the composed Clifford operator."
+msgstr ""
+

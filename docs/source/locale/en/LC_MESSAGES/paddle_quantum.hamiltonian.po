@@ -1,0 +1,206 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.hamiltonian.rst:2
+msgid "paddle\\_quantum.hamiltonian"
+msgstr ""
+
+#: of paddle_quantum.hamiltonian:1
+msgid "The module of the hamiltonian class."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian:1
+#: paddle_quantum.hamiltonian.SpinOps:1
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian:1
+msgid "Hamiltonian ``class`` in Paddle Quantum."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian:3
+msgid "User can instantiate the ``class`` with a Pauli string."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian
+#: paddle_quantum.hamiltonian.Hamiltonian.construct_h_matrix
+#: paddle_quantum.hamiltonian.SpinOps
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian:5
+msgid "A list of Hamiltonian information, e.g. ``[(1, 'Z0, Z1'), (2, 'I')]``"
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian:6
+msgid ""
+"Determines whether the input list will be automatically merged (e.g.``(1,"
+" 'Z0, Z1')`` and ``(2, 'Z1, Z0')``, these two items will be automatically"
+" merged)."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian
+#: paddle_quantum.hamiltonian.Hamiltonian.construct_h_matrix
+#: paddle_quantum.hamiltonian.Hamiltonian.decompose_pauli_words
+#: paddle_quantum.hamiltonian.Hamiltonian.decompose_with_sites
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian:9
+msgid "Create a Hamiltonian class"
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian:11
+msgid "If ``compress=False``, the legitimacy of the input will not be checked."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.n_terms:1
+msgid "Number of terms of the hamiltonian."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.pauli_str:1
+msgid "The Pauli string corresponding to the hamiltonian."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.terms:1
+msgid "All items in hamiltonian, i.e. ``[['Z0, Z1'], ['I']]``."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.coefficients:1
+msgid "The coefficient of each term in the Hamiltonian，i.e. ``[1.0, 2.0]``."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.pauli_words:1
+msgid "The Pauli word of each term，i.e. ``['ZIZ', 'IIX']``."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.pauli_words_r:1
+msgid "A list of Pauli word (exclude I)，i.e. ``['ZXZZ', 'Z', 'X']``."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.pauli_words_matrix:1
+msgid "The list of matrices with respect to simplied Pauli words."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.sites:1
+msgid "A list of qubits index corresponding to the hamiltonian."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.n_qubits:1
+msgid "Number of qubits."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.decompose_with_sites:1
+msgid ""
+"Decompose pauli_str into coefficients, a simplified form of Pauli "
+"strings, and the indices of qubits on which the Pauli operators act on."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.decompose_with_sites:3
+msgid ""
+"- coefficients: the coefficient for each term. - pauli_words_r: the "
+"simplified form of the Pauli string for each item, e.g. the Pauli word of"
+" 'Z0, Z1, X3' is 'ZZX'. - sites: a list of qubits index, e.g. the site of"
+" 'Z0, Z1, X3' is [0, 1, 3]."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.decompose_pauli_words:3
+#: paddle_quantum.hamiltonian.Hamiltonian.decompose_with_sites:3
+msgid "coefficients: the coefficient for each term."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.decompose_with_sites:4
+msgid ""
+"pauli_words_r: the simplified form of the Pauli string for each item, "
+"e.g. the Pauli word of 'Z0, Z1, X3' is 'ZZX'."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.decompose_with_sites:5
+msgid "sites: a list of qubits index, e.g. the site of 'Z0, Z1, X3' is [0, 1, 3]."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.construct_h_matrix
+#: paddle_quantum.hamiltonian.Hamiltonian.decompose_pauli_words
+#: paddle_quantum.hamiltonian.Hamiltonian.decompose_with_sites
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.decompose_pauli_words:1
+msgid "Decompose pauli_str into coefficients and Pauli strings."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.decompose_pauli_words:3
+msgid ""
+"- coefficients: the coefficient for each term. - the Pauli string for "
+"each item, e.g. the Pauli word of 'Z0, Z1, X3' is 'ZZIX'."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.decompose_pauli_words:4
+msgid ""
+"the Pauli string for each item, e.g. the Pauli word of 'Z0, Z1, X3' is "
+"'ZZIX'."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.construct_h_matrix:1
+msgid "Construct a matrix form of the Hamiltonian in Z-basis."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.construct_h_matrix:3
+msgid "The number of qubits. Defaults to 1."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.Hamiltonian.construct_h_matrix:5
+msgid "The matrix form of the Hamiltonian in Z-basis."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.SpinOps:1
+msgid ""
+"The spin operators in matrix forms, could be used to construct "
+"Hamiltonian matrix or spin observables."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.SpinOps:3
+msgid "Size of the system (number of qubits)."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.SpinOps:4
+msgid ""
+"Decide whether to use the sparse matrix to calculate. Default is "
+"``False``."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.SpinOps.sigz_p:1
+msgid ""
+"A list of :math:`S^z_i` operators, different elements correspond to "
+"different indices :math:`i`."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.SpinOps.sigy_p:1
+msgid ""
+"A list of :math:`S^y_i` operators, different elements correspond to "
+"different indices :math:`i`."
+msgstr ""
+
+#: of paddle_quantum.hamiltonian.SpinOps.sigx_p:1
+msgid ""
+"A list of :math:`S^x_i` operators, different elements correspond to "
+"different indices :math:`i`."
+msgstr ""
+

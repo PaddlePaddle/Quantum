@@ -1,0 +1,52 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.channel.custom.rst:2
+msgid "paddle\\_quantum.channel.custom"
+msgstr ""
+
+#: of paddle_quantum.channel.custom:1
+msgid "The source file of the classes for custom quantum channels."
+msgstr ""
+
+#: of paddle_quantum.channel.custom.KrausRepr:1
+msgid "Bases: :py:class:`~paddle_quantum.channel.base.Channel`"
+msgstr ""
+
+#: of paddle_quantum.channel.custom.KrausRepr:1
+msgid "A custom channel in Kraus representation."
+msgstr ""
+
+#: of paddle_quantum.channel.custom.KrausRepr
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.channel.custom.KrausRepr:3
+msgid "Kraus operators of this channel."
+msgstr ""
+
+#: of paddle_quantum.channel.custom.KrausRepr:4
+msgid "Indices of the qubits on which this channel acts."
+msgstr ""
+
+#: of paddle_quantum.channel.custom.KrausRepr:5
+msgid "Total number of qubits. Defaults to ``None``."
+msgstr ""
+

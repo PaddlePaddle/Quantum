@@ -1,0 +1,66 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.custom.rst:2
+msgid "paddle\\_quantum.gate.custom"
+msgstr ""
+
+#: of paddle_quantum.gate.custom:1
+msgid "The source file of the oracle class and the control oracle class."
+msgstr ""
+
+#: of paddle_quantum.gate.custom.ControlOracle:1
+#: paddle_quantum.gate.custom.Oracle:1
+msgid "Bases: :py:class:`~paddle_quantum.gate.base.Gate`"
+msgstr ""
+
+#: of paddle_quantum.gate.custom.Oracle:1
+msgid "An oracle as a gate."
+msgstr ""
+
+#: of paddle_quantum.gate.custom.ControlOracle
+#: paddle_quantum.gate.custom.Oracle
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.custom.ControlOracle:3
+#: paddle_quantum.gate.custom.Oracle:3
+msgid "Unitary oracle to be implemented."
+msgstr ""
+
+#: of paddle_quantum.gate.custom.ControlOracle:4
+#: paddle_quantum.gate.custom.Oracle:4
+msgid "Indices of the qubits on which the gates are applied."
+msgstr ""
+
+#: of paddle_quantum.gate.custom.ControlOracle:5
+#: paddle_quantum.gate.custom.Oracle:5
+msgid "Total number of qubits. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.custom.ControlOracle:6
+#: paddle_quantum.gate.custom.Oracle:6
+msgid "Number of layers. Defaults to ``1``."
+msgstr ""
+
+#: of paddle_quantum.gate.custom.ControlOracle:1
+msgid "A controlled oracle as a gate."
+msgstr ""
+

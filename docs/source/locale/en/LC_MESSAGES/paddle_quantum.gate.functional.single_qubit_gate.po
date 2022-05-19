@@ -1,0 +1,195 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.functional.single_qubit_gate.rst:2
+msgid "paddle\\_quantum.gate.functional.single\\_qubit\\_gate"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate:1
+msgid "The source file of the functions for single-qubit quantum gates."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h:1
+msgid "Apply a Hadamard gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h
+#: paddle_quantum.gate.functional.single_qubit_gate.p
+#: paddle_quantum.gate.functional.single_qubit_gate.rx
+#: paddle_quantum.gate.functional.single_qubit_gate.ry
+#: paddle_quantum.gate.functional.single_qubit_gate.rz
+#: paddle_quantum.gate.functional.single_qubit_gate.s
+#: paddle_quantum.gate.functional.single_qubit_gate.t
+#: paddle_quantum.gate.functional.single_qubit_gate.u3
+#: paddle_quantum.gate.functional.single_qubit_gate.x
+#: paddle_quantum.gate.functional.single_qubit_gate.y
+#: paddle_quantum.gate.functional.single_qubit_gate.z
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h:3
+#: paddle_quantum.gate.functional.single_qubit_gate.p:3
+#: paddle_quantum.gate.functional.single_qubit_gate.rx:3
+#: paddle_quantum.gate.functional.single_qubit_gate.ry:3
+#: paddle_quantum.gate.functional.single_qubit_gate.rz:3
+#: paddle_quantum.gate.functional.single_qubit_gate.s:3
+#: paddle_quantum.gate.functional.single_qubit_gate.t:3
+#: paddle_quantum.gate.functional.single_qubit_gate.u3:3
+#: paddle_quantum.gate.functional.single_qubit_gate.x:3
+#: paddle_quantum.gate.functional.single_qubit_gate.y:3
+#: paddle_quantum.gate.functional.single_qubit_gate.z:3
+msgid "Input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h:4
+#: paddle_quantum.gate.functional.single_qubit_gate.p:5
+#: paddle_quantum.gate.functional.single_qubit_gate.rx:5
+#: paddle_quantum.gate.functional.single_qubit_gate.ry:5
+#: paddle_quantum.gate.functional.single_qubit_gate.rz:5
+#: paddle_quantum.gate.functional.single_qubit_gate.s:4
+#: paddle_quantum.gate.functional.single_qubit_gate.t:4
+#: paddle_quantum.gate.functional.single_qubit_gate.u3:5
+#: paddle_quantum.gate.functional.single_qubit_gate.x:4
+#: paddle_quantum.gate.functional.single_qubit_gate.y:4
+#: paddle_quantum.gate.functional.single_qubit_gate.z:4
+msgid "Index of the qubit on which the gate is applied."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h:5
+#: paddle_quantum.gate.functional.single_qubit_gate.p:6
+#: paddle_quantum.gate.functional.single_qubit_gate.rx:6
+#: paddle_quantum.gate.functional.single_qubit_gate.ry:6
+#: paddle_quantum.gate.functional.single_qubit_gate.rz:6
+#: paddle_quantum.gate.functional.single_qubit_gate.s:5
+#: paddle_quantum.gate.functional.single_qubit_gate.t:5
+#: paddle_quantum.gate.functional.single_qubit_gate.u3:6
+#: paddle_quantum.gate.functional.single_qubit_gate.x:5
+#: paddle_quantum.gate.functional.single_qubit_gate.y:5
+#: paddle_quantum.gate.functional.single_qubit_gate.z:5
+msgid "Type of data."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h:6
+#: paddle_quantum.gate.functional.single_qubit_gate.p:7
+#: paddle_quantum.gate.functional.single_qubit_gate.rx:7
+#: paddle_quantum.gate.functional.single_qubit_gate.ry:7
+#: paddle_quantum.gate.functional.single_qubit_gate.rz:7
+#: paddle_quantum.gate.functional.single_qubit_gate.s:6
+#: paddle_quantum.gate.functional.single_qubit_gate.t:6
+#: paddle_quantum.gate.functional.single_qubit_gate.u3:7
+#: paddle_quantum.gate.functional.single_qubit_gate.x:6
+#: paddle_quantum.gate.functional.single_qubit_gate.y:6
+#: paddle_quantum.gate.functional.single_qubit_gate.z:6
+msgid "Backend on which the simulation is run."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h
+#: paddle_quantum.gate.functional.single_qubit_gate.p
+#: paddle_quantum.gate.functional.single_qubit_gate.rx
+#: paddle_quantum.gate.functional.single_qubit_gate.ry
+#: paddle_quantum.gate.functional.single_qubit_gate.rz
+#: paddle_quantum.gate.functional.single_qubit_gate.s
+#: paddle_quantum.gate.functional.single_qubit_gate.t
+#: paddle_quantum.gate.functional.single_qubit_gate.u3
+#: paddle_quantum.gate.functional.single_qubit_gate.x
+#: paddle_quantum.gate.functional.single_qubit_gate.y
+#: paddle_quantum.gate.functional.single_qubit_gate.z
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h:8
+#: paddle_quantum.gate.functional.single_qubit_gate.p:9
+#: paddle_quantum.gate.functional.single_qubit_gate.rx:9
+#: paddle_quantum.gate.functional.single_qubit_gate.ry:9
+#: paddle_quantum.gate.functional.single_qubit_gate.rz:9
+#: paddle_quantum.gate.functional.single_qubit_gate.s:8
+#: paddle_quantum.gate.functional.single_qubit_gate.t:8
+#: paddle_quantum.gate.functional.single_qubit_gate.u3:9
+#: paddle_quantum.gate.functional.single_qubit_gate.x:8
+#: paddle_quantum.gate.functional.single_qubit_gate.y:8
+#: paddle_quantum.gate.functional.single_qubit_gate.z:8
+msgid "Output state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.h
+#: paddle_quantum.gate.functional.single_qubit_gate.p
+#: paddle_quantum.gate.functional.single_qubit_gate.rx
+#: paddle_quantum.gate.functional.single_qubit_gate.ry
+#: paddle_quantum.gate.functional.single_qubit_gate.rz
+#: paddle_quantum.gate.functional.single_qubit_gate.s
+#: paddle_quantum.gate.functional.single_qubit_gate.t
+#: paddle_quantum.gate.functional.single_qubit_gate.u3
+#: paddle_quantum.gate.functional.single_qubit_gate.x
+#: paddle_quantum.gate.functional.single_qubit_gate.y
+#: paddle_quantum.gate.functional.single_qubit_gate.z
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.s:1
+msgid "Apply an S gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.t:1
+msgid "Apply a T gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.x:1
+msgid "Apply an X gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.y:1
+msgid "Apply a Y gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.z:1
+msgid "Apply a Z gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.p:1
+msgid "Apply a P gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.p:4
+#: paddle_quantum.gate.functional.single_qubit_gate.rx:4
+#: paddle_quantum.gate.functional.single_qubit_gate.ry:4
+#: paddle_quantum.gate.functional.single_qubit_gate.rz:4
+msgid "Parameter of the gate."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.rx:1
+msgid "Apply a single-qubit rotation gate about the x-axis on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.ry:1
+msgid "Apply a single-qubit rotation gate about the y-axis on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.rz:1
+msgid "Apply a single-qubit rotation gate about the z-axis on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.u3:1
+msgid "Apply a single-qubit rotation gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.single_qubit_gate.u3:4
+msgid "Parameters of the gate."
+msgstr ""
+

@@ -21,9 +21,9 @@ from sympy import symbols, expand
 from numpy import pi, random, log2
 from paddle import to_tensor, real, abs, zeros, t, conj, matmul, multiply
 from paddle import nn
+import paddle_quantum
 from paddle_quantum.mbqc.utils import kron, basis, permute_systems
 from paddle_quantum.mbqc.simulator import MBQC
-from paddle_quantum.circuit import UAnsatz
 
 __all__ = [
     "get_all_indices",
@@ -551,7 +551,7 @@ class MBQC_QAOA_Net(nn.Layer):
         # Get cost Hamiltonian
         HC = get_cost_hamiltonian(poly)
         # Calculate loss
-        loss = - expecval(vec_out, HC)
+        loss = -expecval(vec_out, HC)
         return loss, vec_out
 
 
@@ -570,7 +570,7 @@ def circuit_qaoa(graph, depth, gamma, beta):
     vertices = graph[0]
     edges = graph[1]
     qubit_number = len(vertices)
-    cir = UAnsatz(qubit_number)
+    cir = paddle_quantum.ansatz.Circuit(qubit_number)
     cir.superposition_layer()
     for layer in range(depth):
         for (u, v) in edges:
@@ -584,7 +584,7 @@ def circuit_qaoa(graph, depth, gamma, beta):
     return cir
 
 
-class Circuit_QAOA_Net(nn.Layer):
+class Circuit_QAOA_Net(paddle_quantum.gate.Gate):
     r"""定义电路模型下的 QAOA 优化网络，用于实例化一个电路模型下 QAOA 的优化网络。
 
     Attributes:
@@ -595,28 +595,25 @@ class Circuit_QAOA_Net(nn.Layer):
         Tensor: 输出量子态列向量
     """
 
-    def __init__(self,
-                 depth,  # depth
-                 dtype="float64"
-                 ):
+    def __init__(self, depth, graph, H):
         r"""定义电路模型下的 QAOA 优化网络。
 
         Args:
             depth (int): QAOA 算法深度
         """
-        super(Circuit_QAOA_Net, self).__init__()
+        super().__init__()
+        V = graph[0]
+        E = graph[1]
+        V = [item - 1for item in V]
+        E = [(edge[0] - 1, edge[1] - 1) for edge in E]
+        n = len(V)
+        self.net = paddle_quantum.ansatz.Circuit(n)
+        self.net.superposition_layer()
+        self.net.qaoa_layer(E, V, depth)
+        hamiltonian = paddle_quantum.Hamiltonian(H)
+        self.loss_func = paddle_quantum.loss.ExpecVal(hamiltonian)
 
-        self.p = depth
-        self.gamma = self.create_parameter(shape=[self.p],
-                                           default_initializer=nn.initializer.Uniform(low=0.0, high=2 * pi),
-                                           dtype=dtype,
-                                           is_bias=False)
-        self.beta = self.create_parameter(shape=[self.p],
-                                          default_initializer=nn.initializer.Uniform(low=0.0, high=2 * pi),
-                                          dtype=dtype,
-                                          is_bias=False)
-
-    def forward(self, graph, H):
+    def forward(self):
         r"""定义优化网络的前向传播机制。
 
         Args:
@@ -627,9 +624,6 @@ class Circuit_QAOA_Net(nn.Layer):
             Tensor: 输出损失函数
             UAnsatz: 电路模型的 UAnsatz 电路
         """
-        cir_gamma = multiply(self.gamma, to_tensor([-1], dtype='float64'))
-        cir_beta = multiply(self.beta, to_tensor([2], dtype='float64'))
-        cir = circuit_qaoa(graph, self.p, cir_gamma, cir_beta)
-        cir.run_state_vector()
-        loss = -cir.expecval(H)
-        return loss, cir
+        state = self.net()
+        loss = self.loss_func(state)
+        return loss, state

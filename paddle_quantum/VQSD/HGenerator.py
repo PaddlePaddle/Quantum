@@ -1,4 +1,5 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# !/usr/bin/env python3
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+r"""
 HGenerator
 """
 
@@ -34,5 +35,5 @@ def generate_rho_sigma():
     # print(rho)  # Print quantum state rho
 
     # Input the quantum state sigma
-    sigma = numpy.diag([0.1, 0.2, 0.3, 0.4]).astype('complex128')
+    sigma = numpy.diag([0.1, 0.2, 0.3, 0.4])
     return rho, sigma

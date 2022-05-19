@@ -1,3 +1,4 @@
+# !/usr/bin/env python3
 # Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,100 +13,62 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-梯度分析工具模块
+r"""
+The module of the gradient tool.
 """
 
 
+from typing import Any, Callable, Tuple, List
 import numpy as np
 import paddle
-from paddle import reshape
+import paddle_quantum
+from paddle_quantum.ansatz import Circuit
+from math import pi
 from random import choice
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 __all__ = [
-    "StateNet",
     "show_gradient",
+    "plot_distribution",
     "random_sample",
-    "random_sample_supervised",
     "plot_loss_grad",
     "plot_supervised_loss_grad",
-    "plot_distribution"
+    "random_sample_supervised"
 ]
 
 
-class StateNet(paddle.nn.Layer):
-    r"""定义用于量子机器学习的量子神经网络模型
-
-    用户可以通过实例化该类定义自己的量子神经网络模型。
-    """
-
-    def __init__(self, shape, dtype='float64'):
-        r"""构造函数，用于实例化一个 ``StateNet`` 对象
-
-        Args:
-            shape (paddle.Tensor): 表示传入的量子电路中的需要被优化的参数个数
-        """
-        super(StateNet, self).__init__()
-        self.theta = self.create_parameter(shape=shape,
-                                           default_initializer=paddle.nn.initializer.Uniform(low=0.0, high=2*np.pi),
-                                           dtype=dtype, is_bias=False)
-
-    def forward(self, circuit, loss_func, *args):
-        r"""用于更新电路参数并计算该量子神经网络的损失值。
-
-        Args:
-            circuit (UAnsatz): 表示传入的参数化量子电路，即要训练的量子神经网络
-            loss_func (function): 表示计算该量子神经网络损失值的函数
-            *args (list): 表示用于损失函数计算的额外参数列表
-
-        Note:
-            这里的 ``loss_func`` 是一个用户自定义的计算损失值的函数，参数为电路和一个可变参数列表。
-
-        Returns:
-            tuple: 包含如下两个元素:
-                - loss (paddle.Tensor): 表示该量子神经网络损失值
-                - circuit (UAnsatz): 更新参数后的量子电路
-        """
-        circuit.update_param(self.theta)
-        circuit.run_state_vector()
-        loss = loss_func(circuit, *args)
-        return loss, circuit
-
-
-def show_gradient(circuit, loss_func, ITR, LR, *args):
-    r"""计算量子神经网络中各可变参数的梯度值和损失函数值
+def show_gradient(circuit: Circuit, loss_func: Callable[[Circuit, Any], paddle.Tensor], 
+                  ITR: int, LR: float, *args: Any) -> Tuple[List[float], List[float]]:
+    r"""Calculate the gradient and loss function for every parameter in QNN.
 
     Args:
-        circuit (UAnsatz): 表示传入的参数化量子电路，即要训练的量子神经网络
-        loss_func (function): 表示计算该量子神经网络损失值的函数
-        ITR (int): 表示训练的次数
-        LR (float): 表示学习训练的速率
-        *args (list): 表示用于损失函数计算的额外参数列表
+        circuit: QNN to be trained.
+        loss_func: Loss function that evaluates the QNN.
+        ITR: Number of iterations.
+        LR: Learning rate.
+        *args: Parameters for ``loss_func`` other than ``circuit``.
 
     Returns:
-        tuple: 包含如下两个元素:
-            - loss_list (list): 表示损失函数值随训练次数变化的列表
-            - grad_list(list): 表示各参数梯度随训练次变化的列表
+        Contains following two elements.
+            - loss_list: A list of losses for each iteration.
+            - grad_list: A list of gradients for each iteration.
     """
-
     grad_list = []
     loss_list = []
-    shape = paddle.shape(circuit.get_param())
-    net = StateNet(shape=shape)
-    opt = paddle.optimizer.Adam(learning_rate=LR, parameters=net.parameters())
-
     pbar = tqdm(
         desc="Training: ", total=ITR, ncols=100, ascii=True
     )
+    
+    # randomize initial parameters
+    circuit.randomize_param()
+    opt = paddle.optimizer.Adam(learning_rate=LR, parameters=circuit.parameters())
 
-    for itr in range(ITR):
+    for _ in range(ITR):
         pbar.update(1)
-        loss, cir = net(circuit, loss_func, *args)
+        loss = loss_func(circuit, *args)
         loss.backward()
-        grad = net.theta.grad.numpy()
-        grad_list.append(grad)
+        grad_list.append(circuit.grad)
         loss_list.append(loss.numpy()[0])
         opt.minimize(loss)
         opt.clear_grad()
@@ -114,13 +77,12 @@ def show_gradient(circuit, loss_func, ITR, LR, *args):
     return loss_list, grad_list
 
 
-def plot_distribution(grad):
-    r"""根据输入的梯度的列表，画出梯度的分布图
+def plot_distribution(grad: np.ndarray) -> None:
+    r"""Plot the distribution map according to the input gradients.
 
     Args:
-        grad (np.array): 表示量子神经网络某参数的梯度列表
+        grad: List of gradients with respect to a parameter.
     """
-
     grad = np.abs(grad)
     grad_list = [0, 0, 0, 0, 0]
     x = ['<0.0001', ' (0.0001,0.001)', '(0.001,0.01)', '(0.01,0.1)', '>0.1']
@@ -144,43 +106,41 @@ def plot_distribution(grad):
     plt.show()
 
 
-def random_sample(circuit, loss_func, sample_num, *args, mode='single', if_plot=True, param=0):
-    r"""表示对模型进行随机采样，根据不同的计算模式，获得对应的平均值和方差
+def random_sample(circuit: Circuit, loss_func: Callable[[Circuit, Any], paddle.Tensor], sample_num: int, *args: Any, 
+                  mode: str = 'single', if_plot: bool = True, param: int = 0) -> Tuple[List[float], List[float]]:
+    r"""Randomly sample the model. Obtain mean and variance of gradients according to different calculation modes.
 
     Args:
-        circuit (UAnsatz): 表示传入的参数化量子电路，即要训练的量子神经网络
-        loss_func (function): 表示计算该量子神经网络损失值的函数
-        sample_num (int): 表示随机采样的次数
-        mode (string): 表示随机采样后的计算模式，默认为 'single'
-        if_plot(boolean): 表示是否对梯度进行画图表示
-        param (int): 表示 ``Single`` 模式中对第几个参数进行画图，默认为第一个参数
-        *args (list): 表示用于损失函数计算的额外参数列表
+        circuit: QNN to be trained.
+        loss_func: Loss function that evaluates the QNN.
+        sample_num: Number of samplings.
+        mode: Mode for calculation. Defaults to ``'single'``.
+        if_plot: Whether plot the calculation. Defaults to ``True``.
+        param: Which parameter to be plotted in single mode, Defaults to ``0``, which means the first one.
+        *args: Parameters for ``loss_func`` other than ``circuit``.
 
     Note:
-        在本函数中提供了三种计算模式，``mode`` 分别可以选择 ``'single'``, ``'max'``, 以及 ``'random'``
-            - mode='single': 表示计算电路中的每个可变参数梯度的平均值和方差
-            - mode='max': 表示对电路中每轮采样的所有参数梯度的最大值求平均值和方差
-            - mode='random': 表示对电路中每轮采样的所有参数随机取一个梯度，求平均值和方差
+        This function provides three calculation modes: single, max and random.
+            - In single mode, we calculate the mean and variance of gradients of every trainable parameter.
+            - In max mode, we calculate the mean and variance of maximum gradients of for every trainable parameter.
+            - In random mode, we calculate the mean and variance of data randomly extracted from gradients of every trainable parameter.
 
     Returns:
-        tuple: 包含如下两个元素:
-            - loss_list (list): 表示多次采样后损失函数值的列表
-            - grad_list(list): 表示多次采样后各参数梯度的列表
+        Contains the following two elements.
+            - loss_list: A list of losses for each iteration.
+            - grad_list: A list of gradients for each iteration.
     """
-
     loss_list, grad_list = [], []
     pbar = tqdm(
         desc="Sampling: ", total=sample_num, ncols=100, ascii=True
     )
-    for itr in range(sample_num):
+    for _ in range(sample_num):
         pbar.update(1)
-        shape = paddle.shape(circuit.get_param())
-        net = StateNet(shape=shape)
-        loss, cir = net(circuit, loss_func, *args)
+        circuit.randomize_param()
+        loss = loss_func(circuit, *args)
         loss.backward()
-        grad = net.theta.grad.numpy()
         loss_list.append(loss.numpy()[0])
-        grad_list.append(grad)
+        grad_list.append(circuit.grad)
 
     pbar.close()
 
@@ -238,16 +198,15 @@ def random_sample(circuit, loss_func, sample_num, *args, mode='single', if_plot=
     return loss_list, grad_list
 
 
-def plot_loss_grad(circuit, loss_func, ITR, LR, *args):
-    r"""绘制损失值和梯度随训练次数变化的图
-
+def plot_loss_grad(circuit: Circuit, loss_func: Callable[[Circuit, Any], paddle.Tensor], ITR: int, LR: float, *args: Any) -> None:
+    r"""Plot the distribution maps between loss values & gradients and number of iterations.
+    
     Args:
-        circuit (UAnsatz): 表示传入的参数化量子电路，即要训练的量子神经网络
-        loss_func (function): 表示计算该量子神经网络损失值的函数
-        ITR (int): 表示训练的次数
-        LR (float): 表示学习训练的速率
-        *args (list): 表示用于损失函数计算的额外参数列表
-
+        circuit: QNN to be trained.
+        loss_func: Loss function that evaluate QNN.
+        ITR: Number of iterations.
+        LR: Learning rate.
+        *args: Parameters for ``loss_func`` other than ``circuit``.
     """
     loss, grad = show_gradient(circuit, loss_func, ITR, LR, *args)
     plt.xlabel(r"Iteration")
@@ -264,24 +223,25 @@ def plot_loss_grad(circuit, loss_func, ITR, LR, *args):
     plt.show()
 
 
-def plot_supervised_loss_grad(circuit, loss_func, N, EPOCH, LR, BATCH, TRAIN_X, TRAIN_Y, *args):
-    r"""绘制监督学习中损失值和梯度随训练次数变化的图
+def plot_supervised_loss_grad(circuit: Circuit, loss_func: Callable[[Circuit, Any], paddle.Tensor], N: int, EPOCH: int, LR: float, 
+                              BATCH: int, TRAIN_X: paddle.Tensor, TRAIN_Y: list, *args: Any) -> Tuple[List[float], List[float]]:
+    r""" plot the distribution maps between loss values & gradients and number of iterations in supervised training
 
     Args:
-        circuit (UAnsatz): 表示传入的参数化量子电路，即要训练的量子神经网络
-        loss_func (function): 表示计算该量子神经网络损失值的函数
-        N (int): 表示量子比特的数量
-        EPOCH (int): 表示训练的轮数
-        LR (float): 表示学习训练的速率
-        BATCH (int): 表示训练时 batch 的大小
-        TRAIN_X (paddle.Tensor): 表示训练数据集
-        TRAIN_Y (list): 表示训练数据集的标签
-        *args (list): 表示用于损失函数计算的额外参数列表
+        circuit: QNN ready to be trained.
+        loss_func: Loss function that evaluates the QNN.
+        N: Number of qubits.
+        EPOCH: Number of training iterations.
+        LR: Learning rate.
+        BATCH: Size of batches.
+        TRAIN_X: Data set .
+        TRAIN_Y: Label set.
+        *args: Parameters for ``loss_func`` other than ``circuit``.
 
     Returns:
-        tuple: 包含如下两个元素:
-             - loss_list (list): 表示多次训练的损失函数值列表
-             - grad_list(list): 表示多次训练后各参数梯度的列表
+        Contains the following two elements.
+            - loss_list: A list of losses for each iteration.
+            - grad_list: A list of gradients for each iteration.
     """
     grad_list = []
     loss_list = []
@@ -289,19 +249,18 @@ def plot_supervised_loss_grad(circuit, loss_func, N, EPOCH, LR, BATCH, TRAIN_X, 
     if type(TRAIN_X) != paddle.Tensor:
         raise Exception("Training data should be paddle.Tensor type")
 
-    shape = paddle.shape(circuit.get_param())
-    net = StateNet(shape=shape)
-    opt = paddle.optimizer.Adam(learning_rate=LR, parameters=net.parameters())
+    circuit.randomize_param()
+    opt = paddle.optimizer.Adam(learning_rate=LR, parameters=circuit.parameters())
 
-    for ep in range(EPOCH):
+    for _ in range(EPOCH):
         for itr in range(len(TRAIN_X)//BATCH):
             input_state = TRAIN_X[itr*BATCH:(itr+1)*BATCH]
-            input_state = reshape(input_state, [-1, 1, 2**N])
+            input_state = input_state.reshape([-1, 1, 2**N])
             label = TRAIN_Y[itr * BATCH:(itr + 1) * BATCH]
-            loss, circuit = net(circuit, loss_func, input_state, label)
+            
+            loss = loss_func(circuit, input_state, label)
             loss.backward()
-            grad = net.theta.grad.numpy()
-            grad_list.append(grad)
+            grad_list.append(circuit.grad)
             loss_list.append(loss.numpy()[0])
             opt.minimize(loss)
             opt.clear_grad()
@@ -322,56 +281,53 @@ def plot_supervised_loss_grad(circuit, loss_func, N, EPOCH, LR, BATCH, TRAIN_X, 
     return loss_list, grad_list
 
 
-def random_sample_supervised(circuit, loss_func, N, sample_num, BATCH, TRAIN_X, TRAIN_Y, *args, mode='single', if_plot=True, param=0):
-    r"""表示对监督学习模型进行随机采样，根据不同的计算模式，获得对应的平均值和方差
+def random_sample_supervised(circuit: Circuit, loss_func: Callable[[Circuit, Any], paddle.Tensor], 
+                             N: int, sample_num: int, BATCH: int, TRAIN_X: paddle.Tensor, TRAIN_Y: paddle.Tensor, 
+                             *args: Any, mode: str = 'single', if_plot: bool = True, param: int = 0) -> Tuple[List[float], List[float]]:
+    r"""Random sample the supervised model. Obtain mean and variance of gradients according to different calculation modes.
 
     Args:
-        circuit (UAnsatz): 表示传入的参数化量子电路，即要训练的量子神经网络
-        loss_func (function): 表示计算该量子神经网络损失值的函数
-        N (int): 表示量子比特的数量
-        sample_num (int): 表示随机采样的次数
-        BATCH (int): 表示训练时 batch 的大小
-        TRAIN_X (paddle.Tensor): 表示训练数据集
-        TRAIN_Y (list): 表示训练数据集的标签
-        mode (string): 表示随机采样后的计算模式，默认为 'single'
-        if_plot(boolean): 表示是否对梯度进行画图表示
-        param (int): 表示 ``Single`` 模式中对第几个参数进行画图，默认为第一个参数
-        *args (list): 表示用于损失函数计算的额外参数列表
+        circuit: QNN to be trained.
+        loss_func: Loss function that evaluates the QNN.
+        N: Number of qubits.
+        sample_num: Number of samplings.
+        BATCH: Size of batches.
+        TRAIN_X: Data set.
+        TRAIN_Y: Label set.
+        mode: Mode for calculation. Defaults to ``'single'``.
+        if_plot: Whether plot the calculation. Defaults to ``True``.
+        param: Which parameter to be plotted in single mode. Defaults to ``0``, which means the first one.
+        *args: Parameters for ``loss_func`` other than ``circuit``.
 
     Note:
-        在本函数中提供了三种计算模式，``mode`` 分别可以选择 ``'single'``, ``'max'``, 以及 ``'random'``
-            - mode='single': 表示计算电路中的每个可变参数梯度的平均值和方差
-            - mode='max': 表示对电路中所有参数梯度的最大值求平均值和方差
-            - mode='random': 表示随机对电路中采样的所有参数随机取一个梯度，求平均值和方差
+        This function provides three calculation modes: single, max and random.
+            - In single mode, we calculate the mean and variance of gradients of every trainable parameters.
+            - In max mode, we calculate the mean and variance of maximum gradients of for every trainable parameters.
+            - In random mode, we calculate the mean and variance of data randomly extracted from gradients of every trainable parameters.
 
     Returns:
-        tuple: 包含如下两个元素:
-            - loss_list (list): 表示多次采样后损失函数值的列表
-            - grad_list(list): 表示多次采样后各参数梯度的列表
+        Contains the following two elements.
+            - loss_list: A list of losses for each iteration.
+            - grad_list: A list of gradients for each iteration.
     """
     grad_list = []
     loss_list = []
     input_state = TRAIN_X[0:BATCH]
-    input_state = reshape(input_state, [-1, 1, 2**N])
+    input_state = input_state.reshape([-1, 1, 2**N])
     label = TRAIN_Y[0: BATCH]
 
     if type(TRAIN_X) != paddle.Tensor:
         raise Exception("Training data should be paddle.Tensor type")
-
-    label = TRAIN_Y[0: BATCH]
 
     pbar = tqdm(
         desc="Sampling: ", total=sample_num, ncols=100, ascii=True
     )
     for idx in range(sample_num):
         pbar.update(1)
-        shape = paddle.shape(circuit.get_param())
-        net = StateNet(shape=shape)
-
-        loss, circuit = net(circuit, loss_func, input_state, label)
+        circuit.randomize_param()
+        loss = loss_func(circuit, input_state, label)
         loss.backward()
-        grad = net.theta.grad.numpy()
-        grad_list.append(grad)
+        grad_list.append(circuit.grad)
         loss_list.append(loss.numpy()[0])
     pbar.close()
 

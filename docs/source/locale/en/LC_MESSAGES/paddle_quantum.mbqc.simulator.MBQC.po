@@ -1,0 +1,482 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Institute for Quantum Computing, Baidu Inc.
+# This file is distributed under the same license as the Paddle Quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Paddle Quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-26 17:14+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.simulator.MBQC.rst:2
+msgid "paddle\\_quantum.mbqc.simulator.MBQC"
+msgstr "paddle\\_quantum.mbqc.simulator.MBQC"
+
+#: of paddle_quantum.mbqc.simulator.MBQC:1
+msgid "定义基于测量的量子计算模型 ``MBQC`` 类。"
+msgstr ""
+"Define ``MBQC`` class to implement a measurement-based quantum "
+"computation model."
+
+#: of paddle_quantum.mbqc.simulator.MBQC:3
+msgid "用户可以通过实例化该类来定义自己的 MBQC 模型。"
+msgstr "Users can construct an MBQC model by instantiating this class."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.__init__:1
+msgid "MBQC 类的构造函数，用于实例化一个 ``MBQC`` 对象。"
+msgstr "MBQC constructor, used to instantiate an ``MBQC`` object."
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.simulator.MBQC.rst:14
+msgid "Methods"
+msgstr "Methods"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ":obj:`__init__ <paddle_quantum.mbqc.simulator.MBQC.__init__>`\\ \\(\\)"
+msgstr ":obj:`__init__ <paddle_quantum.mbqc.simulator.MBQC.__init__>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`correct_byproduct "
+"<paddle_quantum.mbqc.simulator.MBQC.correct_byproduct>`\\ \\(gate\\, "
+"which\\_qubit\\, power\\)"
+msgstr ""
+":obj:`correct_byproduct "
+"<paddle_quantum.mbqc.simulator.MBQC.correct_byproduct>`\\ \\(gate\\, "
+"which\\_qubit\\, power\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.correct_byproduct:1
+msgid "对测量后的量子态进行副产品纠正。"
+msgstr "Correct byproducts to the quantum state after measurements."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`draw_process <paddle_quantum.mbqc.simulator.MBQC.draw_process>`\\ "
+"\\(\\[draw\\, pos\\, pause\\_time\\]\\)"
+msgstr ""
+":obj:`draw_process <paddle_quantum.mbqc.simulator.MBQC.draw_process>`\\ "
+"\\(\\[draw\\, pos\\, pause\\_time\\]\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.draw_process:1
+msgid "动态过程图绘制，用以实时展示 MBQC 模型的模拟计算过程。"
+msgstr "Draw dynamic figures to show the MBQC computation process in real-time."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`get_classical_output "
+"<paddle_quantum.mbqc.simulator.MBQC.get_classical_output>`\\ \\(\\)"
+msgstr ""
+":obj:`get_classical_output "
+"<paddle_quantum.mbqc.simulator.MBQC.get_classical_output>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.get_classical_output:1
+msgid "获取 MBQC 模型运行后的经典输出结果。"
+msgstr "Get the classical output of MBQC."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ":obj:`get_graph <paddle_quantum.mbqc.simulator.MBQC.get_graph>`\\ \\(\\)"
+msgstr ":obj:`get_graph <paddle_quantum.mbqc.simulator.MBQC.get_graph>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.get_graph:1
+msgid "获取图的信息。"
+msgstr "Get MBQC graph."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`get_history <paddle_quantum.mbqc.simulator.MBQC.get_history>`\\ "
+"\\(\\)"
+msgstr ""
+":obj:`get_history <paddle_quantum.mbqc.simulator.MBQC.get_history>`\\ "
+"\\(\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.get_history:1
+msgid "获取 MBQC 计算模拟时的中间步骤信息。"
+msgstr "Get information about intermediate steps in MBQC."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`get_pattern <paddle_quantum.mbqc.simulator.MBQC.get_pattern>`\\ "
+"\\(\\)"
+msgstr ""
+":obj:`get_pattern <paddle_quantum.mbqc.simulator.MBQC.get_pattern>`\\ "
+"\\(\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.get_pattern:1
+msgid "获取测量模式的信息。"
+msgstr "Get MBQC pattern."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`get_quantum_output "
+"<paddle_quantum.mbqc.simulator.MBQC.get_quantum_output>`\\ \\(\\)"
+msgstr ""
+":obj:`get_quantum_output "
+"<paddle_quantum.mbqc.simulator.MBQC.get_quantum_output>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.get_quantum_output:1
+msgid "获取 MBQC 模型运行后的量子态输出结果。"
+msgstr "Get the quantum output of MBQC."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`measure <paddle_quantum.mbqc.simulator.MBQC.measure>`\\ "
+"\\(which\\_qubit\\, basis\\_list\\)"
+msgstr ""
+":obj:`measure <paddle_quantum.mbqc.simulator.MBQC.measure>`\\ "
+"\\(which\\_qubit\\, basis\\_list\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.measure:1
+msgid "以待测量的比特和测量基为输入参数，对该比特进行测量。"
+msgstr "Measure the qubit with the given measurement basis."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`run_pattern <paddle_quantum.mbqc.simulator.MBQC.run_pattern>`\\ "
+"\\(\\)"
+msgstr ""
+":obj:`run_pattern <paddle_quantum.mbqc.simulator.MBQC.run_pattern>`\\ "
+"\\(\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.run_pattern:1
+msgid "按照设置的测量模式对 MBQC 模型进行模拟。"
+msgstr "Run MBQC by the given measurement pattern."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`set_graph <paddle_quantum.mbqc.simulator.MBQC.set_graph>`\\ "
+"\\(graph\\)"
+msgstr ""
+":obj:`set_graph <paddle_quantum.mbqc.simulator.MBQC.set_graph>`\\ "
+"\\(graph\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.set_graph:1
+msgid "设置 MBQC 模型中的图。"
+msgstr "Set the underlying graph of MBQC."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`set_input_state "
+"<paddle_quantum.mbqc.simulator.MBQC.set_input_state>`\\ \\(\\[state\\]\\)"
+msgstr ""
+":obj:`set_input_state "
+"<paddle_quantum.mbqc.simulator.MBQC.set_input_state>`\\ \\(\\[state\\]\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.set_input_state:1
+msgid "设置需要替换的输入量子态。"
+msgstr "Set the initial input state."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`set_pattern <paddle_quantum.mbqc.simulator.MBQC.set_pattern>`\\ "
+"\\(pattern\\)"
+msgstr ""
+":obj:`set_pattern <paddle_quantum.mbqc.simulator.MBQC.set_pattern>`\\ "
+"\\(pattern\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.set_pattern:1
+msgid "设置 MBQC 模型的测量模式。"
+msgstr "Set MBQC pattern."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`sum_outcomes <paddle_quantum.mbqc.simulator.MBQC.sum_outcomes>`\\ "
+"\\(which\\_qubits\\[\\, start\\]\\)"
+msgstr ""
+":obj:`sum_outcomes <paddle_quantum.mbqc.simulator.MBQC.sum_outcomes>`\\ "
+"\\(which\\_qubits\\[\\, start\\]\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.sum_outcomes:1
+msgid "根据输入的量子系统标签，在存储测量结果的字典中找到对应的测量结果，并进行求和。"
+msgstr "Find the corresponding qubits' outcomes in the dictionary and sum them up."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+msgid ""
+":obj:`track_progress "
+"<paddle_quantum.mbqc.simulator.MBQC.track_progress>`\\ \\(\\[track\\]\\)"
+msgstr ""
+":obj:`track_progress "
+"<paddle_quantum.mbqc.simulator.MBQC.track_progress>`\\ \\(\\[track\\]\\)"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1:<autosummary>:1
+#: paddle_quantum.mbqc.simulator.MBQC.track_progress:1
+msgid "显示 MBQC 模型运行进度的开关。"
+msgstr "Switch to track the progress bar of MBQC."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:1
+msgid "定义维护点列表，用于实例化一个 ``Vertex`` 对象。"
+msgstr "Define the vertex class, used to instantiate a ``Vertex`` object."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:3
+msgid "将 MBQC 算法中图的节点分为三类，并进行动态维护。"
+msgstr ""
+"Divide the vertices of the MBQC graph into three groups and maintain them"
+" dynamically."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:5
+msgid "这是内部类，用户不需要直接调用到该类。"
+msgstr "This is an internal class, not callable to users."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:9
+msgid "MBQC 算法中图上的全部节点，不随运算而改变"
+msgstr ""
+"Total vertices in an MBQC graph, the length of this list will not change "
+"during calculations."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex
+msgid "type"
+msgstr "type"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:11
+#: paddle_quantum.mbqc.simulator.MBQC.Vertex:17
+#: paddle_quantum.mbqc.simulator.MBQC.Vertex:23
+#: paddle_quantum.mbqc.simulator.MBQC.Vertex:29
+msgid "list"
+msgstr "list"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:15
+msgid "待激活的节点，随着运算的执行而逐渐减少"
+msgstr ""
+"Vertices to be activated, the length of this list is decreasing during "
+"calculations."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:21
+msgid "激活的节点，与当前测量步骤直接相关的节点"
+msgstr "Active vertices relevant to the current measurement step."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.Vertex:27
+msgid "已被测量过的节点，随着运算的执行而逐渐增加"
+msgstr ""
+"Measured vertices, the length of this list is increasing during "
+"calculations."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.set_graph:3
+msgid "该函数用于将用户自己构造的图传递给 ``MBQC`` 实例。"
+msgstr "This function is called to pass the user's graph to an ``MBQC`` instance."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.correct_byproduct
+#: paddle_quantum.mbqc.simulator.MBQC.draw_process
+#: paddle_quantum.mbqc.simulator.MBQC.measure
+#: paddle_quantum.mbqc.simulator.MBQC.set_graph
+#: paddle_quantum.mbqc.simulator.MBQC.set_input_state
+#: paddle_quantum.mbqc.simulator.MBQC.set_pattern
+#: paddle_quantum.mbqc.simulator.MBQC.sum_outcomes
+#: paddle_quantum.mbqc.simulator.MBQC.track_progress
+msgid "Parameters"
+msgstr "Parameters"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.set_graph:5
+msgid "MBQC 模型中的图，由列表 ``[V, E]`` 给出， 其中 ``V`` 为节点列表，``E`` 为边列表"
+msgstr ""
+"MBQC graph, denoted by a list ``[V, E]``, where ``V`` is a list of "
+"vertices and ``E`` is a list of edges."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.get_classical_output
+#: paddle_quantum.mbqc.simulator.MBQC.get_graph
+#: paddle_quantum.mbqc.simulator.MBQC.get_history
+#: paddle_quantum.mbqc.simulator.MBQC.get_pattern
+#: paddle_quantum.mbqc.simulator.MBQC.get_quantum_output
+#: paddle_quantum.mbqc.simulator.MBQC.sum_outcomes
+msgid "Returns"
+msgstr "Returns"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.get_graph:3
+msgid "图"
+msgstr "MBQC graph"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.get_classical_output
+#: paddle_quantum.mbqc.simulator.MBQC.get_graph
+#: paddle_quantum.mbqc.simulator.MBQC.get_history
+#: paddle_quantum.mbqc.simulator.MBQC.get_pattern
+#: paddle_quantum.mbqc.simulator.MBQC.get_quantum_output
+#: paddle_quantum.mbqc.simulator.MBQC.sum_outcomes
+msgid "Return type"
+msgstr "Return type"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.set_pattern:3
+msgid "该函数用于将用户由电路图翻译得到或自己构造的测量模式传递给 ``MBQC`` 实例。"
+msgstr "This function is called to pass the pattern to an ``MBQC`` instance."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.set_pattern:5
+msgid "输入的 pattern 参数是 ``Pattern`` 类型，其中命令列表为标准 ``EMC`` 命令。"
+msgstr ""
+"The type of parameter pattern is ``Pattern``, whose commands are in a "
+"standard ``EMC`` form."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.set_pattern:7
+msgid "MBQC 算法对应的测量模式"
+msgstr "MBQC pattern."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.get_pattern:3
+msgid "测量模式"
+msgstr "MBQC pattern"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.set_input_state:5
+msgid ""
+"与电路模型不同，MBQC 模型通常默认初始态为加态。如果用户不调用此方法设置初始量子态，则默认为加态。 如果用户以测量模式运行 "
+"MBQC，则此处输入量子态的系统标签会被限制为从零开始的自然数，类型为整型。"
+msgstr ""
+"Unlike the circuit model, the MBQC model usually sets the initial state "
+"as a plus state by default. If the user does not call this function to "
+"set the initial quantum state, it would be a plus state by default. If "
+"the user runs MBQC by a pattern, the system label of the input state will"
+" be limited to natural numbers starting from zero and with type 'int'."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.set_input_state:8
+msgid "需要替换的量子态，默认为加态"
+msgstr "Input state (plus state by default)."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.draw_process:3
+msgid "是否绘制动态过程图的布尔开关"
+msgstr "Boolean switch to drawing dynamic figures"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.draw_process:5
+msgid ""
+"节点坐标的字典数据或者内置的坐标选择，内置的坐标选择有： ``True`` 为测量模式自带的坐标，``False`` 为 "
+"`spring_layout` 坐标"
+msgstr ""
+"Dictionary of vertices positions or to use build-in methods to generate "
+"positions. The build-in methods are: ``True`` for the self-contained "
+"positions in the pattern and ``False`` for the ``spring_layout`` method "
+"in ``networkx``."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.draw_process:8
+msgid "绘制动态过程图时每次更新的停顿时间"
+msgstr "Pause time for each update of dynamic figures."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.track_progress:3
+msgid "``True`` 打开进度条显示功能， ``False`` 关闭进度条显示功能"
+msgstr ""
+"``True`` means to open the progress bar, and ``False`` means to close the"
+" progress bare."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.measure:5
+msgid ""
+"这是用户在实例化 MBQC 类之后最常调用的方法之一，此处我们对单比特测量模拟进行了最大程度的优化， 随着用户对该函数的调用，MBQC "
+"类将自动完成激活相关节点、生成所需的图态以及对特定比特进行测量的全过程， "
+"并记录测量结果和对应测量后的量子态。用户每调用一次该函数，就完成一次对单比特的测量操作。"
+msgstr ""
+"This is the most frequently called method after the instantiation of "
+"MBQC. Here we optimize simulation of single-qubit measurement to the "
+"greatest extent. Once this function is called, MBQC class will "
+"automatically complete the whole process of vertices activation, graph "
+"state creation, and single-qubit measurement. It will record the outcome "
+"and the post-measurement quantum state. Each call of this function will "
+"complete one single-qubit measurement operation."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.measure:9
+msgid "当且仅当用户调用 ``measure`` 类方法时，MBQC 模型才真正进行运算。"
+msgstr ""
+"MBQC will start the computation process if and only if the user calls the"
+" ``measure`` method."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.measure:11
+msgid "待测量量子比特的系统标签， 可以是 ``str``, ``tuple`` 等任意数据类型，但需要和 MBQC 模型的图上标签匹配"
+msgstr ""
+"A system label of qubit to be measured, it can be any type of ``str``, "
+"``tuple``,  etc. (but should be consistent with those in the graph)."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.measure:14
+msgid "测量基向量构成的列表，列表元素为 ``Tensor`` 类型的列向量"
+msgstr ""
+"A measurement basis list, with each element being a vector of type "
+"``Tensor``."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.correct_byproduct:12
+#: paddle_quantum.mbqc.simulator.MBQC.measure:17
+#: paddle_quantum.mbqc.simulator.MBQC.sum_outcomes:13
+msgid "代码示例："
+msgstr "Code example:"
+
+#: of paddle_quantum.mbqc.simulator.MBQC.sum_outcomes:3
+msgid "在进行副产品纠正操作和定义适应性测量角度时，用户可以调用该方法对特定比特的测量结果求和。"
+msgstr ""
+"When calculating the adaptive measurements' angles and correcting "
+"byproducts, users can call this method to sum measurement outcomes of "
+"specific qubits."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.sum_outcomes:5
+msgid "需要查找测量结果并求和的比特的系统标签列表"
+msgstr ""
+"A list of qubit systems labels, of which the outcomes are required to sum"
+" up."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.sum_outcomes:7
+msgid "对结果进行求和后需要额外相加的整数"
+msgstr "An additional integer to sum up."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.sum_outcomes:10
+msgid "指定比特的测量结果的和"
+msgstr "Summation of specific qubits' outcomes."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.correct_byproduct:3
+msgid "这是用户在实例化 MBQC 类并完成测量后，经常需要调用的一个方法。"
+msgstr ""
+"This method is usually called after the instantiation of MBQC class and "
+"measurements."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.correct_byproduct:5
+msgid "``'X'`` 或者 ``'Z'``，分别表示 Pauli X 或 Z 门修正"
+msgstr ""
+"``'X'`` or ``'Z'``, denoting correction of Pauli X or Pauli Z gate "
+"respectively."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.correct_byproduct:7
+msgid "待操作的量子比特的系统标签，可以是 ``str``, ``tuple`` 等任意数据类型，但需要和 MBQC 中图的标签类型匹配"
+msgstr ""
+"System label of the qubit to operate, it can be type of ``str``, "
+"``tuple``, etc. (be should be consistent with those in the graph)."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.correct_byproduct:9
+msgid "副产品纠正算符的指数"
+msgstr "Exponent of byproduct operator."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.correct_byproduct:14
+msgid "此处展示的是 MBQC 模型下实现隐形传态的一个例子。"
+msgstr "Here is an example of quantum teleportation in MBQC."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.run_pattern:3
+msgid "该方法必须在 ``set_pattern`` 调用后调用。"
+msgstr "This method must be called after ``set_pattern``."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.get_classical_output:3
+msgid ""
+"如果用户输入是测量模式，则返回测量输出节点得到的比特串，与原电路的测量结果相一致，没有被测量的比特位填充 "
+"\"？\"，如果用户输入是图，则返回所有节点的测量结果"
+msgstr ""
+"If the user inputs a pattern, it returns with a bit string obtained from "
+"outcomes of output labels, consistent with the result in the circuit "
+"model, with those unmeasured filling with \"?\". If the user sets a "
+"graph, it returns with all vertices outcomes."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.get_history:3
+msgid "生成图态、进行测量、纠正副产品后运算结果构成的列表"
+msgstr ""
+"A list of quantum results obtained after graph state preparation, "
+"measurements, and byproduct correction."
+
+#: of paddle_quantum.mbqc.simulator.MBQC.get_quantum_output:3
+msgid "MBQC 模型运行后的量子态"
+msgstr "A quantum state after running MBQC."
+

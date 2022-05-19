@@ -22,8 +22,8 @@ from paddle_quantum.mbqc.utils import write_running_data, read_running_data
 from time import perf_counter
 from paddle_quantum.mbqc.simulator import simulate_by_mbqc, sample_by_mbqc
 from numpy import random
+import paddle_quantum
 from paddle_quantum.mbqc.qobject import Circuit
-from paddle_quantum.circuit import UAnsatz
 
 __all__ = [
     "qkernel_circuit",
@@ -47,29 +47,47 @@ def qkernel_circuit(alpha, cir):
     """
     qubit_number = alpha.shape[0]
 
-    # U
-    for i in range(qubit_number):
-        if not isinstance(cir, Circuit):
-            cir.h(i)
-        cir.rx(alpha[i, 1], i)
-        cir.rz(alpha[i, 2], i)
-        cir.rx(alpha[i, 3], i)
-    # cz
-    for i in range(qubit_number - 1):
-        cir.h(i + 1)
-        cir.cnot([i, i + 1])
-        cir.h(i + 1)
-
-    # U^{\dagger}
-    for i in range(qubit_number):
-        cir.rx(alpha[i, 5], i)
-        cir.rz(alpha[i, 6], i)
-        cir.rx(alpha[i, 7], i)
-        cir.h(i)
-
-    # Measure
     if isinstance(cir, Circuit):
+        # U
+        for i in range(qubit_number):
+            if not isinstance(cir, Circuit):
+                cir.h(i)
+            cir.rx(alpha[i, 1], i)
+            cir.rz(alpha[i, 2], i)
+            cir.rx(alpha[i, 3], i)
+        # cz
+        for i in range(qubit_number - 1):
+            cir.h(i + 1)
+            cir.cnot([i, i + 1])
+            cir.h(i + 1)
+
+        # U^{\dagger}
+        for i in range(qubit_number):
+            cir.rx(alpha[i, 5], i)
+            cir.rz(alpha[i, 6], i)
+            cir.rx(alpha[i, 7], i)
+            cir.h(i)
         cir.measure()
+    else:
+        # U
+        for i in range(qubit_number):
+            if not isinstance(cir, Circuit):
+                cir.h(i)
+            cir.rx(i, param=alpha[i, 1])
+            cir.rz(i, param=alpha[i, 2])
+            cir.rx(i, param=alpha[i, 3])
+        # cz
+        for i in range(qubit_number - 1):
+            cir.h(i + 1)
+            cir.cnot([i, i + 1])
+            cir.h(i + 1)
+
+        # U^{\dagger}
+        for i in range(qubit_number):
+            cir.rx(i, param=alpha[i, 5])
+            cir.rz(i, param=alpha[i, 6])
+            cir.rx(i, param=alpha[i, 7])
+            cir.h(i)
 
     return cir
 
@@ -91,12 +109,12 @@ def cir_uansatz(alpha, shots=1):
         raise ValueError("the UAnsatz model could not support qubit number larger than 25 on a laptop.")
 
     else:
-        cir = UAnsatz(qubit_number)
+        cir = paddle_quantum.ansatz.Circuit(qubit_number)
         cir = qkernel_circuit(alpha, cir)
 
         uansatz_start_time = perf_counter()
-        cir.run_state_vector()
-        outcome = cir.measure(shots=shots)
+        state = cir()
+        outcome = state.measure(shots=shots)
         uansatz_end_time = perf_counter()
 
         # As the outcome dictionary is in a messy order, we need to reorder the outcome

@@ -1,0 +1,248 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.fisher.rst:2
+msgid "paddle\\_quantum.fisher"
+msgstr ""
+
+#: of paddle_quantum.fisher:1
+msgid "The source file of the class for the fisher information."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:1
+#: paddle_quantum.fisher.QuantumFisher:1
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher:1
+msgid "Quantum fisher information (QFI) & related calculators."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher
+#: paddle_quantum.fisher.ClassicalFisher.get_cfisher
+#: paddle_quantum.fisher.ClassicalFisher.get_eff_dim
+#: paddle_quantum.fisher.ClassicalFisher.get_gradient
+#: paddle_quantum.fisher.QuantumFisher
+#: paddle_quantum.fisher.QuantumFisher.get_eff_qdim
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_norm
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_rank
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher:3
+msgid ""
+"Parameterized quantum circuits requiring calculation of quantum Fisher "
+"information."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher:5
+msgid ""
+"This class does not fit the situation when parameters among gates are "
+"correlated, such as control-gates."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_qfisher_matrix:1
+msgid "Use parameter shift rule of order 2 to calculate the matrix of QFI."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_cfisher
+#: paddle_quantum.fisher.ClassicalFisher.get_eff_dim
+#: paddle_quantum.fisher.ClassicalFisher.get_gradient
+#: paddle_quantum.fisher.ClassicalFisher.get_normalized_cfisher
+#: paddle_quantum.fisher.QuantumFisher.get_eff_qdim
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_matrix
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_norm
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_rank
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_qfisher_matrix:3
+msgid "Matrix of QFI."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_cfisher
+#: paddle_quantum.fisher.ClassicalFisher.get_eff_dim
+#: paddle_quantum.fisher.ClassicalFisher.get_gradient
+#: paddle_quantum.fisher.ClassicalFisher.get_normalized_cfisher
+#: paddle_quantum.fisher.QuantumFisher.get_eff_qdim
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_matrix
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_norm
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_rank
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_qfisher_norm:1
+msgid ""
+"Use finite difference rule to calculate the projection norm of QFI along "
+"particular direction."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_qfisher_norm:3
+msgid "A direction represented by a vector."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_qfisher_norm:4
+msgid "Step size of the finite difference rule. Defaults to ``0.01``。"
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_qfisher_norm:6
+msgid "Projection norm."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_eff_qdim:1
+msgid ""
+"Calculate the effective quantum dimension, i.e. the maximum rank of QFI "
+"matrix in the whole parameter space."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_eff_qdim:3
+msgid "Number of samples to estimate the dimension. Defaults to ``4``."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_eff_qdim:4
+#: paddle_quantum.fisher.QuantumFisher.get_qfisher_rank:3
+msgid ""
+"Minimum tolerance of the singular values to be 0. Defaults to ``None``, "
+"with the same meaning as in ``numpy.linalg.matrix_rank()``."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_eff_qdim:7
+msgid "Effective quantum dimension of the quantum circuit."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_qfisher_rank:1
+msgid "Calculate the rank of the QIF matrix."
+msgstr ""
+
+#: of paddle_quantum.fisher.QuantumFisher.get_qfisher_rank:6
+msgid "Rank of the QIF matrix."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:1
+msgid "Classical fisher information (CFI) & related calculators."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:3
+msgid "Instance of the classical or quantum neural network model."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:4
+msgid "Number of the parameter sets."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:5
+msgid "Number of the input samples."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:6
+msgid "Model type is ``'classical'`` or ``'quantum'``. Defaults to ``'quantum'``."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:7
+msgid ""
+"including - size: list of sizes of classical NN units - num_qubits: "
+"number of qubits of quantum NN - depth: depth of quantum NN - encoding: "
+"``IQP`` or ``re-uploading`` encoding of quantum NN"
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:13
+msgid "Unsupported encoding."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher:14
+msgid "Unsupported model type."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_gradient:1
+msgid ""
+"Calculate the gradients with respect to the variational parameters of the"
+" output layer."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_gradient:3
+msgid "Input samples."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_gradient:5
+msgid ""
+"Gradient with respect to the variational parameters of the output layer "
+"with shape [num_inputs, dimension of the output layer, num_thetas]."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_cfisher:1
+msgid "Use the Jacobian matrix to calculate the CFI matrix."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_cfisher:3
+msgid "Gradients with respect to the variational parameter of the output layer."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_cfisher:5
+msgid ""
+"CFI matrix with shape [num_inputs, dimension of the output layer, "
+"num_theta]."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_normalized_cfisher:1
+msgid "Calculate the normalized CFI matrix."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_normalized_cfisher:3
+msgid ""
+"contains elements  - CFI matrix with shape [num_inputs, num_theta, "
+"num_theta] - its trace"
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_normalized_cfisher:3
+msgid "contains elements"
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_normalized_cfisher:5
+msgid "CFI matrix with shape [num_inputs, num_theta, num_theta]"
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_normalized_cfisher:6
+msgid "its trace"
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_eff_dim:1
+msgid "Calculate the classical effective dimension."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_eff_dim:3
+msgid "Normalized CFI matrix."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_eff_dim:4
+msgid "List of different numbers of samples."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_eff_dim:5
+msgid "A parameter in the effective dimension. Defaults to ``1``."
+msgstr ""
+
+#: of paddle_quantum.fisher.ClassicalFisher.get_eff_dim:7
+msgid "Classical effective dimensions for different numbers of samples."
+msgstr ""
+

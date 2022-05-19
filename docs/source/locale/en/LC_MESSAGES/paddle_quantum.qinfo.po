@@ -1,0 +1,397 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.qinfo.rst:2
+msgid "paddle\\_quantum.qinfo"
+msgstr ""
+
+#: of paddle_quantum.qinfo:1
+msgid "The function for quantum information."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace:1
+msgid "Calculate the partial trace of the quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity
+#: paddle_quantum.qinfo.image_to_density_matrix paddle_quantum.qinfo.is_ppt
+#: paddle_quantum.qinfo.logarithmic_negativity paddle_quantum.qinfo.negativity
+#: paddle_quantum.qinfo.partial_trace
+#: paddle_quantum.qinfo.partial_trace_discontiguous
+#: paddle_quantum.qinfo.partial_transpose
+#: paddle_quantum.qinfo.partial_transpose_2
+#: paddle_quantum.qinfo.pauli_str_to_matrix paddle_quantum.qinfo.purity
+#: paddle_quantum.qinfo.random_pauli_str_generator
+#: paddle_quantum.qinfo.relative_entropy paddle_quantum.qinfo.schmidt_decompose
+#: paddle_quantum.qinfo.shadow_trace paddle_quantum.qinfo.state_fidelity
+#: paddle_quantum.qinfo.trace_distance paddle_quantum.qinfo.von_neumann_entropy
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace:3
+#: paddle_quantum.qinfo.partial_trace_discontiguous:3
+msgid "Input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace:4
+msgid "The dimension of system A."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace:5
+msgid "The dimension of system B."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace:6
+msgid ""
+"1 or 2. 1 means to calculate partial trace on system A; 2 means to "
+"calculate partial trace on system B."
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity
+#: paddle_quantum.qinfo.image_to_density_matrix paddle_quantum.qinfo.is_ppt
+#: paddle_quantum.qinfo.logarithmic_negativity paddle_quantum.qinfo.negativity
+#: paddle_quantum.qinfo.partial_trace
+#: paddle_quantum.qinfo.partial_trace_discontiguous
+#: paddle_quantum.qinfo.partial_transpose
+#: paddle_quantum.qinfo.partial_transpose_2
+#: paddle_quantum.qinfo.pauli_str_to_matrix paddle_quantum.qinfo.purity
+#: paddle_quantum.qinfo.random_pauli_str_generator
+#: paddle_quantum.qinfo.relative_entropy paddle_quantum.qinfo.schmidt_decompose
+#: paddle_quantum.qinfo.shadow_trace paddle_quantum.qinfo.state_fidelity
+#: paddle_quantum.qinfo.trace_distance paddle_quantum.qinfo.von_neumann_entropy
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace:8
+msgid "Partial trace of the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity
+#: paddle_quantum.qinfo.image_to_density_matrix paddle_quantum.qinfo.is_ppt
+#: paddle_quantum.qinfo.logarithmic_negativity paddle_quantum.qinfo.negativity
+#: paddle_quantum.qinfo.partial_trace
+#: paddle_quantum.qinfo.partial_trace_discontiguous
+#: paddle_quantum.qinfo.partial_transpose
+#: paddle_quantum.qinfo.partial_transpose_2
+#: paddle_quantum.qinfo.pauli_str_to_matrix paddle_quantum.qinfo.purity
+#: paddle_quantum.qinfo.random_pauli_str_generator
+#: paddle_quantum.qinfo.relative_entropy paddle_quantum.qinfo.schmidt_decompose
+#: paddle_quantum.qinfo.shadow_trace paddle_quantum.qinfo.state_fidelity
+#: paddle_quantum.qinfo.trace_distance paddle_quantum.qinfo.von_neumann_entropy
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace_discontiguous:1
+msgid ""
+"Calculate the partial trace of the quantum state with arbitrarily "
+"selected subsystem"
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace_discontiguous:4
+msgid "Remaining qubits, default is None, indicate all qubits remain."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_trace_discontiguous:6
+msgid "Partial trace of the quantum state with arbitrarily selected subsystem."
+msgstr ""
+
+#: of paddle_quantum.qinfo.state_fidelity:1
+#: paddle_quantum.qinfo.trace_distance:1
+msgid "Calculate the fidelity of two quantum states."
+msgstr ""
+
+#: of paddle_quantum.qinfo.trace_distance:3
+msgid "D(\\rho, \\sigma) = 1 / 2 * \\text{tr}|\\rho-\\sigma|"
+msgstr ""
+
+#: of paddle_quantum.qinfo.is_ppt:3
+#: paddle_quantum.qinfo.logarithmic_negativity:3
+#: paddle_quantum.qinfo.negativity:3 paddle_quantum.qinfo.partial_transpose:3
+#: paddle_quantum.qinfo.partial_transpose_2:3 paddle_quantum.qinfo.purity:7
+#: paddle_quantum.qinfo.relative_entropy:8
+#: paddle_quantum.qinfo.relative_entropy:9
+#: paddle_quantum.qinfo.state_fidelity:6 paddle_quantum.qinfo.state_fidelity:7
+#: paddle_quantum.qinfo.trace_distance:7 paddle_quantum.qinfo.trace_distance:8
+#: paddle_quantum.qinfo.von_neumann_entropy:7
+msgid "Density matrix form of the quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.state_fidelity:9
+#: paddle_quantum.qinfo.trace_distance:10
+msgid "The fidelity between the input quantum states."
+msgstr ""
+
+#: of paddle_quantum.qinfo.state_fidelity:3
+msgid ""
+"F(\\rho, \\sigma) = \\text{tr}(\\sqrt{\\sqrt{\\rho}\\sigma\\sqrt{\\rho}})"
+"\n"
+"\n"
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity:1
+msgid "calculate the fidelity between gates"
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity:3
+msgid "F(U, V) = |\\text{tr}(UV^\\dagger)|/2^n"
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity:7
+msgid ":math:`U` is a :math:`2^n\\times 2^n` unitary gate"
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity:9
+msgid "quantum gate :math:`U`  in matrix form"
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity:10
+msgid "quantum gate :math:`V`  in matrix form"
+msgstr ""
+
+#: of paddle_quantum.qinfo.gate_fidelity:12
+msgid "fidelity between gates"
+msgstr ""
+
+#: of paddle_quantum.qinfo.purity:1
+msgid "Calculate the purity of a quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.purity:3
+msgid "P = \\text{tr}(\\rho^2)"
+msgstr ""
+
+#: of paddle_quantum.qinfo.purity:9
+msgid "The purity of the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.von_neumann_entropy:1
+msgid "Calculate the von Neumann entropy of a quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.von_neumann_entropy:3
+msgid "S = -\\text{tr}(\\rho \\log(\\rho))"
+msgstr ""
+
+#: of paddle_quantum.qinfo.von_neumann_entropy:9
+msgid "The von Neumann entropy of the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.relative_entropy:1
+msgid "Calculate the relative entropy of two quantum states."
+msgstr ""
+
+#: of paddle_quantum.qinfo.relative_entropy:3
+msgid "S(\\rho \\| \\sigma)=\\text{tr} \\rho(\\log \\rho-\\log \\sigma)"
+msgstr ""
+
+#: of paddle_quantum.qinfo.relative_entropy:11
+msgid "Relative entropy between input quantum states."
+msgstr ""
+
+#: of paddle_quantum.qinfo.random_pauli_str_generator:1
+msgid "Generate a random observable in list form."
+msgstr ""
+
+#: of paddle_quantum.qinfo.random_pauli_str_generator:3
+msgid ""
+"An observable :math:`O=0.3X\\otimes I\\otimes I+0.5Y\\otimes I\\otimes "
+"Z`'s list form is ``[[0.3, 'x0'], [0.5, 'y0,z2']]``.  Such an observable "
+"is generated by ``random_pauli_str_generator(3, terms=2)``"
+msgstr ""
+
+#: of paddle_quantum.qinfo.pauli_str_to_matrix:8
+#: paddle_quantum.qinfo.random_pauli_str_generator:7
+msgid "Number of qubits."
+msgstr ""
+
+#: of paddle_quantum.qinfo.random_pauli_str_generator:8
+msgid "Number of terms in the observable. Defaults to 3."
+msgstr ""
+
+#: of paddle_quantum.qinfo.random_pauli_str_generator:10
+msgid "The randomly generated observable’s list form."
+msgstr ""
+
+#: of paddle_quantum.qinfo.pauli_str_to_matrix:1
+msgid "Convert the input list form of an observable to its matrix form."
+msgstr ""
+
+#: of paddle_quantum.qinfo.pauli_str_to_matrix:3
+msgid ""
+"For example, if the input ``pauli_str`` is ``[[0.7, 'z0,x1'], [0.2, "
+"'z1']]`` and ``n=3``, then this function returns the observable "
+":math:`0.7Z\\otimes X\\otimes I+0.2I\\otimes Z\\otimes I` in matrix form."
+msgstr ""
+
+#: of paddle_quantum.qinfo.pauli_str_to_matrix:7
+msgid "A list form of an observable."
+msgstr ""
+
+#: of paddle_quantum.qinfo.pauli_str_to_matrix
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.qinfo.pauli_str_to_matrix:10
+msgid "Only Pauli operator \"I\" can be accepted without specifying its position."
+msgstr ""
+
+#: of paddle_quantum.qinfo.pauli_str_to_matrix:12
+msgid "The matrix form of the input observable."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_transpose:1
+#: paddle_quantum.qinfo.partial_transpose_2:1
+msgid ""
+"Calculate the partial transpose :math:`\\rho^{T_A}` of the input quantum "
+"state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_transpose_2:4
+msgid ""
+"1 or 2. 1 means to perform partial transpose on system A; 2 means to "
+"perform partial trace on system B. Default is 2."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_transpose:6
+#: paddle_quantum.qinfo.partial_transpose_2:6
+msgid "The partial transpose of the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.partial_transpose:4
+msgid "Number of qubits of the system to be transposed."
+msgstr ""
+
+#: of paddle_quantum.qinfo.negativity:1
+msgid ""
+"Compute the Negativity :math:`N = ||\\frac{\\rho^{T_A}-1}{2}||` of the "
+"input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.negativity:5
+msgid "The Negativity of the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.logarithmic_negativity:1
+msgid ""
+"Calculate the Logarithmic Negativity :math:`E_N = ||\\rho^{T_A}||` of the"
+" input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.logarithmic_negativity:5
+msgid "The Logarithmic Negativity of the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.is_ppt:1
+msgid "Check if the input quantum state is PPT."
+msgstr ""
+
+#: of paddle_quantum.qinfo.is_ppt:5
+msgid "Whether the input quantum state is PPT."
+msgstr ""
+
+#: of paddle_quantum.qinfo.schmidt_decompose:1
+msgid ""
+"Calculate the Schmidt decomposition of a quantum state "
+":math:`\\lvert\\psi\\rangle=\\sum_ic_i\\lvert i_A\\rangle\\otimes\\lvert "
+"i_B \\rangle`."
+msgstr ""
+
+#: of paddle_quantum.qinfo.schmidt_decompose:3
+msgid "State vector form of the quantum state, with shape（2**n）"
+msgstr ""
+
+#: of paddle_quantum.qinfo.schmidt_decompose:4
+msgid ""
+"Qubit indices to be included in subsystem A (other qubits are included in"
+" subsystem B), default are the first half qubits of :math:`\\lvert "
+"\\psi\\rangle`"
+msgstr ""
+
+#: of paddle_quantum.qinfo.schmidt_decompose:6
+msgid ""
+"contains elements  * A one dimensional array composed of Schmidt "
+"coefficients, with shape ``(k)`` * A high dimensional array composed of "
+"bases for subsystem A :math:`\\lvert i_A\\rangle`, with shape ``(k, 2**m,"
+" 1)`` * A high dimensional array composed of bases for subsystem B "
+":math:`\\lvert i_B\\rangle` , with shape ``(k, 2**m, 1)``"
+msgstr ""
+
+#: of paddle_quantum.qinfo.schmidt_decompose:6
+msgid "contains elements"
+msgstr ""
+
+#: of paddle_quantum.qinfo.schmidt_decompose:8
+msgid ""
+"A one dimensional array composed of Schmidt coefficients, with shape "
+"``(k)``"
+msgstr ""
+
+#: of paddle_quantum.qinfo.schmidt_decompose:9
+msgid ""
+"A high dimensional array composed of bases for subsystem A :math:`\\lvert"
+" i_A\\rangle`, with shape ``(k, 2**m, 1)``"
+msgstr ""
+
+#: of paddle_quantum.qinfo.schmidt_decompose:10
+msgid ""
+"A high dimensional array composed of bases for subsystem B :math:`\\lvert"
+" i_B\\rangle` , with shape ``(k, 2**m, 1)``"
+msgstr ""
+
+#: of paddle_quantum.qinfo.image_to_density_matrix:1
+msgid "Encode image to density matrix"
+msgstr ""
+
+#: of paddle_quantum.qinfo.image_to_density_matrix:3
+msgid "Path to the image file."
+msgstr ""
+
+#: of paddle_quantum.qinfo.image_to_density_matrix:5
+msgid "The density matrix obtained by encoding"
+msgstr ""
+
+#: of paddle_quantum.qinfo.shadow_trace:1
+msgid ""
+"Estimate the expectation value :math:`\\text{trace}(H\\rho)`  of an "
+"observable :math:`H`."
+msgstr ""
+
+#: of paddle_quantum.qinfo.shadow_trace:3
+msgid "Quantum state."
+msgstr ""
+
+#: of paddle_quantum.qinfo.shadow_trace:4
+msgid "Observable."
+msgstr ""
+
+#: of paddle_quantum.qinfo.shadow_trace:5
+msgid "Number of samples."
+msgstr ""
+
+#: of paddle_quantum.qinfo.shadow_trace:6
+msgid ""
+"Method used to , which should be one of “CS”, “LBCS”, and “APS”. Default "
+"is “CS”."
+msgstr ""
+
+#: of paddle_quantum.qinfo.shadow_trace:8
+msgid "The estimated expectation value for the hamiltonian."
+msgstr ""
+

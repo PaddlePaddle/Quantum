@@ -13,20 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-量子化学模块
+r"""
+The function for quantum chemistry.
 """
 
 import os
 import re
+import string
+from typing import Optional
 import numpy as np
-import psi4
 import openfermion
 from openfermion import MolecularData, transforms
 from openfermion.ops import general_basis_change
-from paddle_quantum.utils import Hamiltonian
+from paddle_quantum.hamiltonian import Hamiltonian
+
 
 __all__ = [
+    "qubitOperator_to_Hamiltonian",
     "geometry",
     "get_molecular_data",
     "active_space",
@@ -35,18 +38,15 @@ __all__ = [
 ]
 
 
-def _hamiltonian_transformation(spin_h, tol=1e-8):
-    r"""将哈密顿量从 openfermion 格式转换成 Paddle Quantum 格式。
-
-    Warning:
-        输入的哈密顿量必须为埃尔米特的，输入的哈密顿中虚数的系数会和实数一起转换成他们的范数 (norm)。
+def qubitOperator_to_Hamiltonian(spin_h: openfermion.ops.operators.qubit_operator.QubitOperator, tol: Optional[float] = 1e-8) -> Hamiltonian:
+    r"""Transfer openfermion form to Paddle Quantum Hamiltonian form.
 
     Args:
-        spin_h (openfermion.ops.operators.qubit_operator.QubitOperator): openfermion 格式的哈密顿量
-        tol (float, optional): 系数小于 tol 的值将被忽略掉，默认为 1e-8
+        spin_h: Hamiltonian in openfermion form.
+        tol: Value less than tol will be ignored. Defaults to 1e-8.
 
     Returns:
-        paddle_quantum.Hamiltonian object: Paddle Quantum 格式的哈密顿量
+        Hamiltonian in Paddle Quantum form.
     """
     terms = spin_h.__str__().split('+\n')
     spin_h.compress(abs_tol=tol)
@@ -73,15 +73,15 @@ def _hamiltonian_transformation(spin_h, tol=1e-8):
     return Hamiltonian(pauli_str)
 
 
-def _geo_str(geometry):
-    r"""创建分子几何信息的字符串
+def _geo_str(geometry: list) -> str:
+    r"""String of molecular geometry information
 
     Args:
-        geometry (list): 包含了分子的几何信息，以 H2 分子为例
-        [['H', [-1.68666, 1.79811, 0.0]], ['H', [-1.12017, 1.37343, 0.0]]]
+        geometry: contains the geometry of the molecule, for example, the H2 molecule
+            [['H', [-1.68666, 1.79811, 0.0]], ['H', [-1.12017, 1.37343, 0.0]]]
 
     Returns:
-        str: 分子几何信息的字符串
+        String of molecular geometry information
     """
     geo_str = ''
     for item in geometry:
@@ -99,27 +99,28 @@ def _geo_str(geometry):
 
 
 def _run_psi4(
-        molecule,
-        charge,
-        multiplicity,
-        method,
-        basis,
-        if_print,
-        if_save
-):
-    r"""计算分子的必要信息，包括单体积分 (one-body integrations) 和双体积分 (two-body integrations)，
-    以及用 scf 和 fci 的方法计算基态的能量。
+        molecule: MolecularData,
+        charge: int,
+        multiplicity: int,
+        method: str,
+        basis: str,
+        if_print: bool,
+        if_save: bool
+) -> None:
+    r"""The necessary information to calculate molecules, including one-body integrations and two-body integrations, as well as the energy of ground states by scf and fci methods.
 
     Args:
-        molecule (MolecularData object): 包含分子所有信息的类 (class)
-        charge (int): 分子的电荷
-        multiplicity (int): 分子的多重度
-        method (str): 用于计算基态能量的方法，包括 'scf'和 'fci'
-        basis (str): 常用的基组是 'sto-3g', '6-31g'等。更多的基组选择可以参考网站
-            https://psicode.org/psi4manual/master/basissets_byelement.html#apdx-basiselement
-        if_print (Boolean): 是否需要打印出选定方法 (method) 计算出的分子基态能量
-        if_save (Boolean): 是否需要将分子信息存储成 .hdf5 文件
+        molecule: Class containing all information about a molecule.
+        charge: Charge of the molecule.
+        multiplicity: The multiplicity of the molecule.
+        method: Method used to calculate the ground state energy, including 'scf' and 'fci'.
+        basis: Most common used basis are ‘sto-3g’, ‘6-31g’. For more basis options, please refer to
+            https://psicode.org/psi4manual/master/basissets_byelement.html#apdx-basiselement. 
+        if_print: If or not the base state energy of the molecule calculated by the selected method should be printed.
+        if_save: If the molecular information needs to be stored as an .hdf5 file.
     """
+
+    import psi4
     psi4.set_memory('500 MB')
     psi4.set_options({'soscf': 'false',
                       'scf_type': 'pk'})
@@ -182,19 +183,19 @@ def _run_psi4(
             print('Calculation is done')
 
 
-def geometry(structure=None, file=None):
-    r"""读取分子的几何信息
+def geometry(structure: Optional[str] = None, file: Optional[str] = None) -> str:
+    r"""Read molecular geometry information.
 
     Args:
-        structure (string, optional): 分子几何信息的字符串形式，以 H2 分子为例
-            ``[['H', [-1.68666, 1.79811, 0.0]], ['H', [-1.12017, 1.37343, 0.0]]]``
-        file (string, optional): .xyz 文件的路径
-
-    Returns:
-        str: 分子的几何信息
+        structure: Including molecular geometry information in string, take H2 as an example 
+            ``[['H', [-1.68666, 1.79811, 0.0]], ['H', [-1.12017, 1.37343, 0.0]]]``. Defaults to None.
+        file: The path of .xyz file. Defaults to None.
 
     Raises:
-        AssertionError: 两个输入参数不可以同时为 ``None`` 
+        AssertionError:  The two optional input cannot be None simultaneously.
+
+    Returns:
+        Molecular geometry information.
     """
     if structure is None and file is None:
         raise AssertionError('Input must be structure or .xyz file')
@@ -202,7 +203,7 @@ def geometry(structure=None, file=None):
         shape = np.array(structure).shape
         assert shape[1] == 2, 'The shape of structure must be (n, 2)'
         for i in range(shape[0]):
-            assert type(np.array(structure)[:, 0][i]) == str, 'The first position must be element symbol'
+            assert isinstance(np.array(structure)[:, 0][i], str), 'The first position must be element symbol'
             assert len(np.array(structure)[:, 1][i]) == 3, 'The second position represents coordinate ' \
                                                            'of particle: x, y, z'
         geo = structure
@@ -222,33 +223,32 @@ def geometry(structure=None, file=None):
 
 
 def get_molecular_data(
-        geometry,
-        charge=0,
-        multiplicity=1,
-        basis='sto-3g',
-        method='scf',
-        if_save=True,
-        if_print=True,
-        name="",
-        file_path="."
-):
-    r"""计算分子的必要信息，包括单体积分（one-body integrations）和双体积分（two-body integrations），
-    以及用选定的方法计算基态的能量。
+        geometry: str,
+        charge: int=0,
+        multiplicity: int=1,
+        basis: str='sto-3g',
+        method: str='scf',
+        if_save: bool=True,
+        if_print: bool=True,
+        name: str="",
+        file_path: str="."
+) -> MolecularData:
+    r"""Calculate necessary values of molecule, including one-body integrations, two-body integrations, and the ground state energy calculated by a chosen method
 
     Args:
-        geometry (str): 分子的几何信息
-        charge (int, optional): 分子的电荷，默认值为 0
-        multiplicity (int, optional): 分子的多重度，默认值为 1
-        basis (str, optional): 常用的基组是 ``'sto-3g'`` 、 ``'6-31g'`` 等，默认的基组是 ``'sto-3g'``，更多的基组选择可以参考网站
-            https://psicode.org/psi4manual/master/basissets_byelement.html#apdx-basiselement
-        method (str, optional): 用于计算基态能量的方法，包括 ``'scf'`` 和 ``'fci'`` ，默认方法为 ``'scf'``
-        if_save (bool, optional): 是否需要将分子信息存储成 .hdf5 文件，默认为 ``True``
-        if_print (bool, optional): 是否需要打印出选定方法 (method) 计算出的分子基态能量，默认为 ``True``
-        name (str, optional): 命名储存的文件，默认为 ``""``
-        file_path (str, optional): 文件的储存路径，默认为 ``"."``
+        geometry: Molecular geometry information.
+        charge: Molecular charge. Defaults to 0.
+        multiplicity: Molecular multiplicity. Defaults to 1.
+        basis: Most common used basis are ‘sto-3g’, ‘6-31g’. For more basis options, please refer to
+            https://psicode.org/psi4manual/master/basissets_byelement.html#apdx-basiselement. Defaults to 'sto-3g'.
+        method: Method to calculate ground state energy, including ``scf``, ``fci``. Defaults to ``scf``.
+        if_save: If need to save molecule information as .hdf5 file. Defaults to True.
+        if_print: If need to print ground state energy calculated by chosen method. Defaults to True.
+        name: The name of the file to save. Defaults to "".
+        file_path: The path of the file to save. Defaults to ".".
 
     Returns:
-        MolecularData: 包含分子所有信息的类
+        A class contains information of the molecule.
     """
     methods = ['scf', 'fci']
     assert method in methods, 'We provide 2 methods: scf and fci'
@@ -293,23 +293,23 @@ def get_molecular_data(
 
 
 def active_space(
-        electrons,
-        orbitals,
-        multiplicity=1,
-        active_electrons=None,
-        active_orbitals=None
-):
-    r"""对于给定的活跃电子和活跃轨道计算相应的活跃空间（active space）。
+        electrons: int,
+        orbitals: int,
+        multiplicity: int=1,
+        active_electrons: int=None,
+        active_orbitals: int=None
+) -> tuple:
+    r"""Calculate active space by nominating the number of active electrons and active orbitals.
 
     Args:
-        electrons (int): 电子数
-        orbitals (int): 轨道数
-        multiplicity (int, optional): 自旋多重度
-        active_electrons (int, optional): 活跃 (active) 电子数，默认情况为所有电子均为活跃电子
-        active_orbitals (int, optional): 活跃 (active) 轨道数，默认情况为所有轨道均为活跃轨道
+        electrons: Number of total electrons.
+        orbitals: Number of total orbitals.
+        multiplicity: Spin multiplicity. Defaults to 1.
+        active_electrons: Number of active electrons, default to the case that all electrons are active.
+        active_orbitals: Number of active orbitals, default to the case that all orbitals are active.
 
     Returns:
-        tuple: 核心轨道和活跃轨道的索引
+        Index for core orbitals and active orbitals.
     """
     assert type(electrons) == int and electrons > 0, 'Number of electrons must be positive integer.'
     assert type(orbitals) == int and orbitals > 0, 'Number of orbitals must be positive integer.'
@@ -348,23 +348,23 @@ def active_space(
 
 
 def fermionic_hamiltonian(
-        molecule,
-        filename=None,
-        multiplicity=1,
-        active_electrons=None,
-        active_orbitals=None
-):
-    r"""计算给定分子的费米哈密顿量。
+        molecule: MolecularData,
+        filename: str=None,
+        multiplicity: int=1,
+        active_electrons: int=None,
+        active_orbitals: int=None
+) -> openfermion.ops.operators.qubit_operator.QubitOperator:
+    r"""Calculate the fermionic hamiltonian of the given molecule.
 
     Args:
-        molecule (MolecularData): 包含分子所有信息的类
-        filename (str, optional): 分子的 .hdf5 文件的路径
-        multiplicity (int, optional): 自旋多重度
-        active_electrons (int, optional): 活跃 (active) 电子数，默认情况为所有电子均为活跃电子
-        active_orbitals (int, optional): 活跃 (active) 轨道数，默认情况为所有轨道均为活跃轨道
+        molecule: A class contains information of the molecule.
+        filename: Path of .hdf5 file of molecule. Defaults to None.
+        multiplicity: Spin multiplicity. Defaults to 1.
+        active_electrons: Number of active electrons, default to the case that all electrons are active.
+        active_orbitals: Number of active orbitals, default to the case that all orbitals are active.
 
     Returns:
-        openfermion.ops.operators.qubit_operator.QubitOperator: openfermion 格式的哈密顿量
+        Hamiltonian in openfermion form.
     """
     if molecule is None:
         assert type(filename) == str, 'Please provide the path of .hdf5 file.'
@@ -385,25 +385,25 @@ def fermionic_hamiltonian(
 
 
 def spin_hamiltonian(
-        molecule,
-        filename=None,
-        multiplicity=1,
-        mapping_method='jordan_wigner',
-        active_electrons=None,
-        active_orbitals=None
-):
-    r"""生成 Paddle Quantum 格式的哈密顿量
+        molecule: openfermion.ops.operators.qubit_operator.QubitOperator ,
+        filename: str=None,
+        multiplicity: int=1,
+        mapping_method: str='jordan_wigner',
+        active_electrons: int=None,
+        active_orbitals: int=None
+) -> Hamiltonian:
+    r"""Generate Hamiltonian in Paddle Quantum form.
 
     Args:
-        molecule (openfermion.ops.operators.qubit_operator.QubitOperator): openfermion 格式的哈密顿量
-        filename (str, optional): 分子的 .hdf5 文件的路径
-        multiplicity (int, optional): 自旋多重度
-        mapping_method (str, optional): 映射方法，这里默认为 ``'jordan_wigner'`` ，此外还提供 ``'bravyi_kitaev'``
-        active_electrons (int, optional): 活跃 (active) 电子数，默认情况为所有电子均为活跃电子
-        active_orbitals (int, optional): 活跃 (active) 轨道数默认情况为所有轨道均为活跃轨道
+        molecule: Hamiltonian in openfermion form.
+        filename: Path of .hdf5 file of molecule. Defaults to None.
+        multiplicity: Spin multiplicity. Defaults to 1.
+        mapping_method: Transformation method, default to ``jordan_wigner``, besides, ``bravyi_kitaev`` is supported. Defaults to ``jordan_wigner``.
+        active_electrons: Number of active electrons, default to the case that all electrons are active.
+        active_orbitals: Number of active orbitals, default to the case that all orbitals are active.
 
     Returns:
-        paddle_quantum.utils.Hamiltonian: Paddle Quantum 格式的哈密顿量
+        Hamiltonian in Paddle Quantum form
     """
     assert mapping_method in ['jordan_wigner', 'bravyi_kitaev'], "Please choose the mapping " \
                                                                  "in ['jordan_wigner', 'bravyi_kitaev']."
@@ -417,4 +417,4 @@ def spin_hamiltonian(
         spin_h = transforms.jordan_wigner(fermionic_h)
     elif mapping_method == 'bravyi_kitaev':
         spin_h = transforms.bravyi_kitaev(fermionic_h)
-    return _hamiltonian_transformation(spin_h, tol=1e-8)
+    return qubitOperator_to_Hamiltonian(spin_h, tol=1e-8)

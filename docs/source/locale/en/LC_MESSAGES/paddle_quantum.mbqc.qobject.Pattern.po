@@ -1,0 +1,239 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, Institute for Quantum Computing, Baidu Inc.
+# This file is distributed under the same license as the Paddle Quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Paddle Quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-18 19:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.qobject.Pattern.rst:2
+msgid "paddle\\_quantum.mbqc.qobject.Pattern"
+msgstr "paddle\\_quantum.mbqc.qobject.Pattern"
+
+#: of paddle_quantum.mbqc.qobject.Pattern:1
+msgid "定义测量模式。"
+msgstr "Define measurement pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:3
+msgid "该测量模式的结构依据文献 [The measurement calculus, arXiv: 0704.1263]。"
+msgstr ""
+"The construction of measurement pattern can be referred to [The "
+"measurement calculus, arXiv: 0704.1263]."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:7
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:3
+msgid "测量模式的名称"
+msgstr "Name of the measurement pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern
+#: paddle_quantum.mbqc.qobject.Pattern.CommandE
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ
+msgid "type"
+msgstr "type"
+
+#: of paddle_quantum.mbqc.qobject.Pattern:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:34
+msgid "str"
+msgstr "str"
+
+#: of paddle_quantum.mbqc.qobject.Pattern:13
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:5
+msgid "测量模式所有节点列表"
+msgstr "A list of all vertices in the pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:15
+#: paddle_quantum.mbqc.qobject.Pattern:21
+#: paddle_quantum.mbqc.qobject.Pattern:27
+#: paddle_quantum.mbqc.qobject.Pattern:33
+#: paddle_quantum.mbqc.qobject.Pattern.CommandE:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:40
+#: paddle_quantum.mbqc.qobject.Pattern.CommandM:46
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS:15
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:13
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:13
+msgid "list"
+msgstr "list"
+
+#: of paddle_quantum.mbqc.qobject.Pattern:19
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:7
+msgid "测量模式的输入节点列表"
+msgstr "A list of all input vertices in the pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:25
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:9
+msgid "测量模式的输出节点列表"
+msgstr "A list of all output vertices in the pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern:31
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:11
+msgid "测量模式的命令列表"
+msgstr "A list of all commands in the pattern."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Pattern.__init__:1
+msgid "构造函数，用于实例化一个 ``Pattern`` 对象。"
+msgstr "``Pattern`` constructor, used to instantiate a ``Pattern`` object."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.__init__
+msgid "Parameters"
+msgstr "Parameters"
+
+#: ../../source/_autosummary/paddle_quantum.mbqc.qobject.Pattern.rst:14
+msgid "Methods"
+msgstr "Methods"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1:<autosummary>:1
+msgid ""
+":obj:`__init__ <paddle_quantum.mbqc.qobject.Pattern.__init__>`\\ "
+"\\(name\\, space\\, input\\_\\, output\\_\\, commands\\)"
+msgstr ""
+":obj:`__init__ <paddle_quantum.mbqc.qobject.Pattern.__init__>`\\ "
+"\\(name\\, space\\, input\\_\\, output\\_\\, commands\\)"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1:<autosummary>:1
+msgid ""
+":obj:`print_command_list "
+"<paddle_quantum.mbqc.qobject.Pattern.print_command_list>`\\ \\(\\)"
+msgstr ""
+":obj:`print_command_list "
+"<paddle_quantum.mbqc.qobject.Pattern.print_command_list>`\\ \\(\\)"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1:<autosummary>:1
+#: paddle_quantum.mbqc.qobject.Pattern.print_command_list:1
+msgid "打印该 ``Pattern`` 类中的命令的信息，便于用户查看。"
+msgstr "Print the information of commands in the ``Pattern`` class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:1
+msgid "定义纠缠命令类。"
+msgstr "Define entanglement command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:3
+msgid "此处纠缠命令对应作用控制 Z 门。"
+msgstr "Here the entanglement commands correspond to applying Control Z gates."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandE:7
+msgid "作用纠缠命令的两个节点标签构成的列表"
+msgstr "A list of vertex pairs to be entangled."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:1
+msgid "定义测量命令类。"
+msgstr "Define the measurement command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:3
+msgid ""
+"测量命令有五个属性，分别为测量比特的标签 ``which_qubit``，原始的测量角度 ``angle``， 测量平面 ``plane``，域 "
+"s 对应的节点标签列表 ``domain_s``，域 t 对应的节点标签列表 ``domain_t``。 设原始角度为 "
+":math:`\\alpha`，则考虑域中节点依赖关系后的测量角度 :math:`\\theta` 为："
+msgstr ""
+"There are five attributes in a measurement command, including qubit label"
+" ``which_qubit``, original measurement angle ``angle``, measurement plane"
+" ``plane``, vertices list ``domain_s`` corresponding to s domain, "
+"vertices list ``domain_t`` corresponding to t domain. If the original "
+"angle is: math:`\\alpha`, the adaptive angle: math:`\theta` after "
+"considering dependencies of vertices in the domains is:"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:7
+msgid "\\theta = (-1)^s \\times \\alpha + t \\times \\pi"
+msgstr "\\theta = (-1)^s \\times \\alpha + t \\times \\pi"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:13
+msgid ""
+"域 s 和域 t 是 MBQC 模型中的概念，分别记录了 Pauli X 算符和 Pauli Z 算符对测量角度产生的影响， "
+"二者共同记录了该测量节点对其他节点的测量结果的依赖关系。"
+msgstr ""
+"Domain s and domain t are concepts in MBQC, recording the byproduct "
+"effect of Pauli X and Pauli Z operators. Both record the dependencies of "
+"this qubit on other measurement outcomes."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:16
+msgid "该命令当前只支持 XY 和 YZ 平面的测量。"
+msgstr ""
+"This command only supports measurements in the XY-plane and the YZ-plane "
+"in this version."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:20
+msgid "作用测量命令的节点标签"
+msgstr "Vertex label for the measurement command."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:22
+#: paddle_quantum.mbqc.qobject.Pattern.CommandS:9
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:7
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:7
+msgid "any"
+msgstr "any"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:26
+msgid "原始的测量角度"
+msgstr "Original measurement angle."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:28
+msgid "Tensor"
+msgstr "Tensor"
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:32
+msgid "测量平面"
+msgstr "Measurement plane."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:38
+msgid "域 s 对应的节点标签列表"
+msgstr "A list of vertices in the s domain."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandM:44
+msgid "域 t 对应的节点标签列表"
+msgstr "A list of vertices in the t domain."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandX:1
+msgid "定义 Pauli X 副产品修正命令类。"
+msgstr "Define Pauli X byproduct correction command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandX:5
+msgid "作用修正算符的节点标签"
+msgstr "Vertex label to be executed Pauli X byproduct correction command on."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:13
+#: paddle_quantum.mbqc.qobject.Pattern.CommandX:11
+#: paddle_quantum.mbqc.qobject.Pattern.CommandZ:11
+msgid "依赖关系列表"
+msgstr "A list of vertices, denoting dependencies on other measurement outcomes."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandZ:1
+msgid "定义 Pauli Z 副产品修正命令。"
+msgstr "Define Pauli Z byproduct correction command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandZ:5
+msgid "作用修正命令的节点标签"
+msgstr "Vertex label for the Pauli Z byproduct correction command."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:1
+msgid "定义 \"信号转移\" 命令类。"
+msgstr "Define \"signal shifting\" command class."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:3
+msgid "\"信号转移\" 是一类特殊的操作，用于消除测量命令对域 t 中节点的依赖关系，在某些情况下对测量模式进行简化。"
+msgstr ""
+"\"signal shifting\" is a special operation, used to remove dependencies "
+"of a measurement command on outcomes of vertices in domain t. In some "
+"cases, measurement patterns can be simplified in this way."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.CommandS:7
+msgid "消除依赖关系的测量命令作用的节点标签"
+msgstr "Vertex label to be executed simplified measurement command on."
+
+#: of paddle_quantum.mbqc.qobject.Pattern.print_command_list:3
+msgid "代码示例:"
+msgstr "Code example:"
+

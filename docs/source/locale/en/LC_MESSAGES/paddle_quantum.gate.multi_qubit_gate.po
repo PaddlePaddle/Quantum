@@ -1,0 +1,506 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.multi_qubit_gate.rst:2
+msgid "paddle\\_quantum.gate.multi\\_qubit\\_gate"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate:1
+msgid "The source file of the classes for multi-qubit gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CNOT:1
+#: paddle_quantum.gate.multi_qubit_gate.CP:1
+#: paddle_quantum.gate.multi_qubit_gate.CRX:1
+#: paddle_quantum.gate.multi_qubit_gate.CRY:1
+#: paddle_quantum.gate.multi_qubit_gate.CRZ:1
+#: paddle_quantum.gate.multi_qubit_gate.CSWAP:1
+#: paddle_quantum.gate.multi_qubit_gate.CU:1
+#: paddle_quantum.gate.multi_qubit_gate.CX:1
+#: paddle_quantum.gate.multi_qubit_gate.CY:1
+#: paddle_quantum.gate.multi_qubit_gate.CZ:1
+#: paddle_quantum.gate.multi_qubit_gate.MS:1
+#: paddle_quantum.gate.multi_qubit_gate.RXX:1
+#: paddle_quantum.gate.multi_qubit_gate.RYY:1
+#: paddle_quantum.gate.multi_qubit_gate.RZZ:1
+#: paddle_quantum.gate.multi_qubit_gate.SWAP:1
+#: paddle_quantum.gate.multi_qubit_gate.Toffoli:1
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits:1
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits:1
+msgid "Bases: :py:class:`~paddle_quantum.gate.base.Gate`"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CNOT:1
+msgid "A collection of CNOT gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CNOT:3
+#: paddle_quantum.gate.multi_qubit_gate.CP:3
+#: paddle_quantum.gate.multi_qubit_gate.CRX:3
+#: paddle_quantum.gate.multi_qubit_gate.CRY:3
+#: paddle_quantum.gate.multi_qubit_gate.CRZ:3
+#: paddle_quantum.gate.multi_qubit_gate.CU:3
+#: paddle_quantum.gate.multi_qubit_gate.CY:3
+#: paddle_quantum.gate.multi_qubit_gate.CZ:3
+msgid ""
+"For a 2-qubit quantum circuit, when ``qubits_idx`` is ``[0, 1]``, the "
+"matrix form of such a gate is:"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CNOT:5
+msgid ""
+"\\begin{align}\n"
+"    CNOT &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes X\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 1 \\\\\n"
+"        0 & 0 & 1 & 0\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CNOT
+#: paddle_quantum.gate.multi_qubit_gate.CP
+#: paddle_quantum.gate.multi_qubit_gate.CRX
+#: paddle_quantum.gate.multi_qubit_gate.CRY
+#: paddle_quantum.gate.multi_qubit_gate.CRZ
+#: paddle_quantum.gate.multi_qubit_gate.CSWAP
+#: paddle_quantum.gate.multi_qubit_gate.CU
+#: paddle_quantum.gate.multi_qubit_gate.CX
+#: paddle_quantum.gate.multi_qubit_gate.CY
+#: paddle_quantum.gate.multi_qubit_gate.CZ
+#: paddle_quantum.gate.multi_qubit_gate.MS
+#: paddle_quantum.gate.multi_qubit_gate.RXX
+#: paddle_quantum.gate.multi_qubit_gate.RYY
+#: paddle_quantum.gate.multi_qubit_gate.RZZ
+#: paddle_quantum.gate.multi_qubit_gate.SWAP
+#: paddle_quantum.gate.multi_qubit_gate.Toffoli
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CNOT:18
+#: paddle_quantum.gate.multi_qubit_gate.CP:14
+#: paddle_quantum.gate.multi_qubit_gate.CRX:18
+#: paddle_quantum.gate.multi_qubit_gate.CRY:18
+#: paddle_quantum.gate.multi_qubit_gate.CRZ:18
+#: paddle_quantum.gate.multi_qubit_gate.CSWAP:21
+#: paddle_quantum.gate.multi_qubit_gate.CU:18
+#: paddle_quantum.gate.multi_qubit_gate.CX:3
+#: paddle_quantum.gate.multi_qubit_gate.CY:18
+#: paddle_quantum.gate.multi_qubit_gate.CZ:18
+#: paddle_quantum.gate.multi_qubit_gate.MS:17
+#: paddle_quantum.gate.multi_qubit_gate.RXX:17
+#: paddle_quantum.gate.multi_qubit_gate.RYY:17
+#: paddle_quantum.gate.multi_qubit_gate.RZZ:17
+#: paddle_quantum.gate.multi_qubit_gate.SWAP:17
+#: paddle_quantum.gate.multi_qubit_gate.Toffoli:20
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits:3
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits:3
+msgid ""
+"Indices of the qubits on which the gates are applied. Defaults to "
+"``'cycle'``."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CNOT:19
+#: paddle_quantum.gate.multi_qubit_gate.CP:15
+#: paddle_quantum.gate.multi_qubit_gate.CRX:19
+#: paddle_quantum.gate.multi_qubit_gate.CRY:19
+#: paddle_quantum.gate.multi_qubit_gate.CRZ:19
+#: paddle_quantum.gate.multi_qubit_gate.CSWAP:22
+#: paddle_quantum.gate.multi_qubit_gate.CU:19
+#: paddle_quantum.gate.multi_qubit_gate.CX:4
+#: paddle_quantum.gate.multi_qubit_gate.CY:19
+#: paddle_quantum.gate.multi_qubit_gate.CZ:19
+#: paddle_quantum.gate.multi_qubit_gate.MS:18
+#: paddle_quantum.gate.multi_qubit_gate.RXX:18
+#: paddle_quantum.gate.multi_qubit_gate.RYY:18
+#: paddle_quantum.gate.multi_qubit_gate.RZZ:18
+#: paddle_quantum.gate.multi_qubit_gate.SWAP:18
+#: paddle_quantum.gate.multi_qubit_gate.Toffoli:21
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits:4
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits:4
+msgid "Total number of qubits. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CNOT:20
+#: paddle_quantum.gate.multi_qubit_gate.CP:16
+#: paddle_quantum.gate.multi_qubit_gate.CRX:20
+#: paddle_quantum.gate.multi_qubit_gate.CRY:20
+#: paddle_quantum.gate.multi_qubit_gate.CRZ:20
+#: paddle_quantum.gate.multi_qubit_gate.CSWAP:23
+#: paddle_quantum.gate.multi_qubit_gate.CU:20
+#: paddle_quantum.gate.multi_qubit_gate.CX:5
+#: paddle_quantum.gate.multi_qubit_gate.CY:20
+#: paddle_quantum.gate.multi_qubit_gate.CZ:20
+#: paddle_quantum.gate.multi_qubit_gate.MS:19
+#: paddle_quantum.gate.multi_qubit_gate.RXX:19
+#: paddle_quantum.gate.multi_qubit_gate.RYY:19
+#: paddle_quantum.gate.multi_qubit_gate.RZZ:19
+#: paddle_quantum.gate.multi_qubit_gate.SWAP:19
+#: paddle_quantum.gate.multi_qubit_gate.Toffoli:22
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits:5
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits:5
+msgid "Number of layers. Defaults to ``1``."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CX:1
+msgid "Same as CNOT."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CY:1
+msgid "A collection of controlled Y gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CY:5
+msgid ""
+"\\begin{align}\n"
+"    CY &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Y\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & -1j \\\\\n"
+"        0 & 0 & 1j & 0\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CZ:1
+msgid "A collection of controlled Z gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CZ:5
+msgid ""
+"\\begin{align}\n"
+"    CZ &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Z\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 \\\\\n"
+"        0 & 0 & 0 & -1\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.SWAP:1
+msgid "A collection of SWAP gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CSWAP:3
+#: paddle_quantum.gate.multi_qubit_gate.MS:3
+#: paddle_quantum.gate.multi_qubit_gate.RXX:3
+#: paddle_quantum.gate.multi_qubit_gate.RYY:3
+#: paddle_quantum.gate.multi_qubit_gate.RZZ:3
+#: paddle_quantum.gate.multi_qubit_gate.SWAP:3
+#: paddle_quantum.gate.multi_qubit_gate.Toffoli:3
+msgid "The matrix form of such a gate is:"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.SWAP:5
+msgid ""
+"\\begin{align}\n"
+"    SWAP =\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 1\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CP:1
+msgid "A collection of controlled P gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CP:5
+msgid ""
+"\\begin{bmatrix}\n"
+"    1 & 0 & 0 & 0\\\\\n"
+"    0 & 1 & 0 & 0\\\\\n"
+"    0 & 0 & 1 & 0\\\\\n"
+"    0 & 0 & 0 & e^{i\\theta}\n"
+"\\end{bmatrix}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CP:17
+#: paddle_quantum.gate.multi_qubit_gate.CRX:21
+#: paddle_quantum.gate.multi_qubit_gate.CRY:21
+#: paddle_quantum.gate.multi_qubit_gate.CRZ:21
+#: paddle_quantum.gate.multi_qubit_gate.CU:21
+#: paddle_quantum.gate.multi_qubit_gate.RXX:20
+#: paddle_quantum.gate.multi_qubit_gate.RYY:20
+#: paddle_quantum.gate.multi_qubit_gate.RZZ:20
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits:6
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits:6
+msgid "Parameters of the gates. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CP:18
+#: paddle_quantum.gate.multi_qubit_gate.CRX:22
+#: paddle_quantum.gate.multi_qubit_gate.CRY:22
+#: paddle_quantum.gate.multi_qubit_gate.CRZ:22
+#: paddle_quantum.gate.multi_qubit_gate.CU:22
+#: paddle_quantum.gate.multi_qubit_gate.RXX:21
+#: paddle_quantum.gate.multi_qubit_gate.RYY:21
+#: paddle_quantum.gate.multi_qubit_gate.RZZ:21
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits:7
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits:7
+msgid "Whether gates in the same layer share a parameter. Defaults to ``False``."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CP
+#: paddle_quantum.gate.multi_qubit_gate.CRX
+#: paddle_quantum.gate.multi_qubit_gate.CRY
+#: paddle_quantum.gate.multi_qubit_gate.CRZ
+#: paddle_quantum.gate.multi_qubit_gate.CU
+#: paddle_quantum.gate.multi_qubit_gate.RXX
+#: paddle_quantum.gate.multi_qubit_gate.RYY
+#: paddle_quantum.gate.multi_qubit_gate.RZZ
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CP:20
+#: paddle_quantum.gate.multi_qubit_gate.CRX:24
+#: paddle_quantum.gate.multi_qubit_gate.CRY:24
+#: paddle_quantum.gate.multi_qubit_gate.CRZ:24
+#: paddle_quantum.gate.multi_qubit_gate.CU:24
+#: paddle_quantum.gate.multi_qubit_gate.RXX:23
+#: paddle_quantum.gate.multi_qubit_gate.RYY:23
+#: paddle_quantum.gate.multi_qubit_gate.RZZ:23
+#: paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits:9
+#: paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits:9
+msgid "The ``param`` must be ``paddle.Tensor`` or ``float``."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CRX:1
+msgid "A collection of controlled rotation gates about the x-axis."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CRX:5
+msgid ""
+"\\begin{align}\n"
+"    CRx &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Rx\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} \\\\\n"
+"        0 & 0 & -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2}\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CRY:1
+msgid "A collection of controlled rotation gates about the y-axis."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CRY:5
+msgid ""
+"\\begin{align}\n"
+"    CRy &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Ry\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & \\cos\\frac{\\theta}{2} & -\\sin\\frac{\\theta}{2} \\\\\n"
+"        0 & 0 & \\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2}\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CRZ:1
+msgid "A collection of controlled rotation gates about the z-axis."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CRZ:5
+msgid ""
+"\\begin{align}\n"
+"    CRz &=|0\\rangle \\langle 0|\\otimes I + |1 \\rangle \\langle "
+"1|\\otimes Rz\\\\\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 \\\\\n"
+"        0 & 0 & 0 & e^{i\\theta}\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CU:1
+msgid "A collection of controlled single-qubit rotation gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CU:5
+msgid ""
+"\\begin{align}\n"
+"    CU\n"
+"    &=\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & \\cos\\frac\\theta2 &-e^{i\\lambda}\\sin\\frac\\theta2 "
+"\\\\\n"
+"        0 & 0 & "
+"e^{i\\phi}\\sin\\frac\\theta2&e^{i(\\phi+\\lambda)}\\cos\\frac\\theta2\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.RXX:1
+msgid "A collection of RXX gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.RXX:5
+msgid ""
+"\\begin{align}\n"
+"    RXX(\\theta) =\n"
+"        \\begin{bmatrix}\n"
+"            \\cos\\frac{\\theta}{2} & 0 & 0 & -i\\sin\\frac{\\theta}{2} "
+"\\\\\n"
+"            0 & \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} & 0 "
+"\\\\\n"
+"            0 & -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} & 0 "
+"\\\\\n"
+"            -i\\sin\\frac{\\theta}{2} & 0 & 0 & \\cos\\frac{\\theta}{2}\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.RYY:1
+msgid "A collection of RYY gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.RYY:5
+msgid ""
+"\\begin{align}\n"
+"    RYY(\\theta) =\n"
+"        \\begin{bmatrix}\n"
+"            \\cos\\frac{\\theta}{2} & 0 & 0 & i\\sin\\frac{\\theta}{2} "
+"\\\\\n"
+"            0 & \\cos\\frac{\\theta}{2} & -i\\sin\\frac{\\theta}{2} & 0 "
+"\\\\\n"
+"            0 & -i\\sin\\frac{\\theta}{2} & \\cos\\frac{\\theta}{2} & 0 "
+"\\\\\n"
+"            i\\sin\\frac{\\theta}{2} & 0 & 0 & cos\\frac{\\theta}{2}\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.RZZ:1
+msgid "A collection of RZZ gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.RZZ:5
+msgid ""
+"\\begin{align}\n"
+"    RZZ(\\theta) =\n"
+"        \\begin{bmatrix}\n"
+"            e^{-i\\frac{\\theta}{2}} & 0 & 0 & 0 \\\\\n"
+"            0 & e^{i\\frac{\\theta}{2}} & 0 & 0 \\\\\n"
+"            0 & 0 & e^{i\\frac{\\theta}{2}} & 0 \\\\\n"
+"            0 & 0 & 0 & e^{-i\\frac{\\theta}{2}}\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.MS:1
+msgid "A collection of Mølmer-Sørensen (MS) gates for trapped ion devices."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.MS:5
+msgid ""
+"\\begin{align}\n"
+"    MS = RXX(-\\frac{\\pi}{2}) = \\frac{1}{\\sqrt{2}}\n"
+"        \\begin{bmatrix}\n"
+"            1 & 0 & 0 & i \\\\\n"
+"            0 & 1 & i & 0 \\\\\n"
+"            0 & i & 1 & 0 \\\\\n"
+"            i & 0 & 0 & 1\n"
+"        \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CSWAP:1
+msgid "A collection of CSWAP (Fredkin) gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.CSWAP:5
+msgid ""
+"\\begin{align}\n"
+"    CSWAP =\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.Toffoli:1
+msgid "A collection of Toffoli gates."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.Toffoli:5
+msgid ""
+"\\begin{align}\n"
+"    \\begin{bmatrix}\n"
+"        1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\\\\n"
+"        0 & 0 & 0 & 0 & 0 & 0 & 1 & 0\n"
+"    \\end{bmatrix}\n"
+"\\end{align}"
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.UniversalTwoQubits:1
+msgid ""
+"A collection of universal two-qubit gates. One of such a gate requires 15"
+" parameters."
+msgstr ""
+
+#: of paddle_quantum.gate.multi_qubit_gate.UniversalThreeQubits:1
+msgid ""
+"A collection of universal three-qubit gates. One of such a gate requires "
+"81 parameters."
+msgstr ""
+

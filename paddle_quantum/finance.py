@@ -1,3 +1,4 @@
+# !/usr/bin/env python3
 # Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+r"""
 Functions and data simulator class of quantum finance.
 """
 
+from datetime import datetime
+from typing import Optional
 import fastdtw
+import networkx
 import numpy as np
-from paddle_quantum.utils import Hamiltonian
+import paddle_quantum
 
 __all__ = [
     "DataSimulator",
@@ -29,17 +33,14 @@ __all__ = [
 
 
 class DataSimulator:
-    r"""用于生成和计算投资组合优化和投资分散化问题要用的数据和相关参数
-
+    r"""Used to generate data and calculate relevant parameters for portfolio optimization and portfolio diversification problems.
+    
+    Args:
+        stocks: A list of names of investable stocks
+        start: The start date of the trading day when the stock data is randomly generated. Defaults to ``None``.
+        end: The end date of the trading day when the stock data is randomly generated. Defaults to ``None``.
     """
-    def __init__(self, stocks, start=None, end=None):
-        r"""构造函数，用于实例化一个 ``DataSimulator`` 对象。
-
-        Args:
-            stocks (list): 表示所有可投资股票的名字
-            start (datetime): 默认为 ``None``，表示随机生成股票数据时交易日的起始日期
-            end (datetime): 默认为 ``None``，表示随机生成股票数据时交易日的结束日期
-        """
+    def __init__(self, stocks: list, start: Optional[datetime] = None, end: Optional[datetime] = None):
         self._n = len(stocks)
         self._stocks = stocks
 
@@ -52,11 +53,11 @@ class DataSimulator:
         self.asset_return_mean = None
         self.asset_return_cov = None
 
-    def set_data(self, data):
-        r"""决定实验使用的数据是随机生成的还是用户本地输入的
+    def set_data(self, data: list) -> None:
+        r"""Decide which data source to use: randomly generated or locally entered.
 
         Args:
-            data (list): 用户输入的股票数据
+            data: Stock data entered by the user.
         """
         if len(data) == self._n:
             self._data = data
@@ -64,11 +65,11 @@ class DataSimulator:
             print("invalid data, data is still empty.")
             self._data = []
 
-    def randomly_generate(self):
-        r"""根据开始日期和结束日期随机生成用于实验的股票数据
+    def randomly_generate(self) -> None:
+        r"""Randomly generate stock data for experiments based on start date and end date.
 
         Note:
-            若要随机生成股票数据，需要以 ``datetime`` 包中的格式指定开始日期和结束日期，如 ``start = datetime.datetime(2016, 1, 1)``
+            To generate random stock data, you need to specify the start date and end date in the format of the ``datetime`` package, e.g. ``start = datetime.datetime(2016, 1, 1)``.
         """
 
         if self._start and self._end:
@@ -86,11 +87,11 @@ class DataSimulator:
         else:
             print("Please provide the start time and the end time you want to generate stock data.")
 
-    def get_asset_return_mean_vector(self):
-        r"""用于计算所有可投资股票的平均投资回报率
+    def get_asset_return_mean_vector(self) -> list:
+        r"""Calculate expected return of each stock.
 
         Returns:
-            list: 所有可投资的股票的平均投资回报率
+            Expected return of all investable stocks.
         """
         returns = []
         for i in range(self._n):
@@ -102,11 +103,11 @@ class DataSimulator:
 
         return self.asset_return_mean
 
-    def get_asset_return_covariance_matrix(self):
-        r"""用于计算所有可投资股票回报率之间的协方差矩阵
+    def get_asset_return_covariance_matrix(self) -> list:
+        r"""Calculate the covariance matrix between the returns of each stock.
 
         Returns:
-            list: 所有可投资股票回报率之间的协方差矩阵
+            The covariance matrix between the returns of each stock.
         """
         returns = []
         for i in range(self._n):
@@ -118,35 +119,35 @@ class DataSimulator:
 
         return self.asset_return_cov
 
-    def get_similarity_matrix(self):
-        r"""计算各股票之间的相似矩阵
+    def get_similarity_matrix(self) -> list:
+        r"""Calculate the similarity matrix among stocks.
 
-        通过动态时间规整算法（Dynamic Time Warping, DTW）计算两股票之间的相似性
+        The Dynamic Time Warping algorithm (DTW) is used to calculate the similarity between two stocks.
 
         Returns:
-            list: 各股票间的相似矩阵
+            The similarity matrix among stocks.
         """
-        self.rho = np.zeros((self._n, self._n))
+        rho = np.zeros((self._n, self._n))
         for i in range(0, self._n):
-            self.rho[i, i] = 1
+            rho[i, i] = 1
             for j in range(i + 1, self._n):
                 curr_rho, _ = fastdtw.fastdtw(self._data[i], self._data[j])
                 curr_rho = 1 / curr_rho
-                self.rho[i, j] = curr_rho
-                self.rho[j, i] = curr_rho
+                rho[i, j] = curr_rho
+                rho[j, i] = curr_rho
 
-        return self.rho
+        return rho
 
 
-def portfolio_optimization_hamiltonian(penalty, mu, sigma, q, budget):
-    r"""构建投资组合优化问题的哈密顿量
+def portfolio_optimization_hamiltonian(penalty: int, mu: list, sigma: list, q: float, budget: int) -> paddle_quantum.Hamiltonian:
+    r"""Construct the hamiltonian of the portfolio optimization problem.
 
     Args:
-        penalty (int): 惩罚参数
-        mu (list): 各股票的预期回报率
-        sigma (list): 各股票回报率间的协方差矩阵
-        q (float): 投资股票的风险
-        budget (int): 投资预算, 即要投资的股票数量
+        penalty: Penalty parameter.
+        mu: Expected return of each stock.
+        sigma: The covariance matrix between the returns of each stock.
+        q: Risk appetite of the decision maker.
+        budget:  Budget, i.e. the number of stocks to be invested.
 
     .. math::
 
@@ -154,57 +155,57 @@ def portfolio_optimization_hamiltonian(penalty, mu, sigma, q, budget):
 
 
     Hint:
-        将布尔变量 :math:`x_i` 映射到哈密顿矩阵上，:math:`x_i \mapsto \frac{I-Z_i}{2}`
+        Mapping Boolean variables :math:`x_i` to Hamiltonian matrices under :math:`x_i \mapsto \frac{I-Z_i}{2}`.
 
     Returns:
-        Hamiltonian: 投资组合优化问题的哈密顿量
+        The hamiltonian of the portfolio optimization problem.
     """
     n = len(mu)
 
-    H_C_list1 = []
-    for i in range(n):
-        for j in range(n):
+    h_c_list1 = []
+    for i in range(0, n):
+        for j in range(0, n):
             sigma_ij = sigma[i][j]
-            H_C_list1.append([sigma_ij / 4, 'I'])
+            h_c_list1.append([sigma_ij / 4, 'I'])
             if i != j:
-                H_C_list1.append([sigma_ij / 4, 'Z' + str(i) + ',Z' + str(j)])
+                h_c_list1.append([sigma_ij / 4, 'Z' + str(i) + ',Z' + str(j)])
             else:
-                H_C_list1.append([sigma_ij / 4, 'I'])
-            H_C_list1.append([- sigma_ij / 4, 'Z' + str(i)])
-            H_C_list1.append([- sigma_ij / 4, 'Z' + str((j))])
-    H_C_list1 = [[q * c, s] for (c, s) in H_C_list1]
+                h_c_list1.append([sigma_ij / 4, 'I'])
+            h_c_list1.append([- sigma_ij / 4, 'Z' + str(i)])
+            h_c_list1.append([- sigma_ij / 4, 'Z' + str(j)])
+    h_c_list1 = [[q * c, s] for (c, s) in h_c_list1]
 
-    H_C_list2 = []
-    for i in range(n):
-        H_C_list2.append([- mu[i] / 2, 'I'])
-        H_C_list2.append([mu[i] / 2, 'Z' + str(i)])
+    h_c_list2 = []
+    for i in range(0, n):
+        h_c_list2.append([- mu[i] / 2, 'I'])
+        h_c_list2.append([mu[i] / 2, 'Z' + str(i)])
 
-    H_C_list3 = [[budget ** 2, 'I']]
-    for i in range(n):
-        H_C_list3.append([- 2 * budget / 2, 'I'])
-        H_C_list3.append([2 * budget / 2, 'Z' + str(i)])
-        H_C_list3.append([2 / 4, 'I'])
-        H_C_list3.append([- 2 / 4, 'Z' + str(i)])
-        for ii in range(i):
-            H_C_list3.append([2 / 4, 'I'])
-            H_C_list3.append([2 / 4, 'Z' + str(i) + ',Z' + str(ii)])
-            H_C_list3.append([- 2 / 4, 'Z' + str(i)])
-            H_C_list3.append([- 2 / 4, 'Z' + str(ii)])
-    H_C_list3 = [[penalty * c, s] for (c, s) in H_C_list3]
+    h_c_list3 = [[budget ** 2, 'I']]
+    for i in range(0, n):
+        h_c_list3.append([- 2 * budget / 2, 'I'])
+        h_c_list3.append([2 * budget / 2, 'Z' + str(i)])
+        h_c_list3.append([2 / 4, 'I'])
+        h_c_list3.append([- 2 / 4, 'Z' + str(i)])
+        for ii in range(0, i):
+            h_c_list3.append([2 / 4, 'I'])
+            h_c_list3.append([2 / 4, 'Z' + str(i) + ',Z' + str(ii)])
+            h_c_list3.append([- 2 / 4, 'Z' + str(i)])
+            h_c_list3.append([- 2 / 4, 'Z' + str(ii)])
+    h_c_list3 = [[penalty * c, s] for (c, s) in h_c_list3]
 
-    H_C_list = H_C_list1 + H_C_list2 + H_C_list3
-    po_hamiltonian = Hamiltonian(H_C_list)
+    h_c_list = h_c_list1 + h_c_list2 + h_c_list3
+    po_hamiltonian = paddle_quantum.Hamiltonian(h_c_list)
 
     return po_hamiltonian
 
 
-def portfolio_diversification_hamiltonian(penalty, rho, q):
-    r"""构建投资组合分散化问题的哈密顿量
+def portfolio_diversification_hamiltonian(penalty: int, rho: list, q: int) -> paddle_quantum.Hamiltonian:
+    r"""Construct the hamiltonian of the portfolio diversification problem.
 
     Args:
-        penalty (int): 惩罚参数
-        rho (list): 各股票间的相似矩阵
-        q (int): 股票聚类的类别数
+        penalty: Penalty parameter.
+        rho: The similarity matrix among stocks.
+        q: Number of categories for stock clustering.
 
     .. math::
 
@@ -214,144 +215,144 @@ def portfolio_diversification_hamiltonian(penalty, rho, q):
         \end{aligned}
 
     Hint:
-        将布尔变量 :math:`x_{ij}` 映射到哈密顿矩阵上，:math:`x_{ij} \mapsto \frac{I-Z_{ij}}{2}`
+        Mapping Boolean variables :math:`x_{ij}` to the Hamiltonian matrices under :math:`x_{ij} \mapsto \frac{I-Z_{ij}}{2}`
 
     Returns:
-        Hamiltonian: 投资组合分散化问题的哈密顿量
+        The hamiltonian of the portfolio diversification problem.
     """
     n = len(rho)
 
-    H_C_list1 = []
-    for i in range(n):
-        for j in range(n):
+    h_c_list1 = []
+    for i in range(0, n):
+        for j in range(0, n):
             rho_ij = - rho[i][j]
-            H_C_list1.append([rho_ij / 2, 'I'])
-            H_C_list1.append([- rho_ij / 2, 'Z' + str(i * n + j)])
+            h_c_list1.append([rho_ij / 2, 'I'])
+            h_c_list1.append([- rho_ij / 2, 'Z' + str(i * n + j)])
 
-    H_C_list2 = [[q ** 2, 'I']]
-    for j in range(n):
-        H_C_list2.append([- q, 'I'])
-        H_C_list2.append([q, 'Z' + str(n ** 2 + j)])
-        H_C_list2.append([1 / 2, 'I'])
-        H_C_list2.append([- 1 / 2, 'Z' + str(n ** 2 + j)])
+    h_c_list2 = [[q ** 2, 'I']]
+    for j in range(0, n):
+        h_c_list2.append([- q, 'I'])
+        h_c_list2.append([q, 'Z' + str(n ** 2 + j)])
+        h_c_list2.append([1 / 2, 'I'])
+        h_c_list2.append([- 1 / 2, 'Z' + str(n ** 2 + j)])
         for jj in range(j):
-            H_C_list2.append([1 / 2, 'I'])
-            H_C_list2.append([1 / 2, 'Z' + str(n ** 2 + j) + ',Z' + str(n ** 2 + jj)])
-            H_C_list2.append([- 1 / 2, 'Z' + str(n ** 2 + j)])
-            H_C_list2.append([- 1 / 2, 'Z' + str(n ** 2 + jj)])
-    H_C_list2 = [[penalty * c, s] for (c, s) in H_C_list2]
+            h_c_list2.append([1 / 2, 'I'])
+            h_c_list2.append([1 / 2, 'Z' + str(n ** 2 + j) + ',Z' + str(n ** 2 + jj)])
+            h_c_list2.append([- 1 / 2, 'Z' + str(n ** 2 + j)])
+            h_c_list2.append([- 1 / 2, 'Z' + str(n ** 2 + jj)])
+    h_c_list2 = [[penalty * c, s] for (c, s) in h_c_list2]
 
-    H_C_list3 = []
-    for i in range(n):
-        H_C_list3.append([1, 'I'])
-        for j in range(n):
-            H_C_list3.append([- 1, 'I'])
-            H_C_list3.append([1, 'Z' + str(i * n + j)])
-            H_C_list3.append([1 / 2, 'I'])
-            H_C_list3.append([- 1 / 2, 'Z' + str(i * n + j)])
+    h_c_list3 = []
+    for i in range(0, n):
+        h_c_list3.append([1, 'I'])
+        for j in range(0, n):
+            h_c_list3.append([- 1, 'I'])
+            h_c_list3.append([1, 'Z' + str(i * n + j)])
+            h_c_list3.append([1 / 2, 'I'])
+            h_c_list3.append([- 1 / 2, 'Z' + str(i * n + j)])
             for jj in range(j):
-                H_C_list3.append([1 / 2, 'I'])
-                H_C_list3.append([- 1 / 2, 'Z' + str(i * n + j)])
-                H_C_list3.append([1 / 2, 'Z' + str(i * n + j) + ',Z' + str(i * n + jj)])
-                H_C_list3.append([- 1 / 2, 'Z' + str(i * n + jj)])
-    H_C_list3 = [[penalty * c, s] for (c, s) in H_C_list3]
+                h_c_list3.append([1 / 2, 'I'])
+                h_c_list3.append([- 1 / 2, 'Z' + str(i * n + j)])
+                h_c_list3.append([1 / 2, 'Z' + str(i * n + j) + ',Z' + str(i * n + jj)])
+                h_c_list3.append([- 1 / 2, 'Z' + str(i * n + jj)])
+    h_c_list3 = [[penalty * c, s] for (c, s) in h_c_list3]
 
-    H_C_list4 = []
-    for j in range(n):
-        H_C_list4.append([1 / 2, 'I'])
-        H_C_list4.append([- 1 / 2, 'Z' + str(j * n + j) + ',Z' + str(n ** 2 + j)])
-    H_C_list4 = [[penalty * c, s] for (c, s) in H_C_list4]
+    h_c_list4 = []
+    for j in range(0, n):
+        h_c_list4.append([1 / 2, 'I'])
+        h_c_list4.append([- 1 / 2, 'Z' + str(j * n + j) + ',Z' + str(n ** 2 + j)])
+    h_c_list4 = [[penalty * c, s] for (c, s) in h_c_list4]
 
-    H_C_list5 = []
-    for i in range(n):
-        for j in range(n):
-            H_C_list5.append([1 / 4, 'I'])
-            H_C_list5.append([- 1 / 4, 'Z' + str(i * n + j)])
-            H_C_list5.append([1 / 4, 'Z' + str(n ** 2 + j)])
-            H_C_list5.append([- 1 / 4, 'Z' + str(i * n + j) + ',Z' + str(n ** 2 + j)])
-    H_C_list5 = [[penalty * c, s] for (c, s) in H_C_list5]
+    h_c_list5 = []
+    for i in range(0, n):
+        for j in range(0, n):
+            h_c_list5.append([1 / 4, 'I'])
+            h_c_list5.append([- 1 / 4, 'Z' + str(i * n + j)])
+            h_c_list5.append([1 / 4, 'Z' + str(n ** 2 + j)])
+            h_c_list5.append([- 1 / 4, 'Z' + str(i * n + j) + ',Z' + str(n ** 2 + j)])
+    h_c_list5 = [[penalty * c, s] for (c, s) in h_c_list5]
 
-    H_C_list = H_C_list1 + H_C_list2 + H_C_list3 + H_C_list4 + H_C_list5
-    pd_hamiltonian = Hamiltonian(H_C_list)
+    h_c_list = h_c_list1 + h_c_list2 + h_c_list3 + h_c_list4 + h_c_list5
+    pd_hamiltonian = paddle_quantum.Hamiltonian(h_c_list)
 
     return pd_hamiltonian
 
 
-def arbitrage_opportunities_hamiltonian(g, penalty, n, K):
-    r"""构建最佳套利机会问题的哈密顿量
+def arbitrage_opportunities_hamiltonian(g: networkx.DiGraph, penalty: int, n: int, k: int) -> paddle_quantum.Hamiltonian:
+    r"""Construct the hamiltonian of the arbitrage opportunity optimization problem.
 
     Args:
-        g (networkx.DiGraph): 不同货币市场间转换的图形化表示
-        A (int): 惩罚参数
-        n (int): 货币种类的数量，即图 g 中的顶点数量
-        K (int): 套利回路中包含的顶点数
+        g: Graphical representation of conversions between different markets.
+        penalty: Penalty parameter.
+        n: Number of currency types, i.e. number of vertices in the graph g.
+        k: Number of vertices contained in the arbitrage loop.
 
     .. math::
 
         C(x) = - P(x) + A\sum_{k=0}^{K-1} \left(1 - \sum_{i=0}^{n-1} x_{i,k}\right)^2 + A\sum_{k=0}^{K-1}\sum_{(i,j)\notin E}x_{i,k}x_{j,k+1}
 
     Hint:
-        将布尔变量 :math:`x_{i,k}` 映射到哈密顿矩阵上，:math:`x_{i,k} \mapsto \frac{I-Z_{i,k}}{2}`
+        Mapping Boolean variables :math:`x_{i,k}` to the Hamiltonian matrices under :math:`x_{i,k} \mapsto \frac{I-Z_{i,k}}{2}`.
 
     Returns:
-       Hamiltonian: 最佳套利机会问题的哈密顿量
+        The hamiltonian of the arbitrage opportunity optimization problem.
     """
     nodes = list(g.nodes)
 
-    H_C_list1 = []
-    for (i, c) in enumerate(nodes):
-        for (j, cc) in enumerate(nodes):
+    h_c_list1 = []
+    for i, c in enumerate(nodes):
+        for j, cc in enumerate(nodes):
             if i != j:
                 c_ij = np.log2(g[c][cc]['weight'])
-                for t in range(K):
-                    H_C_list1.append([c_ij / 4, 'I'])
-                    H_C_list1.append([c_ij / 4, 'Z' + str(i * n + t) + ',Z' + str((j * n + (t + 1) % K))])
-                    H_C_list1.append([- c_ij / 4, 'Z' + str(i * n + t)])
-                    H_C_list1.append([- c_ij / 4, 'Z' + str((j * n + (t + 1) % K))])
-    H_C_list1 = [[-c, s] for (c, s) in H_C_list1]
+                for t in range(k):
+                    h_c_list1.append([c_ij / 4, 'I'])
+                    h_c_list1.append([c_ij / 4, 'Z' + str(i * n + t) + ',Z' + str((j * n + (t + 1) % k))])
+                    h_c_list1.append([- c_ij / 4, 'Z' + str(i * n + t)])
+                    h_c_list1.append([- c_ij / 4, 'Z' + str((j * n + (t + 1) % k))])
+    h_c_list1 = [[-c, s] for (c, s) in h_c_list1]
 
-    H_C_list2 = []
-    for t in range(K):
-        H_C_list2.append([1, 'I'])
+    h_c_list2 = []
+    for t in range(k):
+        h_c_list2.append([1, 'I'])
         for i in range(n):
-            H_C_list2.append([- 2 * 1 / 2, 'I'])
-            H_C_list2.append([2 * 1 / 2, 'Z' + str(i * n + t)])
-            H_C_list2.append([2 / 4, 'I'])
-            H_C_list2.append([- 2 / 4, 'Z' + str(i * n + t)])
+            h_c_list2.append([- 2 * 1 / 2, 'I'])
+            h_c_list2.append([2 * 1 / 2, 'Z' + str(i * n + t)])
+            h_c_list2.append([2 / 4, 'I'])
+            h_c_list2.append([- 2 / 4, 'Z' + str(i * n + t)])
             for ii in range(i):
-                H_C_list2.append([2 / 4, 'I'])
-                H_C_list2.append([2 / 4, 'Z' + str(i * n + t) + ',Z' + str(ii * n + t)])
-                H_C_list2.append([- 2 / 4, 'Z' + str(i * n + t)])
-                H_C_list2.append([- 2 / 4, 'Z' + str(ii * n + t)])
-    H_C_list2 = [[penalty * c, s] for (c, s) in H_C_list2]
+                h_c_list2.append([2 / 4, 'I'])
+                h_c_list2.append([2 / 4, 'Z' + str(i * n + t) + ',Z' + str(ii * n + t)])
+                h_c_list2.append([- 2 / 4, 'Z' + str(i * n + t)])
+                h_c_list2.append([- 2 / 4, 'Z' + str(ii * n + t)])
+    h_c_list2 = [[penalty * c, s] for (c, s) in h_c_list2]
 
-    H_C_list3 = []
-    for t in range(K):
+    h_c_list3 = []
+    for t in range(k):
         for (i, c) in enumerate(nodes):
             for (j, cc) in enumerate(nodes):
                 if (c, cc) not in g.edges and c != cc:
-                    H_C_list3.append([1 / 4, "I"])
-                    H_C_list3.append([- 1 / 4, 'Z' + str(i * n + t)])
-                    H_C_list3.append([- 1 / 4, 'Z' + str((j * n + (t + 1) % K))])
-                    H_C_list3.append([- 1 / 4, 'Z' + str(i * n + t) + ',Z' + str((j * n + (t + 1) % K))])
-    H_C_list3 = [[penalty * c, s] for (c, s) in H_C_list3]
+                    h_c_list3.append([1 / 4, "I"])
+                    h_c_list3.append([- 1 / 4, 'Z' + str(i * n + t)])
+                    h_c_list3.append([- 1 / 4, 'Z' + str((j * n + (t + 1) % k))])
+                    h_c_list3.append([- 1 / 4, 'Z' + str(i * n + t) + ',Z' + str((j * n + (t + 1) % k))])
+    h_c_list3 = [[penalty * c, s] for (c, s) in h_c_list3]
 
-    H_C_list4 = []
+    h_c_list4 = []
     for i in range(n):
-        H_C_list4.append([1, 'I'])
-        for t in range(K):
-            H_C_list4.append([- 2 * 1 / 2, 'I'])
-            H_C_list4.append([2 * 1 / 2, 'Z' + str(i * n + t)])
-            H_C_list4.append([2 / 4, 'I'])
-            H_C_list4.append([- 2 / 4, 'Z' + str(i * n + t)])
+        h_c_list4.append([1, 'I'])
+        for t in range(k):
+            h_c_list4.append([- 2 * 1 / 2, 'I'])
+            h_c_list4.append([2 * 1 / 2, 'Z' + str(i * n + t)])
+            h_c_list4.append([2 / 4, 'I'])
+            h_c_list4.append([- 2 / 4, 'Z' + str(i * n + t)])
             for tt in range(t):
-                H_C_list4.append([2 / 4, 'I'])
-                H_C_list4.append([2 / 4, 'Z' + str(i * n + t) + ',Z' + str(i * n + tt)])
-                H_C_list4.append([- 2 / 4, 'Z' + str(i * n + t)])
-                H_C_list4.append([- 2 / 4, 'Z' + str(i * n + tt)])
-    H_C_list4 = [[penalty * c, s] for (c, s) in H_C_list4]
+                h_c_list4.append([2 / 4, 'I'])
+                h_c_list4.append([2 / 4, 'Z' + str(i * n + t) + ',Z' + str(i * n + tt)])
+                h_c_list4.append([- 2 / 4, 'Z' + str(i * n + t)])
+                h_c_list4.append([- 2 / 4, 'Z' + str(i * n + tt)])
+    h_c_list4 = [[penalty * c, s] for (c, s) in h_c_list4]
 
-    H_C_list = H_C_list1 + H_C_list2 + H_C_list3 + H_C_list4
-    ao_hamiltonian = Hamiltonian(H_C_list)
+    h_c_list = h_c_list1 + h_c_list2 + h_c_list3 + h_c_list4
+    ao_hamiltonian = paddle_quantum.Hamiltonian(h_c_list)
 
     return ao_hamiltonian

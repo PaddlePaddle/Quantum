@@ -1,0 +1,225 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.locc.locc_net.rst:2
+msgid "paddle\\_quantum.locc.locc\\_net"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net:1
+msgid "The source file of the LoccNet class."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet:1
+msgid "Bases: :py:class:`~paddle.fluid.dygraph.layers.Layer`"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet:1
+msgid "Used to design LOCC protocols and perform training or verification."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.set_init_state:1
+msgid "Initialize the LoccState of LoccNet."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party
+#: paddle_quantum.locc.locc_net.LoccNet.create_ansatz
+#: paddle_quantum.locc.locc_net.LoccNet.measure
+#: paddle_quantum.locc.locc_net.LoccNet.partial_state
+#: paddle_quantum.locc.locc_net.LoccNet.reset_state
+#: paddle_quantum.locc.locc_net.LoccNet.set_init_state
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.reset_state:4
+#: paddle_quantum.locc.locc_net.LoccNet.set_init_state:3
+msgid "Matrix form of the input quantum state."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.set_init_state:4
+msgid ""
+"Indices of the qubits corresponding to the input quantum state. It should"
+" be a ``tuple`` of ``(party_id, qubit_id)``, or a ``list`` of it."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party
+#: paddle_quantum.locc.locc_net.LoccNet.create_ansatz
+#: paddle_quantum.locc.locc_net.LoccNet.measure
+#: paddle_quantum.locc.locc_net.LoccNet.partial_state
+#: paddle_quantum.locc.locc_net.LoccNet.reset_state
+#: paddle_quantum.locc.locc_net.LoccNet.set_init_state
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.create_ansatz:5
+#: paddle_quantum.locc.locc_net.LoccNet.measure:9
+#: paddle_quantum.locc.locc_net.LoccNet.partial_state:9
+#: paddle_quantum.locc.locc_net.LoccNet.reset_state:8
+#: paddle_quantum.locc.locc_net.LoccNet.set_init_state:7
+msgid "Party's ID should be ``str`` or ``int``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.partial_state:1
+msgid "Get the quantum state of the qubits of interest."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.partial_state:3
+msgid "Input LOCC state."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.partial_state:4
+msgid ""
+"Indices of the qubits of interest. It should be a ``tuple`` of "
+"``(party_id, qubit_id)``, or a ``list`` of it."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.partial_state:6
+msgid ""
+"If ``True``, return the partial quantum state of the given qubits; if "
+"``False``, return the partial quantum state of the remaining qubits. "
+"Defaults to ``True``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.partial_state:10
+#: paddle_quantum.locc.locc_net.LoccNet.reset_state:9
+msgid "The ``state`` should be ``LoccState`` or a ``list`` of it."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party
+#: paddle_quantum.locc.locc_net.LoccNet.create_ansatz
+#: paddle_quantum.locc.locc_net.LoccNet.get_num_qubits
+#: paddle_quantum.locc.locc_net.LoccNet.measure
+#: paddle_quantum.locc.locc_net.LoccNet.partial_state
+#: paddle_quantum.locc.locc_net.LoccNet.reset_state
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.partial_state:12
+msgid "LOCC state after obtaining partial quantum state."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party
+#: paddle_quantum.locc.locc_net.LoccNet.create_ansatz
+#: paddle_quantum.locc.locc_net.LoccNet.get_num_qubits
+#: paddle_quantum.locc.locc_net.LoccNet.measure
+#: paddle_quantum.locc.locc_net.LoccNet.partial_state
+#: paddle_quantum.locc.locc_net.LoccNet.reset_state
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.reset_state:1
+msgid "Reset the quantum state of the qubits of interest."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.reset_state:3
+msgid "LOCC state before resetting."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.reset_state:5
+msgid ""
+"Indices of the qubits to be reset. It should be a ``tuple`` of "
+"``(party_id, qubit_id)``, or a ``list`` of it."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.reset_state:11
+msgid "LOCC state after resetting the state of part of the qubits."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party:1
+msgid "Add a new LOCC party."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party:3
+msgid "Number of qubits of the party."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party:4
+msgid "Name of the party. Defaults to ``None``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party:8
+msgid ""
+"You can use a string or a number as a party's ID. If a string is "
+"preferred, you can set ``party_name``; if a number is preferred, then you"
+" don't need to set ``party_name`` and the party's index number will be "
+"automatically assigned."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party:12
+msgid "The ``party_name`` should be ``str``."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.add_new_party:14
+msgid "ID of the party."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.create_ansatz:1
+msgid "Create a new local ansatz."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.create_ansatz:3
+msgid "Party's ID."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.create_ansatz:7
+msgid "Created local ansatz."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.measure:1
+msgid "Perform 0-1 measurement or parameterized measurement on an LOCC state."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.measure:3
+msgid "LOCC state to be measured."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.measure:4
+msgid "Indices of the qubits to be measured."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.measure:5
+msgid "Expected measurement outcomes."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.measure:6
+msgid ""
+"Parameters of measurement. Defaults to ``None``, which means 0-1 "
+"measurement."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.measure:8
+msgid "The ``results_desired`` should be ``str`` or a ``list`` of it."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.measure:10
+msgid "The ``status`` should be ``LoccState`` or a ``list`` of it."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.measure:12
+msgid "LOCC state after measurement."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.get_num_qubits:1
+msgid "Get the number of the qubits in this LOCCNet."
+msgstr ""
+
+#: of paddle_quantum.locc.locc_net.LoccNet.get_num_qubits:3
+msgid "Number of qubits in LOCCNet."
+msgstr ""
+

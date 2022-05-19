@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.gate.functional.base.rst:2
+msgid "paddle\\_quantum.gate.functional.base"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base:1
+msgid "The source file of the basic function for quantum gates."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation:1
+msgid "Apply the gate on the input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation:3
+msgid "Input state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation:4
+msgid "Gate to be executed."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation:5
+msgid "Indices of the qubits on which the gate is applied."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation:6
+msgid "Total number of qubits."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation:7
+msgid "Backend on which the simulation is run."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation:9
+msgid "Output state."
+msgstr ""
+
+#: of paddle_quantum.gate.functional.base.simulation
+msgid "Return type"
+msgstr ""
+

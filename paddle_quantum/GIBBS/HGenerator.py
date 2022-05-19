@@ -1,4 +1,5 @@
-# Copyright (c) 2021 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
+# !/usr/bin/env python3
+# Copyright (c) 2020 Institute for Quantum Computing, Baidu Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+r"""
 HGenerator
 """
 
 import scipy
 from numpy import trace as np_trace
-from paddle_quantum.utils import pauli_str_to_matrix
+from paddle_quantum.qinfo import pauli_str_to_matrix
 
 __all__ = ["H_generator", ]
 
@@ -33,13 +34,13 @@ def H_generator():
 
     # Generate the matrix form of the Hamiltonian
     N_SYS_B = 3  # Number of qubits in subsystem B used to generate Gibbs state
-    hamiltonian = pauli_str_to_matrix(H, N_SYS_B)
+    hamiltonian = pauli_str_to_matrix(H, N_SYS_B).numpy()
 
     # Generate the target Gibbs state rho
     beta = 1.5  # Set inverse temperature beta
     rho_G = scipy.linalg.expm(-1 * beta * hamiltonian) / np_trace(scipy.linalg.expm(-1 * beta * hamiltonian))
 
     # Convert to the data type supported by Paddle Quantum
-    hamiltonian = hamiltonian.astype("complex128")
-    rho_G = rho_G.astype("complex128")
+    hamiltonian = hamiltonian
+    rho_G = rho_G
     return hamiltonian, rho_G

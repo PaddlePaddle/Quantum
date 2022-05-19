@@ -1,0 +1,116 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.ansatz.container.rst:2
+msgid "paddle\\_quantum.ansatz.container"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container:1
+msgid "The source file of the Sequential class."
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential:1
+msgid "Bases: :py:class:`~paddle_quantum.base.Operator`"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential:1
+msgid "Sequential container."
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential
+#: paddle_quantum.ansatz.container.Sequential.append
+#: paddle_quantum.ansatz.container.Sequential.extend
+#: paddle_quantum.ansatz.container.Sequential.forward
+#: paddle_quantum.ansatz.container.Sequential.insert
+#: paddle_quantum.ansatz.container.Sequential.pop
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential:3
+msgid "initial operators ready to be a sequential"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential:7
+msgid ""
+"Sublayers will be added to this container in the order of argument in the"
+" constructor. The argument passed to the constructor can be iterable "
+"Layers or iterable name Layer pairs."
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.append:1
+msgid "append an operator"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.append:3
+msgid "operator with a name or just an operator"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.extend:1
+msgid "append a list of operators"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.extend:3
+msgid "list of operators"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.insert:1
+msgid "insert an operator at index ``index``"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.insert:3
+msgid "index to be inserted"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.insert:4
+msgid "an operator"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.pop:1
+msgid "remove the operator at index ``index`` or matched with ``operator``"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.pop:3
+msgid "at which the operator will be popped"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.pop:4
+msgid "matched with which the operator will be popped"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.forward:1
+msgid "forward the input"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.forward:3
+msgid "initial state"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.forward
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.forward:5
+msgid "output state"
+msgstr ""
+
+#: of paddle_quantum.ansatz.container.Sequential.forward
+msgid "Return type"
+msgstr ""
+

@@ -1,0 +1,52 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.qchem.slater_determinant.rst:2
+msgid "paddle\\_quantum.qchem.slater\\_determinant"
+msgstr ""
+
+#: of paddle_quantum.qchem.slater_determinant:1
+msgid "Slater determinant ansatz used in restricted Hartree Fock method."
+msgstr ""
+
+#: of paddle_quantum.qchem.slater_determinant.RHFSlaterDeterminantModel:1
+msgid "Bases: :py:class:`~paddle_quantum.gate.base.Gate`"
+msgstr ""
+
+#: of paddle_quantum.qchem.slater_determinant.RHFSlaterDeterminantModel:1
+msgid "Slater determinant ansatz used in Restricted Hartree Fock calculation."
+msgstr ""
+
+#: of paddle_quantum.qchem.slater_determinant.RHFSlaterDeterminantModel
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.qchem.slater_determinant.RHFSlaterDeterminantModel:3
+msgid "number of qubits used to encode the Slater determinant state."
+msgstr ""
+
+#: of paddle_quantum.qchem.slater_determinant.RHFSlaterDeterminantModel:4
+msgid "number of electrons inside the molecule."
+msgstr ""
+
+#: of paddle_quantum.qchem.slater_determinant.RHFSlaterDeterminantModel:5
+msgid "parameters used to initialize Slater determinant state."
+msgstr ""
+

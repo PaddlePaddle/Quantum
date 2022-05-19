@@ -1,0 +1,216 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Baidu Inc
+# This file is distributed under the same license as the paddle-quantum
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: paddle-quantum \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-17 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: ../../source/paddle_quantum.qchem.qchem.rst:2
+msgid "paddle\\_quantum.qchem.qchem"
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem:1
+msgid "The function for quantum chemistry."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.qubitOperator_to_Hamiltonian:1
+msgid "Transfer openfermion form to Paddle Quantum Hamiltonian form."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space
+#: paddle_quantum.qchem.qchem.fermionic_hamiltonian
+#: paddle_quantum.qchem.qchem.geometry
+#: paddle_quantum.qchem.qchem.get_molecular_data
+#: paddle_quantum.qchem.qchem.qubitOperator_to_Hamiltonian
+#: paddle_quantum.qchem.qchem.spin_hamiltonian
+msgid "Parameters"
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.fermionic_hamiltonian:9
+#: paddle_quantum.qchem.qchem.qubitOperator_to_Hamiltonian:3
+#: paddle_quantum.qchem.qchem.spin_hamiltonian:3
+msgid "Hamiltonian in openfermion form."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.qubitOperator_to_Hamiltonian:4
+msgid "Value less than tol will be ignored. Defaults to 1e-8."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space
+#: paddle_quantum.qchem.qchem.fermionic_hamiltonian
+#: paddle_quantum.qchem.qchem.geometry
+#: paddle_quantum.qchem.qchem.get_molecular_data
+#: paddle_quantum.qchem.qchem.qubitOperator_to_Hamiltonian
+#: paddle_quantum.qchem.qchem.spin_hamiltonian
+msgid "Returns"
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.qubitOperator_to_Hamiltonian:6
+msgid "Hamiltonian in Paddle Quantum form."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space
+#: paddle_quantum.qchem.qchem.fermionic_hamiltonian
+#: paddle_quantum.qchem.qchem.geometry
+#: paddle_quantum.qchem.qchem.get_molecular_data
+#: paddle_quantum.qchem.qchem.qubitOperator_to_Hamiltonian
+#: paddle_quantum.qchem.qchem.spin_hamiltonian
+msgid "Return type"
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.geometry:1
+msgid "Read molecular geometry information."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.geometry:3
+msgid ""
+"Including molecular geometry information in string, take H2 as an example"
+" ``[['H', [-1.68666, 1.79811, 0.0]], ['H', [-1.12017, 1.37343, 0.0]]]``. "
+"Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.geometry:5
+msgid "The path of .xyz file. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.geometry
+msgid "Raises"
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.geometry:7
+msgid "The two optional input cannot be None simultaneously."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.geometry:9
+#: paddle_quantum.qchem.qchem.get_molecular_data:3
+msgid "Molecular geometry information."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:1
+msgid ""
+"Calculate necessary values of molecule, including one-body integrations, "
+"two-body integrations, and the ground state energy calculated by a chosen"
+" method"
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:4
+msgid "Molecular charge. Defaults to 0."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:5
+msgid "Molecular multiplicity. Defaults to 1."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:6
+msgid ""
+"Most common used basis are ‘sto-3g’, ‘6-31g’. For more basis options, "
+"please refer to "
+"https://psicode.org/psi4manual/master/basissets_byelement.html#apdx-"
+"basiselement. Defaults to 'sto-3g'."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:8
+msgid ""
+"Method to calculate ground state energy, including ``scf``, ``fci``. "
+"Defaults to ``scf``."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:9
+msgid "If need to save molecule information as .hdf5 file. Defaults to True."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:10
+msgid ""
+"If need to print ground state energy calculated by chosen method. "
+"Defaults to True."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:11
+msgid "The name of the file to save. Defaults to \"\"."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.get_molecular_data:12
+msgid "The path of the file to save. Defaults to \".\"."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.fermionic_hamiltonian:3
+#: paddle_quantum.qchem.qchem.get_molecular_data:14
+msgid "A class contains information of the molecule."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space:1
+msgid ""
+"Calculate active space by nominating the number of active electrons and "
+"active orbitals."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space:3
+msgid "Number of total electrons."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space:4
+msgid "Number of total orbitals."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space:5
+#: paddle_quantum.qchem.qchem.fermionic_hamiltonian:5
+#: paddle_quantum.qchem.qchem.spin_hamiltonian:5
+msgid "Spin multiplicity. Defaults to 1."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space:6
+#: paddle_quantum.qchem.qchem.fermionic_hamiltonian:6
+#: paddle_quantum.qchem.qchem.spin_hamiltonian:7
+msgid ""
+"Number of active electrons, default to the case that all electrons are "
+"active."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space:7
+#: paddle_quantum.qchem.qchem.fermionic_hamiltonian:7
+#: paddle_quantum.qchem.qchem.spin_hamiltonian:8
+msgid ""
+"Number of active orbitals, default to the case that all orbitals are "
+"active."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.active_space:9
+msgid "Index for core orbitals and active orbitals."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.fermionic_hamiltonian:1
+msgid "Calculate the fermionic hamiltonian of the given molecule."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.fermionic_hamiltonian:4
+#: paddle_quantum.qchem.qchem.spin_hamiltonian:4
+msgid "Path of .hdf5 file of molecule. Defaults to None."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.spin_hamiltonian:1
+msgid "Generate Hamiltonian in Paddle Quantum form."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.spin_hamiltonian:6
+msgid ""
+"Transformation method, default to ``jordan_wigner``, besides, "
+"``bravyi_kitaev`` is supported. Defaults to ``jordan_wigner``."
+msgstr ""
+
+#: of paddle_quantum.qchem.qchem.spin_hamiltonian:10
+msgid "Hamiltonian in Paddle Quantum form"
+msgstr ""
+
