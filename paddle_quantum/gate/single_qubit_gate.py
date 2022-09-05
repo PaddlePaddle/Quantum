@@ -23,10 +23,10 @@ import numpy as np
 import paddle.nn
 import paddle_quantum
 from . import functional
-from .base import Gate
+from .base import Gate, ParamGate
 from ..backend import Backend
 from paddle_quantum.intrinsic import _format_qubits_idx, _get_float_dtype
-from typing import Optional, Union, Iterable
+from typing import Optional, List, Union, Iterable
 
 
 class H(Gate):
@@ -49,7 +49,8 @@ class H(Gate):
     """
     def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.gate_name = 'h'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -85,7 +86,8 @@ class S(Gate):
     """
     def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.gate_name = 's'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -121,7 +123,8 @@ class T(Gate):
     """
     def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.gate_name = 't'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -156,8 +159,9 @@ class X(Gate):
     """
     def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
-
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.gate_name = 'x'
+        
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
             state.gate_history.append({
@@ -191,7 +195,8 @@ class Y(Gate):
     """
     def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.gate_name = 'y'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -226,7 +231,8 @@ class Z(Gate):
     """
     def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.gate_name = 'z'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -242,7 +248,7 @@ class Z(Gate):
         return state
 
 
-class P(Gate):
+class P(ParamGate):
     r"""A collection of single-qubit P gates.
 
     The matrix form of such a gate is:
@@ -269,29 +275,12 @@ class P(Gate):
             param: Optional[Union[paddle.Tensor, float]] = None, param_sharing: Optional[bool] = False
     ):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         self.param_sharing = param_sharing
-        float_dtype = _get_float_dtype(self.dtype)
-
-        if param_sharing:
-            param_shape = [1]
-        else:
-            param_shape = list(np.shape(self.qubits_idx))
-        param_shape = [self.depth] + param_shape
-        if param is None:
-            initializer = paddle.nn.initializer.Uniform(low=0, high=2 * math.pi)
-        else:
-            if isinstance(param, float):
-                initializer = paddle.nn.initializer.Constant(param)
-            elif isinstance(param, paddle.Tensor):
-                initializer = paddle.nn.initializer.Assign(param.reshape(param_shape))
-            else:
-                raise ValueError("The param must be paddle.Tensor or float.")
-        theta = self.create_parameter(
-            shape=param_shape, dtype=float_dtype,
-            default_initializer=initializer
-        )
-        self.add_parameter('theta', theta)
+        
+        param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
+        self.theta_generation(param, param_shape)
+        self.gate_name = 'p'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -307,7 +296,7 @@ class P(Gate):
         return state
 
 
-class RX(Gate):
+class RX(ParamGate):
     r"""A collection of single-qubit rotation gates about the x-axis.
 
     The matrix form of such a gate is:
@@ -334,31 +323,12 @@ class RX(Gate):
             param: Optional[Union[paddle.Tensor, float]] = None, param_sharing: Optional[bool] = False
     ):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         self.param_sharing = param_sharing
-        float_dtype = _get_float_dtype(self.dtype)
-
-        if param_sharing:
-            param_shape = [1]
-        else:
-            param_shape = list(np.shape(self.qubits_idx))
-        param_shape = [self.depth] + param_shape
-        if param is None:
-            theta = self.create_parameter(
-                shape=param_shape, dtype=float_dtype,
-                default_initializer=paddle.nn.initializer.Uniform(low=0, high=2 * math.pi)
-            )
-            self.add_parameter('theta', theta)
-        elif isinstance(param, paddle.Tensor):
-            theta = self.create_parameter(
-                shape=param_shape, dtype=float_dtype,
-                default_initializer=paddle.nn.initializer.Assign(param.reshape(param_shape))
-            )
-            self.add_parameter('theta', theta)
-        elif isinstance(param, float):
-            self.theta = paddle.ones(param_shape, dtype=float_dtype) * param
-        else:
-            raise ValueError("The param must be paddle.Tensor or float.")
+        
+        param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
+        self.theta_generation(param, param_shape)
+        self.gate_name = 'rx'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -390,7 +360,7 @@ class RX(Gate):
         return state
 
 
-class RY(Gate):
+class RY(ParamGate):
     r"""A collection of single-qubit rotation gates about the y-axis.
 
     The matrix form of such a gate is:
@@ -417,31 +387,12 @@ class RY(Gate):
             param: Optional[Union[paddle.Tensor, float]] = None, param_sharing: Optional[bool] = False
     ):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         self.param_sharing = param_sharing
-        float_dtype = _get_float_dtype(self.dtype)
-
-        if param_sharing:
-            param_shape = [1]
-        else:
-            param_shape = list(np.shape(self.qubits_idx))
-        param_shape = [self.depth] + param_shape
-        if param is None:
-            theta = self.create_parameter(
-                shape=param_shape, dtype=float_dtype,
-                default_initializer=paddle.nn.initializer.Uniform(low=0, high=2 * math.pi)
-            )
-            self.add_parameter('theta', theta)
-        elif isinstance(param, paddle.Tensor):
-            theta = self.create_parameter(
-                shape=param_shape, dtype=float_dtype,
-                default_initializer=paddle.nn.initializer.Assign(param.reshape(param_shape))
-            )
-            self.add_parameter('theta', theta)
-        elif isinstance(param, float):
-            self.theta = paddle.ones(param_shape, dtype=float_dtype) * param
-        else:
-            raise ValueError("The param must be paddle.Tensor or float.")
+        
+        param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
+        self.theta_generation(param, param_shape)
+        self.gate_name = 'ry'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -473,7 +424,7 @@ class RY(Gate):
         return state
 
 
-class RZ(Gate):
+class RZ(ParamGate):
     r"""A collection of single-qubit rotation gates about the z-axis.
 
     The matrix form of such a gate is:
@@ -500,31 +451,12 @@ class RZ(Gate):
             param: Optional[Union[paddle.Tensor, float]] = None, param_sharing: Optional[bool] = False
     ):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         self.param_sharing = param_sharing
-        float_dtype = _get_float_dtype(self.dtype)
-
-        if param_sharing:
-            param_shape = [1]
-        else:
-            param_shape = list(np.shape(self.qubits_idx))
-        param_shape = [self.depth] + param_shape
-        if param is None:
-            theta = self.create_parameter(
-                shape=param_shape, dtype=float_dtype,
-                default_initializer=paddle.nn.initializer.Uniform(low=0, high=2 * math.pi)
-            )
-            self.add_parameter('theta', theta)
-        elif isinstance(param, paddle.Tensor):
-            theta = self.create_parameter(
-                shape=param_shape, dtype=float_dtype,
-                default_initializer=paddle.nn.initializer.Assign(param.reshape(param_shape))
-            )
-            self.add_parameter('theta', theta)
-        elif isinstance(param, float):
-            self.theta = paddle.ones(param_shape, dtype=float_dtype) * param
-        else:
-            raise ValueError("The param must be paddle.Tensor or float.")
+        
+        param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
+        self.theta_generation(param, param_shape)
+        self.gate_name = 'rz'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -556,7 +488,7 @@ class RZ(Gate):
         return state
 
 
-class U3(Gate):
+class U3(ParamGate):
     r"""A collection of single-qubit rotation gates.
 
     The matrix form of such a gate is:
@@ -586,29 +518,15 @@ class U3(Gate):
             param: Optional[Union[paddle.Tensor, Iterable[float]]] = None, param_sharing: Optional[bool] = False
     ):
         super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         self.param_sharing = param_sharing
-        float_dtype = _get_float_dtype(self.dtype)
-
+        
         if param_sharing:
-            param_shape = [3]
+            param_shape = [depth, 3]
         else:
-            param_shape = list(np.shape(self.qubits_idx)) + [3]
-        param_shape = [self.depth] + param_shape
-        if param is None:
-            initializer = paddle.nn.initializer.Uniform(low=0, high=2 * math.pi)
-        else:
-            if isinstance(param, float):
-                initializer = paddle.nn.initializer.Constant(param)
-            elif isinstance(param, paddle.Tensor):
-                initializer = paddle.nn.initializer.Assign(param.reshape(param_shape))
-            else:
-                raise ValueError("The param must be paddle.Tensor or float.")
-        theta = self.create_parameter(
-            shape=param_shape, dtype=float_dtype,
-            default_initializer=initializer
-        )
-        self.add_parameter('theta', theta)
+            param_shape = [depth, len(self.qubits_idx), 3]
+        self.theta_generation(param, param_shape)
+        self.gate_name = 'u'
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:

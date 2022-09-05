@@ -65,6 +65,9 @@ class RHFEnergyLoss(pq.Operator):
         basis: chemical basis, e.g. "sto-3g".
         multiplicity: spin multiplicity.
         charge: charge of the molecule.
+
+    Raises:
+        ModuleNotFoundError: `hartree fock` method needs pyscf being installed, please run `pip install -U pyscf`. 
     """
     
     def __init__(

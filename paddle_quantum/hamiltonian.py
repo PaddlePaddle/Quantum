@@ -136,7 +136,7 @@ class Hamiltonian:
 
     @property
     def pauli_words(self) -> list:
-        r"""The Pauli word of each term，i.e. ``['ZIZ', 'IIX']``.
+        r"""The Pauli word of each term, i.e. ``['ZIZ', 'IIX']``.
         """
         if self.__update_flag:
             self.__decompose()
@@ -146,7 +146,7 @@ class Hamiltonian:
 
     @property
     def pauli_words_r(self) -> list:
-        r"""A list of Pauli word (exclude I)，i.e. ``['ZXZZ', 'Z', 'X']``.
+        r"""A list of Pauli word (exclude I), i.e. ``['ZXZZ', 'Z', 'X']``.
         """
         if self.__update_flag:
             self.__decompose()
@@ -209,11 +209,14 @@ class Hamiltonian:
             return self.__nqubits
 
     def __decompose(self):
-        r"""将哈密顿量分解为不同的形式
+        r"""decompose the Hamiltonian into vairious forms
+
+        Raises:
+            Exception: Operators should be defined with a string composed of Pauli operators followed by qubit index on which it act, separated with ",". i.e. "Z0, X1"
 
         Notes:
-            这是一个内部函数，你不需要直接使用它
-            这是一个比较基础的函数，它负责将输入的 Pauli string 拆分为不同的形式并存储在内部变量中
+            This is an intrinsic function, user do not need to call this directly
+            This is a fundamental function, it decomposes the input Pauli string into different forms and stores them into private variables.
         """
         self.__pauli_words = []
         self.__pauli_words_r = []
@@ -261,10 +264,10 @@ class Hamiltonian:
             self.__update_flag = False
 
     def __compress(self):
-        r""" 对同类项进行合并。
+        r"""combine like terms
 
         Notes:
-            这是一个内部函数，你不需要直接使用它
+            This is an intrinsic function, user do not need to call this directly
         """
         if self.__update_flag:
             self.__decompose()
@@ -388,14 +391,14 @@ class SpinOps:
         return self.__sigx_p
 
     def __direct_prod_op(self, spin_op, spin_index):
-        r"""直积，得到第 n 个自旋（量子比特）上的自旋算符
+        r"""get spin operators on n-th spin (qubit) with direct product
 
         Args:
-            spin_op: 单体自旋算符
-            spin_index: 标记第 n 个自旋（量子比特）
+            spin_op: single body spin operator
+            spin_index: on which spin (qubit)
 
         Returns:
-            scipy.sparse or np.ndarray: 直积后的自旋算符，其数据类型取决于 self.__use_sparse
+            scipy.sparse or np.ndarray: spin operator with direct product form. The data type is specified by self.__use_sparse
         """
         s_p = copy.copy(spin_op)
         for i in range(self.size):

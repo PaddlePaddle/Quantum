@@ -31,11 +31,8 @@ __all__ = ["RHFSlaterDeterminantModel"]
 class GivensRotationBlock(pq.gate.Gate):
     r"""This is a two-qubit gate performs the Givens rotation.
 
-    .. math::
-
-        \begin{align}
-            U(\theta)=e^{-i\frac{\theta}{2}(Y\otimes X-X\otimes Y)}
-        \end{align}
+    .. math:
+        U(\theta)=e^{-i\frac{\theta}{2}(Y\otimes X-X\otimes Y)}
 
     Args:
         pindex, qindex qubits where Givens rotation gate acts on.

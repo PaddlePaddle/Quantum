@@ -27,9 +27,12 @@ __all__ = [
 
 
 def H_generator():
-    """
-    Generate a Hamiltonian with trivial descriptions
-    :return: a Hamiltonian, 'mat'
+    r"""Generate a Hamiltonian with trivial descriptions
+    
+    Returns:
+        Tuple: including following elements
+            - H: the Hamiltonian
+            - rho: density matrix
     """
 
     beta = 1
@@ -47,9 +50,12 @@ def H_generator():
 
 
 def H2_generator():
-    """
-    Generate a Hamiltonian with trivial descriptions
-    Returns: A Hamiltonian, 'mat'
+    r"""Generate a Hamiltonian with trivial descriptions
+    
+    Returns: 
+        tuple contains
+            - H: Hamiltonian, a list of Pauli string
+            - N: the number of qubits
     """
 
     beta = 1

@@ -29,10 +29,15 @@ __all__ = [
 ]
 
 
-def Hamiltonian_str_convert(qubit_op):
-    '''
-    Convert provided Hamiltonian information to Pauli string
-    '''
+def _Hamiltonian_str_convert(qubit_op):
+    r"""Convert provided Hamiltonian information to Pauli string
+
+    Args:
+        qubit_op: instance of ``QubitOperator`` class defined in ``openfermion``
+
+    Returns:
+        H_info for Hamiltonian
+    """
     info_dic = qubit_op.terms
 
     def process_tuple(tup):
@@ -55,10 +60,21 @@ def Hamiltonian_str_convert(qubit_op):
 
 
 def calc_H_rho_from_qubit_operator(qubit_op, n_qubits):
+    r"""Generate a Hamiltonian from QubitOperator
+
+    Args:
+        qubit_op: instance of ``QubitOperator`` class defined in ``openfermion``
+        n_qubits: number of qubits
+
+    Raises:
+        Exception: unrecognized basis
+
+    Returns:
+        Tuple:
+        -  H: (2**n, 2**n) complex128 array, as the Hamiltonian (n == n_qubits)
+        -  rho: (2**n, 2**n) complex128 array, as the density matrix (n == n_qubits)
     """
-    Generate a Hamiltonian from QubitOperator
-    Returns: H, rho
-    """
+    
 
     # const
     beta = 1
@@ -94,9 +110,20 @@ def calc_H_rho_from_qubit_operator(qubit_op, n_qubits):
 
 
 def read_calc_H(geo_fn, multiplicity=1, charge=0):
-    """
-    Read and calc the H and rho
-    Returns: H,rho matrix
+    r"""Read and calc the H and rho
+
+    Args:
+        geo_fn (str): geometry filename
+        multiplicity (int, optional): used in openfermionpyscf, Defaults to 1.
+        charge (int, optional): used in openfermionpyscf, Defaults to 0.
+
+    Raises:
+        Exception: filename should be a string
+
+    Returns:
+        Tuple:
+        -  H: the Hamiltonian
+        -  nqubit: qubit 的个数
     """
 
     if not isinstance(geo_fn, str):  # geo_fn = 'h2.xyz'
@@ -117,19 +144,11 @@ def read_calc_H(geo_fn, multiplicity=1, charge=0):
     qubit_op = openfermion.transforms.jordan_wigner(molecular_hamiltonian)
 
     # calc H
-    Hamiltonian = Hamiltonian_str_convert(qubit_op)
+    Hamiltonian = _Hamiltonian_str_convert(qubit_op)
     return Hamiltonian, molecular_hamiltonian.n_qubits
 
 
-def main():
-    """
-    The main function
-    """
-
+if __name__ == '__main__':
     filename = 'h2.xyz'
     H, N = read_calc_H(geo_fn=filename)
     print('H', H)
-
-
-if __name__ == '__main__':
-    main()

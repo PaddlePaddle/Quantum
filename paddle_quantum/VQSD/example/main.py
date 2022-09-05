@@ -20,9 +20,10 @@ Main
 import numpy
 from paddle_quantum.VQSD.HGenerator import generate_rho_sigma
 from paddle_quantum.VQSD.Paddle_VQSD import Paddle_VQSD
+   
 
 
-def main():
+if __name__ == '__main__':
     """
     main
     """
@@ -34,7 +35,3 @@ def main():
 
     print("The estimated spectrum is:", numpy.real(numpy.diag(rho_tilde_np)))
     print('The target spectrum is:', D)
-
-
-if __name__ == '__main__':
-    main()

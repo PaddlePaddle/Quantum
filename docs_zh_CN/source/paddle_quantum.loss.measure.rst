@@ -49,5 +49,8 @@ paddle\_quantum.loss.measure
       :type qubits_idx: Union[Iterable[int], int, str], optional
       :param desired_result: 指定要返回的测量结果的概率值。默认为 ``None``，返回所有测量结果的概率值。
       :type desired_result: Union[Iterable[str], str], optional
+      :raises NotImplementedError: 所指定的后端必须为量桨已经实现的后端
+      :raises NotImplementedError: ``qubits_idx`` 须为 ``Iterable`` 或 ``'full'``。
+      :raises NotImplementedError: 目前我们只支持在Z方向上测量。
       :return: 测量结果所对应的概率值。
       :rtype: paddle.Tensor

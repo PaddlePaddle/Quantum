@@ -3,7 +3,7 @@
 Paddle Quantum（量桨）
 =======================
 
-`Paddle Quantum（量桨） <https://github.com/PaddlePaddle/Quantum>`__\ 是基于百度飞桨开发的量子机器学习工具集，支持量子神经网络的搭建与训练，提供易用的量子机器学习开发套件与量子优化、量子化学等前沿量子应用工具集，使得百度飞桨也因此成为国内首个支持量子机器学习的深度学习框架。
+`Paddle Quantum（量桨） <https://github.com/PaddlePaddle/Quantum>`__\ 是基于百度飞桨研发的全球首个云量一体的量子机器学习平台。量桨支持量子神经网络的搭建与训练等功能，使得百度飞桨也因此成为国内首个支持量子机器学习的深度学习框架。量桨具备轻松上手、功能丰富等特点，提供了完善的API文档和用例教程，使用户可以快速入门和上手。
 
 .. figure:: https://release-data.cdn.bcebos.com/Paddle%20Quantum.png
    :target: https://github.com/PaddlePaddle/Quantum
@@ -19,7 +19,7 @@ Paddle Quantum（量桨）
 
 - 轻松上手
 
-  - 丰富的在线学习资源（近 40 篇教程案例）
+  - 丰富的在线学习资源（近 50 篇教程案例）
   - 通过模板高效搭建量子神经网络
   - 自动微分框架
 
@@ -47,7 +47,7 @@ Paddle Quantum（量桨）
 
 当用户安装 Paddle Quantum 时会自动下载安装这个关键依赖包。关于 PaddlePaddle 更全面的安装信息请参考
 `PaddlePaddle <https://www.paddlepaddle.org.cn/install/quick>`__
-安装配置页面。此项目需求 PaddlePaddle 2.2.0+。
+安装配置页面。此项目需求 PaddlePaddle 2.2.0 到 2.3.0。
 
 .. _header-n19:
 

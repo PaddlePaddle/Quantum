@@ -77,6 +77,8 @@ paddle\_quantum.state.common
       p_{1}|\Phi^{+}\rangle\langle\Phi^{+}|+p_{2}| \Psi^{+}\rangle\langle\Psi^{+}|+p_{3}| \Phi^{-}\rangle\langle\Phi^{-}| +
       p_{4}|\Psi^{-}\rangle\langle\Psi^{-}|
 
+   :param prob: 各个贝尔态的概率。
+   :type: List[float]
    :raises Exception: 当后端为态矢量时，所输入量子态应该为纯态。
    :raises NotImplementedError: 所指定的后端必须为量桨已经实现的后端。
 
@@ -123,7 +125,7 @@ paddle\_quantum.state.common
 
    :param num_qubits: 量子态所包含的量子比特数。
    :type num_qubits: int
-   :raises Exception: 所指定的后端必须为态矢量。
+   :raises Exception: 当后端为态矢量时，所输入量子态应该为纯态。
    :raises NotImplementedError: 所指定的后端必须为量桨已经实现的后端。
    :returns: 生成的 GHZ-state。
    :rtype: paddle_quantum.State

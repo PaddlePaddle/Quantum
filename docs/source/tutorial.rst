@@ -21,14 +21,14 @@ Tutorials
 ---------
 
 We provide use cases covering quantum simulation, machine learning, combinatorial optimization, local operations and classical communication (LOCC), and other popular quantum machine learning research topics.
-Similar to the \ `quick start guide </quick-start/overview.html>`__\ , you can read each tutorial `online </tutorials/overview.html>`__ or download and run `Jupyter Notebooks <https://github.com/PaddlePaddle/Quantum/tree/master/tutorial>`__\  locally.
+Similar to the \ `quick start guide </quick-start/overview.html>`__\ , you can read each tutorial `online </tutorials/overview.html>`__ or download and run `Jupyter Notebooks <https://github.com/PaddlePaddle/Quantum/tree/master/tutorials>`__\  locally.
 For interested developers, we recommend them to download Jupyter Notebooks and play around with it. Here are the tutorial categories:
 
-- `Quantum Simulation <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/quantum_simulation>`__
-- `Machine Learning <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/machine_learning>`__
-- `Combinatorial Optimization <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/combinatorial_optimization>`__
-- `LOCCNet <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/locc>`__
-- `QNN Research <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/qnn_research>`__
+- `Quantum Simulation <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/quantum_simulation>`__
+- `Machine Learning <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/machine_learning>`__
+- `Combinatorial Optimization <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/combinatorial_optimization>`__
+- `LOCCNet <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/locc>`__
+- `QNN Research <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/qnn_research>`__
 
 With the latest LOCCNet module, Paddle Quantum can efficiently simulate distributed quantum information processing tasks. Interested readers can
 start with this `tutorial on LOCCNet </tutorials/loccnet/loccnet-framework.html>`__. In addition, Paddle Quantum supports quantum neural

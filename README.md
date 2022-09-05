@@ -7,7 +7,7 @@ English | [简体中文](README_CN.md)
    - [Install PaddlePaddle](#install-paddlepaddle)
    - [Install Paddle Quantum](#install-paddle-quantum)
    - [Environment setup for Quantum Chemistry module](#environment_setup_for_quantum_chemistry_module)
-   - [Run programs](#run-programs)
+   - [Run Example](#run-example)
 - [Introduction and developments](#introduction-and-developments)
    - [Quick start](#quick-start)
    - [Tutorials](#tutorials)
@@ -18,7 +18,7 @@ English | [简体中文](README_CN.md)
 - [Copyright and License](#copyright-and-license)
 - [References](#references)
 
-[Paddle Quantum (量桨)](https://qml.baidu.com/) is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle. It provides a platform to construct and train quantum neural networks (QNNs) with easy-to-use QML development kits supporting combinatorial optimization, quantum chemistry and other cutting-edge quantum applications, making PaddlePaddle the first deep learning framework in China that supports quantum machine learning.
+[Paddle Quantum (量桨)](https://qml.baidu.com/) is the world's first cloud-integrated quantum machine learning platform based on Baidu PaddlePaddle. It supports the building and training of quantum neural networks, making PaddlePaddle the first deep learning framework in China. Paddle Quantum is feature-rich and easy to use. It provides comprehensive API documentation and tutorials help users get started right away.
 
 <p align="center">
   <a href="https://qml.baidu.com/">
@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.2.0-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.2.1-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -55,7 +55,7 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 ## Features
 
 - Easy-to-use
-  - Many online learning resources (Nearly 40 tutorials)
+  - Many online learning resources (Nearly 50 tutorials)
   - High efficiency in building QNN with various QNN templates
   - Automatic differentiation
 - Versatile
@@ -71,7 +71,7 @@ Paddle Quantum aims at establishing a bridge between artificial intelligence (AI
 
 ### Install PaddlePaddle
 
-This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 2.2.0+.
+This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick)'s official installation and configuration page. This project requires PaddlePaddle 2.2.0 to 2.3.0.
 
 ### Install Paddle Quantum
 
@@ -151,6 +151,7 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
     8. [Hamiltonian Simulation with Product Formula](./tutorials/quantum_simulation/HamiltonianSimulation_EN.ipynb)
     9. [Simulate the Spin Dynamics on a Heisenberg Chain](./tutorials/quantum_simulation/SimulateHeisenberg_EN.ipynb)
     10. [Distributed Variational Quantum Eigensolver Based on Schmidt Decomposition](./tutorials/quantum_simulation/DistributedVQE_EN.ipynb)
+    11. [Quantum Signal Processing and Quantum Singular Value Transformation](./tutorials/quantum_simulation/QSP_and_QSVT_EN.ipynb)
 
 - [Machine Learning](./tutorials/machine_learning)
     1. [Encoding Classical Data into Quantum States](./tutorials/machine_learning/DataEncoding_EN.ipynb)
@@ -160,6 +161,8 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
     5. [Quantum Autoencoder](./tutorials/machine_learning/QAutoencoder_EN.ipynb)
     6. [Quantum GAN](./tutorials/machine_learning/QGAN_EN.ipynb)
     7. [Variational Quantum Singular Value Decomposition (VQSVD)](./tutorials/machine_learning/VQSVD_EN.ipynb)
+    8. [Data Encoding Analysis](./tutorials/machine_learning/EncodingAnalysis_EN.ipynb)
+    9. [Quantum Neural Network Approximating Functions](./tutorials/machine_learning/QApproximating_EN.ipynb)
 
 - [Combinatorial Optimization](./tutorials/combinatorial_optimization)
     1. [Quantum Approximation Optimization Algorithm (QAOA)](./tutorials/combinatorial_optimization/QAOA_EN.ipynb)

@@ -140,7 +140,7 @@ paddle\_quantum.gate.single\_qubit\_gate
 
 .. py:class:: P(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    单量子比特 P 门。
 
@@ -167,7 +167,7 @@ paddle\_quantum.gate.single\_qubit\_gate
 
 .. py:class:: RX(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    关于 x 轴的单量子比特旋转门。
 
@@ -194,7 +194,7 @@ paddle\_quantum.gate.single\_qubit\_gate
 
 .. py:class:: RY(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    关于 y 轴的单量子比特旋转门。
 
@@ -221,7 +221,7 @@ paddle\_quantum.gate.single\_qubit\_gate
 
 .. py:class:: RZ(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    关于 z 轴的单量子比特旋转门。
 
@@ -248,7 +248,7 @@ paddle\_quantum.gate.single\_qubit\_gate
 
 .. py:class:: U3(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    单量子比特旋转门。
 

@@ -3,7 +3,7 @@ paddle\_quantum.ansatz.circuit
 
 量子电路类的功能实现。
 
-.. py:class:: Circuit(num_qubits = None)
+.. py:class:: Circuit(num_qubits=None)
       
       基类: :py:class:`paddle_quantum.ansatz.container.Sequential`
       
@@ -28,7 +28,11 @@ paddle\_quantum.ansatz.circuit
 
          展平后的电路参数梯度。
 
-      .. py:method:: update_param(theta, idx = None)
+      .. py:property:: depth()
+
+         电路深度
+
+      .. py:method:: update_param(theta, idx=None)
 
          替换单层或所有的电路参数。
 
@@ -39,7 +43,11 @@ paddle\_quantum.ansatz.circuit
 
          :raises ValueError: 索引必须是整数或者 None。
 
-      .. py:method:: randomize_param(self, low = 0, high = 2 * pi)
+      .. py:method:: transfer_static()
+
+         将该线路的所有参数的 ``stop_grdient`` 设为 ``True``
+
+      .. py:method:: randomize_param(low=0, high=2 * pi)
 
          在 ``[low, high)`` 的范围内随机化电路参数
 
@@ -48,7 +56,7 @@ paddle\_quantum.ansatz.circuit
          :param high: 随机参数的上界, 默认为 ``2*pi``。
          :type high: float, optional
 
-      .. py:method:: h(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: h(qubits_idx='full', num_qubits=None, depth=1)
 
          添加一个单量子比特的 Hadamard 门。
 
@@ -69,7 +77,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: s(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: s(qubits_idx='full', num_qubits=None, depth=1)
 
          添加单量子比特 S 门。
 
@@ -90,7 +98,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: t(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: t(qubits_idx='full', num_qubits=None, depth=1)
 
          添加单量子比特 T 门。
 
@@ -111,7 +119,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: x(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: x(qubits_idx='full', num_qubits=None, depth=1)
 
          添加单量子比特 X 门。
 
@@ -701,7 +709,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: ccx(qubits_idx = 'cycle', num_qubits = None, depth = 1)
+      .. py:method:: ccx(qubits_idx='cycle', num_qubits=None, depth=1)
 
          添加 CCX 门。
 
@@ -771,6 +779,8 @@ paddle\_quantum.ansatz.circuit
          :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
+         :param gate_name: oracle 的名字，默认为 ``O``。
+         :type gate_name: str, optional
       
       .. py:method:: control_oracle(oracle, qubits_idx, num_qubits=None, depth=1)
 
@@ -784,8 +794,28 @@ paddle\_quantum.ansatz.circuit
          :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
+         :param gate_name: oracle 的名字，默认为 ``cO``。
+         :type gate_name: str, optional
+
+      .. py:method:: collapse(qubits_idx='full', num_qubits=None, desired_result=None, if_print=False, measure_basis='z')
+
+         添加一个坍缩算子
+
+         :param qubits_idx: 作用的量子比特的编号。
+         :type qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int]
+         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
+         :type num_qubits: int, optional
+         :param desired_result: 期望的坍缩态（现只支持输入计算基），默认为 ``None`` （随机坍缩）。
+         :type desired_result: Union[int, str]
+         :param if_print: 是否要打印坍缩的信息，默认为 ``True``。
+         :type if_print: bool, optional
+         :param measure_basis: 要观测的测量基底，默认为 ``z``。
+         :type measure_basis: Union[Iterable[paddle.Tensor], str]
+
+         :raises NotImplementdError: 要观测的测量基底只能为 ``z``，其他测量基底会在之后推出。
+         :raises TypeError: 当 ``backend`` 为 ``unitary_matrix`` 时，无法获取输入态的概率。
       
-      .. py:method:: superposition_layer(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: superposition_layer(qubits_idx='full', num_qubits=None, depth=1)
 
          添加一个 Hadamard 门组成的层。
 
@@ -796,7 +826,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: weak_superposition_layer(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: weak_superposition_layer(qubits_idx='full', num_qubits=None, depth=1)
 
          转角度为 :math:`\pi/4` 的 Ry 门组成的层。
       
@@ -807,7 +837,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: linear_entangled_layer(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: linear_entangled_layer(qubits_idx='full', num_qubits=None, depth=1)
          
          包含 Ry 门、Rz 门，和 CNOT 门的线性纠缠层。
 
@@ -818,7 +848,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: real_entangled_layer(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: real_entangled_layer(qubits_idx='full', num_qubits=None, depth=1)
 
          包含 Ry 门和 CNOT 门的强纠缠层。
 
@@ -829,7 +859,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: complex_entangled_layer(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: complex_entangled_layer(qubits_idx='full', num_qubits=None, depth=1)
 
          包含 U3 门和 CNOT 门的强纠缠层。
 
@@ -840,7 +870,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: real_block_layer(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: real_block_layer(qubits_idx='full', num_qubits=None, depth=1)
 
          包含 Ry 门和 CNOT 门的弱纠缠层。
 
@@ -851,7 +881,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: complex_block_layer(qubits_idx = 'full', num_qubits = None, depth = 1)
+      .. py:method:: complex_block_layer(qubits_idx='full', num_qubits=None, depth=1)
 
          包含 U3 门和 CNOT 门的弱纠缠层。
 
@@ -862,7 +892,7 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: bit_flip(prob, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: bit_flip(prob, qubits_idx='full', num_qubits=None)
 
          添加比特反转信道。
 
@@ -873,7 +903,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
       
-      .. py:method:: phase_flip(prob, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: phase_flip(prob, qubits_idx='full', num_qubits=None)
 
          添加相位反转信道。
 
@@ -884,7 +914,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
 
-      .. py:method:: bit_phase_flip(prob, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: bit_phase_flip(prob, qubits_idx='full', num_qubits=None)
 
          添加比特相位反转信道。
 
@@ -895,7 +925,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
       
-      .. py:method:: amplitude_damping(gamma, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: amplitude_damping(gamma, qubits_idx='full', num_qubits=None)
 
          添加振幅阻尼信道。
 
@@ -906,7 +936,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
       
-      .. py:method:: generalized_amplitude_damping(gamma, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: generalized_amplitude_damping(gamma, qubits_idx='full', num_qubits=None)
 
          添加广义振幅阻尼信道。
 
@@ -919,7 +949,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
       
-      .. py:method:: phase_damping(gamma, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: phase_damping(gamma, qubits_idx='full', num_qubits=None)
 
          添加相位阻尼信道。
 
@@ -930,7 +960,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
 
-      .. py:method:: depolarizing(prob, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: depolarizing(prob, qubits_idx='full', num_qubits=None)
 
          添加去极化信道。
 
@@ -941,7 +971,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
       
-      .. py:method:: pauli_channel(prob, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: pauli_channel(prob, qubits_idx='full', num_qubits=None)
 
          添加泡利信道。
 
@@ -952,7 +982,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
       
-      .. py:method:: reset_channel(prob, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: reset_channel(prob, qubits_idx='full', num_qubits=None)
 
          添加重置信道。
 
@@ -963,7 +993,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
       
-      .. py:method:: thermal_relaxation(const_t, exec_time, qubits_idx = 'full', num_qubits = None)
+      .. py:method:: thermal_relaxation(const_t, exec_time, qubits_idx='full', num_qubits=None)
 
          添加热弛豫信道。
 
@@ -976,7 +1006,7 @@ paddle\_quantum.ansatz.circuit
         :param num_qubits: 总的量子比特个数，默认为 ``None``。
         :type num_qubits: int, optional
 
-      .. py:method:: kraus_repr(kraus_oper, qubits_idx, num_qubits = None)
+      .. py:method:: kraus_repr(kraus_oper, qubits_idx, num_qubits=None)
 
          添加一个 Kraus 表示的自定义量子信道。
 
@@ -987,7 +1017,7 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
 
-      .. py:method:: unitary_matrix(num_qubits = None)
+      .. py:method:: unitary_matrix(num_qubits=None)
 
          电路的酉矩阵形式
 

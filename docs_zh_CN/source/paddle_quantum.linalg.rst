@@ -27,7 +27,7 @@ paddle\_quantum.linalg
 
    验证矩阵 ``P`` 是否为厄密矩阵
 
-   :param mat: 矩阵
+   :param mat: 厄密矩阵
    :type mat: paddle.Tensor
    :param eps: 容错率
    :type eps: float, optional
@@ -39,7 +39,7 @@ paddle\_quantum.linalg
 
    验证矩阵 ``P`` 是否为映射算子
 
-   :param mat: 矩阵
+   :param mat: 映射算子
    :type mat: paddle.Tensor
    :param eps: 容错率
    :type eps: float, optional
@@ -47,11 +47,11 @@ paddle\_quantum.linalg
    :return: 决定是否 :math:`PP - P = 0`
    :rtype: bool
 
-.. py:function:: is_unitary(mat, eps = 1e-5)
+.. py:function:: is_unitary(mat, eps=1e-5)
 
    验证矩阵 ``P`` 是否为酉矩阵
 
-   :param mat: 矩阵
+   :param mat: 酉矩阵
    :type mat: paddle.Tensor
    :param eps: 容错率
    :type eps: float, optional
@@ -66,7 +66,7 @@ paddle\_quantum.linalg
    :param num_qubits: 量子比特数 n
    :type num_qubits: int
 
-   :return: 一个 :math:`2^n \times 2^n` 厄密矩阵
+   :return: 一个 :math:`2^n \times 2^n` 厄密矩阵 (n 为量子比特数) 
    :rtype: paddle.Tensor
 
 .. py:function:: orthogonal_projection_random(num_qubits)
@@ -76,27 +76,17 @@ paddle\_quantum.linalg
    :param num_qubits: 量子比特数 n
    :type num_qubits: int
 
-   :return: 一个 :math:`2^n \times 2^n` 正交投影算子
+   :return: 一个 :math:`2^n \times 2^n` 正交投影算子 (n 为量子比特数)
    :rtype: paddle.Tensor
 
-.. py:function:: unitary_hermitian_random(num_qubits)
+.. py:function:: density_matrix_random(num_qubits)
 
-   随机生成一个厄密酉矩阵
+   随机生成一个密度矩阵
 
    :param num_qubits: 量子比特数 n
    :type num_qubits: int
 
-   :return: 一个 :math:`2^n \times 2^n` 厄密共轭酉矩阵
-   :rtype: paddle.Tensor
-
-.. py:function:: unitary_random_with_hermitian_block(num_qubits)
-
-   随机生成一个左上半部分为厄密矩阵的酉矩阵
-
-   :param num_qubits: 量子比特数 n
-   :type num_qubits: int
-
-   :return:  一个左上半部分为厄密矩阵的 :math:`2^n \times 2^n` 酉矩阵
+   :return: 一个 :math:`2^n \times 2^n` 密度矩阵 (n 为量子比特数)
    :rtype: paddle.Tensor
 
 .. py:function:: unitary_random(num_qubits)
@@ -106,7 +96,29 @@ paddle\_quantum.linalg
    :param num_qubits: 量子比特数 n
    :type num_qubits: int
 
-   :return: 一个 :math:`2^n \times 2^n` 酉矩阵
+   :return: 一个 :math:`2^n \times 2^n` 酉矩阵 (n 为量子比特数)
+   :rtype: paddle.Tensor
+
+.. py:function:: unitary_hermitian_random(num_qubits)
+
+   随机生成一个厄密酉矩阵
+
+   :param num_qubits: 量子比特数 n
+   :type num_qubits: int
+
+   :return: 一个 :math:`2^n \times 2^n` 厄密共轭酉矩阵 (n 为量子比特数)
+   :rtype: paddle.Tensor
+
+.. py:function:: unitary_random_with_hermitian_block(num_qubits, is_unitary)
+
+   随机生成一个左上半部分为厄密矩阵的酉矩阵
+
+   :param num_qubits: 量子比特数 n
+   :type num_qubits: int
+   :param is_unitary: 厄密矩阵块是否是酉矩阵的 1/2
+   :type is_unitary: bool
+
+   :return:  一个左上半部分为厄密矩阵的 :math:`2^n \times 2^n` 酉矩阵 (n 为量子比特数)
    :rtype: paddle.Tensor
 
 .. py:function:: haar_orthogonal(num_qubits)
@@ -116,7 +128,7 @@ paddle\_quantum.linalg
    :param num_qubits: 量子比特数 n
    :type num_qubits: int
 
-   :return:  一个 :math:`2^n \times 2^n` 正交矩阵
+   :return:  一个 :math:`2^n \times 2^n` 正交矩阵 (n 为量子比特数)
    :rtype: paddle.Tensor
 
 .. py:function::  haar_unitary(num_qubits)
@@ -126,7 +138,7 @@ paddle\_quantum.linalg
    :param num_qubits: 量子比特数 n
    :type num_qubits: int
 
-   :return:  一个 :math:`2^n \times 2^n` 酉矩阵
+   :return:  一个 :math:`2^n \times 2^n` 酉矩阵 (n 为量子比特数)
    :rtype: paddle.Tensor
 
 .. py:function::  haar_state_vector(num_qubits, is_real=False)
@@ -138,7 +150,7 @@ paddle\_quantum.linalg
    :param is_real: 生成的态矢量是否为实数
    :type is_real: bool, optional
 
-   :return:  一个 :math:`2^n \times 1` 态矢量
+   :return:  一个 :math:`2^n \times 1` 态矢量 (n 为量子比特数)
    :rtype: paddle.Tensor
 
 .. py:function::  haar_density_operator(num_qubits, rank=None, is_real=False)
@@ -152,7 +164,7 @@ paddle\_quantum.linalg
    :param is_real: 生成的态矢量是否为实数
    :type is_real: bool, optional
 
-   :return:  一个 :math:`2^n x 2^n` 密度矩阵
+   :return:  一个 :math:`2^n \times 2^n` 密度矩阵 (n 为量子比特数)
    :rtype: paddle.Tensor
 
 .. py:function::  NKron(matrix_A, matrix_B, *args)
@@ -160,11 +172,11 @@ paddle\_quantum.linalg
    计算两个及以上的矩阵的克罗内克乘积
 
    :param matrix_A: 矩阵
-   :type num_qubits: np.ndarray
+   :type num_qubits: Union[np.ndarray, paddle.Tensor]
    :param matrix_B: 矩阵
-   :type matrix_B: np.ndarray
+   :type matrix_B: Union[np.ndarray, paddle.Tensor]
    :param \*args: 更多矩阵
-   :type \*args: np.ndarray
+   :type \*args: Union[np.ndarray, paddle.Tensor]
    
    :return:  克罗内克乘积
-   :rtype: np.ndarray
+   :rtype: Union[np.ndarray, paddle.Tensor]

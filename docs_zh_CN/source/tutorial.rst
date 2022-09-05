@@ -23,14 +23,14 @@ Paddle Quantum。目前支持网页阅览和\ `下载运行 Jupyter Notebook <ht
 --------
 
 我们提供了涵盖量子模拟、机器学习、组合优化、本地操作与经典通讯（local operations and classical communication, LOCC）、量子神经网络等多个领域的案例供大家学习。与\ `入门手册 </quick-start/overview.html>`__\ 类似，每个教程目前支持
-\ `网页阅览 </tutorials/overview.html>`__\ 和\ `下载运行 Jupyter Notebook <https://github.com/PaddlePaddle/Quantum/tree/master/tutorial>`__\ 两种方式。我们推荐用户下载 Notebook
+\ `网页阅览 </tutorials/overview.html>`__\ 和\ `下载运行 Jupyter Notebook <https://github.com/PaddlePaddle/Quantum/tree/master/tutorials>`__\ 两种方式。我们推荐用户下载 Notebook
 后，本地运行进行实践。
 
-- `量子模拟 <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/quantum_simulation>`__
-- `机器学习 <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/machine_learning>`__
-- `组合优化 <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/combinatorial_optimization>`__
-- `LOCCNet <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/locc>`__
-- `量子神经网络研究 <https://github.com/PaddlePaddle/Quantum/blob/master/tutorial/qnn_research>`__
+- `量子模拟 <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/quantum_simulation>`__
+- `机器学习 <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/machine_learning>`__
+- `组合优化 <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/combinatorial_optimization>`__
+- `LOCCNet <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/locc>`__
+- `量子神经网络研究 <https://github.com/PaddlePaddle/Quantum/blob/master/tutorials/qnn_research>`__
 
 随着 LOCCNet 模组的推出，量桨现已支持分布式量子信息处理任务的高效模拟和开发。感兴趣的读者请参见 `教程 </tutorials/loccnet/loccnet-framework.html>`__。
 Paddle Quantum 也支持在 GPU

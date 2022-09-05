@@ -3,7 +3,7 @@ paddle\_quantum.gate.custom
 
 自定义量子门和受控量子门的功能实现。
 
-.. py:class:: Oracle(oracle, qubits_idx, num_qubits=None, depth=1)
+.. py:class:: Oracle(oracle, qubits_idx, num_qubits=None, depth=1, gate_name='O')
 
    基类：:py:class:`paddle_quantum.gate.base.Gate`
 
@@ -17,8 +17,10 @@ paddle\_quantum.gate.custom
    :type num_qubits: int, optional
    :param depth: 层数，默认为 ``1``。
    :type depth: int, optional
+   :param gate_name: oracle 的名字，默认为 ``O``。
+   :type gate_name: str, optional
 
-.. py:class:: ControlOracle(oracle, qubits_idx, num_qubits=None, depth=1)
+.. py:class:: ControlOracle(oracle, qubits_idx, num_qubits=None, depth=1, gate_name='cO')
 
    基类：:py:class:`paddle_quantum.gate.base.Gate`
 
@@ -32,3 +34,5 @@ paddle\_quantum.gate.custom
    :type num_qubits: int, optional
    :param depth: 层数，默认为 ``1``。
    :type depth: int, optional
+   :param gate_name: oracle 的名字，默认为 ``cO``。
+   :type gate_name: str, optional

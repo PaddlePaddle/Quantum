@@ -1,7 +1,8 @@
-qcompute
-paddlepaddle>=2.2.0
-scipy
+paddlepaddle<=2.3.0
+scipy>=1.8.1
+protobuf<=3.20.1
 networkx>=2.5
+qcompute
 matplotlib
 tqdm
 openfermion

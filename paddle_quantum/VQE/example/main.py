@@ -23,11 +23,8 @@ from paddle_quantum.VQE.benchmark import benchmark_result
 from paddle_quantum.VQE.chemistrysub import H2_generator
 
 
-def main():
-    """
-    Main Learning network using dynamic graph
-    :return: Plot or No return
-    """
+if __name__ == '__main__':
+    #Main Learning network using dynamic graph
     # Read data from built-in function or xyz file depending on OS
     sysStr = platform.system()
 
@@ -51,7 +48,3 @@ def main():
 
     Paddle_VQE(hamiltonian, N)
     benchmark_result()
-
-
-if __name__ == '__main__':
-    main()

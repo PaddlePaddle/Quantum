@@ -74,3 +74,6 @@ paddle\_quantum.visual
    :type density_matrix: paddle_quantum.State
    :param size: 条宽度，在 0 到 1 之间，默认为 ``0.3``。
    :type size: float, optional
+   
+   :raises TypeError: 要求输入的 ``density_matrix`` 类型为 ``numpy.ndarray``, ``paddle.Tensor``, 或者 ``paddle_quantum.State``
+   :raises ValueError: 要求输入的 ``density_matrix`` 是一个方阵

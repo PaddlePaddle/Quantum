@@ -21,6 +21,7 @@ import paddle
 import paddle_quantum
 from ..backend import quleaf
 from ..backend import Backend
+from ..intrinsic import _get_float_dtype
 from typing import Optional, Union, Iterable
 
 
@@ -90,8 +91,12 @@ class ExpecVal(paddle_quantum.Operator):
             The expectation value. If the backend is QuLeaf, it is computed by sampling.
         """
         if self.backend == Backend.QuLeaf:
+            if len(state.param_list) > 0:
+                param = paddle.concat(state.param_list)
+            else:
+                param = paddle.to_tensor(state.param_list)
             expec_val = quleaf.ExpecValOp.apply(
-                paddle.concat(state.param_list),
+                param,
                 state, self.hamiltonian, self.shots
             )
             return expec_val
@@ -154,26 +159,32 @@ class Measure(paddle_quantum.Operator):
             qubits_idx: The index of the qubits to be measured. Defaults to ``'full'`` which means measure all the qubits.
             desired_result: Specify the results of the measurement to return. Defaults to ``None`` which means return the probability of all the results.
 
+        Raises:
+            NotImplementedError: The backend is wrong or not supported.
+            NotImplementedError: The qubit index is wrong or not supported.
+            NotImplementedError: Currently we just support the z basis.
+            
         Returns:
             The probability of the measurement.
         """
+        float_dtype = _get_float_dtype(paddle_quantum.get_dtype())
         num_qubits = state.num_qubits
         if self.measure_basis == 'z':
             if state.backend == paddle_quantum.Backend.StateVector:
                 prob_amplitude = paddle.multiply(paddle.conj(state.data), state.data).real()
             elif state.backend == paddle_quantum.Backend.DensityMatrix:
-                prob_amplitude = paddle.zeros([2 ** num_qubits])
+                prob_amplitude = paddle.zeros([2 ** num_qubits], dtype=float_dtype)
                 for idx in range(0, 2 ** num_qubits):
                     prob_amplitude[idx] += state.data[idx, idx].real()
             else:
-                raise NotImplementedError
+                raise NotImplementedError("The backend is wrong or not supported.")
 
             if isinstance(qubits_idx, int):
                 qubits_idx = [qubits_idx]
             if isinstance(qubits_idx, Iterable) and all((isinstance(idx, int) for idx in qubits_idx)):
                 qubits_idx = list(qubits_idx)
                 measured_num = len(qubits_idx)
-                prob_array = paddle.zeros([2 ** measured_num])
+                prob_array = paddle.zeros([2 ** measured_num], dtype=float_dtype)
                 for idx in range(0, 2 ** num_qubits):
                     binary = bin(idx)[2:]
                     binary = '0' * (num_qubits - len(binary)) + binary
@@ -184,11 +195,14 @@ class Measure(paddle_quantum.Operator):
             elif qubits_idx == 'full':
                 prob_array = prob_amplitude
             else:
-                raise NotImplementedError
+                raise NotImplementedError("The qubit index is wrong or not supported.")
+
+            prob_array = prob_array / paddle.sum(prob_array) # normalize calculation error
             if desired_result is None:
                 return prob_array
             if isinstance(desired_result, str):
                 desired_result = [desired_result]
-            return paddle.concat([prob_array[int(res, base=2)] for res in desired_result])
+                prob_array = paddle.concat([prob_array[int(res, base=2)] for res in desired_result])
+            return prob_array
         else:
-            raise NotImplementedError
+            raise NotImplementedError("Currently we just support the z basis.")

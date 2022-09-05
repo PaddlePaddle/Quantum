@@ -45,7 +45,7 @@ class KrausRepr(Channel):
         assert 2 ** num_acted_qubits == kraus_oper[0].shape[0], "The length of oracle should be integer power of 2."
         self.kraus_oper = kraus_oper
         is_single_qubit = True if num_acted_qubits == 1 else False
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit, num_acted_qubits)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits)
 
     def forward(self, state: 'paddle_quantum.State') -> 'paddle_quantum.State':
         for qubits_idx in self.qubits_idx:

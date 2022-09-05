@@ -40,14 +40,22 @@ class LoccState(paddle_quantum.State):
         backend: Backend of Paddle Quantum. Defaults to ``None``.
         dtype: Type of data. Defaults to ``None``.
     """
+
     def __init__(
-            self, data: paddle.Tensor = None, prob: paddle.Tensor = None, measured_result: str = None, num_qubits: Optional[int] = None,
-            backend: Optional[paddle_quantum.Backend] = None, dtype: Optional[str] = None
+        self,
+        data: paddle.Tensor = None,
+        prob: paddle.Tensor = None,
+        measured_result: str = None,
+        num_qubits: Optional[int] = None,
+        backend: Optional[paddle_quantum.Backend] = None,
+        dtype: Optional[str] = None,
     ):
         if data is None and prob is None and measured_result is None:
             self.data = paddle.to_tensor([1], dtype=paddle_quantum.get_dtype())
-            self.prob = paddle.to_tensor([1], dtype=_get_float_dtype(paddle_quantum.get_dtype()))
-            self.measured_result = ''
+            self.prob = paddle.to_tensor(
+                [1], dtype=_get_float_dtype(paddle_quantum.get_dtype())
+            )
+            self.measured_result = ""
             self.num_qubits = 0
         else:
             self.data = data
@@ -62,13 +70,20 @@ class LoccState(paddle_quantum.State):
         self.backend = backend
         self.dtype = dtype if dtype is not None else paddle_quantum.get_dtype()
 
-    def clone(self) -> 'LoccState':
+    def clone(self) -> "LoccState":
         r"""Create a copy of the current object.
 
         Returns:
             A copy of the current object.
         """
-        return LoccState(self.data, self.prob, self.measured_result, self.num_qubits, self.backend, self.dtype)
+        return LoccState(
+            self.data,
+            self.prob,
+            self.measured_result,
+            self.num_qubits,
+            self.backend,
+            self.dtype,
+        )
 
     def __getitem__(self, item):
         if item == 0:
@@ -83,13 +98,15 @@ class LoccState(paddle_quantum.State):
         return (
             f"state: {self.data.numpy()}\n"
             f"prob: {self.prob.numpy()[0]}\n"
-            f"measured_result: {self.measured_result}")
+            f"measured_result: {self.measured_result}"
+        )
 
     def __str__(self):
         return (
             f"state: {self.data.numpy()}\n"
             f"prob: {self.prob.numpy()[0]}\n"
-            f"measured_result: {self.measured_result}")
+            f"measured_result: {self.measured_result}"
+        )
 
 
 LoccStatus = LoccState

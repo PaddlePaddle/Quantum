@@ -4,7 +4,7 @@ paddle\_quantum.trotter
 Trotter 哈密顿量时间演化的功能实现。
 
 
-.. py:function:: construct_trotter_circuit(circuit, hamiltonian, tau, steps, method = 'suzuki', order = 1, grouping = None, coefficient = None, permutation = None)
+.. py:function:: construct_trotter_circuit(circuit, hamiltonian, tau, steps, method='suzuki', order=1, grouping=None, coefficient=None, permutation=None)
 
    向 circuit 的后面添加 trotter 时间演化电路，即给定一个系统的哈密顿量 H，该电路可以模拟系统的时间演化 :math:`U_{cir} e^{-iHt}`。
 
@@ -26,6 +26,11 @@ Trotter 哈密顿量时间演化的功能实现。
    :type coefficient: np.ndarrayorpaddle.Tensor, optional
    :param permutation: 自定义哈密顿量的排列方式，默认为 ``None``，仅在 ``method='custom'`` 时有效。
    :type permutation: np.ndarray, optional
+
+   :raises ValueError: Trotter-Suzuki 分解的阶数 ``order`` 必须为 ``1``, ``2``, 或 ``2k``, 其中 ``k`` 是一个整数
+   :raises ValueError: ``permutation`` 和 ``coefficient`` 的形状不一致
+   :raises ValueError: 重排策略 ``grouping`` 的方法不支持, 仅支持 ``'xyz'``, ``'even_odd'``
+   :raises ValueError: 搭建时间演化电路的方法 ``method`` 不支持, 仅支持 ``'suzuki'``, ``'custom'``
 
    .. Hint::
 
@@ -91,7 +96,7 @@ Trotter 哈密顿量时间演化的功能实现。
    :return: 系数数组。
    :rtype: np.ndarray
 
-.. py:function:: get_1d_heisenberg_hamiltonian(length, j_x = 1.0, j_y = 1.0, j_z = 1.0, h_z = 0.0, periodic_boundary_condition = True)
+.. py:function:: get_1d_heisenberg_hamiltonian(length, j_x=1.0, j_y=1.0, j_z=1.0, h_z=0.0, periodic_boundary_condition=True)
 
    生成一个一维海森堡链的哈密顿量。
 

@@ -19,3 +19,38 @@ paddle\_quantum.gate.base
       参数名为"mylayer_0.w_n"，其中 "w" 是参数的名称，"n" 为自动生成的具有唯一性的后缀。如果为 ``None``，
       前缀名将为小写的类名。默认为 ``None``。
    :type name_scope: str, optional
+
+   .. py:method:: gate_history_generation()
+
+      生成量子门的历史记录
+
+.. py:class:: ParamGate
+
+   基类：:py:class:`paddle_quantum.gate.base.Gate`
+
+   可参数化量子门的基类。
+
+   .. py:method:: theta_generation(param, param_shape)
+
+      规范可参数化量子门的输入，并根据输入决定是否要管理或者生成参数
+
+      :param param: 可参数化量子门的输入
+      :type param: Union[paddle.Tensor, float, List[float]]
+      :param param_shape: 输入的形状
+      :type param_shape: List[int]
+
+   .. note::
+
+      在以下情况 ``param`` 会被转为一个参数
+         - ``param`` 是 ``None``
+      在以下情况 ``param`` 会被记录为一个参数
+         - ``param`` 是 `ParamBase`
+      在以下情况 ``param`` 会保持不变
+         - ``param`` 是一个 `paddle.Tensor` 但不是 `ParamBase`
+         - ``param`` 是一个 `float` 或者 `List[float]`
+
+   .. py:method:: gate_history_generation()
+
+      生成可参数化量子门的历史记录
+
+   

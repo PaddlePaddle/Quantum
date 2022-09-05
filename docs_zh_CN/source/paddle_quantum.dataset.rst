@@ -175,7 +175,7 @@ paddle\_quantum.dataset
    :param dimension: 编码数据的维度。
    :type dimension: int
 
-   .. py:method:: encode(feature, encoding, num_qubits, return_state = True, full_return = False)
+   .. py:method:: encode(feature, encoding, num_qubits, return_state=True, full_return=False)
 
       用 ``num_qubits`` 的量子比特对 ``feature`` 进行编码 ``encoding``。
 

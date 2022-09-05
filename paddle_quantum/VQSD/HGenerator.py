@@ -27,6 +27,14 @@ __all__ = ["generate_rho_sigma", ]
 
 
 def generate_rho_sigma():
+    r"""Generate two quantum states with specific eigenvalues
+    
+    Returns: Tuple: including following elements
+        - rho
+        - sigma
+    
+    """
+    
     numpy.random.seed(SEED)
     V = scipy.stats.unitary_group.rvs(4)  # Generate a random unitary matrix
     D = numpy.diag([0.5, 0.3, 0.1, 0.1])  # Input the spectrum of the target state rho

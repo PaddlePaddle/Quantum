@@ -27,6 +27,8 @@ import paddle.vision.transforms as transform
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 from paddle_quantum.gate import RY, RZ, U3, CNOT, IQPEncoding, AmplitudeEncoding
+from .base import get_dtype
+from .intrinsic import _get_float_dtype
 
 __all__ = [
     "Dataset",
@@ -117,14 +119,15 @@ class Dataset(object):
         """
         quantum_states = classical_data.copy()
         quantum_circuits = classical_data.copy()
+        float_dtype = _get_float_dtype(get_dtype())
         if encoding == AMPLITUDE_ENCODING:
             # Not support to return circuit in amplitude encoding
             if return_state is False or split_circuit is True:
                 raise Exception("Not support to return circuit in amplitude encoding")
             for i in range(len(classical_data)):
-                x = paddle.to_tensor(_normalize(classical_data[i]))
+                x = paddle.to_tensor(_normalize(classical_data[i]), dtype=float_dtype)
                 if is_image:
-                    x = paddle.to_tensor(_normalize_image(classical_data[i]))
+                    x = paddle.to_tensor(_normalize_image(classical_data[i]), dtype=float_dtype)
                 circuit = AmplitudeEncoding(qubits_idx='full', num_qubits=num_qubits)
                 state = circuit(x)
                 quantum_states[i] = state.data.numpy()
@@ -133,9 +136,9 @@ class Dataset(object):
             for i in range(len(classical_data)):
                 one_block_param = 1 * num_qubits
                 depth = int(can_describe_dimension / one_block_param)
-                param = paddle.to_tensor(_normalize(classical_data[i]))
+                param = paddle.to_tensor(_normalize(classical_data[i]), dtype=float_dtype)
                 if is_image:
-                    param = paddle.to_tensor(_normalize_image(classical_data[i]))
+                    param = paddle.to_tensor(_normalize_image(classical_data[i]), dtype=float_dtype)
                 param = paddle.reshape(param, (depth, num_qubits, 1))
                 which_qubits = list(range(num_qubits))
                 if split_circuit:
@@ -158,9 +161,9 @@ class Dataset(object):
             for i in range(len(classical_data)):
                 one_block_param = 1 * num_qubits
                 depth = int(can_describe_dimension / one_block_param)
-                param = paddle.to_tensor(_normalize(classical_data[i]))
+                param = paddle.to_tensor(_normalize(classical_data[i]), dtype=float_dtype)
                 if is_image:
-                    param = paddle.to_tensor(_normalize_image(classical_data[i]))
+                    param = paddle.to_tensor(_normalize_image(classical_data[i]), dtype=float_dtype)
                 param = paddle.reshape(param, (depth, num_qubits))
                 if split_circuit:
                     quantum_circuits[i] = []
@@ -190,9 +193,9 @@ class Dataset(object):
             for i in range(len(classical_data)):
                 one_block_param = 3 * num_qubits
                 depth = int(can_describe_dimension / one_block_param)
-                param = paddle.to_tensor(_normalize(classical_data[i]))
+                param = paddle.to_tensor(_normalize(classical_data[i]), dtype=float_dtype)
                 if is_image:
-                    param = paddle.to_tensor(_normalize_image(classical_data[i]))
+                    param = paddle.to_tensor(_normalize_image(classical_data[i]), dtype=float_dtype)
                 param = paddle.reshape(param, (depth, num_qubits, 3))
                 which_qubits = list(range(num_qubits))
                 if split_circuit:
@@ -219,9 +222,9 @@ class Dataset(object):
             for i in range(len(classical_data)):
                 one_block_param = 2 * num_qubits
                 depth = int(can_describe_dimension / one_block_param)
-                param = paddle.to_tensor(_normalize(classical_data[i]))
+                param = paddle.to_tensor(_normalize(classical_data[i]), dtype=float_dtype)
                 if is_image:
-                    param = paddle.to_tensor(_normalize_image(classical_data[i]))
+                    param = paddle.to_tensor(_normalize_image(classical_data[i]), dtype=float_dtype)
                 param = paddle.reshape(param, (depth, num_qubits, 2))
                 which_qubits = [k for k in range(num_qubits)]
                 if split_circuit:
@@ -256,9 +259,9 @@ class Dataset(object):
             for i in range(len(classical_data)):
                 one_block_param = 1 * num_qubits
                 depth = int(can_describe_dimension / one_block_param)
-                param = paddle.to_tensor(_normalize(classical_data[i]))
+                param = paddle.to_tensor(_normalize(classical_data[i]), dtype=float_dtype)
                 if is_image:
-                    param = paddle.to_tensor(_normalize_image(classical_data[i]))
+                    param = paddle.to_tensor(_normalize_image(classical_data[i]), dtype=float_dtype)
                 param = paddle.reshape(param, (depth, num_qubits, 1))
                 which_qubits = [k for k in range(num_qubits)]
                 if split_circuit:
@@ -287,9 +290,9 @@ class Dataset(object):
             for i in range(len(classical_data)):
                 one_block_param = 3 * num_qubits
                 depth = int(can_describe_dimension / one_block_param)
-                param = paddle.to_tensor(_normalize(classical_data[i]))
+                param = paddle.to_tensor(_normalize(classical_data[i]), dtype=float_dtype)
                 if is_image:
-                    param = paddle.to_tensor(_normalize_image(classical_data[i]))
+                    param = paddle.to_tensor(_normalize_image(classical_data[i]), dtype=float_dtype)
                 param = paddle.reshape(param, (depth, num_qubits, 3))
                 which_qubits = [k for k in range(num_qubits)]
                 if split_circuit:
@@ -463,7 +466,7 @@ class VisionDataset(Dataset):
                 new_size = int(np.sqrt(self.dimension))
                 cur_image = transform.resize(cur_image.reshape((self.figure_size, self.figure_size)),
                                              (new_size, new_size))
-                self.classical_image_vectors[i] = cur_image.reshape(-1).astype(np.float64)  # now it is one-dimension
+                self.classical_image_vectors[i] = cur_image.reshape(-1)  # now it is one-dimension
 
                 if self.can_describe_dimension < len(self.classical_image_vectors[i]):
                     self.classical_image_vectors[i] = self.classical_image_vectors[i][:self.can_describe_dimension]
@@ -476,14 +479,14 @@ class VisionDataset(Dataset):
         elif downscaling_method == DOWNSCALINGMETHOD_PCA:
             for i in range(len(self.classical_image_vectors)):
                 _, s, _ = np.linalg.svd(self.classical_image_vectors[i].reshape((self.figure_size, self.figure_size)))
-                s = s[:self.dimension].astype(np.float64)
+                s = s[:self.dimension]
                 if self.can_describe_dimension > self.dimension:
                     self.classical_image_vectors[i] = np.append(s, np.array(
                         [0.0] * (self.can_describe_dimension - self.dimension)))
                 else:
                     self.classical_image_vectors[i] = s[:self.can_describe_dimension]
 
-        # Step 4: Encode the data, which must be of float64 type(needed in paddle quantum)
+        # Step 4: Encode the data
         self.quantum_image_states, self.quantum_image_circuits = self.data2circuit(
             self.classical_image_vectors, encoding, num_qubits, self.can_describe_dimension, split_circuit,
             return_state, is_image=True)
@@ -714,14 +717,13 @@ class SimpleDataset(Dataset):
 
         # The second step: fill the vector to ``can_describe_dimension`` using zero
         for i in range(len(self.feature)):
-            self.feature[i] = self.feature[i].reshape(-1).astype(
-                np.float64)  # now self.images[i] is a numpy with (new_size*new_size,1) shape
+            self.feature[i] = self.feature[i].reshape(-1) # now self.images[i] is a numpy with (new_size*new_size,1) shape
             self.feature[i] = np.append(
                 self.feature[i],
                 np.array([0.0] * (self.can_describe_dimension - self.dimension))
             )  # now self.images[i] is filled to ``self.can_describe_dimension``
 
-        # Step 3: Encode the data, which must be of float64 type(needed in paddle quantum)
+        # Step 3: Encode the data
         self.quantum_states, self.quantum_circuits = self.data2circuit(
             self.feature, encoding, num_qubits, self.can_describe_dimension, False,  # split_circuit=False
             return_state
@@ -800,7 +802,7 @@ class BreastCancer(SimpleDataset):
 
     """
 
-    def __init__(self, encoding: str, num_qubits: int, test_rate: Optional[float] =0.2, 
+    def __init__(self, encoding: str, num_qubits: int, test_rate: Optional[float] = 0.2, 
                  return_state: Optional[bool] = True, seed: Optional[int] = 0) -> None:
         SimpleDataset.__init__(self, dimension=30)  # The dimension is 30
         self.dimension = 30

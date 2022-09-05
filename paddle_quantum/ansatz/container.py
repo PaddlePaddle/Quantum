@@ -18,7 +18,6 @@ The source file of the Sequential class.
 """
 
 import collections
-from sre_parse import State
 from paddle_quantum import Operator
 from typing import Optional, Union, Iterable, Any, List
 

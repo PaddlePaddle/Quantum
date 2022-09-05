@@ -29,8 +29,8 @@ from typing import Optional, Union, Iterable, List
 
 
 class LoccNet(paddle.nn.Layer):
-    r"""Used to design LOCC protocols and perform training or verification.
-    """
+    r"""Used to design LOCC protocols and perform training or verification."""
+
     def __init__(self):
         super().__init__()
         self.parties_by_number = []
@@ -54,15 +54,14 @@ class LoccNet(paddle.nn.Layer):
         self.init_status.num_qubits += state.num_qubits
         for idx, (party_id, qubit_id) in enumerate(qubits_idx):
             if isinstance(party_id, str):
-                self.parties_by_name[party_id][qubit_id] = (temp_len + idx)
+                self.parties_by_name[party_id][qubit_id] = temp_len + idx
             elif isinstance(party_id, int):
-                self.parties_by_number[party_id][qubit_id] = (temp_len + idx)
+                self.parties_by_number[party_id][qubit_id] = temp_len + idx
             else:
                 raise ValueError
 
-    def __partial_trace(self, rho_AB, dim1, dim2, A_or_B):
-        r"""TODO To be checked.
-        """
+    def __partial_trace(self, rho_AB: paddle.Tensor, dim1: int, dim2: int, A_or_B: int):
+        r"""TODO To be checked."""
         if A_or_B == 2:
             dim1, dim2 = dim2, dim1
         idty_np = np.identity(dim2)
@@ -82,8 +81,8 @@ class LoccNet(paddle.nn.Layer):
                     res,
                     paddle.matmul(
                         paddle.matmul(row_tmp, rho_AB),
-                        paddle.transpose(row_tmp_conj, perm=[1, 0])
-                    )
+                        paddle.transpose(row_tmp_conj, perm=[1, 0]),
+                    ),
                 )
             if A_or_B == 2:
                 row_tmp = paddle.kron(idty_B, bra_j)
@@ -93,13 +92,16 @@ class LoccNet(paddle.nn.Layer):
                     res,
                     paddle.matmul(
                         paddle.matmul(row_tmp, rho_AB),
-                        paddle.transpose(row_tmp_conj, perm=[1, 0])
-                    )
+                        paddle.transpose(row_tmp_conj, perm=[1, 0]),
+                    ),
                 )
         return res
 
     def partial_state(
-            self, state: Union[List[LoccState], LoccState], qubits_idx: Iterable, is_desired: bool = True
+        self,
+        state: Union[List[LoccState], LoccState],
+        qubits_idx: Iterable,
+        is_desired: bool = True,
     ) -> Union[List[LoccState], LoccState]:
         r"""Get the quantum state of the qubits of interest.
 
@@ -149,17 +151,17 @@ class LoccNet(paddle.nn.Layer):
                     swapped[target_seq[next_idx]] = True
                     swap_list.append((next_idx, target_seq[next_idx]))
                     next_idx = target_seq[next_idx]
-
-        cir = paddle_quantum.ansatz.Circuit()
+        
+        cir = paddle_quantum.ansatz.Circuit(n)
         for a, b in swap_list:
             cir.swap([a, b])
 
         if isinstance(state, LoccState):
             state = cir(state)
             if is_desired:
-                state_data = self.__partial_trace(state.data, 2 ** m, 2 ** (n - m), 2)
+                state_data = self.__partial_trace(state.data, 2**m, 2 ** (n - m), 2)
             else:
-                state_data = self.__partial_trace(state.data, 2 ** m, 2 ** (n - m), 1)
+                state_data = self.__partial_trace(state.data, 2**m, 2 ** (n - m), 1)
             new_state = state.clone()
             new_state.data = state_data
             new_state.num_qubits = int(math.log2(state_data.shape[-1]))
@@ -168,9 +170,13 @@ class LoccNet(paddle.nn.Layer):
             for each_state in state:
                 each_state = cir(each_state)
                 if is_desired:
-                    state_data = self.__partial_trace(each_state.data, 2 ** m, 2 ** (n - m), 2)
+                    state_data = self.__partial_trace(
+                        each_state.data, 2**m, 2 ** (n - m), 2
+                    )
                 else:
-                    state_data = self.__partial_trace(each_state.data, 2 ** m, 2 ** (n - m), 1)
+                    state_data = self.__partial_trace(
+                        each_state.data, 2**m, 2 ** (n - m), 1
+                    )
                 _state = each_state.clone()
                 _state.data = state_data
                 _state.num_qubits = int(math.log2(state_data.shape[-1]))
@@ -182,7 +188,10 @@ class LoccNet(paddle.nn.Layer):
         return new_state
 
     def reset_state(
-            self, status: Union[List[LoccState], LoccState], state: paddle_quantum.State, which_qubits: Iterable
+        self,
+        status: Union[List[LoccState], LoccState],
+        state: paddle_quantum.State,
+        which_qubits: Iterable,
     ) -> Union[List[LoccState], LoccState]:
         r"""Reset the quantum state of the qubits of interest.
 
@@ -234,18 +243,18 @@ class LoccNet(paddle.nn.Layer):
                     swap_list.append((next_idx, target_seq[next_idx]))
                     next_idx = target_seq[next_idx]
 
-        cir0 = paddle_quantum.ansatz.Circuit()
+        cir0 = paddle_quantum.ansatz.Circuit(n)
         for a, b in swap_list:
             cir0.swap([a, b])
 
-        cir1 = paddle_quantum.ansatz.Circuit()
+        cir1 = paddle_quantum.ansatz.Circuit(n)
         swap_list.reverse()
         for a, b in swap_list:
             cir1.swap([a, b])
 
         if isinstance(status, LoccState):
             _state = cir0(status)
-            state_data = self.__partial_trace(_state.data, 2 ** m, 2 ** (n - m), 1)
+            state_data = self.__partial_trace(_state.data, 2**m, 2 ** (n - m), 1)
             state_data = paddle.kron(state.data, state_data)
             _state = _state.clone()
             _state.data = state_data
@@ -255,7 +264,7 @@ class LoccNet(paddle.nn.Layer):
             new_status = []
             for each_status in status:
                 _state = cir0(each_status)
-                state_data = self.__partial_trace(_state.data, 2 ** m, 2 ** (n - m), 1)
+                state_data = self.__partial_trace(_state.data, 2**m, 2 ** (n - m), 1)
                 state_data = paddle.kron(state.data, state_data)
                 _state = _state.clone()
                 _state.data = state_data
@@ -268,7 +277,9 @@ class LoccNet(paddle.nn.Layer):
 
         return new_status
 
-    def add_new_party(self, qubits_number: int, party_name: Optional[str] = None) -> Union[int, str]:
+    def add_new_party(
+        self, qubits_number: int, party_name: Optional[str] = None
+    ) -> Union[int, str]:
         r"""Add a new LOCC party.
 
         Args:
@@ -320,30 +331,41 @@ class LoccNet(paddle.nn.Layer):
         else:
             raise ValueError
 
-    def __measure_parameterized(self, state_data, which_qubits, result_desired, theta):
-        r"""TODO 进行参数化的测量。
+    def __measure_parameterized(
+        self,
+        state_data: paddle.Tensor,
+        which_qubits: Iterable,
+        result_desired: str,
+        theta: paddle.Tensor,
+    ):
+        r"""TODO Do parameterized measurement。
 
         Args:
-            state_data (Tensor): 输入的量子态
-            which_qubits (list): 测量作用的量子比特编号
-            result_desired (str): 期望得到的测量结果
-            theta (Tensor): 测量运算的参数
+            state_data (Tensor): The input quantum state
+            which_qubits (list): The indices of qubits to be measured
+            result_desired (str): The desired result
+            theta (Tensor): The parameters of measurement
 
         Returns:
-            Tensor: 测量坍塌后的量子态
-            Tensor: 测量坍塌得到的概率
-            str: 测量得到的结果
+            Tensor: The quantum state collapsed after measurement
+            Tensor: The probability of collapsing to the resulting state
+            str: The result of measurement
         """
         n = self.get_num_qubits()
-        assert len(which_qubits) == len(result_desired), \
-            "the length of qubits wanted to be measured and the result desired should be same"
+        assert len(which_qubits) == len(
+            result_desired
+        ), "the length of qubits wanted to be measured and the result desired should be same"
         op_list = [paddle.to_tensor(np.eye(2), dtype=paddle_quantum.get_dtype())] * n
         for idx in range(0, len(which_qubits)):
             i = which_qubits[idx]
             ele = result_desired[idx]
             if int(ele) == 0:
-                basis0 = paddle.to_tensor(np.array([[1, 0], [0, 0]]), dtype=paddle_quantum.get_dtype())
-                basis1 = paddle.to_tensor(np.array([[0, 0], [0, 1]]), dtype=paddle_quantum.get_dtype())
+                basis0 = paddle.to_tensor(
+                    np.array([[1, 0], [0, 0]]), dtype=paddle_quantum.get_dtype()
+                )
+                basis1 = paddle.to_tensor(
+                    np.array([[0, 0], [0, 1]]), dtype=paddle_quantum.get_dtype()
+                )
                 rho0 = paddle.multiply(basis0, paddle.cos(theta[idx]))
                 rho1 = paddle.multiply(basis1, paddle.sin(theta[idx]))
                 rho = paddle.add(rho0, rho1)
@@ -351,8 +373,12 @@ class LoccNet(paddle.nn.Layer):
             elif int(ele) == 1:
                 # rho = diag(concat([cos(theta[idx]), sin(theta[idx])]))
                 # rho = paddle.to_tensor(rho, zeros((2, 2), dtype="float64"))
-                basis0 = paddle.to_tensor(np.array([[1, 0], [0, 0]]), dtype=paddle_quantum.get_dtype())
-                basis1 = paddle.to_tensor(np.array([[0, 0], [0, 1]]), dtype=paddle_quantum.get_dtype())
+                basis0 = paddle.to_tensor(
+                    np.array([[1, 0], [0, 0]]), dtype=paddle_quantum.get_dtype()
+                )
+                basis1 = paddle.to_tensor(
+                    np.array([[0, 0], [0, 1]]), dtype=paddle_quantum.get_dtype()
+                )
                 rho0 = paddle.multiply(basis0, paddle.sin(theta[idx]))
                 rho1 = paddle.multiply(basis1, paddle.cos(theta[idx]))
                 rho = paddle.add(rho0, rho1)
@@ -366,31 +392,40 @@ class LoccNet(paddle.nn.Layer):
                 measure_operator = paddle.kron(measure_operator, op_list[idx])
         state_measured = paddle.matmul(
             paddle.matmul(measure_operator, state_data),
-            paddle_quantum.linalg.dagger(measure_operator)
+            paddle_quantum.linalg.dagger(measure_operator),
         )
-        prob = paddle.real(paddle.trace(paddle.matmul(
-            paddle.matmul(paddle_quantum.linalg.dagger(measure_operator), measure_operator),
-            state_data
-        )))
+        prob = paddle.real(
+            paddle.trace(
+                paddle.matmul(
+                    paddle.matmul(
+                        paddle_quantum.linalg.dagger(measure_operator), measure_operator
+                    ),
+                    state_data,
+                )
+            )
+        )
         state_measured = paddle.divide(state_measured, prob)
         return state_measured, prob, result_desired
 
-    def __measure_parameterless(self, state, which_qubits, result_desired):
-        r"""TODO 进行 01 测量。
+    def __measure_parameterless(
+        self, state: paddle.Tensor, which_qubits: Iterable, result_desired: str
+    ):
+        r"""TODO Do 01 measurement。
 
         Args:
-            state (Tensor): 输入的量子态
-            which_qubits (list): 测量作用的量子比特编号
-            result_desired (str): 期望得到的测量结果
+            state (Tensor): The input quantum state
+            which_qubits (list): The indices of qubits to be measured
+            result_desired (str): The desired result
 
         Returns:
-            Tensor: 测量坍塌后的量子态
-            Tensor: 测量坍塌得到的概率
-            str: 测量得到的结果
+            Tensor: The quantum state after measurement
+            Tensor: The probability of collapsing to the resulting state
+            str: The result of measurement
         """
         n = self.get_num_qubits()
-        assert len(which_qubits) == len(result_desired), \
-            "the length of qubits wanted to be measured and the result desired should be same"
+        assert len(which_qubits) == len(
+            result_desired
+        ), "the length of qubits wanted to be measured and the result desired should be same"
         op_list = [np.eye(2)] * n
         for i, ele in zip(which_qubits, result_desired):
             k = int(ele)
@@ -398,23 +433,36 @@ class LoccNet(paddle.nn.Layer):
             rho[int(k), int(k)] = 1
             op_list[i] = rho
         if n > 1:
-            measure_operator = paddle.to_tensor(functools.reduce(np.kron, op_list), dtype=paddle_quantum.get_dtype())
+            measure_operator = paddle.to_tensor(
+                functools.reduce(np.kron, op_list), dtype=paddle_quantum.get_dtype()
+            )
         else:
-            measure_operator = paddle.to_tensor(op_list[0], dtype=paddle_quantum.get_dtype())
+            measure_operator = paddle.to_tensor(
+                op_list[0], dtype=paddle_quantum.get_dtype()
+            )
         state_measured = paddle.matmul(
             paddle.matmul(measure_operator, state),
-            paddle_quantum.linalg.dagger(measure_operator)
+            paddle_quantum.linalg.dagger(measure_operator),
         )
-        prob = paddle.real(paddle.trace(paddle.matmul(
-            paddle.matmul(paddle_quantum.linalg.dagger(measure_operator), measure_operator),
-            state
-        )))
+        prob = paddle.real(
+            paddle.trace(
+                paddle.matmul(
+                    paddle.matmul(
+                        paddle_quantum.linalg.dagger(measure_operator), measure_operator
+                    ),
+                    state,
+                )
+            )
+        )
         state_measured = paddle.divide(state_measured, prob)
         return state_measured, prob, result_desired
 
     def measure(
-            self, status: Union[List[LoccState], LoccState], which_qubits: Iterable,
-            results_desired: Union[List[str], str], theta: paddle.Tensor = None
+        self,
+        status: Union[List[LoccState], LoccState],
+        which_qubits: Iterable,
+        results_desired: Union[List[str], str],
+        theta: paddle.Tensor = None,
     ) -> Union[List[LoccState], LoccState]:
         r"""Perform 0-1 measurement or parameterized measurement on an LOCC state.
 
@@ -455,9 +503,13 @@ class LoccNet(paddle.nn.Layer):
             new_status = []
             for result_desired in results_desired:
                 if theta is None:
-                    result_measured = self.__measure_parameterless(status.data, qubits_list, result_desired)
+                    result_measured = self.__measure_parameterless(
+                        status.data, qubits_list, result_desired
+                    )
                 else:
-                    result_measured = self.__measure_parameterized(status.data, qubits_list, result_desired, theta)
+                    result_measured = self.__measure_parameterized(
+                        status.data, qubits_list, result_desired, theta
+                    )
                 state_data, prob, res = result_measured
                 _state = status.clone()
                 _state.data = state_data
@@ -474,9 +526,13 @@ class LoccNet(paddle.nn.Layer):
                 prior_prob = each_status.prob
                 for result_desired in results_desired:
                     if theta is None:
-                        result_measured = self.__measure_parameterless(each_status.state, qubits_list, result_desired)
+                        result_measured = self.__measure_parameterless(
+                            each_status.state, qubits_list, result_desired
+                        )
                     else:
-                        result_measured = self.__measure_parameterized(each_status.state, qubits_list, result_desired, theta)
+                        result_measured = self.__measure_parameterized(
+                            each_status.state, qubits_list, result_desired, theta
+                        )
                     state_data, prob, res = result_measured
                     _state = each_status.clone()
                     _state.data = state_data
@@ -493,7 +549,7 @@ class LoccNet(paddle.nn.Layer):
         r"""Get the number of the qubits in this LOCCNet.
 
         Returns:
-            Number of qubits in LOCCNet.
+            The number of qubits in LOCCNet.
         """
         num_qubits = 0
         for party in self.parties_by_number:

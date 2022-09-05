@@ -63,6 +63,12 @@ def construct_trotter_circuit(
             and ``'even_odd'`` grouping methods. Defaults to None.
         coefficient: Custom coefficients corresponding to terms of the Hamiltonian. Only works for ``method='custom'``. Defaults to None.
         permutation: Custom permutation of the Hamiltonian. Only works for ``method='custom'``. Defaults to None.
+    
+    Raises:
+        ValueError: The order of the trotter-suzuki decomposition should be either 1, 2 or 2k (k an integer)
+        ValueError: Shape of the permutation and coefficient array don\'t match
+        ValueError: Grouping method ``grouping`` is not supported, valid key words: 'xyz', 'even_odd'
+        ValueError: The method ``method`` is not supported, valid method keywords: 'suzuki', 'custom'
 
     Hint:
         For a more detailed explanation of how this function works, users may refer to the tutorials on Paddle Quantum's website: https://qml.baidu.com/tutorials/overview.html.
@@ -155,7 +161,7 @@ def construct_trotter_circuit(
 
 
 def __get_suzuki_num(order):
-    r"""计算阶数为 order 的 suzuki product formula 的 trotter 数。
+    r"""compute the Trotter number of the suzuki product formula with the order of ``order``
     """
     if order == 1 or order == 2:
         n_suzuki = order
@@ -169,32 +175,34 @@ def __get_suzuki_num(order):
 
 
 def __sort_pauli_word(pauli_word, site):
-    r"""将 pauli_word 按照 site 的大小进行排列，并同时返回排序后的 pauli_word 和 site。
+    r"""reordering the ``pauli_word`` by the value of ``site``, return the new pauli_word and site after sort.
 
     Note:
-        这是一个内部函数，一般你不需要直接使用它。
+        This is an intrinsic function, user do not need to call this directly
     """
     sort_index = np.argsort(np.array(site))
     return ''.join(np.array(list(pauli_word))[sort_index].tolist()), np.array(site)[sort_index]
 
 
 def _add_trotter_block(circuit, tau, grouped_hamiltonian, order):
-    r"""添加一个 trotter 块，i.e. :math:`e^{-iH\tau}`，并使用 Trotter-Suzuki 分解对其进行展开。
+    r"""add a Trotter block, i.e. :math:`e^{-iH\tau}`, use Trotter-Suzuki decomposition to expand it.
 
     Args:
-        circuit (Circuit): 需要添加 trotter 块的电路
-        tau (float or tensor): 该 trotter 块的演化时间
-        grouped_hamiltonian (list): 一个由 Hamiltonian 对象组成的列表，该函数会默认该列表中的哈密顿量为 Trotter-Suzuki 展开的基本项
-        order (int): Trotter-Suzuki 展开的阶数
+        circuit: target circuit to add the Trotter block
+        tau: evolution time of this Trotter block
+        grouped_hamiltonian: list of Hamiltonian objects, this function uses these as the basic terms of Trotter-Suzuki expansion by default
+        order: The order of Trotter-Suzuki expansing
 
-    Note (关于 grouped_hamiltonian 的使用方法):
-        以二阶的 trotter-suzki 分解 S2(t) 为例，若 grouped_hamiltonian = [H_1, H_2]，则会按照
-        (H_1, t/2)(H_2, t/2)(H_2, t/2)(H_1, t/2) 的方法进行添加 trotter 电路
-        特别地，若用户没有预先对 Hamiltonian 进行 grouping 的话，传入一个单个的 Hamiltonian 对象，则该函数会按照该 Hamiltonian
-        的顺序进行正则（canonical）的分解：依然以二阶 trotter 为例，若传入单个 H，则添加 (H[0:-1:1], t/2)(H[-1:0:-1], t/2) 的电路
+    Note:
+        About how to use grouped_hamiltonian: 
+        For example, consider Trotter-Suzuki decomposition of the second order S2(t), if grouped_hamiltonian = [H_1, H_2], it will add Trotter circuit
+        with (H_1, t/2)(H_2, t/2)(H_2, t/2)(H_1, t/2). Specifically, if user does not pre-grouping the Hamiltonians and put a single Hamiltonian object,
+        this function will make canonical decomposition according to the order of this Hamiltonian: for second order, if put a single Hamiltonian H, 
+        the circuit will be added with (H[0:-1:1], t/2)(H[-1:0:-1], t/2)
 
     Warning:
-        本函数一般情况下为内部函数，不会对输入的合法性进行检测和尝试修正。推荐使用 construct_trotter_circuit() 来构建时间演化电路
+        This function is usually an intrinsic function, it does not check or correct the input. 
+        To build time evolution circuit, function ``construct_trotter_circuit()`` is recommanded
     """
     if order == 1:
         __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian)
@@ -206,18 +214,19 @@ def _add_trotter_block(circuit, tau, grouped_hamiltonian, order):
 
 
 def _add_custom_block(circuit, tau, grouped_hamiltonian, custom_coefficients, permutation):
-    r""" 添加一个自定义形式的 trotter 块
+    r"""Add a custom Trotter block
 
     Args:
-        circuit (Circuit)): 需要添加 trotter 块的电路
-        tau (float or tensor): 该 trotter 块的演化时间
-        grouped_hamiltonian (list): 一个由 Hamiltonian 对象组成的列表，该函数会默认该列表中的哈密顿量为 trotter-suzuki 展开的基本项
-        order (int): trotter-suzuki 展开的阶数
-        permutation (np.ndarray): 自定义置换
-        custom_coefficients (np.ndarray or Tensor): 自定义系数
+        circuit: target circuit to add the Trotter block
+        tau: evolution time of this Trotter block
+        grouped_hamiltonian: list of Hamiltonian objects, this function uses these as the basic terms of Trotter-Suzuki expansion by default
+        order: The order of Trotter-Suzuki expansing
+        permutation: custom permutation
+        custom_coefficients: custom coefficients
 
     Warning:
-        本函数一般情况下为内部函数，不会对输入的合法性进行检测和尝试修正。推荐使用 construct_trotter_circuit() 来构建时间演化电路
+        This function is usually an intrinsic function, it does not check or correct the input. 
+        To build time evolution circuit, function ``construct_trotter_circuit()`` is recommanded
     """
 
     # combine the grouped hamiltonian into one single hamiltonian
@@ -235,10 +244,10 @@ def _add_custom_block(circuit, tau, grouped_hamiltonian, custom_coefficients, pe
 
 
 def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=False, optimization=False):
-    r""" 添加一阶 trotter-suzuki 分解的时间演化块
+    r"""Add a time evolution block of the first order Trotter-Suzuki decompositon
 
     Notes:
-        这是一个内部函数，你不需要使用它
+        This is an intrinsic function, user do not need to call this directly
     """
     if not reverse:
         for hamiltonian in grouped_hamiltonian:
@@ -338,20 +347,20 @@ def optimal_circuit(circuit: paddle_quantum.ansatz.Circuit, theta: Union[paddle.
 
 
 def __add_second_order_trotter_block(circuit, tau, grouped_hamiltonian):
-    r""" 添加二阶 trotter-suzuki 分解的时间演化块
+    r"""Add a time evolution block of the second order Trotter-Suzuki decompositon
 
     Notes:
-        这是一个内部函数，你不需要使用它
+        This is an intrinsic function, user do not need to call this directly
     """
     __add_first_order_trotter_block(circuit, tau / 2, grouped_hamiltonian)
     __add_first_order_trotter_block(circuit, tau / 2, grouped_hamiltonian, reverse=True)
 
 
 def __add_higher_order_trotter_block(circuit, tau, grouped_hamiltonian, order):
-    r""" 添加高阶（2k 阶） trotter-suzuki 分解的时间演化块
+    r"""Add a time evolution block of the higher order (2k) Trotter-Suzuki decompositon 
 
     Notes:
-        这是一个内部函数，你不需要使用它
+        This is an intrinsic function, user do not need to call this directly
     """
     assert order % 2 == 0
     p_values = get_suzuki_p_values(order)
@@ -423,13 +432,13 @@ def add_n_pauli_gate(
 
 
 def __group_hamiltonian_xyz(hamiltonian):
-    r""" 将哈密顿量拆分成 X、Y、Z 以及剩余项四个部分，并返回由他们组成的列表
+    r"""Decompose the Hamiltonian as X, Y, Z, and remainder term, return the list of them.
 
     Args:
-        hamiltonian (Hamiltonian): Paddle Quantum 中的 Hamiltonian 类
+        hamiltonian: Hamiltonian class in Paddle Quantum
 
     Notes:
-        X、Y、Z 项分别指的是该项的 Pauli word 只含有 X、Y、Z，例如 'XXXY' 就会被分类到剩余项
+        X, (Y, Z) means the terms whose Pauli word only include X, (Y, Z). For example, 'XXXY' would be a remainder term.
     """
     grouped_hamiltonian = []
     coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()
@@ -455,14 +464,16 @@ def __group_hamiltonian_xyz(hamiltonian):
 
 
 def __group_hamiltonian_even_odd(hamiltonian):
-    r""" 将哈密顿量拆分为奇数项和偶数项两部分
+    r"""Decompose the Hamiltonian into odd and even parts.
 
     Args:
-        hamiltonian (Hamiltonian):
+        hamiltonian (Hamiltonian): Hamiltonian class in Paddle Quantum
 
     Warning:
-        注意该分解方法并不能保证拆分后的奇数项和偶数项内部一定相互对易，因此不正确的使用该方法反而会增加 trotter 误差。
-        请在使用该方法前检查哈密顿量是否为可以进行奇偶分解：例如一维最近邻相互作用系统的哈密顿量可以进行奇偶分解
+        Note this decomposition cannot make sure the mutual commutativity among odd terms or even terms. Use this method incorrectly would cause larger
+        Trotter error.
+        Please check whether Hamiltonian could be odd-even decomposed before you call this method. For example, 1-D Hamiltonian with nearest neighbor 
+        interaction could be odd-even decomposed.
     """
     grouped_hamiltonian = []
     coeffs, pauli_words, sites = hamiltonian.decompose_with_sites()

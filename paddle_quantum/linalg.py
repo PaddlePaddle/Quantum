@@ -17,14 +17,16 @@ r"""
 The common linear algorithm in paddle quantum.
 """
 
-from typing import Optional
+from typing import Optional, Union
 import paddle
 import math
 import numpy as np
 import scipy
+from scipy.stats import unitary_group
 from functools import reduce
 
 import paddle_quantum
+from paddle_quantum.intrinsic import _get_float_dtype
 
 
 def abs_norm(mat: paddle.Tensor) -> float:
@@ -37,7 +39,7 @@ def abs_norm(mat: paddle.Tensor) -> float:
         norm of mat
 
     """
-    mat = mat.cast('complex64')
+    mat = mat.cast(paddle_quantum.get_dtype())
     return paddle.norm(paddle.abs(mat)).item()
 
 
@@ -58,7 +60,7 @@ def is_hermitian(mat: paddle.Tensor, eps: Optional[float] = 1e-6) -> bool:
     r""" verify whether mat ``P`` is Hermitian
 
     Args:
-        mat: matrix
+        mat: hermitian candidate
         eps: tolerance of error
 
     Returns:
@@ -67,7 +69,7 @@ def is_hermitian(mat: paddle.Tensor, eps: Optional[float] = 1e-6) -> bool:
     """
     shape = mat.shape
     if len(shape) != 2 or shape[0] != shape[1] or math.log2(shape[0]) != math.ceil(math.log2(shape[0])):
-        # not a mat / not a square mat / shape is not in form 2^n x 2^n
+        # not a mat / not a square mat / shape is not in form 2^num_qubits x 2^num_qubits
         return False
     return abs_norm(mat - dagger(mat)) < eps
 
@@ -76,7 +78,7 @@ def is_projector(mat: paddle.Tensor, eps: Optional[float] = 1e-6) -> bool:
     r""" verify whether mat ``P`` is a projector
 
     Args:
-        mat: matrix
+        mat: projector candidate
         eps: tolerance of error
 
     Returns:
@@ -85,7 +87,7 @@ def is_projector(mat: paddle.Tensor, eps: Optional[float] = 1e-6) -> bool:
     """
     shape = mat.shape
     if len(shape) != 2 or shape[0] != shape[1] or math.log2(shape[0]) != math.ceil(math.log2(shape[0])):
-        # not a mat / not a square mat / shape is not in form 2^n x 2^n
+        # not a mat / not a square mat / shape is not in form 2^num_qubits x 2^num_qubits
         return False
     return abs_norm(mat @ mat - mat) < eps
 
@@ -94,7 +96,7 @@ def is_unitary(mat: paddle.Tensor, eps: Optional[float] = 1e-5) -> bool:
     r""" verify whether mat ``P`` is a unitary
 
     Args:
-        mat: matrix
+        mat: unitary candidate
         eps: tolerance of error
 
     Returns:
@@ -103,52 +105,87 @@ def is_unitary(mat: paddle.Tensor, eps: Optional[float] = 1e-5) -> bool:
     """
     shape = mat.shape
     if len(shape) != 2 or shape[0] != shape[1] or math.log2(shape[0]) != math.ceil(math.log2(shape[0])):
-        # not a mat / not a square mat / shape is not in form 2^n x 2^n
+        # not a mat / not a square mat / shape is not in form 2^num_qubits x 2^num_qubits
         return False
     return abs_norm(mat @ dagger(mat) - paddle.cast(paddle.eye(shape[0]), mat.dtype)) < eps
 
 
 def hermitian_random(num_qubits: int) -> paddle.Tensor:
-    r"""randomly generate a :math:`2^n \times 2^n` hermitian matrix
+    r"""randomly generate a :math:`2^num_qubits \times 2^num_qubits` hermitian matrix
 
     Args:
         num_qubits: log2(dimension)
 
     Returns:
-         a :math:`2^n \times 2^n` hermitian matrix
+         a :math:`2^num_qubits \times 2^num_qubits` hermitian matrix
 
     """
     assert num_qubits > 0
     n = 2 ** num_qubits
-    vec = paddle.randn([n, n]) + 1j * paddle.randn([n, n])
+    
+    float_dtype = _get_float_dtype(paddle_quantum.get_dtype())
+    vec = paddle.randn([n, n], dtype=float_dtype) + 1j * paddle.randn([n, n], dtype=float_dtype)
     mat = vec @ dagger(vec)
     return mat / paddle.trace(mat)
 
 
 def orthogonal_projection_random(num_qubits: int) -> paddle.Tensor:
-    r"""randomly generate a :math:`2^n \times 2^n` rank-1 orthogonal projector
+    r"""randomly generate a :math:`2^num_qubits \times 2^num_qubits` rank-1 orthogonal projector
 
     Args:
         num_qubits: log2(dimension)
 
     Returns:
-         a :math:`2^n \times 2^n` orthogonal projector and its eigenstate
+         a 2^num_qubits x 2^num_qubits orthogonal projector
     """
     assert num_qubits > 0
     n = 2 ** num_qubits
-    vec = paddle.randn([n, 1]) + 1j * paddle.randn([n, 1])
+    float_dtype = _get_float_dtype(paddle_quantum.get_dtype())
+    vec = paddle.randn([n, 1], dtype=float_dtype) + 1j * paddle.randn([n, 1], dtype=float_dtype)
     mat = vec @ dagger(vec)
     return mat / paddle.trace(mat)
 
 
-def unitary_hermitian_random(num_qubits: int) -> paddle.Tensor:
-    r"""randomly generate a :math:`2^n \times 2^n` hermitian unitary
+def density_matrix_random(num_qubits: int) -> paddle.Tensor:
+    r""" randomly generate an num_qubits-qubit state in density matrix form
+    
+    Args:
+        num_qubits: number of qubits
+    
+    Returns:
+        a 2^num_qubits x 2^num_qubits density matrix
+        
+    """
+    float_dtype = _get_float_dtype(paddle_quantum.get_dtype())
+    real = paddle.rand([2 ** num_qubits, 2 ** num_qubits], dtype=float_dtype)
+    imag = paddle.rand([2 ** num_qubits, 2 ** num_qubits], dtype=float_dtype)
+    M = real + 1j * imag 
+    M = M @ dagger(M)
+    rho = M / paddle.trace(M)
+    return rho
+
+
+def unitary_random(num_qubits: int) -> paddle.Tensor:
+    r"""randomly generate a :math:`2^num_qubits \times 2^num_qubits` unitary
 
     Args:
         num_qubits: :math:`\log_{2}(dimension)`
 
     Returns:
-         a :math:`2^n \times 2^n` hermitian unitary matrix
+         a :math:`2^num_qubits \times 2^num_qubits` unitary matrix
+         
+    """
+    return paddle.to_tensor(unitary_group.rvs(2 ** num_qubits), dtype=paddle_quantum.get_dtype())
+
+
+def unitary_hermitian_random(num_qubits: int) -> paddle.Tensor:
+    r"""randomly generate a :math:`2^num_qubits \times 2^num_qubits` hermitian unitary
+
+    Args:
+        num_qubits: :math:`\log_{2}(dimension)`
+
+    Returns:
+         a :math:`2^num_qubits \times 2^num_qubits` hermitian unitary matrix
          
     """
     proj_mat = orthogonal_projection_random(num_qubits)
@@ -156,39 +193,29 @@ def unitary_hermitian_random(num_qubits: int) -> paddle.Tensor:
     return (2 + 0j) * proj_mat - id_mat
 
 
-def unitary_random_with_hermitian_block(num_qubits: int) -> paddle.Tensor:
-    r"""randomly generate a unitary :math:`2^n \times 2^n` matrix that is a block encoding of a :math:`2^{n/2} \times 2^{n/2}` Hermitian matrix
+def unitary_random_with_hermitian_block(num_qubits: int, is_unitary: bool = False) -> paddle.Tensor:
+    r"""randomly generate a unitary :math:`2^num_qubits \times 2^num_qubits` matrix that is a block encoding of a :math:`2^{num_qubits/2} \times 2^{num_qubits/2}` Hermitian matrix
 
     Args:
         num_qubits: :math:`\log_{2}(dimension)`
+        is_unitary: whether the hermitian block is a unitary divided by 2 (for tutorial only)
 
     Returns:
-         a :math:`2^n \times 2^n` unitary matrix that its upper-left block is a Hermitian matrix
+         a :math:`2^num_qubits \times 2^num_qubits` unitary matrix that its upper-left block is a Hermitian matrix
 
     """
     assert num_qubits > 0
-    dtype = paddle_quantum.get_dtype()
-    mat0 = hermitian_random(num_qubits - 1).numpy()
+    
+    if is_unitary:
+        mat0 = unitary_hermitian_random(num_qubits - 1).numpy() / 2
+    else:
+        mat0 = hermitian_random(num_qubits - 1).numpy()
     id_mat = np.eye(2 ** (num_qubits - 1))
     mat1 = 1j * scipy.linalg.sqrtm(id_mat - np.matmul(mat0, mat0))
 
     mat = np.block([[mat0, mat1], [mat1, mat0]])
 
-    return paddle.to_tensor(mat, dtype=dtype)
-
-
-def unitary_random(num_qubits: int) -> paddle.Tensor:
-    r"""randomly generate a :math:`2^n \times 2^n` unitary
-
-    Args:
-        num_qubits: :math:`\log_{2}(dimension)`
-
-    Returns:
-         a :math:`2^n \times 2^n` unitary matrix
-
-    """
-    unitary = scipy.stats.unitary_group(2 ** num_qubits)
-    return paddle.to_tensor(unitary)
+    return paddle.to_tensor(mat, dtype=paddle_quantum.get_dtype())
 
 
 def haar_orthogonal(num_qubits: int) -> paddle.Tensor:
@@ -198,7 +225,7 @@ def haar_orthogonal(num_qubits: int) -> paddle.Tensor:
         num_qubits: number of qubits
 
     Returns:
-        a :math:`2^n \times 2^n` orthogonal matrix
+        a :math:`2^num_qubits \times 2^num_qubits` orthogonal matrix
         
     """
     # Matrix dimension
@@ -210,7 +237,7 @@ def haar_orthogonal(num_qubits: int) -> paddle.Tensor:
     # Step 3: make the decomposition unique
     mat_lambda = np.diag(mat_r) / abs(np.diag(mat_r))
     mat_u = mat_q @ np.diag(mat_lambda)
-    return paddle.to_tensor(mat_u)
+    return paddle.to_tensor(mat_u, dtype=paddle_quantum.get_dtype())
 
 
 def haar_unitary(num_qubits: int) -> paddle.Tensor:
@@ -220,7 +247,7 @@ def haar_unitary(num_qubits: int) -> paddle.Tensor:
         num_qubits: number of qubits
 
     Returns:
-        a :math:`2^n \times 2^n` unitary
+        a :math:`2^num_qubits \times 2^num_qubits` unitary
         
     """
     # Matrix dimension
@@ -232,7 +259,7 @@ def haar_unitary(num_qubits: int) -> paddle.Tensor:
     # Step 3: make the decomposition unique
     mat_lambda = np.diag(mat_r) / np.abs(np.diag(mat_r))
     mat_u = mat_q @ np.diag(mat_lambda)
-    return paddle.to_tensor(mat_u)
+    return paddle.to_tensor(mat_u, dtype=paddle_quantum.get_dtype())
 
 
 def haar_state_vector(num_qubits: int, is_real: Optional[bool] = False) -> paddle.Tensor:
@@ -243,7 +270,7 @@ def haar_state_vector(num_qubits: int, is_real: Optional[bool] = False) -> paddl
             is_real: whether the vector is real, default to be False
 
         Returns:
-            a :math:`2^n \times 1` state vector
+            a :math:`2^num_qubits \times 1` state vector
             
     """
     # Vector dimension
@@ -259,7 +286,7 @@ def haar_state_vector(num_qubits: int, is_real: Optional[bool] = False) -> paddl
         # Perform u onto |0>, i.e., the first column of u
         phi = unitary[:, 0]
 
-    return paddle.to_tensor(phi)
+    return paddle.to_tensor(phi, dtype=paddle_quantum.get_dtype())
 
 
 def haar_density_operator(num_qubits: int, rank: Optional[int] = None, is_real: Optional[bool] = False) -> paddle.Tensor:
@@ -271,7 +298,7 @@ def haar_density_operator(num_qubits: int, rank: Optional[int] = None, is_real: 
             is_real: whether the density matrix is real, default to be False
 
         Returns:
-            a :math:`2^n \times 2^n` density matrix
+            a :math:`2^num_qubits \times 2^num_qubits` density matrix
     """
     dim = 2 ** num_qubits
     rank = rank if rank is not None else dim
@@ -283,18 +310,40 @@ def haar_density_operator(num_qubits: int, rank: Optional[int] = None, is_real: 
         ginibre_matrix = np.random.randn(dim, rank) + 1j * np.random.randn(dim, rank)
         rho = ginibre_matrix @ ginibre_matrix.conj().T
     rho = rho / np.trace(rho)
-    return paddle.to_tensor(rho / np.trace(rho))
+    return paddle.to_tensor(rho / np.trace(rho), dtype=paddle_quantum.get_dtype())
 
 
-def NKron(matrix_A: np.ndarray, matrix_B: np.ndarray, *args: np.ndarray) -> np.ndarray:
+def NKron(
+        matrix_A: Union[paddle.Tensor, np.ndarray],
+        matrix_B: Union[paddle.Tensor, np.ndarray],
+        *args: Union[paddle.Tensor, np.ndarray]
+    ) ->  Union[paddle.Tensor, np.ndarray]:
     r""" calculate Kronecker product of at least two matrices
 
     Args:
-        matrix_A: matrix
-        matrix_B: matrix
-        *args: other matrices
+        matrix_A: matrix, as paddle.Tensor or numpy.ndarray
+        matrix_B: matrix, as paddle.Tensor or numpy.ndarray
+        *args: other matrices, as paddle.Tensor or numpy.ndarray
 
     Returns:
-        Kronecker product of matrices
+        Kronecker product of matrices, determined by input type of matrix_A
+
+    .. code-block:: python
+
+        from paddle_quantum.state import density_op_random
+        from paddle_quantum.utils import NKron
+        A = density_op_random(2)
+        B = density_op_random(2)
+        C = density_op_random(2)
+        result = NKron(A, B, C)
+
+    Note:
+        result should be A \otimes B \otimes C
     """
-    return reduce(lambda result, index: np.kron(result, index), args, np.kron(matrix_A, matrix_B), )
+    is_ndarray = False
+    if isinstance(matrix_A, np.ndarray):
+        is_ndarray = True
+    if not is_ndarray:
+        return reduce(lambda result, index: paddle.kron(result, index), args, paddle.kron(matrix_A, matrix_B), )
+    else:
+        return reduce(lambda result, index: np.kron(result, index), args, np.kron(matrix_A, matrix_B), )

@@ -38,13 +38,16 @@ class Oracle(Gate):
     """
     def __init__(
             self, oracle: paddle.Tensor, qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int],
-            num_qubits: int = None, depth: int = 1
+            num_qubits: int = None, depth: int = 1, gate_name: str = 'O'
     ):
         super().__init__(depth)
+        oracle = oracle.cast(paddle_quantum.get_dtype())
         assert is_unitary(oracle), "the input oracle must be a unitary matrix"
         num_acted_qubits = int(math.log2(oracle.shape[0]))
         self.oracle = paddle.cast(oracle, paddle_quantum.get_dtype())
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, False, num_acted_qubits)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits)
+        
+        self.gate_name = gate_name
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         for _ in range(0, self.depth):
@@ -63,23 +66,25 @@ class ControlOracle(Gate):
         depth: Number of layers. Defaults to ``1``.
     """
     def __init__(
-            self, oracle: paddle.Tensor,
-            # num_control_qubits: int, controlled_value: 'str',
-            qubits_idx: Union[Iterable[Iterable[int]], Iterable[int]],
-            num_qubits: int = None, depth: int = 1
-    ):
+            self, oracle: paddle.Tensor, qubits_idx: Union[Iterable[Iterable[int]], Iterable[int]],
+            num_qubits: int = None, depth: int = 1, gate_name: str = 'cO'
+    ) -> None:
         super().__init__(depth)
+        complex_dtype = paddle_quantum.get_dtype()
+        oracle = oracle.cast(complex_dtype)
         assert is_unitary(oracle), "the input oracle must be a unitary matrix"
         
         num_acted_qubits = int(math.log2(oracle.shape[0]))
         # 暂时只支持单控制位
         oracle = (
-            paddle.kron(paddle.to_tensor([[1.0, 0], [0, 0]]), paddle.eye(2 ** num_acted_qubits)) +
-            paddle.kron(paddle.to_tensor([[0.0, 0], [0, 1]]), oracle)
+            paddle.kron(paddle.to_tensor([[1.0, 0], [0, 0]], dtype=complex_dtype), paddle.eye(2 ** num_acted_qubits)) +
+            paddle.kron(paddle.to_tensor([[0.0, 0], [0, 1]], dtype=complex_dtype), oracle)
         )
         num_acted_qubits = num_acted_qubits + 1
-        self.oracle = paddle.cast(oracle, paddle_quantum.get_dtype())
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, False, num_acted_qubits)
+        self.oracle = oracle
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits)
+        
+        self.gate_name = gate_name
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         for _ in range(0, self.depth):

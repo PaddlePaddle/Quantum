@@ -23,20 +23,22 @@ import re
 import numpy as np
 from scipy.linalg import logm, sqrtm
 import paddle
-from paddle import kron
-from paddle import matmul
-from paddle import transpose
-from paddle_quantum.intrinsic import _get_float_dtype
+from paddle import kron, matmul, transpose
+from .state import State
+from .base import get_dtype
+from .intrinsic import _get_float_dtype
+from .linalg import dagger, is_unitary, NKron
+from .backend import Backend
 import matplotlib.image
-from paddle_quantum.linalg import dagger, is_unitary, NKron
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple, List, Union
 
 
-def partial_trace(rho_AB: paddle_quantum.State, dim1: int, dim2: int, A_or_B: int) -> paddle.Tensor:
+def partial_trace(state: Union[State, paddle.Tensor], 
+                  dim1: int, dim2: int, A_or_B: int) -> Union[State, paddle.Tensor]:
     r"""Calculate the partial trace of the quantum state.
 
     Args:
-        rho_AB: Input quantum state.
+        state: Input quantum state.
         dim1: The dimension of system A.
         dim2: The dimension of system B.
         A_or_B: 1 or 2. 1 means to calculate partial trace on system A; 2 means to calculate partial trace on system B.
@@ -47,15 +49,17 @@ def partial_trace(rho_AB: paddle_quantum.State, dim1: int, dim2: int, A_or_B: in
     if A_or_B == 2:
         dim1, dim2 = dim2, dim1
     
-    rho_AB = rho_AB.data
-    complex_dtype = paddle_quantum.get_dtype()
-    float_dtype = _get_float_dtype(complex_dtype)
+    is_State = False
+    if isinstance(state, State):
+        is_State = True
+        backend = state.backend
+        rho_AB = state.data if backend != Backend.StateVector else state.ket @ state.bra
+    else:
+        rho_AB = state
+    complex_dtype = rho_AB.dtype
 
-    idty_np = np.identity(dim2).astype(complex_dtype)
-    idty_B = paddle.to_tensor(idty_np)
-
-    zero_np = np.zeros([dim2, dim2], complex_dtype)
-    res = paddle.to_tensor(zero_np)
+    idty_B = paddle.eye(dim2).cast(complex_dtype)
+    res = paddle.zeros([dim2, dim2]).cast(complex_dtype)
 
     for dim_j in range(dim1):
         row_top = paddle.zeros([1, dim_j])
@@ -67,73 +71,87 @@ def partial_trace(rho_AB: paddle_quantum.State, dim1: int, dim2: int, A_or_B: in
         if A_or_B == 1:
             row_tmp = kron(bra_j, idty_B)
             row_tmp_conj = paddle.conj(row_tmp)
-            res = paddle.add(res, paddle.matmul(paddle.matmul(row_tmp, rho_AB), paddle.transpose(row_tmp_conj, perm=[1, 0]), ), )
+            res += (row_tmp @ rho_AB) @ paddle.transpose(row_tmp_conj, perm=[1, 0])
 
         if A_or_B == 2:
             row_tmp = kron(idty_B, bra_j)
             row_tmp_conj = paddle.conj(row_tmp)
-            res = paddle.add(res, paddle.matmul(paddle.matmul(row_tmp, rho_AB), paddle.transpose(row_tmp_conj, perm=[1, 0]), ), )
-
+            res += (row_tmp @ rho_AB) @ paddle.transpose(row_tmp_conj, perm=[1, 0])
+    
+    if is_State:
+        if backend == Backend.StateVector:
+            eigval, eigvec = paddle.linalg.eig(res)
+            res = eigvec[:, paddle.argmax(paddle.real(eigval))]
+        return State(res, backend=backend)
     return res
 
 
-def partial_trace_discontiguous(rho: paddle_quantum.State, preserve_qubits: Optional[list] = None) -> paddle.Tensor:
+def partial_trace_discontiguous(state: Union[State, paddle.Tensor], 
+                                preserve_qubits: list=None) -> Union[State, paddle.Tensor]:
     r"""Calculate the partial trace of the quantum state with arbitrarily selected subsystem
 
     Args:
-        rho: Input quantum state.
+        state: Input quantum state.
         preserve_qubits: Remaining qubits, default is None, indicate all qubits remain.
 
     Returns:
         Partial trace of the quantum state with arbitrarily selected subsystem.
     """
-    if type(rho) == paddle_quantum.State:
-        rho = rho.data
-    complex_dtype = paddle_quantum.get_dtype()
-    float_dtype = _get_float_dtype(complex_dtype)
+    is_State = False
+    if isinstance(state, State):
+        is_State = True
+        backend = rho.backend
+        rho = state.data if backend != Backend.StateVector else state.ket @ state.bra
+    else:
+        rho = state
+    complex_dtype = rho.dtype
 
     if preserve_qubits is None:
         return rho
-    else:
-        n = int(math.log2(rho.size) // 2)
-        num_preserve = len(preserve_qubits)
+    
+    n = int(math.log2(rho.size) // 2)
+    num_preserve = len(preserve_qubits)
 
-        shape = paddle.ones((n + 1,))
-        shape = 2 * shape
-        shape[n] = 2 ** n
-        shape = paddle.cast(shape, "int32")
-        identity = paddle.eye(2 ** n)
-        identity = paddle.reshape(identity, shape=shape)
-        discard = list()
-        for idx in range(0, n):
-            if idx not in preserve_qubits:
-                discard.append(idx)
-        addition = [n]
-        preserve_qubits.sort()
+    shape = paddle.ones((n + 1,))
+    shape = 2 * shape
+    shape[n] = 2 ** n
+    shape = paddle.cast(shape, "int32")
+    identity = paddle.eye(2 ** n)
+    identity = paddle.reshape(identity, shape=shape)
+    discard = list()
+    for idx in range(0, n):
+        if idx not in preserve_qubits:
+            discard.append(idx)
+    addition = [n]
+    preserve_qubits.sort()
 
-        preserve_qubits = paddle.to_tensor(preserve_qubits)
-        discard = paddle.to_tensor(discard)
-        addition = paddle.to_tensor(addition)
-        permute = paddle.concat([discard, preserve_qubits, addition])
+    preserve_qubits = paddle.to_tensor(preserve_qubits)
+    discard = paddle.to_tensor(discard)
+    addition = paddle.to_tensor(addition)
+    permute = paddle.concat([discard, preserve_qubits, addition])
 
-        identity = paddle.transpose(identity, perm=permute)
-        identity = paddle.reshape(identity, (2 ** n, 2 ** n))
+    identity = paddle.transpose(identity, perm=permute)
+    identity = paddle.reshape(identity, (2 ** n, 2 ** n))
 
-        result = np.zeros((2 ** num_preserve, 2 ** num_preserve), dtype=complex_dtype)
-        result = paddle.to_tensor(result)
+    result = np.zeros((2 ** num_preserve, 2 ** num_preserve))
+    result = paddle.to_tensor(result, dtype=complex_dtype)
 
-        for i in range(0, 2 ** (n - num_preserve)):
-            bra = identity[i * 2 ** num_preserve:(i + 1) * 2 ** num_preserve, :]
-            result = result + matmul(matmul(bra, rho), transpose(bra, perm=[1, 0]))
+    for i in range(0, 2 ** (n - num_preserve)):
+        bra = identity[i * 2 ** num_preserve:(i + 1) * 2 ** num_preserve, :]
+        result = result + matmul(matmul(bra, rho), transpose(bra, perm=[1, 0]))
 
-        return result
+    if is_State:
+        if backend == Backend.StateVector:
+            eigval, eigvec = paddle.linalg.eig(result)
+            result = eigvec[:, paddle.argmax(paddle.real(eigval))]
+        return State(result, backend=backend)
+    return result
 
 
-def trace_distance(rho: paddle_quantum.State, sigma: paddle_quantum.State) -> paddle.Tensor:
-    r"""Calculate the trace distance between two quantum states.
+def trace_distance(rho: Union[State, paddle.Tensor], sigma: Union[State, paddle.Tensor]) -> paddle.Tensor:
+    r"""Calculate the fidelity of two quantum states.
 
     .. math::
-
         D(\rho, \sigma) = 1 / 2 * \text{tr}|\rho-\sigma|
 
     Args:
@@ -141,16 +159,17 @@ def trace_distance(rho: paddle_quantum.State, sigma: paddle_quantum.State) -> pa
         sigma: Density matrix form of the quantum state.
 
     Returns:
-        Trace distance between the input quantum states.
+        The fidelity between the input quantum states.
     """
-    assert rho.data.shape == sigma.data.shape, 'The shape of two quantum states are different'
-    A = rho.data.numpy() - sigma.data.numpy()
-    distance = 1 / 2 * np.sum(np.abs(np.linalg.eigvals(A)))
+    if isinstance(rho, State):
+        rho = rho.data
+        sigma = sigma.data
+    assert rho.shape == sigma.shape, 'The shape of two quantum states are different'
+    eigval, eigvec = paddle.linalg.eig(rho - sigma)
+    return 0.5 * paddle.sum(paddle.abs(eigval))
 
-    return paddle.to_tensor(distance)
 
-
-def state_fidelity(rho: paddle_quantum.State, sigma: paddle_quantum.State) -> paddle.Tensor:
+def state_fidelity(rho: Union[State, paddle.Tensor], sigma: Union[State, paddle.Tensor]) -> paddle.Tensor:
     r"""Calculate the fidelity of two quantum states.
 
     .. math::
@@ -163,8 +182,12 @@ def state_fidelity(rho: paddle_quantum.State, sigma: paddle_quantum.State) -> pa
     Returns:
         The fidelity between the input quantum states.
     """
-    rho = rho.data.numpy()
-    sigma = sigma.data.numpy()
+    
+    if isinstance(rho, State):
+        rho = rho.data
+        sigma = sigma.data
+    rho = rho.numpy()
+    sigma = sigma.numpy()
     assert rho.shape == sigma.shape, 'The shape of two quantum states are different'
     fidelity = np.trace(sqrtm(sqrtm(rho) @ sigma @ sqrtm(rho))).real
 
@@ -188,18 +211,15 @@ def gate_fidelity(U: paddle.Tensor, V: paddle.Tensor) -> paddle.Tensor:
         fidelity between gates
     
     """
-    complex_dtype = paddle_quantum.get_dtype()
-    U = paddle.to_tensor(U, dtype=complex_dtype)
-    V = paddle.to_tensor(V, dtype=complex_dtype)
-    # assert is_unitary(U), "U is not a unitary"
-    # assert is_unitary(V), "V is not a unitary"
-    assert U.shape == V.shape, 'The shape of two unitary matrices are different'
+    complex_dtype = U.dtype
+    V = paddle.cast(V, dtype=complex_dtype)
+    assert U.shape == V.shape, 'The shape of two matrices are different'
     
     fidelity = paddle.abs(paddle.trace(U @ dagger(V))) / U.shape[0]
     return fidelity
 
 
-def purity(rho: paddle_quantum.State) -> paddle.Tensor:
+def purity(rho: Union[State, paddle.Tensor]) -> paddle.Tensor:
     r"""Calculate the purity of a quantum state.
 
     .. math::
@@ -212,13 +232,14 @@ def purity(rho: paddle_quantum.State) -> paddle.Tensor:
     Returns:
         The purity of the input quantum state.
     """
-    rho = rho.data
+    if isinstance(rho, State):
+        rho = rho.data
     gamma = paddle.trace(paddle.matmul(rho, rho))
 
     return gamma.real()
 
 
-def von_neumann_entropy(rho: paddle_quantum.State) -> paddle.Tensor:
+def von_neumann_entropy(rho: Union[State, paddle.Tensor]) -> paddle.Tensor:
     r"""Calculate the von Neumann entropy of a quantum state.
 
     .. math::
@@ -231,7 +252,9 @@ def von_neumann_entropy(rho: paddle_quantum.State) -> paddle.Tensor:
     Returns:
         The von Neumann entropy of the input quantum state.
     """
-    rho = rho.data.numpy()
+    if isinstance(rho, State):
+        rho = rho.data
+    rho = rho.numpy()
     rho_eigenvalues = np.real(np.linalg.eigvals(rho))
     entropy = 0
     for eigenvalue in rho_eigenvalues:
@@ -242,7 +265,7 @@ def von_neumann_entropy(rho: paddle_quantum.State) -> paddle.Tensor:
     return paddle.to_tensor(entropy)
 
 
-def relative_entropy(rho: paddle_quantum.State, sig: paddle_quantum.State) -> paddle.Tensor:
+def relative_entropy(rho: Union[State, paddle.Tensor], sig: Union[State, paddle.Tensor]) -> paddle.Tensor:
     r"""Calculate the relative entropy of two quantum states.
 
     .. math::
@@ -257,8 +280,11 @@ def relative_entropy(rho: paddle_quantum.State, sig: paddle_quantum.State) -> pa
     Returns:
         Relative entropy between input quantum states.
     """
-    rho = rho.data.numpy() 
-    sig = sig.data.numpy()
+    if isinstance(rho, State):
+        rho = rho.data
+        sig = sig.data
+    rho = rho.numpy() 
+    sig = sig.numpy()
     assert rho.shape == sig.shape, 'The shape of two quantum states are different'
     res = np.trace(rho @ logm(rho) - rho @ logm(sig))
     return paddle.to_tensor(res.real)
@@ -276,7 +302,7 @@ def random_pauli_str_generator(n: int, terms: Optional[int] = 3) -> List:
         terms: Number of terms in the observable. Defaults to 3.
 
     Returns:
-        The randomly generated observable’s list form.
+        The randomly generated observable's list form.
     """
     pauli_str = []
     for sublen in np.random.randint(1, high=n + 1, size=terms):
@@ -332,12 +358,15 @@ def pauli_str_to_matrix(pauli_str: list, n: int) -> paddle.Tensor:
         if len(op_str) == 1:
             matrices.append(coeff * sub_matrices[0])
         else:
-            matrices.append(coeff * NKron(sub_matrices[0], sub_matrices[1], *sub_matrices[2:]))
+            mat = sub_matrices[0]
+            for idx in range(1, len(sub_matrices)):
+                mat = np.kron(mat, sub_matrices[idx])
+            matrices.append(coeff * mat)
 
-    return paddle.to_tensor(sum(matrices), dtype=paddle_quantum.get_dtype())
+    return paddle.to_tensor(sum(matrices), dtype=get_dtype())
 
 
-def partial_transpose_2(density_op: paddle_quantum.State, sub_system: Optional[int] = None) -> paddle.Tensor:
+def partial_transpose_2(density_op: Union[State, paddle.Tensor], sub_system: int = None) -> paddle.Tensor:
     r"""Calculate the partial transpose :math:`\rho^{T_A}` of the input quantum state.
 
     Args:
@@ -350,7 +379,10 @@ def partial_transpose_2(density_op: paddle_quantum.State, sub_system: Optional[i
     sys_idx = 2 if sub_system is None else 1
 
     # Copy the density matrix and not corrupt the original one
-    density_op = density_op.data.numpy()
+    if isinstance(density_op, State):
+        density_op = density_op.data
+    complex_dtype = density_op.dtype
+    density_op = density_op.numpy()
     transposed_density_op = np.copy(density_op)
     if sys_idx == 2:
         for j in [0, 2]:
@@ -360,10 +392,10 @@ def partial_transpose_2(density_op: paddle_quantum.State, sub_system: Optional[i
         transposed_density_op[2:4, 0:2] = density_op[0:2, 2:4]
         transposed_density_op[0:2, 2:4] = density_op[2:4, 0:2]
 
-    return paddle.to_tensor(transposed_density_op)
+    return paddle.to_tensor(transposed_density_op, dtype=complex_dtype)
 
 
-def partial_transpose(density_op: paddle_quantum.State, n: int) -> paddle.Tensor:
+def partial_transpose(density_op: Union[State, paddle.Tensor], n: int) -> paddle.Tensor:
     r"""Calculate the partial transpose :math:`\rho^{T_A}` of the input quantum state.
 
     Args:
@@ -374,16 +406,19 @@ def partial_transpose(density_op: paddle_quantum.State, n: int) -> paddle.Tensor
         The partial transpose of the input quantum state.
     """
     # Copy the density matrix and not corrupt the original one
-    density_op = density_op.data.numpy()
+    if isinstance(density_op, State):
+        density_op = density_op.data
+    complex_dtype = density_op.dtype
+    density_op = density_op.numpy()
     transposed_density_op = np.copy(density_op)
     for j in range(0, 2 ** n, 2):
         for i in range(0, 2 ** n, 2):
             transposed_density_op[i:i + 2, j:j + 2] = density_op[i:i + 2, j:j + 2].transpose()
 
-    return paddle.to_tensor(transposed_density_op)
+    return paddle.to_tensor(transposed_density_op, dtype=complex_dtype)
 
 
-def negativity(density_op: paddle_quantum.State) -> paddle.Tensor:
+def negativity(density_op: Union[State, paddle.Tensor]) -> paddle.Tensor:
     r"""Compute the Negativity :math:`N = ||\frac{\rho^{T_A}-1}{2}||` of the input quantum state.
 
     Args:
@@ -394,6 +429,9 @@ def negativity(density_op: paddle_quantum.State) -> paddle.Tensor:
     """
     # Implement the partial transpose
     density_op_T = partial_transpose_2(density_op)
+    if isinstance(density_op_T, State):
+        density_op_T = density_op_T.data
+    density_op_T = density_op_T.numpy()
 
     # Calculate through the equivalent expression N = sum(abs(\lambda_i)) when \lambda_i<0
     n = 0.0
@@ -401,10 +439,10 @@ def negativity(density_op: paddle_quantum.State) -> paddle.Tensor:
     for val in eigen_val:
         if val < 0:
             n = n + np.abs(val)
-    return paddle.to_tensor(n)
+    return paddle.to_tensor(n, dtype=_get_float_dtype(paddle_quantum.get_dtype()))
 
 
-def logarithmic_negativity(density_op: paddle_quantum.State) -> paddle.Tensor:
+def logarithmic_negativity(density_op: Union[State, paddle.Tensor]) -> paddle.Tensor:
     r"""Calculate the Logarithmic Negativity :math:`E_N = ||\rho^{T_A}||` of the input quantum state.
 
     Args:
@@ -421,7 +459,7 @@ def logarithmic_negativity(density_op: paddle_quantum.State) -> paddle.Tensor:
     return log2_n
 
 
-def is_ppt(density_op: paddle_quantum.State) -> bool:
+def is_ppt(density_op: Union[State, paddle.Tensor]) -> bool:
     r"""Check if the input quantum state is PPT.
 
     Args:
@@ -439,11 +477,12 @@ def is_ppt(density_op: paddle_quantum.State) -> bool:
     return ppt
 
 
-def schmidt_decompose(psi: paddle_quantum.State, sys_A: Optional[List[int]] = None) -> Tuple[paddle.Tensor]:
+def schmidt_decompose(psi: Union[State, paddle.Tensor], 
+                      sys_A: List[int]=None) -> Tuple[paddle.Tensor, paddle.Tensor, paddle.Tensor]:
     r"""Calculate the Schmidt decomposition of a quantum state :math:`\lvert\psi\rangle=\sum_ic_i\lvert i_A\rangle\otimes\lvert i_B \rangle`.
 
     Args:
-        psi: State vector form of the quantum state, with shape（2**n）
+        psi: State vector form of the quantum state, with shape (2**n)
         sys_A: Qubit indices to be included in subsystem A (other qubits are included in subsystem B), default are the first half qubits of :math:`\lvert \psi\rangle`
 
     Returns:
@@ -453,7 +492,10 @@ def schmidt_decompose(psi: paddle_quantum.State, sys_A: Optional[List[int]] = No
         * A high dimensional array composed of bases for subsystem A :math:`\lvert i_A\rangle`, with shape ``(k, 2**m, 1)``
         * A high dimensional array composed of bases for subsystem B :math:`\lvert i_B\rangle` , with shape ``(k, 2**m, 1)``
     """
-    psi = psi.data.numpy()
+    if isinstance(psi, State):
+        psi = psi.data
+    psi = psi.numpy()
+    complex_dtype = psi.dtype
     assert psi.ndim == 1, 'Psi must be a one dimensional vector.'
     assert np.log2(psi.size).is_integer(), 'The number of amplitutes must be an integral power of 2.'
 
@@ -465,20 +507,20 @@ def schmidt_decompose(psi: paddle_quantum.State, sys_A: Optional[List[int]] = No
     # Permute qubit indices
     psi = psi.reshape([2] * tot_qu).transpose(sys_A + sys_B)
 
-    # construct amplitute matrix
+    # construct amplitude matrix
     amp_mtr = psi.reshape([2**len(sys_A), 2**len(sys_B)])
 
     # Standard process to obtain schmidt decomposition
     u, c, v = np.linalg.svd(amp_mtr)
 
     k = np.count_nonzero(c > 1e-13)
-    c = c[:k]
-    u = u.T[:k].reshape([k, -1, 1])
-    v = v[:k].reshape([k, -1, 1])
-    return paddle.to_tensor(c), paddle.to_tensor(u), paddle.to_tensor(v)
+    c = paddle.to_tensor(c[:k], dtype=complex_dtype)
+    u = paddle.to_tensor(u.T[:k].reshape([k, -1, 1]), dtype=complex_dtype)
+    v = paddle.to_tensor(v[:k].reshape([k, -1, 1]), dtype=complex_dtype)
+    return c, u, v
 
 
-def image_to_density_matrix(image_filepath: str) -> paddle_quantum.State:
+def image_to_density_matrix(image_filepath: str) -> State:
     r"""Encode image to density matrix
 
     Args:
@@ -498,10 +540,10 @@ def image_to_density_matrix(image_filepath: str) -> paddle_quantum.State:
     # Density matrix whose trace  is 1
     rho = image_matrix@image_matrix.T
     rho = rho/np.trace(rho)
-    return paddle_quantum.State(paddle.to_tensor(rho), backend=paddle_quantum.Backend.DensityMatrix)
+    return State(paddle.to_tensor(rho), backend=paddle_quantum.Backend.DensityMatrix)
 
 
-def shadow_trace(state: 'paddle_quantum.State', hamiltonian: paddle_quantum.Hamiltonian, 
+def shadow_trace(state: 'State', hamiltonian: paddle_quantum.Hamiltonian, 
                  sample_shots: int, method: Optional[str] = 'CS') -> float:
     r"""Estimate the expectation value :math:`\text{trace}(H\rho)`  of an observable :math:`H`.
 
@@ -510,6 +552,9 @@ def shadow_trace(state: 'paddle_quantum.State', hamiltonian: paddle_quantum.Hami
         hamiltonian: Observable.
         sample_shots: Number of samples.
         method: Method used to , which should be one of “CS”, “LBCS”, and “APS”. Default is “CS”.
+
+    Raises:
+        ValueError: Hamiltonian has a bad form
     
     Returns:
         The estimated expectation value for the hamiltonian.
@@ -639,3 +684,47 @@ def shadow_trace(state: 'paddle_quantum.State', hamiltonian: paddle_quantum.Hami
             trace_estimation = estimation
 
     return trace_estimation
+
+
+def tensor_product(state_a: Union[State, paddle.Tensor], state_b: Union[State, paddle.Tensor], *args: Union[State, paddle.Tensor]) -> State:
+    r"""calculate tensor product (kronecker product) between at least two state. This function automatically returns State instance
+
+    Args:
+        state_a: State
+        state_b: State
+        *args: other states
+
+    Raises:
+        NotImplementedError: only accept state or tensor instances
+
+    Returns:
+        tensor product of input states
+
+    Note:
+        the backend should be density matrix.
+    """
+    if isinstance(state_a, State):
+        data_a = state_a.data
+    elif isinstance(state_a, paddle.Tensor):
+        data_a = state_a
+    else:
+        raise NotImplementedError
+    
+    if isinstance(state_b, State):
+        data_b = state_b.data
+    elif isinstance(state_b, paddle.Tensor):
+        data_b = state_b
+    else:
+        raise NotImplementedError
+    
+    addis = []
+    for st in args:
+        if isinstance(st, State):
+            addis.append(st.data)
+        elif isinstance(st, paddle.Tensor):
+            addis.append(st)
+        else:
+            raise NotImplementedError
+    
+    res = paddle_quantum.linalg.NKron(data_a, data_b, *addis)
+    return State(res)

@@ -33,13 +33,13 @@ __all__ = [
 
 
 def maxcut_hamiltonian(E):
-    r"""生成最大割问题对应的哈密顿量。
+    r"""Generate the Hamiltonian for Max-Cut problem
 
     Args:
-        E (list): 图的边
+        E (list): Edges of the graph
 
     Returns:
-        list: 生成的哈密顿量的列表形式
+        list: list form of the generated Hamiltonian
     """
     H_D_list = []
     for (u, v) in E:
@@ -49,22 +49,22 @@ def maxcut_hamiltonian(E):
 
 
 def find_cut(G, p, ITR, LR, print_loss=False, shots=0, plot=False):
-    r"""运行 QAOA 寻找最大割问题的近似解。
+    r"""Find the approximated solution of given Max-Cut problem via QAOA
 
     Args:
-        G (NetworkX graph): 图
-        p (int): QAOA 电路的层数
-        ITR (int): 梯度下降优化参数的迭代次数
-        LR (float): Adam 优化器的学习率
-        print_loss (bool, optional): 优化过程中是否输出损失函数的值，默认为 ``False``，即不输出
-        shots (int, optional): QAOA 电路最终输出的量子态的测量次数，默认 0，则返回测量结果的精确概率分布
-        plot (bool, optional): 是否绘制测量结果图，默认为 ``False`` ，即不绘制
+        G (NetworkX graph): Graph
+        p (int): depth of the QAOA circuit
+        ITR (int): maximum iteration times for optimization
+        LR (float): learning rate of the Adam optimizer
+        print_loss (bool, optional): whether print the loss value during optimization. Defaults to ``False``, not print
+        shots (int, optional): measurement times at the final output of QAOA circuit, Defaults to ``0``, exact probability distribution
+        plot (bool, optional): whether plot the result of measurement, Defaults to ``False``, not plot
 
     Returns:
         tuple: tuple containing:
 
-            string: 寻找到的近似解
-            dict: 所有测量结果和其对应的出现次数
+            string: approximated solution
+            dict: measurement results and their frequencies
     """
     V = list(G.nodes())
     # Map nodes' labels to integers from 0 to |V|-1

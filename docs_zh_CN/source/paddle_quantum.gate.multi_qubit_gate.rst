@@ -129,7 +129,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: CP(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    受控 P 门。
 
@@ -158,7 +158,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: CRX(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    关于 x 轴的受控单量子比特旋转门。
 
@@ -191,7 +191,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: CRY(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    关于 y 轴的受控单量子比特旋转门。
 
@@ -224,7 +224,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: CRZ(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    关于 z 轴的受控单量子比特旋转门。
 
@@ -257,7 +257,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: CU(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    受控单量子比特旋转门。
 
@@ -290,7 +290,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: RXX(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    RXX 门。
 
@@ -322,7 +322,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: RYY(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    RYY 门。
 
@@ -354,7 +354,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: RZZ(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    RZZ 门。
 
@@ -474,7 +474,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: UniversalTwoQubits(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    两量子比特通用门，该通用门需要 15 个参数。
 
@@ -492,7 +492,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
 .. py:class:: UniversalThreeQubits(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.gate.base.ParamGate`
 
    三量子比特通用门，该通用门需要 81 个参数。
 

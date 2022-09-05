@@ -3,7 +3,7 @@ paddle\_quantum.qchem.uccsd
 
 UCCSD 电路模板。
 
-.. py:class:: UCCSDModel(n_qubits, n_electrons, n_trotter_steps, single_excitation_amplitude = None, double_excitation_amplitude = None)
+.. py:class:: UCCSDModel(n_qubits, n_electrons, n_trotter_steps, single_excitation_amplitude=None, double_excitation_amplitude=None)
 
    基类：:py:class:`paddle_quantum.gate.Gate`
 

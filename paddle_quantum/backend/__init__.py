@@ -20,6 +20,7 @@ The module that contains various backends.
 from . import state_vector
 from . import density_matrix
 from . import quleaf
+from . import unitary_matrix
 import enum
 
 

@@ -16,7 +16,8 @@
 r"""
 Paddle Quantum Library.
 """
-
+import os
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"]="python"
 from .backend import Backend
 from .state import State
 from .base import Operator
@@ -32,7 +33,6 @@ from . import locc
 from . import loss
 from . import mbqc
 from . import operator
-from . import qchem
 from . import base
 from . import dataset
 from . import finance
@@ -46,4 +46,4 @@ from . import trotter
 from . import visual
 
 name = 'paddle_quantum'
-__version__ = '2.2.0'
+__version__ = '2.2.1'

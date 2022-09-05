@@ -22,7 +22,7 @@ copyright = '2022, Baidu Inc'
 author = 'Baidu Inc'
 
 # The full version, including alpha/beta/rc tags
-release = '2.2.0'
+release = '2.2.1'
 
 
 # -- General configuration ---------------------------------------------------

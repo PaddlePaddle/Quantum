@@ -20,9 +20,10 @@ main
 import numpy
 from paddle_quantum.SSVQE.HGenerator import H_generator
 from paddle_quantum.SSVQE.Paddle_SSVQE import Paddle_SSVQE
+   
 
 
-def main():
+if __name__ == '__main__':
     N = 2
     H = H_generator(N)
 
@@ -39,7 +40,3 @@ def main():
 
     print('The estimated 3rd excited state energy is: ', loss_components[3].numpy())
     print('The theoretical 3rd excited state energy: ', numpy.linalg.eigh(H)[0][3])
-
-
-if __name__ == '__main__':
-    main()

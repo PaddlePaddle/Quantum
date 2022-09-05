@@ -39,7 +39,10 @@ class State(object):
             num_qubits: The number of qubits contained in the quantum state. Defaults to ``None``, which means it will be inferred by the data.
             backend: Used to specify the backend used. Defaults to ``None``, which means to use the default backend.
             dtype: Used to specify the data dtype of the data. Defaults to ``None``, which means to use the default data type.
-
+        
+        Raises:
+            Exception: The shape of the data is not correct.
+            NotImplementedError: If the backend is wrong or not implemented.
         """
     def __init__(
             self, data: Union[paddle.Tensor, np.ndarray, QCompute.QEnv], num_qubits: Optional[int] = None,
@@ -55,6 +58,8 @@ class State(object):
                 data = paddle.cast(data, dtype)
         self.dtype = dtype if dtype is not None else paddle_quantum.get_dtype()
         if self.backend == Backend.StateVector:
+            if data.shape[-1] == 1:
+                data = paddle.squeeze(data)
             self.data = data
             if num_qubits is not None:
                 if data.shape[-1] != 2 ** num_qubits:
@@ -90,6 +95,33 @@ class State(object):
         else:
             raise NotImplementedError
         self.num_qubits = num_qubits
+
+    @property
+    def ket(self) -> paddle.Tensor:
+        r""" return the ket form in state_vector backend
+
+        Returns:
+            ket form of the state
+
+        """
+        if self.backend != Backend.StateVector:
+            raise Exception("the backend must be in state_vector to raise the ket form of state")
+
+        return self.data.reshape([2 ** self.num_qubits, 1])
+    
+    @property
+    def bra(self) -> paddle.Tensor:
+        r""" return the bra form in state_vector backend
+
+        Returns:
+            bra form of the state
+
+        """
+        if self.backend != Backend.StateVector:
+            raise Exception("the backend must be in state_vector to raise the bra form of state")
+
+        return paddle.conj(self.data.reshape([1, 2 ** self.num_qubits]))
+
 
     def numpy(self) -> np.ndarray:
         r"""get the data in numpy.
@@ -132,6 +164,9 @@ class State(object):
             hamiltonian: Input observable.
             shots: Number of measurement shots.
 
+        Raises:
+            NotImplementedError: If the backend is wrong or not implemented.
+
         Returns:
             The expectation value of the input observable for the quantum state.
         """
@@ -148,14 +183,6 @@ class State(object):
             [1 / math.sqrt(2), -1j / math.sqrt(2)],
             [1 / math.sqrt(2), 1j / math.sqrt(2)],
         ], dtype=self.dtype)
-        # gate_for_x = paddle.to_tensor([
-        #     [1 / math.sqrt(2), 1j / math.sqrt(2)],
-        #     [1j / math.sqrt(2), 1 / math.sqrt(2)],
-        # ], dtype=self.dtype)
-        # gate_for_y = paddle.to_tensor([
-        #     [1 / math.sqrt(2), -1j / math.sqrt(2)],
-        #     [-1j / math.sqrt(2), 1 / math.sqrt(2)],
-        # ], dtype=self.dtype)
         if self.backend == Backend.StateVector:
             simulator = state_vector.unitary_transformation
         elif self.backend == Backend.DensityMatrix:
@@ -210,11 +237,26 @@ class State(object):
             qubits_idx: The index of the qubit to be measured. Defaults to ``None``, which means all qubits are measured.
             plot: Whether to draw the measurement result plot. Defaults to ``False`` which means no plot.
 
+        Raises:
+            Exception: The number of shots should be greater than 0.
+            NotImplementedError: If the backend is wrong or not implemented.
+            NotImplementedError: The qubit index is wrong or not supported.
 
         Returns:
             Measurement results
         """
-        if self.backend == paddle_quantum.Backend.StateVector:
+        if self.backend == paddle_quantum.Backend.QuLeaf:
+            if shots == 0:
+                    raise Exception("The quleaf server requires the number of shots to be greater than 0.")
+            state_data = self.data
+            QCompute.MeasureZ(*state_data.Q.toListPair())
+            result = state_data.commit(shots, fetchMeasure=True)['counts']
+            result = {''.join(reversed(key)): value for key, value in result.items()}
+            if qubits_idx is not None:
+                # new_result = [(self.__process_string(key, qubits_idx), value) for key, value in result.items()]
+                # result = self.__process_similiar(new_result)
+                pass
+        elif self.backend == paddle_quantum.Backend.StateVector:
             prob_amplitude = paddle.multiply(paddle.conj(self.data), self.data).real()
         elif self.backend == paddle_quantum.Backend.DensityMatrix:
             prob_amplitude = paddle.zeros([2 ** self.num_qubits])

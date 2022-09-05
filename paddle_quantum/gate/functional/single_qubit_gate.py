@@ -85,7 +85,7 @@ def t(state: paddle_quantum.State, qubit_idx: int, dtype: str, backend: paddle_q
     """
     gate = [
         [1, 0],
-        [0, math.cos(math.pi / 4) - math.sin(math.pi / 4) * 1j],
+        [0, math.cos(math.pi / 4) + math.sin(math.pi / 4) * 1j],
     ]
     gate = paddle.to_tensor(gate, dtype=dtype)
     state_data = simulation(state, gate, qubit_idx, state.num_qubits, backend)

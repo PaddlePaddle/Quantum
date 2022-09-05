@@ -497,6 +497,10 @@ def plot_density_matrix_graph(density_matrix: paddle_quantum.State, size: Option
     Args:
         density_matrix: The state vector or density matrix of quantum state with multi qubits, requiring the number of qubits greater than 1
         size: Bar width, between 0 and 1, default is ``0.3``.
+
+    Raises:
+        TypeError: Expected density_matrix to be np.ndarray or paddle.Tensor or paddle_quantum.State
+        ValueError: Expected density matrix dim0 equal to dim1
     """
     if not isinstance(
         density_matrix, (np.ndarray, paddle.Tensor, paddle_quantum.State)

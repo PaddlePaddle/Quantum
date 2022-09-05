@@ -3,7 +3,7 @@
 Paddle Quantum
 =======================
 
-`Paddle Quantum <https://github.com/PaddlePaddle/Quantum>`__\  is a quantum machine learning toolkit developed based on Baidu PaddlePaddle. It provides a platform to construct and train quantum neural networks (QNN) with easy-to-use QML development kits supporting combinatorial optimization, quantum chemistry and other cutting-edge quantum applications, making PaddlePaddle the first deep learning framework in China that supports quantum machine learning.
+`Paddle Quantum <https://github.com/PaddlePaddle/Quantum>`__\  is the world's first cloud-integrated quantum machine learning platform based on Baidu PaddlePaddle. It supports the building and training of quantum neural networks, making PaddlePaddle the first deep learning framework in China. Paddle Quantum is feature-rich and easy to use. It provides comprehensive API documentation and tutorials help users get started right away.
 
 .. figure:: https://release-data.cdn.bcebos.com/Paddle%20Quantum.png
    :target: https://github.com/PaddlePaddle/Quantum
@@ -19,7 +19,7 @@ Features
 
 - Easy-to-use
 
-  - Many online learning resources (Nearly 40 tutorials)
+  - Many online learning resources (Nearly 50 tutorials)
   - High efficiency in building QNN with various QNN templates
   - Automatic differentiation
 
@@ -45,7 +45,7 @@ Install
 Install PaddlePaddle
 ~~~~~~~~~~~~~~~~~~~~
 
-This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to `PaddlePaddle <https://www.paddlepaddle.org.cn/install/quick>`__ Install and configuration page. This project requires PaddlePaddle 2.2.0+.
+This dependency will be automatically satisfied when users install Paddle Quantum. Please refer to `PaddlePaddle <https://www.paddlepaddle.org.cn/install/quick>`__ Install and configuration page. This project requires PaddlePaddle 2.2.0 to 2.3.0.
 
 .. _header-n19:
 

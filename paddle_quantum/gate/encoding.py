@@ -41,17 +41,26 @@ class BasisEncoding(Gate):
     ) -> None:
         super().__init__()
         self.num_qubits = num_qubits
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.gate_name = 'BasisEnc'
 
-    def forward(self, feature: paddle.Tensor, 
-                state: Optional[paddle_quantum.State] = None, inverse: Optional[bool] = False) -> paddle_quantum.State:
-        feature = paddle.cast(feature, 'int32')
+    def forward(self, feature: paddle.Tensor, state: 'paddle_quantum.State' = None) -> 'paddle_quantum.State':
         if state is None:
             state = paddle_quantum.state.zero_state(self.num_qubits)
+        feature = paddle.cast(feature, 'int32')
+        gate_history = []
         for idx, element in enumerate(feature):
             if element:
                 state = functional.x(state, self.qubits_idx[idx], self.dtype, self.backend)
+                gate_history.append({'gate': 'x', 'which_qubits': self.qubits_idx[idx], 'theta': None})
+        self.gate_history = gate_history
         return state
+    
+    def gate_history_generation(self) -> None:
+        if self.gate_history is None:
+            raise RuntimeError("you must forward the encoding to receive the gate history")
+        pass
+        
 
 
 class AmplitudeEncoding(Gate):
@@ -68,9 +77,10 @@ class AmplitudeEncoding(Gate):
             num_qubits = max(qubits_idx)
         super().__init__()
         self.num_qubits = num_qubits
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.gate_name = 'AmpEnc'
 
-    def forward(self, feature: paddle.Tensor) -> paddle_quantum.State:
+    def forward(self, feature: paddle.Tensor) -> 'paddle_quantum.State':
         def calc_location(location_of_bits_list):
             if len(location_of_bits_list) <= 1:
                 result_list = [0, location_of_bits_list[0]]
@@ -133,21 +143,28 @@ class AngleEncoding(Gate):
             num_qubits = max(qubits_idx)
         super().__init__()
         self.num_qubits = num_qubits
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        
         if encoding_gate == 'rx':
             self.encoding_gate = functional.rx
         elif encoding_gate == 'ry':
             self.encoding_gate = functional.ry
         elif encoding_gate == 'rz':
             self.encoding_gate = functional.rz
+        self.encoding_gate_name = encoding_gate
+        
         feature = paddle.cast(feature, _get_float_dtype(paddle_quantum.get_dtype()))
         feature = paddle.flatten(feature)
         self.feature = feature
+        
+        self.gate_name = 'AngleEnc'
 
     def forward(
-            self, state: paddle_quantum.State, invert: Optional[bool] = False
-    ) -> paddle_quantum.State:
-
+            self, state: 'paddle_quantum.State' = None, invert: bool = False
+    ) -> 'paddle_quantum.State':
+        gate_history = []
+        if state is None:
+            state = paddle_quantum.state.zero_state(self.num_qubits)
         if invert:
             feature = -1 * self.feature
         else:
@@ -157,7 +174,14 @@ class AngleEncoding(Gate):
                 state, element[0], self.qubits_idx[idx],
                 dtype=self.dtype, backend=self.backend
             )
+            gate_history.append({'gate': self.encoding_gate_name, 'which_qubits': self.qubits_idx[idx], 'theta': element[0]})
+        self.gate_history = gate_history
         return state
+    
+    def gate_history_generation(self) -> None:
+        if self.gate_history is None:
+            raise RuntimeError("you must forward the encoding to receive the gate history")
+        pass
 
 
 class IQPEncoding(Gate):
@@ -181,10 +205,15 @@ class IQPEncoding(Gate):
             feature = paddle.cast(feature, _get_float_dtype(paddle_quantum.get_dtype()))
             feature = paddle.flatten(feature)
             self.feature = feature
+            
+        self.gate_name = 'IQPEnc'
 
     def forward(
-            self, state: paddle_quantum.State, invert: Optional[bool] = False
+            self, state: paddle_quantum.State = None, invert: Optional[bool] = False
     ) -> paddle_quantum.State:
+        gate_history = []
+        if state is None:
+            state = paddle_quantum.state.zero_state(self.num_qubits)
         for _ in range(0, self.num_repeat):
             if invert:
                 for qubits_idx in self.qubits_idx:
@@ -194,15 +223,28 @@ class IQPEncoding(Gate):
                         dtype=self.dtype, backend=self.backend
                     )
                     state = functional.cnot(state, qubits_idx, dtype=self.dtype, backend=self.backend)
+                    
+                    gate_history.append({'gate': 'cnot', 'which_qubits': qubits_idx, 'theta': None})
+                    gate_history.append({'gate': 'rz', 'which_qubits': qubits_idx[1], 
+                                         'theta': -self.feature[qubits_idx[0]] * self.feature[qubits_idx[1]]})
+                    gate_history.append({'gate': 'cnot', 'which_qubits': qubits_idx, 'theta': None})
+                    
                 for idx in range(0, self.feature.size):
                     state = functional.rz(state, -self.feature[idx], idx, dtype=self.dtype, backend=self.backend)
+                    gate_history.append({'gate': 'rz', 'which_qubits': idx, 'theta': -self.feature[idx]})
+                    
                 for idx in range(0, self.feature.size):
                     state = functional.h(state, idx, dtype=self.dtype, backend=self.backend)
+                    gate_history.append({'gate': 'h', 'which_qubits': idx, 'theta': None})
             else:
                 for idx in range(0, self.feature.size):
                     state = functional.h(state, idx, dtype=self.dtype, backend=self.backend)
+                    gate_history.append({'gate': 'h', 'which_qubits': idx, 'theta': None})
+                    
                 for idx in range(0, self.feature.size):
                     state = functional.rz(state, self.feature[idx], idx, dtype=self.dtype, backend=self.backend)
+                    gate_history.append({'gate': 'rz', 'which_qubits': idx, 'theta': self.feature[idx]})
+                    
                 for qubits_idx in self.qubits_idx:
                     state = functional.cnot(state, qubits_idx, dtype=self.dtype, backend=self.backend)
                     state = functional.rz(
@@ -210,4 +252,16 @@ class IQPEncoding(Gate):
                         dtype=self.dtype, backend=self.backend
                     )
                     state = functional.cnot(state, qubits_idx, dtype=self.dtype, backend=self.backend)
+                    
+                    gate_history.append({'gate': 'cnot', 'which_qubits': qubits_idx, 'theta': None})
+                    gate_history.append({'gate': 'rz', 'which_qubits': qubits_idx[1], 
+                                         'theta': self.feature[qubits_idx[0]] * self.feature[qubits_idx[1]]})
+                    gate_history.append({'gate': 'cnot', 'which_qubits': qubits_idx, 'theta': None})
+                    
+        self.gate_history = gate_history
         return state
+
+    def gate_history_generation(self) -> None:
+        if self.gate_history is None:
+            raise RuntimeError("you must forward the encoding to receive the gate history")
+        pass

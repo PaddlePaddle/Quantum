@@ -46,7 +46,7 @@ class BitFlip(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(prob, float):
             self.prob = paddle.to_tensor(prob)
         else:
@@ -80,7 +80,7 @@ class PhaseFlip(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(prob, float):
             self.prob = paddle.to_tensor(prob)
         else:
@@ -114,7 +114,7 @@ class BitPhaseFlip(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(prob, float):
             self.prob = paddle.to_tensor(prob)
         else:
@@ -156,7 +156,7 @@ class AmplitudeDamping(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(gamma, float):
             self.gamma = paddle.to_tensor(gamma)
         else:
@@ -197,7 +197,7 @@ class GeneralizedAmplitudeDamping(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(prob, float):
             self.prob = paddle.to_tensor(prob)
         else:
@@ -244,7 +244,7 @@ class PhaseDamping(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(gamma, float):
             self.gamma = paddle.to_tensor(gamma)
         else:
@@ -280,7 +280,7 @@ class Depolarizing(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(prob, float):
             self.prob = paddle.to_tensor(prob)
         else:
@@ -311,7 +311,7 @@ class PauliChannel(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(prob, Iterable):
             self.prob = paddle.to_tensor(prob)
         else:
@@ -369,7 +369,7 @@ class ResetChannel(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(prob, Iterable):
             self.prob = paddle.to_tensor(prob)
         else:
@@ -402,7 +402,7 @@ class ThermalRelaxation(Channel):
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
         super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, is_single_qubit_gate=True)
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
         if isinstance(const_t, float):
             self.const_t = paddle.to_tensor(const_t)
         else:

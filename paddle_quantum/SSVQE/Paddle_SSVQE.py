@@ -37,6 +37,16 @@ __all__ = [
 
 
 def loss_func(U, H):
+    r"""Compute the loss function of SSVQE
+    
+    Args:
+        H: Hamiltonian
+        U: unitary of the circuit
+    
+    Returns: Tutle: inlcuding following elements
+        - loss function
+        - loss components
+    """
     # Calculate loss function
     loss_struct = paddle.real(matmul(matmul(dagger(U), H), U))
     # Use computational basis to calculate each expectation value, which is the same
@@ -55,13 +65,16 @@ def loss_func(U, H):
 
 
 def Paddle_SSVQE(H, N=2, ITR=50, LR=0.3):
-    r"""
-    Paddle_SSVQE
-    :param H: Hamiltonian
-    :param N: Number of qubits/Width of QNN
-    :param ITR: Number of iterations
-    :param LR: Learning rate
-    :return: First several smallest eigenvalues of the Hamiltonian
+    r"""Paddle_SSVQE
+    
+    Args:
+        H: Hamiltonian
+        N: Number of qubits/Width of QNN
+        ITR: Number of iterations
+        LR: Learning rate
+    
+    Returns: 
+        First several smallest eigenvalues of the Hamiltonian
     """
 
     # We need to convert Numpy array to variable supported in PaddlePaddle
@@ -89,7 +102,7 @@ def Paddle_SSVQE(H, N=2, ITR=50, LR=0.3):
     return loss_components
 
 
-def main():
+if __name__ == '__main__':
     paddle.seed(SEED)
     N = 2
     H = H_generator(N)
@@ -127,6 +140,3 @@ def main():
                 output_ordinalvalue(i), numpy.linalg.eigh(H)[0][i])
             )
 
-
-if __name__ == '__main__':
-    main()

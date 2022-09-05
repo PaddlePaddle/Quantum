@@ -113,7 +113,7 @@ msgid ""
 "This dependency will be automatically satisfied when users install Paddle"
 " Quantum. Please refer to `PaddlePaddle "
 "<https://www.paddlepaddle.org.cn/install/quick>`__ Install and "
-"configuration page. This project requires PaddlePaddle 2.2.0+."
+"configuration page. This project requires PaddlePaddle 2.2.0 to 2.3.0."
 msgstr ""
 
 #: ../../source/introduction.rst:53

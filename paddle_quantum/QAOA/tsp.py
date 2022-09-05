@@ -34,13 +34,15 @@ __all__ = [
 
 
 def tsp_hamiltonian(g, A, n):
-    """
-    This is to construct Hamiltonia H_C
+    r"""This is to construct Hamiltonia H_C
+
      Args:
-        G: the graph to solve
+        g: the graph to solve
+        A: the penality parameter
+        n: the number of vertices of graph g
+
      Returns:
-        Hamiltonian list
-        Hamiltonian H_C
+        Hamiltonian with list form
     """
     H_C_list1 = []
     for i in range(n - 1):
@@ -93,8 +95,7 @@ def tsp_hamiltonian(g, A, n):
 
 
 def solve_tsp(g, A, p=2, ITR=120, LR=0.4, print_loss=False, shots=0):
-    """
-    This is the core function to solve the TSP.
+    r"""This is the core function to solve the TSP.
 
     Args:
         g: the graph to solve
@@ -102,6 +103,9 @@ def solve_tsp(g, A, p=2, ITR=120, LR=0.4, print_loss=False, shots=0):
         p: number of layers of blocks in the complex entangled circuit (default value p=2)
         ITR: number of iteration steps for the complex entangled circuit (default value ITR=120)
         LR: learning rate for the gradient-based optimization method (default value LR=0.4)
+        print_loss (bool, optional): whether print the loss value during optimization. Defaults to ``False``, not print
+        shots (int, optional): measurement times at the final output of QAOA circuit, Defaults to ``0``, exact probability distribution
+
     Returns:
         string representation for the optimized walk for the salesman
     """

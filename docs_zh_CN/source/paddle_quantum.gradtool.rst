@@ -98,6 +98,8 @@ paddle\_quantum.gradtool
    :param \*args: 用于损失函数计算的额外参数列表。
    :type \*args: Any
 
+   :raise Exception: 训练数据必须是 ``paddle.Tensor`` 类型
+
    :return: 包含如下两个元素：
                - loss_list: 损失函数值随训练次数变化的列表。
                - grad_list: 各参数梯度随训练次变化的列表。
@@ -129,6 +131,8 @@ paddle\_quantum.gradtool
    :type param: int
    :param \*args: 用于损失函数计算的额外参数列表。
    :type \*args: Any
+
+   :raise Exception: 训练数据必须是 ``paddle.Tensor`` 类型
 
    .. note::
       在本函数中提供了三种计算模式，``mode`` 分别可以选择 ``'single'``, ``'max'``, 以及 ``'random'``。

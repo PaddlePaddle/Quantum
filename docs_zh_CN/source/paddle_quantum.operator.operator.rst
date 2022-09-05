@@ -35,6 +35,14 @@ paddle\_quantum.operator.operator
 
    该类可以让你使用对量子态进行坍缩，坍缩到某一本征态。
 
+   :param qubits_idx: 坍缩的量子比特编号，默认为 ``'full'``.
+   :type qubits_idx: Union[Iterable[int], int, str], optional
+   :param num_qubits: 总的量子比特数量，默认为 ``None``。
+   :type num_qubits: int, optional
+   :param desired_result: 想要坍缩到的特定结果。
+   :type desired_result: Union[int, str]
+   :param if_print: 是否打印坍缩后的量子态的信息，默认为 ``'False'``.
+   :type if_print: bool
    :param measure_basis: 测量基底。量子态会坍缩到对应的本征态上。
    :type measure_basis: Union[Iterable[paddle.Tensor], str]
    :raises NotImplementedError: 所输入的测量基底还没有实现。
@@ -45,8 +53,5 @@ paddle\_quantum.operator.operator
 
       :param state: 输入的量子态，其将会被坍缩。
       :type state: paddle_quantum.State
-      :param desired_result: 想要坍缩到的特定结果。
-      :type desired_result: Union[int, str]
-      :raises NotImplementedError: 当前仅支持 z 基底。
       :return: 坍缩后的量子态。
       :rtype: paddle_quantum.State

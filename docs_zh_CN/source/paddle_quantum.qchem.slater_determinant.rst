@@ -22,7 +22,7 @@ paddle\_quantum.qchem.slater\_determinant
    :param theta: 给定旋转角度。
    :type theta: float
 
-.. py:class:: RHFSlaterDeterminantModel(n_qubits, n_electrons, mo_coeff = None)
+.. py:class:: RHFSlaterDeterminantModel(n_qubits, n_electrons, mo_coeff=None)
 
    基类：:py:class:`paddle_quantum.gate.Gate`
 

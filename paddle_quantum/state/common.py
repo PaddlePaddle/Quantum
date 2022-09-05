@@ -172,7 +172,7 @@ def bell_diagonal_state(prob: List[float]) -> State:
         prob: The prob of each bell state.
 
     Raises:
-        Exception: The state should bu a pure state if the backend is state_vector.
+        Exception: The state should be a pure state if the backend is state_vector.
         NotImplementedError: If the backend is wrong or not implemented.
 
     Returns:
@@ -325,7 +325,7 @@ def completely_mixed_computational(num_qubits: int) -> State:
         num_qubits: The number of qubits contained in the quantum state.
 
     Raises:
-        Exception: The state should bu a pure state if the backend is state_vector.
+        Exception: The state should be a pure state if the backend is state_vector.
         NotImplementedError: If the backend is wrong or not implemented.
 
     Returns:
@@ -365,7 +365,7 @@ def r_state(prob: float) -> State:
         prob: The parameter of the R-state to be generated. It should be in :math:`[0,1]` .
 
     Raises:
-        Exception: The state should bu a pure state if the backend is state_vector.
+        Exception: The state should be a pure state if the backend is state_vector.
         NotImplementedError: If the backend is wrong or not implemented.
 
     Returns:
@@ -410,7 +410,7 @@ def s_state(prob: float) -> State:
         prob: The parameter of the S-state to be generated. It should be in :math:`[0,1]` .
 
     Raises:
-        Exception: The state should bu a pure state if the backend is state_vector.
+        Exception: The state should be a pure state if the backend is state_vector.
         NotImplementedError: If the backend is wrong or not implemented.
 
     Returns:
@@ -455,7 +455,7 @@ def isotropic_state(num_qubits: int, prob: float) -> State:
         prob: The parameter of the isotropic state to be generated. It should be in :math:`[0,1]` .
 
     Raises:
-        Exception: The state should bu a pure state if the backend is state_vector.
+        Exception: The state should be a pure state if the backend is state_vector.
         NotImplementedError: If the backend is wrong or not implemented.
 
     Returns:

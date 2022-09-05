@@ -3,7 +3,7 @@ paddle\_quantum.qchem.loss
 
 量子化学中的损失函数。
 
-.. py:class:: MolEnergyLoss(geometry, basis, multiplicity = 1, charge = 0)
+.. py:class:: MolEnergyLoss(geometry, basis, multiplicity=1, charge=0)
 
    基类：:py:class:`paddle_quantum.loss.ExpecVal`
 
@@ -18,7 +18,7 @@ paddle\_quantum.qchem.loss
    :param charge: 分子电荷量， 默认值为 ``0``。
    :type charge: int, optional
 
-.. py:class:: RHFEnergyLoss(geometry, basis, multiplicity = 1, charge = 0)
+.. py:class:: RHFEnergyLoss(geometry, basis, multiplicity=1, charge=0)
 
    基类: :py:class:`paddle_quantum.Operator`
 

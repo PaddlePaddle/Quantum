@@ -124,3 +124,31 @@ paddle\_quantum.gate.layer
    :type depth: int, optional
 
 .. py:class:: QAOALayer(Gate)
+
+   基类：:py:class:`paddle_quantum.gate.base.Gate`
+
+   QAOA 驱动层
+
+   .. note::
+
+      仅支持 MaxCut 问题
+
+   :param edges: 图的边
+   :type edges: Iterable
+   :param nodes: 图的节点
+   :type nodes: Iterable
+   :param depth: 层数，默认为 ``1``。
+   :type depth: int, optional
+
+.. py:class:: QAOALayer(Gate)
+
+   基类：:py:class:`paddle_quantum.gate.base.Gate`
+
+   带权重的 QAOA 驱动层
+
+   :param edges: 带权重的图的边
+   :type edges: Dict[Tuple[int, int], float]
+   :param nodes: 带权重的图的节点
+   :type nodes: Dict[int, float]
+   :param depth: 层数，默认为 ``1``。
+   :type depth: int, optional

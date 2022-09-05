@@ -113,7 +113,7 @@ Fisher 信息的功能实现。
       :return: 量子费舍信息矩阵的秩
       :rtype: int
 
-.. py:class:: ClassicalFisher(model, num_thetas, num_inputs, model_type = 'quantum', **kwargs)
+.. py:class:: ClassicalFisher(model, num_thetas, num_inputs, model_type='quantum', **kwargs)
 
    :param model: 经典或量子神经网络模型的实例
    :type model: paddle.nn.Layer
@@ -164,7 +164,7 @@ Fisher 信息的功能实现。
 
       :rtype: Tuple[np.ndarray, float]
 
-   .. py:method:: get_eff_dim(normalized_cfisher, list_num_samples, gamma = 1)
+   .. py:method:: get_eff_dim(normalized_cfisher, list_num_samples, gamma=1)
 
       计算经典的有效维数
 

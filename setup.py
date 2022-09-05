@@ -24,7 +24,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='paddle-quantum',
-    version='2.2.0',
+    version='2.2.1',
     author='Institute for Quantum Computing, Baidu INC.',
     author_email='qml@baidu.com',
     description='Paddle Quantum is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle.',
@@ -44,6 +44,7 @@ setuptools.setup(
         'paddle_quantum.operator',
         'paddle_quantum.state',
         'paddle_quantum.qchem',
+        'paddle_quantum.qsvt',
         'paddle_quantum.mbqc',
         'paddle_quantum.GIBBS',
         'paddle_quantum.GIBBS.example',
@@ -78,10 +79,11 @@ setuptools.setup(
         'paddle_quantum.mbqc.VQSVD.example': ['*.txt'],
     },
     install_requires=[
-        'paddlepaddle>=2.2.0',
-        'qcompute',
-        'scipy',
+        'paddlepaddle<=2.3.0',
+        'scipy>=1.8.1',
+        'protobuf<=3.20.1',
         'networkx>=2.5',
+        'qcompute',
         'matplotlib>=3.3.0',
         'tqdm',
         'openfermion',

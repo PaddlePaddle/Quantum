@@ -3,7 +3,7 @@ paddle\_quantum.qchem.hardware\_efficient
 
 Hardware Efficient 电路模板。
 
-.. py:class:: HardwareEfficientModel(n_qubits, depth, theta = None)
+.. py:class:: HardwareEfficientModel(n_qubits, depth, theta=None)
 
    基类： :py:class:`paddle_quantum.gate.base.Gate`
 

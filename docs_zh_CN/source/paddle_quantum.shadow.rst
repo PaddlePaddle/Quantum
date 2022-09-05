@@ -20,5 +20,8 @@ paddle\_quantum.shadow
    :param method: 进行随机采样的方法，有 ``'CS'`` 、 ``'LBCS'`` 、 ``'APS'`` 三种方法，默认为 ``'CS'``。
    :type method: str, optional
 
+   :raises ValueError: 输入的哈密顿量 (Hamiltonian) 形式不合法
+   :raises NotImplementedError: 输入 ``state`` 的 ``backend`` 必须是 ``StateVector`` 或 ``DensityMatrix``
+
    :return: 随机选择的泡利测量基和测量结果，形状为 ``(sample_shots, 2)`` 的list。
    :rtype: list

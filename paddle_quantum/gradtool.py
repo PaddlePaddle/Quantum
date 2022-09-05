@@ -238,6 +238,9 @@ def plot_supervised_loss_grad(circuit: Circuit, loss_func: Callable[[Circuit, An
         TRAIN_Y: Label set.
         *args: Parameters for ``loss_func`` other than ``circuit``.
 
+    Raises:
+        Exception: Training data should be paddle.Tensor type
+
     Returns:
         Contains the following two elements.
             - loss_list: A list of losses for each iteration.
@@ -304,6 +307,9 @@ def random_sample_supervised(circuit: Circuit, loss_func: Callable[[Circuit, Any
             - In single mode, we calculate the mean and variance of gradients of every trainable parameters.
             - In max mode, we calculate the mean and variance of maximum gradients of for every trainable parameters.
             - In random mode, we calculate the mean and variance of data randomly extracted from gradients of every trainable parameters.
+    
+    Raises:
+        Exception: Training data should be paddle.Tensor type
 
     Returns:
         Contains the following two elements.

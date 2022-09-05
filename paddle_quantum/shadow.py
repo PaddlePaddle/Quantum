@@ -43,6 +43,11 @@ def shadow_sample(
         mode: Representation form of the input quantum state.
         hamiltonian: A ``Hamiltonian`` object representing the observable to be measured. Defaults to ``None``.
         method: Method for sampling random Pauli operators, which should be one of ``'CS'``, ``'LBCS'``, and ``'APS'``. Defaults to ``'CS'``.
+    
+    Raises:
+        ValueError: Hamiltonian has a bad form
+        NotImplementedError: The backend of ``state`` should be ``StateVector`` or ``DensityMatrix``
+
 
     Returns:
         Randomly chosen Pauli operators and their corresponding measurement result in a list of shape ``(sample_shots, 2)``.

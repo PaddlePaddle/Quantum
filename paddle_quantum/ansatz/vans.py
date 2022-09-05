@@ -82,7 +82,7 @@ class Inserter:
             # add one qubit gates rz_rx_rz to the circuit
             cir.insert(insert_ind, RZ([index], param=theta[0]))
             cir.insert(insert_ind + 1, RX([index], param=theta[1]))
-            cir.insert(insert_ind + 2, RX([index], param=theta[2]))
+            cir.insert(insert_ind + 2, RZ([index], param=theta[2]))
         else:
             # add two qubit gates to the circuit
             # obtain which two qubits to insert
@@ -121,9 +121,9 @@ class Inserter:
             cir.insert(insert_ind + 1, RZ([qubit_i], param=theta[0]))
             cir.insert(insert_ind + 2, RX([qubit_i], param=theta[1]))
             cir.insert(insert_ind + 3, RZ([qubit_i], param=theta[2]))
-            cir.insert(insert_ind + 4, RX([qubit_i], param=theta[3]))
-            cir.insert(insert_ind + 5, RZ([qubit_i], param=theta[4]))
-            cir.insert(insert_ind + 6, RX([qubit_i], param=theta[5]))
+            cir.insert(insert_ind + 4, RX([qubit_j], param=theta[3]))
+            cir.insert(insert_ind + 5, RZ([qubit_j], param=theta[4]))
+            cir.insert(insert_ind + 6, RX([qubit_j], param=theta[5]))
             cir.insert(insert_ind + 7, CNOT([qubit_i, qubit_j]))
         return cir
 
@@ -145,7 +145,7 @@ class Inserter:
         for gate_info in history:
             qubits_idx = gate_info["which_qubits"]
             if gate_info["gate"] == "rz" or gate_info["gate"] == "rx":
-                qubit_ind = qubits_idx[0]
+                qubit_ind = qubits_idx
                 count_gates[qubit_ind] += 1
             elif gate_info["gate"] == "cnot":
                 qubit_i = min(qubits_idx[0], qubits_idx[1])
@@ -712,11 +712,12 @@ class Simplifier:
         return cir
 
 
-def cir_decompose(cir: Circuit) -> Circuit:
-    r"""Decompose all layers of circuit into gates.
+def cir_decompose(cir: Circuit, trainable: Optional[bool] = False) -> Circuit:
+    r"""Decompose all layers of circuit into gates, and make all parameterized gates trainable if needed
 
     Args:
         cir: Target quantum circuit.
+        trainable: whether the decomposed parameterized gates are trainable
 
     Returns:
         A quantum circuit with same structure and parameters but all layers are decomposed into Gates.
@@ -730,13 +731,17 @@ def cir_decompose(cir: Circuit) -> Circuit:
         gate_name = gate_info['gate']
         qubits_idx = gate_info['which_qubits']
         param = gate_info['theta']
-
         # get gate function
         if param is None:
             getattr(new_cir, gate_name)(qubits_idx)
-        else:
-            getattr(new_cir, gate_name)(qubits_idx, param=param)
-
+            continue
+        
+        if trainable:
+            param = param.reshape([1] + param.shape)
+            param = paddle.create_parameter(
+                shape=param.shape, dtype=param.dtype,
+                default_initializer=paddle.nn.initializer.Assign(param))
+        getattr(new_cir, gate_name)(qubits_idx, param=param)
     return new_cir
 
 
@@ -831,7 +836,7 @@ class VAns:
                 self.loss = itr_loss
             else:  # insert + simplification
                 # Insert
-                new_cir = cir_decompose(self.cir)
+                new_cir = cir_decompose(self.cir, trainable=True)
                 new_cir = Inserter.insert_identities(
                     new_cir, self.insert_rate, self.epsilon)
 
@@ -874,6 +879,7 @@ class VAns:
         Returns:
             Optimized loss.
         """
+        cir = cir_decompose(cir, trainable=True)
 
         opt = paddle.optimizer.Adam(
             learning_rate=self.LR, parameters=cir.parameters())

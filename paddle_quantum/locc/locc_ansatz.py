@@ -18,6 +18,7 @@ The source file of the LoccAnsatz class.
 """
 
 import collections
+from matplotlib import docstring
 import paddle
 import paddle_quantum
 from ..gate import H, S, T, X, Y, Z, P, RX, RY, RZ, U3
@@ -40,26 +41,29 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
     Args:
         party: The owner of this circuit.
     """
+
     def __init__(self, party: LoccParty):
         super().__init__()
         self.party = party
         self.num_local_qubits = len(self.party)
 
     def __transform_qubits_idx(self, oper):
-        if hasattr(oper, 'qubits_idx'):
+        if hasattr(oper, "qubits_idx"):
             if isinstance(oper.qubits_idx[0], Iterable):
                 oper.qubits_idx = [
-                    [self.party[qubit_idx] for qubit_idx in qubits_idx] for qubits_idx in oper.qubits_idx
+                    [self.party[qubit_idx] for qubit_idx in qubits_idx]
+                    for qubits_idx in oper.qubits_idx
                 ]
             else:
-                oper.qubits_idx = [self.party[qubit_idx] for qubit_idx in oper.qubits_idx]
+                oper.qubits_idx = [
+                    self.party[qubit_idx] for qubit_idx in oper.qubits_idx
+                ]
 
-    def append(self, operator: Union[Iterable, paddle_quantum.Operator]):
-        r""" Append an operator.
-        
+    def append(self, operator: Union[Iterable, paddle_quantum.Operator]) -> None:
+        r"""Append an operator.
+
         Args:
             operator: operator with a name or just an operator.
-        
         """
         if isinstance(operator, Iterable):
             name, oper = operator
@@ -70,12 +74,11 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
             idx = len(self._sub_layers)
             self.add_sublayer(str(idx), operator)
 
-    def extend(self, operators: List[Operator]):
-        r""" Append a list of operators.
-        
+    def extend(self, operators: List[Operator]) -> None:
+        r"""Append a list of operators.
+
         Args:
-            operator: List of operators.
-        
+            operators: List of operators.
         """
         if len(operators) > 0 and isinstance(operators[0], (list, tuple)):
             for name, oper in operators:
@@ -87,13 +90,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
                 self.__transform_qubits_idx(oper)
                 self.add_sublayer(str(idx + origin_len), oper)
 
-    def insert(self, index: int, operator: Operator):
-        r""" Insert an operator at index ``index``.
-        
+    def insert(self, index: int, operator: Operator) -> None:
+        r"""Insert an operator at index ``index``.
+
         Args:
             index: Index to be inserted.
             operator: An operator.
-        
         """
         new_operators = collections.OrderedDict()
         for idx, name in enumerate(self._sub_layers):
@@ -113,7 +115,7 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
                 new_operators[name] = self._sub_layers[name]
         self._sub_layers = new_operators
 
-    def pop(self, operator: Operator):
+    def pop(self, operator: Operator) -> None:
         r"""Remove the matched operator.
 
         Args:
@@ -133,21 +135,23 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self._sub_layers = new_operators
 
     def forward(self, state: LoccState) -> LoccState:
-        r""" Forward the input.
-        
+        r"""Forward the input.
+
         Args:
             state: Initial state.
-            
+
         Returns:
             Output state.
-        
-        """        
+        """
         for layer in self._sub_layers.values():
             state = layer(state)
         return state
 
     def h(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
     ) -> None:
         r"""Add single-qubit Hadamard gates.
 
@@ -162,7 +166,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def s(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
     ) -> None:
         r"""Add single-qubit S gates.
 
@@ -177,7 +184,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def t(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
     ) -> None:
         r"""Add single-qubit T gates.
 
@@ -192,7 +202,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def x(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
     ) -> None:
         r"""Add single-qubit X gates.
 
@@ -207,7 +220,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def y(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
     ) -> None:
         r"""Add single-qubit Y gates.
 
@@ -222,7 +238,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def z(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
     ) -> None:
         r"""Add single-qubit Z gates.
 
@@ -237,8 +256,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def p(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add single-qubit P gates.
 
@@ -255,8 +278,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def rx(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add single-qubit rotation gates about the x-axis.
 
@@ -273,8 +300,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def ry(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add single-qubit rotation gates about the y-axis.
 
@@ -291,8 +322,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def rz(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: Optional[int] = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add single-qubit rotation gates about the z-axis.
 
@@ -309,8 +344,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def u3(
-            self, qubits_idx: Union[Iterable, int, str] = 'full', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, Iterable[float]] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, int, str] = "full",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, Iterable[float]] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add single-qubit rotation gates.
 
@@ -327,7 +366,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def cnot(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Add CNOT gates.
 
@@ -342,7 +384,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def cx(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Same as cnot.
 
@@ -357,7 +402,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def cy(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Add controlled Y gates.
 
@@ -372,7 +420,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def cz(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Add controlled Z gates.
 
@@ -387,7 +438,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def swap(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Add SWAP gates.
 
@@ -402,8 +456,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def cp(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add controlled P gates.
 
@@ -420,8 +478,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def crx(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add controlled rotation gates about the x-axis.
 
@@ -438,8 +500,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def cry(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add controlled rotation gates about the y-axis.
 
@@ -456,8 +522,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def crz(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add controlled rotation gates about the z-axis.
 
@@ -474,8 +544,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def cu(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add controlled single-qubit rotation gates.
 
@@ -492,8 +566,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def rxx(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add RXX gates.
 
@@ -510,8 +588,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def ryy(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add RYY gates.
 
@@ -528,8 +610,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def rzz(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add RZZ gates.
 
@@ -546,7 +632,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def ms(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Add Mølmer-Sørensen (MS) gates.
 
@@ -561,7 +650,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def cswap(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Add CSWAP (Fredkin) gates.
 
@@ -576,7 +668,10 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def ccx(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Add CCX gates.
 
@@ -595,8 +690,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def universal_two_qubits(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add universal two-qubit gates. One of such a gate requires 15 parameters.
 
@@ -613,8 +712,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def universal_three_qubits(
-            self, qubits_idx: Union[Iterable, str] = 'cycle', num_qubits: int = None, depth: int = 1,
-            param: Union[paddle.Tensor, float] = None, param_sharing: bool = False
+        self,
+        qubits_idx: Union[Iterable, str] = "cycle",
+        num_qubits: int = None,
+        depth: int = 1,
+        param: Union[paddle.Tensor, float] = None,
+        param_sharing: bool = False,
     ) -> None:
         r"""Add universal three-qubit gates. One of such a gate requires 81 parameters.
 
@@ -631,8 +734,11 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def oracle(
-            self, oracle: paddle.Tensor, qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int],
-            num_qubits: int = None, depth: int = 1
+        self,
+        oracle: paddle.Tensor,
+        qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int],
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         r"""Add an oracle gate.
 
@@ -648,10 +754,12 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
 
     def control_oracle(
-            self, oracle: paddle.Tensor,
-            # num_control_qubits: int, controlled_value: 'str',
-            qubits_idx: Union[Iterable[Iterable[int]], Iterable[int]],
-            num_qubits: int = None, depth: int = 1
+        self,
+        oracle: paddle.Tensor,
+        # num_control_qubits: int, controlled_value: 'str',
+        qubits_idx: Union[Iterable[Iterable[int]], Iterable[int]],
+        num_qubits: int = None,
+        depth: int = 1,
     ) -> None:
         """Add a controlled oracle gate.
 

@@ -3,6 +3,17 @@ paddle\_quantum.qchem.qchem
 
 量子化学中的功能函数。
 
+.. py:function:: qubitOperator_to_Hamiltonian(spin_h,tol)
+   将openfermion形式转化为量桨的哈密顿量形式。
+
+   :param spin_h: openfermion形式的哈密顿量。
+   :type spin_h: openfermion.ops.operators.qubit_operator.QubitOperator
+   :param tol: 阈值
+   :type tol: float, optional
+
+   :return: 返回转换成量桨形式的哈密顿量
+   :rtype: Hamiltonian
+
 .. py:function:: geometry(structure, file)
 
    读取分子几何信息。

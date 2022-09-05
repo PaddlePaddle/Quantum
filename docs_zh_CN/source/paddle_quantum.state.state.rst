@@ -17,6 +17,17 @@ paddle\_quantum.state.state
    :type backend: paddle_quantum.Backend, optional
    :param dtype: 量子态的数据类型。默认为 None，使用全局的默认数据类型。
    :type dtype: str, optional
+   :raises Exception: 所输入的量子态维度不正确。
+   :raises NotImplementedError: 所指定的后端必须为量桨已经实现的后端。
+
+
+   .. py:property:: ket()
+
+      得到量子态的列向量形式。
+
+   .. py:property:: bra()
+
+      得到量子态的行向量形式。
 
    .. py:method:: numpy()
 
@@ -55,6 +66,7 @@ paddle\_quantum.state.state
       :type hamiltonian: paddle_quantum.Hamiltonian
       :param shots: 测量次数。
       :type shots: int
+      :raises NotImplementedError: 所指定的后端必须为量桨已经实现的后端。
       :return: 该量子态关于可观测量的期望值。
       :rtype: float
         
@@ -69,5 +81,8 @@ paddle\_quantum.state.state
       :type qubits_idx: Union[Iterable[int], int], optional
       :param plot: 是否画图。默认为 Flase，表示不画图。
       :type plot: bool, optional
+      :raises Exception: 测量的次数必须大于0。
+      :raises NotImplementedError: 所指定的后端必须为量桨已经实现的后端。
+      :raises NotImplementedError: 输入的量子比特下标有误。
       :return: 测量结果。
       :rtype: dict

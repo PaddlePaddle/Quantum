@@ -35,7 +35,8 @@ options = {
 }
 
 
-def main(n=4):
+if __name__ == "__main__":
+    n = 4
     paddle.seed(SEED)
     
     p = 4  # number of layers in the circuit
@@ -73,7 +74,3 @@ def main(n=4):
     ax.margins(0.20)
     plt.axis("off")
     plt.show()
-
-
-if __name__ == "__main__":
-    main()

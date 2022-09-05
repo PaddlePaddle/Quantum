@@ -32,9 +32,9 @@ def _one(dtype):
 
 def _format_qubits_idx(
         qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int, str],
-        num_qubits: int, is_single_qubit_gate: bool, num_acted_qubits: int = 0
+        num_qubits: int, num_acted_qubits: int = 1
 ) -> Union[List[List[int]], List[int]]:
-    if is_single_qubit_gate:
+    if num_acted_qubits == 1:
         if qubits_idx == 'full':
             qubits_idx = list(range(0, num_qubits))
         elif qubits_idx == 'even':
@@ -48,13 +48,15 @@ def _format_qubits_idx(
     else:
         if qubits_idx == 'cycle':
             qubits_idx = []
-            for idx in range(0, num_qubits - 1):
-                qubits_idx.append([idx, idx + 1])
-            qubits_idx.append([num_qubits - 1, 0])
+            for idx in range(0, num_qubits - num_acted_qubits):
+                qubits_idx.append([i for i in range(idx, idx + num_acted_qubits)])
+            for idx in range(num_qubits - num_acted_qubits, num_qubits):
+                qubits_idx.append([i for i in range(idx, num_qubits)] + 
+                                  [i for i in range(idx + num_acted_qubits - num_qubits)])
         elif qubits_idx == 'linear':
             qubits_idx = []
-            for idx in range(0, num_qubits - 1):
-                qubits_idx.append([idx, idx + 1])
+            for idx in range(0, num_qubits - num_acted_qubits):
+                qubits_idx.append([i for i in range(idx, idx + num_acted_qubits)])
         elif len(np.shape(qubits_idx)) == 1 and len(qubits_idx) == num_acted_qubits:
             qubits_idx = [list(qubits_idx)]
         elif len(np.shape(qubits_idx)) == 2 and all((len(indices) == num_acted_qubits for indices in qubits_idx)):

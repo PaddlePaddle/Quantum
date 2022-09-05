@@ -3,12 +3,12 @@ paddle\_quantum.qinfo
 
 量子信息中的常用功能实现。
 
-.. py:function:: partial_trace(rho_AB, dim1, dim2, A_or_B)
+.. py:function:: partial_trace(state, dim1, dim2, A_or_B)
 
    计算量子态的偏迹。
 
-   :param rho_AB: 输入的量子态。
-   :type rho_AB: paddle_quantum.State
+   :param state: 输入的量子态。
+   :type state: Union[paddle_quantum.State, paddle.Tensor]
    :param dim1: 系统A的维数。
    :type dim1: int
    :param dim2: 系统B的维数。
@@ -19,12 +19,12 @@ paddle\_quantum.qinfo
    :return: 输入的量子态的偏迹。
    :rtype: paddle.Tensor
 
-.. py:function:: partial_trace_discontiguous(rho, preserve_qubits = None)
+.. py:function:: partial_trace_discontiguous(state, preserve_qubits=None)
 
    计算量子态的偏迹，可选取任意子系统。
 
-   :param rho: 输入的量子态。
-   :type rho: paddle_quantum.State
+   :param state: 输入的量子态。
+   :type state: Union[paddle_quantum.State, paddle.Tensor]
    :param preserve_qubits: 要保留的量子比特，默认为 None，表示全保留。
    :type preserve_qubits: list, optional
    
@@ -40,9 +40,9 @@ paddle\_quantum.qinfo
       D(\rho, \sigma) = 1 / 2 * \text{tr}|\rho-\sigma|
 
    :param rho: 量子态的密度矩阵形式。
-   :type rho: paddle_quantum.State
+   :type rho: Union[paddle_quantum.State, paddle.Tensor]
    :param sigma: 量子态的密度矩阵形式。
-   :type sigma: paddle_quantum.State
+   :type sigma: Union[paddle_quantum.State, paddle.Tensor]
 
    :return: 输入的量子态之间的迹距离。
    :rtype: paddle.Tensor
@@ -56,9 +56,9 @@ paddle\_quantum.qinfo
       F(\rho, \sigma) = \text{tr}(\sqrt{\sqrt{\rho}\sigma\sqrt{\rho}})
 
    :param rho: 量子态的密度矩阵形式。
-   :type rho: paddle_quantum.State
+   :type rho: Union[paddle_quantum.State, paddle.Tensor]
    :param sigma: 量子态的密度矩阵形式。
-   :type sigma: paddle_quantum.State
+   :type sigma: Union[paddle_quantum.State, paddle.Tensor]
    :return: 输入的量子态之间的保真度。
    :rtype: paddle.Tensor
 
@@ -89,7 +89,7 @@ paddle\_quantum.qinfo
       P = \text{tr}(\rho^2)
 
    :param rho: 量子态的密度矩阵形式。
-   :type rho: paddle_quantum.State
+   :type rho: Union[paddle_quantum.State, paddle.Tensor]
 
    :return: 输入的量子态的纯度。
    :rtype: paddle.Tensor
@@ -103,7 +103,7 @@ paddle\_quantum.qinfo
       S = -\text{tr}(\rho \log(\rho))
 
    :param rho: 量子态的密度矩阵形式。
-   :type rho: paddle_quantum.State
+   :type rho: Union[paddle_quantum.State, paddle.Tensor]
 
    :return: 输入的量子态的冯诺依曼熵。
    :rtype: paddle.Tensor
@@ -117,14 +117,14 @@ paddle\_quantum.qinfo
       S(\rho \| \sigma)=\text{tr} \rho(\log \rho-\log \sigma)
 
    :param rho: 量子态的密度矩阵形式
-   :type rho: paddle_quantum.State
+   :type rho: Union[paddle_quantum.State, paddle.Tensor]
    :param sig: 量子态的密度矩阵形式
-   :type sig: paddle_quantum.State
+   :type sig: Union[paddle_quantum.State, paddle.Tensor]
    
    :return: 输入的量子态之间的相对熵
    :rtype: paddle.Tensor
 
-.. py:function:: random_pauli_str_generator(n, terms = 3)
+.. py:function:: random_pauli_str_generator(n, terms=3)
 
    随机生成一个可观测量（observable）的列表（ ``list`` ）形式。
 
@@ -158,12 +158,12 @@ paddle\_quantum.qinfo
    :return: 输入列表对应的可观测量的矩阵形式。
    :rtype: paddle.Tensor
 
-.. py:function:: partial_transpose_2(density_op, sub_system = None)
+.. py:function:: partial_transpose_2(density_op, sub_system=None)
 
    计算输入量子态的 partial transpose :math:`\rho^{T_A}`。
 
    :param density_op: 量子态的密度矩阵形式。
-   :type density_op: paddle_quantum.State
+   :type density_op: Union[paddle_quantum.State, paddle.Tensor]
    :param sub_system: 1或2，表示关于哪个子系统进行 partial transpose，默认为第二个。
    :type sub_system: int, optional
 
@@ -175,7 +175,7 @@ paddle\_quantum.qinfo
    计算输入量子态的 partial transpose :math:`\rho^{T_A}`。
 
    :param density_op: 量子态的密度矩阵形式。
-   :type density_op: paddle_quantum.State
+   :type density_op: Union[paddle_quantum.State, paddle.Tensor]
    :param n: 需要转置系统的量子比特数量。
    :type n: int
    
@@ -187,7 +187,7 @@ paddle\_quantum.qinfo
    计算输入量子态的 Negativity :math:`N = ||\frac{\rho^{T_A}-1}{2}||`。
 
    :param density_op: 量子态的密度矩阵形式。
-   :type density_op: paddle_quantum.State
+   :type density_op: Union[paddle_quantum.State, paddle.Tensor]
 
    :return: 输入的量子态的 Negativity。
    :rtype: paddle.Tensor
@@ -197,27 +197,27 @@ paddle\_quantum.qinfo
    计算输入量子态的 Logarithmic Negativity :math:`E_N = ||\rho^{T_A}||`。
 
    :param density_op: 量子态的密度矩阵形式。
-   :type density_op: paddle_quantum.State
+   :type density_op: Union[paddle_quantum.State, paddle.Tensor]
 
    :return: 输入的量子态的 Logarithmic Negativity。
    :rtype: paddle.Tensor
 
-.. py:function:: is_ppt(density_op: paddle_quantum.State)
+.. py:function:: is_ppt(density_op)
 
    计算输入量子态是否满足 PPT 条件。
 
    :param density_op: 量子态的密度矩阵形式。
-   :type density_op: paddle_quantum.State
+   :type density_op: Union[paddle_quantum.State, paddle.Tensor]
    
    :return: 输入的量子态是否满足 PPT 条件。
    :rtype: bool
 
-.. py:function:: schmidt_decompose(psi, sys_A = None)
+.. py:function:: schmidt_decompose(psi, sys_A=None)
 
    计算输入量子态的施密特分解 :math:`\lvert\psi\rangle=\sum_ic_i\lvert i_A\rangle\otimes\lvert i_B \rangle`。
 
    :param psi: 量子态的向量形式，形状为（2**n）。
-   :type psi: paddle_quantum.State
+   :type psi: Union[paddle_quantum.State, paddle.Tensor]
    :param sys_A: 包含在子系统 A 中的 qubit 下标（其余 qubit 包含在子系统B中），默认为量子态 :math:`\lvert \psi\rangle` 的前半数 qubit。
    :type sys_A: List[int], optional
 
@@ -240,7 +240,7 @@ paddle\_quantum.qinfo
    :return: 编码得到的密度矩阵。
    :rtype: paddle_quantum.State
 
-.. py:function:: shadow_trace(state, hamiltonian, sample_shots, method = 'CS')
+.. py:function:: shadow_trace(state, hamiltonian, sample_shots, method='CS')
 
    估计可观测量 :math:`H` 的期望值 :math:`\text{trace}(H\rho)`。
 
@@ -253,5 +253,27 @@ paddle\_quantum.qinfo
    :param method: 使用 shadow 来进行估计的方法，可选 "CS"、"LBCS"、"APS" 三种方法，默认为 ``CS``。
    :type method: str, optional
 
+   :raises ValueError: 输入的哈密顿量 (Hamiltonian) 形式不合法
+
    :return: 估计可观测量 :math:`H` 的期望值。
    :rtype: float
+
+.. py:function:: tensor_product(state_a, state_b, *args)
+
+   计算输入的量子态(至少两个)的直积形式, 输出将自动返回 State 实例
+
+   :param state_a: 量子态A
+   :type state_a: Union[State, paddle.Tensor]
+   :param state_b: 量子态B
+   :type state_b: Union[State, paddle.Tensor]
+   :param args: 其他量子态
+   :type args: Union[State, paddle.Tensor]
+
+   :raises NotImplementedError: 当前只接收输入类型为 State 或 paddle.Tensor
+
+   .. note::
+
+      使用的 backend 必须为 DensityMatrix
+
+   :return: 输入量子态的直积
+   :rtype: State

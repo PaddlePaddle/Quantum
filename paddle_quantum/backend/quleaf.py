@@ -63,6 +63,7 @@ def set_quleaf_token(token: str) -> None:
     """
     global TOKEN
     TOKEN = token
+    QCompute.Define.hubToken = token
 
 
 def get_quleaf_token() -> str:

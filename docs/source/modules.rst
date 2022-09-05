@@ -22,3 +22,4 @@
    paddle_quantum.shadow
    paddle_quantum.trotter
    paddle_quantum.visual
+   paddle_quantum.qsvt

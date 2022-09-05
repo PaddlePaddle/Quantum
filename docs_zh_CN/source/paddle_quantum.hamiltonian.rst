@@ -75,7 +75,7 @@ paddle\_quantum.hamiltonian
                   - pauli_words: 元素为每一项的泡利字符串，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZIX'。
       :rtype: Tuple[list]
    
-   .. py:method:: construct_h_matrix(qubit_num = None)
+   .. py:method:: construct_h_matrix(qubit_num=None)
         
       构建 Hamiltonian 在 Z 基底下的矩阵。
 

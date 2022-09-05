@@ -17,11 +17,15 @@ r"""
 The source file of the basic class for the quantum gates.
 """
 
+import paddle
 import paddle_quantum
+from typing import Union, List, Iterable
+from ..intrinsic import _get_float_dtype
+from math import pi
 
 
 class Gate(paddle_quantum.Operator):
-    r"""Basis class for quantum gates.
+    r"""Base class for quantum gates.
 
     Args:
         depth: Number of layers. Defaults to 1.
@@ -36,6 +40,7 @@ class Gate(paddle_quantum.Operator):
     ):
         super().__init__(backend, dtype, name_scope)
         self.depth = depth
+        self.gate_name = None
 
     def forward(self, *inputs, **kwargs):
         raise NotImplementedError
@@ -47,3 +52,75 @@ class Gate(paddle_quantum.Operator):
                 value.backend = paddle_quantum.get_backend() if self.backend is None else self.backend
             if value.dtype is None:
                 value.dtype = paddle_quantum.get_dtype() if self.dtype is None else self.dtype
+
+    def gate_history_generation(self) -> None:
+        r""" determine self.gate_history
+        
+        """
+        gate_history = []
+        for _ in range(0, self.depth):
+            for qubit_idx in self.qubits_idx:
+                gate_info = {'gate': self.gate_name, 'which_qubits': qubit_idx, 'theta': None}
+                gate_history.append(gate_info)
+        self.gate_history = gate_history
+
+
+class ParamGate(Gate):
+    r""" Base class for quantum parameterized gates
+    
+    """
+    def theta_generation(self, param: Union[paddle.Tensor, float, List[float]], param_shape: List[int]) -> None:
+        """ determine self.theta, and create parameter if necessary
+
+        Args:
+            param: input theta
+            param_shape: shape for theta
+            
+        Note:
+            in the following cases ``param`` will be transformed to a parameter:
+                - ``param`` is None
+            in the following cases ``param`` will be added to the parameter list:
+                - ``param`` is ParamBase
+            in the following cases ``param`` will keep unchange:
+                - ``param`` is a Tensor but not a parameter
+                - ``param`` is a float or list of floats
+            
+        """
+        
+        float_dtype = _get_float_dtype(self.dtype)
+        
+        if param is None:
+            theta = self.create_parameter(
+                shape=param_shape, dtype=float_dtype,
+                default_initializer=paddle.nn.initializer.Uniform(low=0, high=2 * pi)
+            )
+            self.add_parameter('theta', theta)
+
+        elif isinstance(param, paddle.fluid.framework.ParamBase):
+            assert param.shape == param_shape, "received: " + str(param.shape) + " expect: " + str(param_shape)
+            self.add_parameter('theta', param)
+            
+        elif isinstance(param, paddle.Tensor):
+            param = param.reshape(param_shape)
+            self.theta = param
+            
+        elif isinstance(param, float):
+            self.theta = paddle.ones(param_shape, dtype=float_dtype) * param
+        
+        else: # when param is a list of float
+            self.theta = paddle.to_tensor(param, dtype=float_dtype).reshape(param_shape)
+
+    def gate_history_generation(self) -> None:
+        r""" determine self.gate_history when gate is parameterized
+        
+        """
+        gate_history = []
+        for depth_idx in range(0, self.depth):
+            for idx, qubit_idx in enumerate(self.qubits_idx):
+                if self.param_sharing:
+                    param = self.theta[depth_idx]
+                else:
+                    param = self.theta[depth_idx][idx]
+                gate_info = {'gate': self.gate_name, 'which_qubits': qubit_idx, 'theta': param}
+                gate_history.append(gate_info)
+        self.gate_history = gate_history

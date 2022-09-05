@@ -37,14 +37,14 @@ __all__ = [
 
 
 def Paddle_VQE(Hamiltonian, N, D=2, ITR=80, LR=0.2):
-    r"""
-    Main Learning network using dynamic graph
-    :param Hamiltonian: Hamiltonian
-    :param N: Width of QNN
-    :param D: Depth of QNN
-    :param ITR: Number of iterations
-    :param LR: Learning rate
-    :return: No return
+    r"""Main Learning network using dynamic graph
+
+    Args:
+        Hamiltonian: Hamiltonian
+        N: Width of QNN
+        D: Depth of QNN. Defaults to 2.
+        ITR: Number of iterations. Defaults to 80.
+        LR: Learning rate. Defaults to 0.2.
     """
 
     # Determine the dimensions of network
@@ -86,7 +86,7 @@ def Paddle_VQE(Hamiltonian, N, D=2, ITR=80, LR=0.2):
     savez("./output/summary_data", iter=summary_iter, energy=summary_loss)
 
 
-def main():
+if __name__ == '__main__':
     # Read data from built-in function or xyz file depending on OS
     sysStr = platform.system()
 
@@ -110,7 +110,3 @@ def main():
 
     Paddle_VQE(hamiltonian, N)
     benchmark_result()
-
-
-if __name__ == '__main__':
-    main()
