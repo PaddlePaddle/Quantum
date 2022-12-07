@@ -26,6 +26,39 @@ from paddle_quantum.linalg import is_unitary
 from typing import Callable, List, Any, Optional
 
 
+def cir_decompose(cir: Circuit, trainable: Optional[bool] = False) -> Circuit:
+    r"""Decompose all layers of circuit into gates, and make all parameterized gates trainable if needed
+
+    Args:
+        cir: Target quantum circuit.
+        trainable: whether the decomposed parameterized gates are trainable
+
+    Returns:
+        A quantum circuit with same structure and parameters but all layers are decomposed into Gates.
+
+    Note:
+        This function does not support customized gates, such as oracle and control-oracle.
+    """
+    gates_history = cir.gate_history
+    new_cir = Circuit()
+    for gate_info in gates_history:
+        gate_name = gate_info['gate']
+        qubits_idx = gate_info['which_qubits']
+        param = gate_info['theta']
+        # get gate function
+        if param is None:
+            getattr(new_cir, gate_name)(qubits_idx)
+            continue
+        
+        if trainable:
+            param = param.reshape([1] + param.shape)
+            param = paddle.create_parameter(
+                shape=param.shape, dtype=param.dtype,
+                default_initializer=paddle.nn.initializer.Assign(param))
+        getattr(new_cir, gate_name)(qubits_idx, param=param)
+    return new_cir
+
+
 class Inserter:
     r"""Class for block insertion for the circuit.
     """
@@ -125,7 +158,8 @@ class Inserter:
             cir.insert(insert_ind + 5, RZ([qubit_j], param=theta[4]))
             cir.insert(insert_ind + 6, RX([qubit_j], param=theta[5]))
             cir.insert(insert_ind + 7, CNOT([qubit_i, qubit_j]))
-        return cir
+        
+        return cir_decompose(cir, trainable=True)
 
     @classmethod
     def __count_qubit_gates(cls, cir: Circuit) -> np.ndarray:
@@ -144,14 +178,13 @@ class Inserter:
         history = cir.gate_history
         for gate_info in history:
             qubits_idx = gate_info["which_qubits"]
-            if gate_info["gate"] == "rz" or gate_info["gate"] == "rx":
+            if gate_info["gate"] in ["rz", "rx"]:
                 qubit_ind = qubits_idx
                 count_gates[qubit_ind] += 1
             elif gate_info["gate"] == "cnot":
                 qubit_i = min(qubits_idx[0], qubits_idx[1])
                 qubit_j = max(qubits_idx[0], qubits_idx[1])
-                idx = (2 * cir.num_qubits - qubit_i) * \
-                    (qubit_i + 1) // 2 + qubit_j - qubit_i - 1
+                idx = (2 * cir.num_qubits - qubit_i) * (qubit_i + 1) // 2 + qubit_j - qubit_i - 1
                 count_gates[idx] += 1
         return count_gates
 
@@ -179,18 +212,11 @@ class Simplifier:
                 cnot_qubits = history_i[0][0]["which_qubits"]
                 # find the other qubit
                 for j in cnot_qubits:
-                    if j != i:
-                        # check the CNOT is also in the front for the other qubit
-                        if (
-                            qubit_history[j][0][0]["gate"] == "cnot"
-                            and qubit_history[j][0][0]["which_qubits"]
-                            == cnot_qubits
-                        ):
-                            count += 1
-        if count == 0:
-            return True
-        else:
-            return False
+                    if j != i and \
+                       qubit_history[j][0][0]["gate"] == "cnot" and \
+                       qubit_history[j][0][0]["which_qubits"] == cnot_qubits:
+                        count += 1
+        return count == 0
 
     @classmethod
     def __check_consec_cnot(cls, cir: Circuit) -> bool:
@@ -216,16 +242,13 @@ class Simplifier:
                 ):
                     cnot_qubits = history_i[j][0]["which_qubits"]
                     # get the other qubit
-                    k = list(set(cnot_qubits).difference(set([i])))[0]
+                    k = list(set(cnot_qubits).difference({i}))[0]
                     # check if the found consecutive cnots are also consecutive on the other qubit
                     history_k = qubit_history[k]
                     idx_k = history_k.index(history_i[j])
                     if history_k[idx_k + 1] == history_i[j + 1]:
                         count += 1
-        if count == 0:
-            return True
-        else:
-            return False
+        return count == 0
 
     @classmethod
     def __check_rz_init(cls, cir: Circuit) -> bool:
@@ -243,12 +266,9 @@ class Simplifier:
             history_i = qubit_history[i]
             if not history_i:
                 continue
-            if history_i[0][0]["gate"] == "z" or history_i[0][0]["gate"] == "rz":
+            if history_i[0][0]["gate"] in ["z", "rz"]:
                 count += 1
-        if count == 0:
-            return True
-        else:
-            return False
+        return count == 0
 
     @classmethod
     def __check_repeated_rotations(cls, cir: Circuit) -> bool:
@@ -275,10 +295,7 @@ class Simplifier:
                     and history_i[j + 1][0]["gate"] == "rz"
                 ):
                     count += 1
-        if count == 0:
-            return True
-        else:
-            return False
+        return count == 0
 
     @classmethod
     def __check_4_consec_rotations(cls, cir: Circuit) -> bool:
@@ -309,10 +326,7 @@ class Simplifier:
                     and history_i[j + 3][0]["gate"] == "rx"
                 ):
                     count += 1
-        if count == 0:
-            return True
-        else:
-            return False
+        return count == 0
 
     @classmethod
     def __check_rz_cnot_rz_rx_cnot_rx(cls, cir: Circuit) -> bool:
@@ -344,10 +358,7 @@ class Simplifier:
                     and history_i[j + 1][0]["which_qubits"][1] == i
                 ):
                     count += 1
-        if count == 0:
-            return True
-        else:
-            return False
+        return count == 0
 
     @classmethod
     def __rule_1(cls, cir: Circuit) -> Circuit:
@@ -369,15 +380,11 @@ class Simplifier:
                     cnot_qubits = history_i[0][0]["which_qubits"]
                     # find the other qubit
                     for j in cnot_qubits:
-                        if j != i:
-                            # check the CNOT is also in the front for the other qubit
-                            if (
-                                qubit_history[j][0][0]["gate"] == "cnot"
-                                and qubit_history[j][0][0]["which_qubits"]
-                                == cnot_qubits
-                            ):
-                                # delete the gate
-                                cir.pop(qubit_history[j][0][1])
+                        if j != i and \
+                           qubit_history[j][0][0]["gate"] == "cnot" and \
+                           qubit_history[j][0][0]["which_qubits"] == cnot_qubits:
+                            # delete the gate
+                            cir.pop(qubit_history[j][0][1])
                         qubit_history = cir.qubit_history
                         history_i = cir.qubit_history[i]
         return cir
@@ -409,7 +416,7 @@ class Simplifier:
                     ):
                         cnot_qubits = history_i[j][0]["which_qubits"]
                         # get the other qubit
-                        k = list(set(cnot_qubits).difference(set([i])))[0]
+                        k = list(set(cnot_qubits).difference({i}))[0]
                         # check if the found consecutive cnots are also consecutive on the other qubit
                         history_k = qubit_history[k]
                         idx_k = history_k.index(history_i[j])
@@ -437,7 +444,7 @@ class Simplifier:
                 history_i = cir.qubit_history[i]
                 if not history_i:
                     continue
-                if history_i[0][0]["gate"] == "z" or history_i[0][0]["gate"] == "rz":
+                if history_i[0][0]["gate"] in ["z", "rz"]:
                     # delete from history
                     cir.pop(history_i[0][1])
         return cir
@@ -709,41 +716,8 @@ class Simplifier:
                 cir = cls.__rule_5(cir)
                 cir = cls.__rule_6(cir)
 
-        return cir
-
-
-def cir_decompose(cir: Circuit, trainable: Optional[bool] = False) -> Circuit:
-    r"""Decompose all layers of circuit into gates, and make all parameterized gates trainable if needed
-
-    Args:
-        cir: Target quantum circuit.
-        trainable: whether the decomposed parameterized gates are trainable
-
-    Returns:
-        A quantum circuit with same structure and parameters but all layers are decomposed into Gates.
-
-    Note:
-        This function does not support customized gates, such as oracle and control-oracle.
-    """
-    gates_history = cir.gate_history
-    new_cir = Circuit()
-    for gate_info in gates_history:
-        gate_name = gate_info['gate']
-        qubits_idx = gate_info['which_qubits']
-        param = gate_info['theta']
-        # get gate function
-        if param is None:
-            getattr(new_cir, gate_name)(qubits_idx)
-            continue
-        
-        if trainable:
-            param = param.reshape([1] + param.shape)
-            param = paddle.create_parameter(
-                shape=param.shape, dtype=param.dtype,
-                default_initializer=paddle.nn.initializer.Assign(param))
-        getattr(new_cir, gate_name)(qubits_idx, param=param)
-    return new_cir
-
+        return cir_decompose(cir, trainable=True)
+    
 
 class VAns:
     r"""Class of Variable Ansatz.
@@ -835,14 +809,13 @@ class VAns:
                 itr_loss = self.optimization(self.cir)
                 self.loss = itr_loss
             else:  # insert + simplification
-                # Insert
-                new_cir = cir_decompose(self.cir, trainable=True)
+                new_cir = self.cir
                 new_cir = Inserter.insert_identities(
                     new_cir, self.insert_rate, self.epsilon)
 
                 new_cir = Simplifier.simplify_circuit(
                     new_cir, self.zero_init_state)
-
+                
                 itr_loss = self.optimization(new_cir)
 
                 relative_diff = (itr_loss - self.loss) / abs(itr_loss)
@@ -879,8 +852,6 @@ class VAns:
         Returns:
             Optimized loss.
         """
-        cir = cir_decompose(cir, trainable=True)
-
         opt = paddle.optimizer.Adam(
             learning_rate=self.LR, parameters=cir.parameters())
 

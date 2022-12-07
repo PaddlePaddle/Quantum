@@ -19,7 +19,8 @@ The source file of the classes for several quantum channel.
 
 import paddle
 import paddle_quantum
-from paddle_quantum.intrinsic import _format_qubits_idx
+from ..intrinsic import _format_qubits_idx
+from ..qinfo import kraus_oper_random
 from .base import Channel
 from . import functional
 from ..backend import Backend
@@ -47,10 +48,7 @@ class BitFlip(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(prob, float):
-            self.prob = paddle.to_tensor(prob)
-        else:
-            self.prob = prob
+        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -81,10 +79,7 @@ class PhaseFlip(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(prob, float):
-            self.prob = paddle.to_tensor(prob)
-        else:
-            self.prob = prob
+        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -115,10 +110,7 @@ class BitPhaseFlip(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(prob, float):
-            self.prob = paddle.to_tensor(prob)
-        else:
-            self.prob = prob
+        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -157,10 +149,7 @@ class AmplitudeDamping(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(gamma, float):
-            self.gamma = paddle.to_tensor(gamma)
-        else:
-            self.gamma = gamma
+        self.gamma = paddle.to_tensor(gamma) if isinstance(gamma, (int, float)) else gamma
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -198,14 +187,8 @@ class GeneralizedAmplitudeDamping(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(prob, float):
-            self.prob = paddle.to_tensor(prob)
-        else:
-            self.prob = prob
-        if isinstance(gamma, float):
-            self.gamma = paddle.to_tensor(gamma)
-        else:
-            self.gamma = gamma
+        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
+        self.gamma = paddle.to_tensor(gamma) if isinstance(gamma, (int, float)) else gamma
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -245,10 +228,7 @@ class PhaseDamping(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(gamma, float):
-            self.gamma = paddle.to_tensor(gamma)
-        else:
-            self.gamma = gamma
+        self.gamma = paddle.to_tensor(gamma) if isinstance(gamma, (int, float)) else gamma
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -265,15 +245,22 @@ class Depolarizing(Channel):
 
     .. math::
 
-        E_0 = \sqrt{1-p} I,
-        E_1 = \sqrt{p/3} X,
-        E_2 = \sqrt{p/3} Y,
-        E_3 = \sqrt{p/3} Z.
+        E_0 = \sqrt{1-3p/4} I,
+        E_1 = \sqrt{p/4} X,
+        E_2 = \sqrt{p/4} Y,
+        E_3 = \sqrt{p/4} Z.
 
     Args:
         prob: Parameter of the depolarizing channels. Its value should be in the range :math:`[0, 1]`.
         qubits_idx: Indices of the qubits on which the channels act. Defaults to ``'full'``.
         num_qubits: Total number of qubits. Defaults to ``None``.
+
+    Note:
+        The implementation logic for this feature has been updated.
+        The current version refers to formula (8.102) in Quantum Computation and Quantum Information 10th
+        edition by M.A.Nielsen and I.L.Chuang.
+        Reference: Nielsen, M., & Chuang, I. (2010). Quantum Computation and Quantum Information: 10th
+        Anniversary Edition. Cambridge: Cambridge University Press. doi:10.1017/CBO9780511976667
     """
     def __init__(
             self, prob: Union[paddle.Tensor, float],
@@ -281,10 +268,7 @@ class Depolarizing(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(prob, float):
-            self.prob = paddle.to_tensor(prob)
-        else:
-            self.prob = prob
+        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -312,10 +296,7 @@ class PauliChannel(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(prob, Iterable):
-            self.prob = paddle.to_tensor(prob)
-        else:
-            self.prob = prob
+        self.prob = paddle.to_tensor(prob) if isinstance(prob, Iterable) else prob
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -370,10 +351,7 @@ class ResetChannel(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(prob, Iterable):
-            self.prob = paddle.to_tensor(prob)
-        else:
-            self.prob = prob
+        self.prob = paddle.to_tensor(prob) if isinstance(prob, Iterable) else prob
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -403,14 +381,8 @@ class ThermalRelaxation(Channel):
     ):
         super().__init__()
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        if isinstance(const_t, float):
-            self.const_t = paddle.to_tensor(const_t)
-        else:
-            self.const_t = const_t
-        if isinstance(exec_time, float):
-            self.exec_time = paddle.to_tensor(exec_time)
-        else:
-            self.exec_time = exec_time
+        self.const_t = paddle.to_tensor(const_t) if isinstance(const_t, (int, float)) else const_t
+        self.exec_time = paddle.to_tensor(exec_time) if isinstance(exec_time, (int, float)) else exec_time
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -418,4 +390,36 @@ class ThermalRelaxation(Channel):
         for qubit_idx in self.qubits_idx:
             state = functional.thermal_relaxation(
                 state, self.const_t, self.exec_time, qubit_idx, self.dtype, self.backend)
+        return state
+
+
+class MixedUnitaryChannel(Channel):
+    r"""A collection of mixed unitary channels.
+
+    Such a channel's Kraus operators are randomly generated unitaries times related probabilities
+    .. math::
+
+        N(\rho) = \sum_{i}  p_{i} U_{i} \rho U_{i}^{\dagger}
+
+    Args:
+        num_unitary: The amount of random unitaries to be generated.
+        qubits_idx: Indices of the qubits on which the channels act. Defaults to ``'full'``.
+        num_qubits: Total number of qubits. Defaults to ``None``.
+
+    Note:
+    The probability distribution of unitaries is set to be uniform distribution.
+    """
+    def __init__(
+            self, num_unitary: int,
+            qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+    ):
+        super().__init__()
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        self.kraus_oper = kraus_oper_random(1, num_unitary)
+
+    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
+        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
+            raise NotImplementedError
+        for qubit_idx in self.qubits_idx:
+            state = functional.kraus_repr(state, self.kraus_oper, qubit_idx, self.dtype, self.backend)
         return state

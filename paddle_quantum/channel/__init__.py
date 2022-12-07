@@ -28,5 +28,7 @@ from .common import Depolarizing
 from .common import PauliChannel
 from .common import ResetChannel
 from .common import ThermalRelaxation
+from .common import MixedUnitaryChannel
 from .custom import KrausRepr
 from .custom import ChoiRepr
+from .custom import StinespringRepr

@@ -58,7 +58,6 @@ class Hamiltonian:
             self.__compress()
 
     def __getitem__(self, indices):
-        new_pauli_str = []
         if isinstance(indices, int):
             indices = [indices]
         elif isinstance(indices, slice):
@@ -66,8 +65,8 @@ class Hamiltonian:
         elif isinstance(indices, tuple):
             indices = list(indices)
 
-        for index in indices:
-            new_pauli_str.append([self.coefficients[index], ','.join(self.terms[index])])
+        new_pauli_str = [[self.coefficients[index], ','.join(self.terms[index])] for index in indices]
+
         return Hamiltonian(new_pauli_str, compress=False)
 
     def __add__(self, h_2):
@@ -90,7 +89,7 @@ class Hamiltonian:
     def __str__(self):
         str_out = ''
         for idx in range(self.n_terms):
-            str_out += '{} '.format(self.coefficients[idx])
+            str_out += f'{self.coefficients[idx]} '
             for _ in range(len(self.terms[idx])):
                 str_out += self.terms[idx][_]
                 if _ != len(self.terms[idx]) - 1:
@@ -120,9 +119,7 @@ class Hamiltonian:
         """
         if self.__update_flag:
             self.__decompose()
-            return self.__terms
-        else:
-            return self.__terms
+        return self.__terms
 
     @property
     def coefficients(self) -> list:
@@ -130,9 +127,7 @@ class Hamiltonian:
         """
         if self.__update_flag:
             self.__decompose()
-            return self.__coefficients
-        else:
-            return self.__coefficients
+        return self.__coefficients
 
     @property
     def pauli_words(self) -> list:
@@ -140,9 +135,7 @@ class Hamiltonian:
         """
         if self.__update_flag:
             self.__decompose()
-            return self.__pauli_words
-        else:
-            return self.__pauli_words
+        return self.__pauli_words
 
     @property
     def pauli_words_r(self) -> list:
@@ -150,9 +143,7 @@ class Hamiltonian:
         """
         if self.__update_flag:
             self.__decompose()
-            return self.__pauli_words_r
-        else:
-            return self.__pauli_words_r
+        return self.__pauli_words_r
 
     @property
     def pauli_words_matrix(self) -> list:
@@ -183,7 +174,7 @@ class Hamiltonian:
                         paddle.to_tensor([[1, 0], [0, 1]], dtype=paddle_quantum.get_dtype())
                     )
                 else:
-                    raise ValueError('wrong format of string ' + string)
+                    raise ValueError(f'wrong format of string {string}')
             return matrix
 
         return list(map(to_matrix, copy.deepcopy(self.pauli_words_r)))
@@ -194,9 +185,7 @@ class Hamiltonian:
         """
         if self.__update_flag:
             self.__decompose()
-            return self.__sites
-        else:
-            return self.__sites
+        return self.__sites
 
     @property
     def n_qubits(self) -> int:
@@ -204,9 +193,7 @@ class Hamiltonian:
         """
         if self.__update_flag:
             self.__decompose()
-            return self.__nqubits
-        else:
-            return self.__nqubits
+        return self.__nqubits
 
     def __decompose(self):
         r"""decompose the Hamiltonian into vairious forms
@@ -235,20 +222,20 @@ class Hamiltonian:
                 match_i = re.match(r'I', single_pauli_term, flags=re.I)
                 if match_i:
                     assert single_pauli_term[0].upper() == 'I', \
-                        'The offset is defined with a sole letter "I", i.e. (3.0, "I")'
+                            'The offset is defined with a sole letter "I", i.e. (3.0, "I")'
                     pauli_word_r += 'I'
                     site.append('')
                 else:
                     match = re.match(r'([XYZ])([0-9]+)', single_pauli_term, flags=re.I)
-                    if match:
-                        pauli_word_r += match.group(1).upper()
-                        assert int(match.group(2)) not in site, 'each Pauli operator should act on different qubit'
-                        site.append(int(match.group(2)))
-                    else:
+                    if not match:
                         raise Exception(
                             'Operators should be defined with a string composed of Pauli operators followed' +
                             'by qubit index on which it act, separated with ",". i.e. "Z0, X1"')
-                    self.__nqubits = max(self.__nqubits, int(match.group(2)) + 1)
+                    pauli_word_r += match[1].upper()
+                    assert int(match[2]) not in site, 'each Pauli operator should act on different qubit'
+
+                    site.append(int(match[2]))
+                    self.__nqubits = max(self.__nqubits, int(match[2]) + 1)
             self.__pauli_words_r.append(pauli_word_r)
             self.__sites.append(site)
             new_pauli_str.append([float(coefficient), pauli_term.upper()])
@@ -271,19 +258,14 @@ class Hamiltonian:
         """
         if self.__update_flag:
             self.__decompose()
-        else:
-            pass
         new_pauli_str = []
         flag_merged = [False for _ in range(self.n_terms)]
         for term_idx_1 in range(self.n_terms):
             if not flag_merged[term_idx_1]:
                 for term_idx_2 in range(term_idx_1 + 1, self.n_terms):
-                    if not flag_merged[term_idx_2]:
-                        if self.pauli_words[term_idx_1] == self.pauli_words[term_idx_2]:
-                            self.__coefficients[term_idx_1] += self.__coefficients[term_idx_2]
-                            flag_merged[term_idx_2] = True
-                    else:
-                        pass
+                    if not flag_merged[term_idx_2] and self.pauli_words[term_idx_1] == self.pauli_words[term_idx_2]:
+                        self.__coefficients[term_idx_1] += self.__coefficients[term_idx_2]
+                        flag_merged[term_idx_2] = True
                 if self.__coefficients[term_idx_1] != 0:
                     new_pauli_str.append([self.__coefficients[term_idx_1], ','.join(self.__terms[term_idx_1])])
         self.__pauli_str = new_pauli_str
@@ -312,8 +294,6 @@ class Hamiltonian:
         """
         if self.__update_flag:
             self.__decompose()
-        else:
-            pass
         return self.coefficients, self.__pauli_words
 
     def construct_h_matrix(self, qubit_num: Optional[int] = None) -> np.ndarray:
@@ -332,7 +312,7 @@ class Hamiltonian:
                 if type(site[0]) is int:
                     qubit_num = max(qubit_num, max(site) + 1)
         else:
-            assert qubit_num >= self.n_qubits, "输入的量子数不小于哈密顿量表达式中所对应的量子比特数"
+            assert qubit_num >= self.n_qubits, "the input number of qubits must be no less than the number of qubits of this Hamiltonian"
         n_qubit = qubit_num
         h_matrix = np.zeros([2 ** n_qubit, 2 ** n_qubit], dtype='complex64')
         spin_ops = SpinOps(n_qubit, use_sparse=True)

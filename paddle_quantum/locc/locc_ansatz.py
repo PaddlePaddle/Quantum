@@ -18,7 +18,6 @@ The source file of the LoccAnsatz class.
 """
 
 import collections
-from matplotlib import docstring
 import paddle
 import paddle_quantum
 from ..gate import H, S, T, X, Y, Z, P, RX, RY, RZ, U3

@@ -71,6 +71,29 @@ def s(state: paddle_quantum.State, qubit_idx: int, dtype: str, backend: paddle_q
     return transformed_state
 
 
+def sdg(state: paddle_quantum.State, qubit_idx: int, dtype: str, backend: paddle_quantum.Backend) -> paddle_quantum.State:
+    r"""Apply an S dagger (inverse S) gate on the input state.
+
+    Args:
+        state: Input state.
+        qubit_idx: Index of the qubit on which the gate is applied.
+        dtype: Type of data.
+        backend: Backend on which the simulation is run.
+
+    Returns:
+          Output state.
+    """
+    gate = [
+        [1, 0],
+        [0, -1j],
+    ]
+    gate = paddle.to_tensor(gate, dtype=dtype)
+    state_data = simulation(state, gate, qubit_idx, state.num_qubits, backend)
+    transformed_state = state.clone()
+    transformed_state.data = state_data
+    return transformed_state
+
+
 def t(state: paddle_quantum.State, qubit_idx: int, dtype: str, backend: paddle_quantum.Backend) -> paddle_quantum.State:
     r"""Apply a T gate on the input state.
 
@@ -93,6 +116,27 @@ def t(state: paddle_quantum.State, qubit_idx: int, dtype: str, backend: paddle_q
     transformed_state.data = state_data
     return transformed_state
 
+def tdg(state: paddle_quantum.State, qubit_idx: int, dtype: str, backend: paddle_quantum.Backend) -> paddle_quantum.State:
+    r"""Apply a T dagger (inverse T) gate on the input state.
+
+    Args:
+        state: Input state.
+        qubit_idx: Index of the qubit on which the gate is applied.
+        dtype: Type of data.
+        backend: Backend on which the simulation is run.
+
+    Returns:
+        Output state.
+    """
+    gate = [
+        [1, 0],
+        [0, math.cos(math.pi/4) - math.sin(math.pi/4) * 1j],
+    ]
+    gate = paddle.to_tensor(gate, dtype=dtype)
+    state_data = simulation(state, gate, qubit_idx, state.num_qubits, backend)
+    transformed_state = state.clone()
+    transformed_state.data = state_data
+    return transformed_state
 
 def x(state: paddle_quantum.State, qubit_idx: int, dtype: str, backend: paddle_quantum.Backend) -> paddle_quantum.State:
     r"""Apply an X gate on the input state.

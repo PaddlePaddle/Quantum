@@ -34,7 +34,7 @@
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.2.1-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.2.2-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -75,7 +75,7 @@
 
 ### 安装 Paddle Quantum
 
-我们推荐通过 `pip` 完成安装,
+我们推荐通过 `pip` 完成安装，
 
 ```bash
 pip install paddle-quantum
@@ -161,6 +161,9 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
     9. [模拟一维海森堡链的自旋动力学](./tutorials/quantum_simulation/SimulateHeisenberg_CN.ipynb)
     10. [基于施密特分解的分布式变分量子本征求解器](./tutorials/quantum_simulation/DistributedVQE_CN.ipynb)
     11. [量子信号处理与量子奇异值变换](./tutorials/quantum_simulation/QSP_and_QSVT_CN.ipynb)
+    12. [利用 qDRIFT 模拟时间演化](./tutorials/quantum_simulation/QDRIFT_CN.ipynb)
+    13. [量子相位处理](./tutorials/quantum_simulation/QPP_CN.ipynb)
+    14. [变分量子精密测量](./tutorials/quantum_simulation/VariationalQM_CN.ipynb)
 
 
 - [机器学习](./tutorials/machine_learning)
@@ -173,6 +176,7 @@ Paddle Quantum（量桨）建立起了人工智能与量子计算的桥梁，为
     7. [变分量子奇异值分解（VQSVD）](./tutorials/machine_learning/VQSVD_CN.ipynb)
     8. [数据编码分析](./tutorials/machine_learning/EncodingAnalysis_CN.ipynb)
     9. [量子神经网络模拟函数](./tutorials/machine_learning/QApproximating_CN.ipynb)
+    10. [变分量子振幅估算](./tutorials/machine_learning/VQAE_CN.ipynb)
 
 - [组合优化](./tutorials/combinatorial_optimization)
     1. [量子近似优化算法（QAOA）](./tutorials/combinatorial_optimization/QAOA_CN.ipynb)

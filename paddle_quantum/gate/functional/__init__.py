@@ -19,7 +19,9 @@ The module that contains the functions of various quantum gates.
 
 from .single_qubit_gate import h
 from .single_qubit_gate import s
+from .single_qubit_gate import sdg
 from .single_qubit_gate import t
+from .single_qubit_gate import tdg
 from .single_qubit_gate import x
 from .single_qubit_gate import y
 from .single_qubit_gate import z

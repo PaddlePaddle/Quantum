@@ -33,6 +33,21 @@ paddle\_quantum.gate.functional.single\_qubit\_gate
    :return: 输出态。
    :rtype: paddle_quantum.State
 
+.. py:function:: sdg(state, qubit_idx, dtype, backend)
+
+    在输入态上作用一个S dagger(逆S)门。
+
+    :param state: 输入态。
+    :type state: paddle_quantum.State
+    :param qubit_idx: 作用在量子比特的编号。
+    :type qubit_idx: int
+    :param dtype: 数据的类型。
+    :type dtype: str
+    :param backend: 运行模拟的后端。
+    :type backend: paddle_quantum.Backend
+    :return: 输出态。
+    :rtype: paddle_quantum.State
+
 .. py:function:: t(state, qubit_idx, dtype, backend)
 
    在输入态上作用一个 T 门。
@@ -47,6 +62,21 @@ paddle\_quantum.gate.functional.single\_qubit\_gate
    :type backend: paddle_quantum.Backend
    :return: 输出态。
    :rtype: paddle_quantum.State
+
+.. py:function:: tdg(state, qubit_idx, dtype, backend)
+
+    在输入态上作用一个T dagger(逆T)门。
+
+    :param state: 输入态。
+    :type state: paddle_quantum.State
+    :param qubit_idx: 作用在量子比特的编号。
+    :type qubit_idx: int
+    :param dtype: 数据的类型。
+    :type dtype: str
+    :param backend: 运行模拟的后端。
+    :type backend: paddle_quantum.Backend
+    :return: 输出态。
+    :rtype: paddle_quantum.State
 
 .. py:function:: x(state, qubit_idx, dtype, backend)
 

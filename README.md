@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.2.1-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.2.2-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -152,6 +152,9 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
     9. [Simulate the Spin Dynamics on a Heisenberg Chain](./tutorials/quantum_simulation/SimulateHeisenberg_EN.ipynb)
     10. [Distributed Variational Quantum Eigensolver Based on Schmidt Decomposition](./tutorials/quantum_simulation/DistributedVQE_EN.ipynb)
     11. [Quantum Signal Processing and Quantum Singular Value Transformation](./tutorials/quantum_simulation/QSP_and_QSVT_EN.ipynb)
+    12. [Hamiltonian Simulation with qDRIFT](./tutorials/quantum_simulation/QDRIFT_EN.ipynb)
+    13. [Quantum Phase Processing](./tutorials/quantum_simulation/QPP_EN.ipynb)
+    14. [Variational Quantum Metrology](./tutorials/quantum_simulation/VariationalQM_EN.ipynb)
 
 - [Machine Learning](./tutorials/machine_learning)
     1. [Encoding Classical Data into Quantum States](./tutorials/machine_learning/DataEncoding_EN.ipynb)
@@ -163,6 +166,7 @@ We provide tutorials covering quantum simulation, machine learning, combinatoria
     7. [Variational Quantum Singular Value Decomposition (VQSVD)](./tutorials/machine_learning/VQSVD_EN.ipynb)
     8. [Data Encoding Analysis](./tutorials/machine_learning/EncodingAnalysis_EN.ipynb)
     9. [Quantum Neural Network Approximating Functions](./tutorials/machine_learning/QApproximating_EN.ipynb)
+    10. [Variational quantum amplitude estimation](./tutorials/machine_learning/VQAE_EN.ipynb)
 
 - [Combinatorial Optimization](./tutorials/combinatorial_optimization)
     1. [Quantum Approximation Optimization Algorithm (QAOA)](./tutorials/combinatorial_optimization/QAOA_EN.ipynb)

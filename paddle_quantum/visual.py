@@ -29,6 +29,7 @@ from typing import Optional, Union, Tuple, List
 import os
 
 
+
 def plot_state_in_bloch_sphere(
     state: List[paddle_quantum.State],
     show_arrow: Optional[bool] = False,
@@ -832,3 +833,4 @@ def __input_args_dtype_check(show_arrow: bool, save_gif: bool, filename: str, vi
             ), 'the type of "view_angle[0]" and "view_angle[1]" should be "int".'
     if view_dist is not None:
         assert type(view_dist) == int, 'the type of "view_dist" should be "int".'
+

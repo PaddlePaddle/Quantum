@@ -19,15 +19,16 @@ The source file of the class for the special quantum operator.
 
 import numpy as np
 import paddle
-import paddle_quantum
+
 import warnings
+import paddle_quantum as pq
 from ..base import Operator
-from typing import Union, Iterable
-from ..intrinsic import _format_qubits_idx, _get_float_dtype
 from ..backend import Backend
 from ..backend import state_vector, density_matrix, unitary_matrix
-from ..linalg import abs_norm
+from ..intrinsic import _format_qubits_idx, _get_float_dtype
+from ..state import State
 from ..qinfo import partial_trace_discontiguous
+from typing import Union, Iterable
 
 
 class ResetState(Operator):
@@ -81,19 +82,19 @@ class Collapse(Operator):
                  measure_basis: Union[Iterable[paddle.Tensor], str] = 'z'):
         super().__init__()
         self.measure_basis = []
-        
+
         # the qubit indices must be sorted
         self.qubits_idx = sorted(_format_qubits_idx(qubits_idx, num_qubits))
-            
+
         self.desired_result = desired_result
         self.if_print = if_print
-        
-        if measure_basis == 'z' or measure_basis == 'computational_basis':
+
+        if measure_basis in ['z', 'computational_basis']:
             self.measure_basis = 'z'
         else:
             raise NotImplementedError
         
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
+    def forward(self, state: State) -> State:
         r"""Compute the collapse of the input state.
 
         Args:
@@ -102,70 +103,71 @@ class Collapse(Operator):
         Returns:
             The collapsed quantum state.
         """
-        complex_dtype = paddle_quantum.get_dtype()
+        complex_dtype = pq.get_dtype()
         float_dtype = _get_float_dtype(complex_dtype)    
-        
-        num_qubits = state.num_qubits
+
         backend = state.backend
         num_acted_qubits = len(self.qubits_idx)
         desired_result = self.desired_result
         desired_result = int(desired_result, 2) if isinstance(desired_result, str) else desired_result 
         
+        def projector_gen() -> paddle.Tensor:
+            proj = paddle.zeros([2 ** num_acted_qubits, 2 ** num_acted_qubits])
+            proj[desired_result, desired_result] += 1
+            proj = proj.cast(complex_dtype)
+            return proj
+        
+        num_qubits = state.num_qubits
         # when backend is unitary
         if backend == Backend.UnitaryMatrix:
             assert isinstance(desired_result, int), "desired_result cannot be None in unitary_matrix backend"
             warnings.warn(
                 "the unitary_matrix of a circuit containing Collapse operator is no longer a unitary"
             )
-            
-            # determine local projector
-            local_projector = paddle.zeros([2 ** num_acted_qubits, 2 ** num_acted_qubits])
-            local_projector[desired_result, desired_result] += 1
-            local_projector = local_projector.cast(complex_dtype)
-            
+
+            local_projector = projector_gen()
+
             projected_state = unitary_matrix.unitary_transformation(state.data, local_projector, self.qubits_idx, num_qubits)
-            return paddle_quantum.State(projected_state, backend=Backend.UnitaryMatrix)
-        
+            return State(projected_state, backend=Backend.UnitaryMatrix)
+
         # retrieve prob_amplitude
-        if backend == Backend.StateVector:
-            rho = state.ket @ state.bra
-        else:
-            rho = state.data
+        rho = state.ket @ state.bra if backend == Backend.StateVector else state.data
         rho = partial_trace_discontiguous(rho, self.qubits_idx)
         prob_amplitude = paddle.zeros([2 ** num_acted_qubits], dtype=float_dtype)
-        for idx in range(0, 2 ** num_acted_qubits):
+        for idx in range(2 ** num_acted_qubits):
             prob_amplitude[idx] += rho[idx, idx].real()
         prob_amplitude /= paddle.sum(prob_amplitude)
-        
+
         if desired_result is None:
             # randomly choose desired_result
-            desired_result = np.random.choice([i for i in range(2 ** num_acted_qubits)], p=prob_amplitude)
+            desired_result = np.random.choice(list(range(2**num_acted_qubits)), p=prob_amplitude)
+
         else:
+            desired_result_str = bin(desired_result)[2:]
             # check whether the state can collapse to desired_result
-            assert prob_amplitude[desired_result] > 1e-20, ("it is infeasible for the state in qubits " + 
-                                                           f"{self.qubits_idx} to collapse to state |{desired_result_str}>")
-            
+            assert prob_amplitude[desired_result] > 1e-20, \
+                f"it is infeasible for the state in qubits {self.qubits_idx} to collapse to state |{bin(desired_result)[2:]}>"
+
+
         # retrieve the binary version of desired result
         desired_result_str = bin(desired_result)[2:]
         assert num_acted_qubits >= len(desired_result_str), "the desired_result is too large"
         for _ in range(num_acted_qubits - len(desired_result_str)):
-            desired_result_str = '0' + desired_result_str
-            
+            desired_result_str = f'0{desired_result_str}'
+
         # whether print the collapsed result
         if self.if_print:
             # retrieve binary representation
             prob = prob_amplitude[desired_result].item()
             print(f"qubits {self.qubits_idx} collapse to the state |{desired_result_str}> with probability {prob}")
-            
-        # determine projector according to the desired result
-        local_projector = paddle.zeros([2 ** num_acted_qubits, 2 ** num_acted_qubits])
-        local_projector[desired_result, desired_result] += 1
-        local_projector = local_projector.cast(complex_dtype)
-        
+
+        local_projector = projector_gen()
+
         # apply the local projector and normalize it
         if backend == Backend.StateVector:
             projected_state = state_vector.unitary_transformation(state.data, local_projector, self.qubits_idx, num_qubits)
-            return paddle_quantum.State(projected_state / (abs_norm(projected_state) + 0j))
         else:
             projected_state = density_matrix.unitary_transformation(state.data, local_projector, self.qubits_idx, num_qubits)
-            return paddle_quantum.State(projected_state / paddle.trace(projected_state))
+        state = State(projected_state)
+        state.normalize()
+        return state

@@ -24,6 +24,29 @@ paddle\_quantum.gate.base
 
       生成量子门的历史记录
 
+   .. py:method:: set_gate_info(**kwargs)
+
+      设置 `gate_info` 的接口
+
+      :param kwargs: 用于设置 `gate_info` 的参数。
+      :type kwargs: Any
+
+   .. py:method:: display_in_circuit(ax, x)
+
+      画出量子电路图，在 `Circuit` 类中被调用。
+
+      :param ax: ``matplotlib.axes.Axes`` 的实例.
+      :type ax: matplotlib.axes.Axes
+      :param x: 开始的水平位置。
+      :type x: float
+
+      :return: 占用的总宽度。
+      :rtype: float
+
+   .. note::
+
+      使用者可以覆写此函数，从而自定义显示方式。
+
 .. py:class:: ParamGate
 
    基类：:py:class:`paddle_quantum.gate.base.Gate`

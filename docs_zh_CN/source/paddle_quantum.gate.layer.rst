@@ -140,7 +140,7 @@ paddle\_quantum.gate.layer
    :param depth: 层数，默认为 ``1``。
    :type depth: int, optional
 
-.. py:class:: QAOALayer(Gate)
+.. py:class:: QAOALayerWeighted(Gate)
 
    基类：:py:class:`paddle_quantum.gate.base.Gate`
 

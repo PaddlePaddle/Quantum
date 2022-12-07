@@ -10,7 +10,7 @@ paddle\_quantum.qsvt.qsp\_utils
    :param degree: 多项式的度
    :type degree: int
    :param odd: 多项式的奇偶性，输入 `True` 则为奇函数， `False` 则为偶函数
-   :type odd: bool
+   :type od: bool
 
    :return: 一个随机生成的多项式
    :rtype: Polynomial

@@ -17,7 +17,8 @@ r"""
 The module of the quantum state.
 """
 
-from .state import State
+from .state import State, is_state_vector, is_density_matrix
+from .state import _type_fetch, _type_transform
 from .common import zero_state
 from .common import computational_basis
 from .common import bell_state

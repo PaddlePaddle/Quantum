@@ -28,7 +28,6 @@ from .hamiltonian import Hamiltonian
 from . import ansatz
 from . import channel
 from . import gate
-from . import linalg
 from . import locc
 from . import loss
 from . import mbqc
@@ -41,9 +40,10 @@ from . import gradtool
 from . import hamiltonian
 from . import linalg
 from . import qinfo
+from . import qml
 from . import shadow
 from . import trotter
 from . import visual
 
 name = 'paddle_quantum'
-__version__ = '2.2.1'
+__version__ = '2.2.2'

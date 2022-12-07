@@ -28,10 +28,6 @@ paddle\_quantum.ansatz.circuit
 
          展平后的电路参数梯度。
 
-      .. py:property:: depth()
-
-         电路深度
-
       .. py:method:: update_param(theta, idx=None)
 
          替换单层或所有的电路参数。
@@ -98,6 +94,27 @@ paddle\_quantum.ansatz.circuit
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
+      .. py:method:: sdg(qubits_idx='full', num_qubits=None, depth=1)
+
+         添加单量子比特 S dagger (逆S)门。
+
+         其矩阵形式为：
+
+         .. math::
+
+           S ^\dagger =
+              \begin{bmatrix}
+                  1 & 0\ \
+                  0 & -i
+              \end{bmatrix}
+
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :type qubits_idx: Union[Iterable[int], int, str], optional
+         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
+         :type num_qubits: int, optional
+         :param depth: 层数，默认为 ``1``。
+         :type depth: int, optional
+
       .. py:method:: t(qubits_idx='full', num_qubits=None, depth=1)
 
          添加单量子比特 T 门。
@@ -118,7 +135,28 @@ paddle\_quantum.ansatz.circuit
          :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
-      
+
+      .. py:method:: tdg(qubits_idx='full', num_qubits=None, depth=1)
+
+         添加单量子比特 T dagger (逆T)门。
+
+         其矩阵形式为：
+
+         .. math::
+
+           T ^\dagger =
+              \begin{bmatrix}
+                  1 & 0\ \
+                  0 & e^\frac{i\pi}{4}
+              \end{bmatrix}
+
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :type qubits_idx: Union[Iterable[int], int, str], optional
+         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
+         :type num_qubits: int, optional
+         :param depth: 层数，默认为 ``1``。
+         :type depth: int, optional
+
       .. py:method:: x(qubits_idx='full', num_qubits=None, depth=1)
 
          添加单量子比特 X 门。
@@ -767,7 +805,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: oracle(oracle, qubits_idx, num_qubits=None, depth=1)
+      .. py:method:: oracle(oracle, qubits_idx, num_qubits=None, depth=1, gate_name='0', latex_name=None, plot_width=None)
 
          添加一个 oracle 门。
 
@@ -781,8 +819,12 @@ paddle\_quantum.ansatz.circuit
          :type depth: int, optional
          :param gate_name: oracle 的名字，默认为 ``O``。
          :type gate_name: str, optional
+         :param latex_name: oracle 的Latex名字，默认为 None, 此时用 gate_name。
+         :type latex_name: str, optional
+         :param plot_width: 电路图中此门的宽度，默认为None，此时与门名称成比例。
+         :type gate_name: float, optional
       
-      .. py:method:: control_oracle(oracle, qubits_idx, num_qubits=None, depth=1)
+      .. py:method:: control_oracle(oracle, qubits_idx, num_qubits=None, depth=1, gate_name='0', latex_name=None, plot_width=None)
 
          添加一个受控 oracle 门。
 
@@ -796,6 +838,10 @@ paddle\_quantum.ansatz.circuit
          :type depth: int, optional
          :param gate_name: oracle 的名字，默认为 ``cO``。
          :type gate_name: str, optional
+         :param latex_name: oracle 的Latex名字，默认为 None, 此时用 gate_name。
+         :type latex_name: str, optional
+         :param plot_width: 电路图中此门的宽度，默认为None，此时与门名称成比例。
+         :type gate_name: float, optional
 
       .. py:method:: collapse(qubits_idx='full', num_qubits=None, desired_result=None, if_print=False, measure_basis='z')
 
@@ -936,13 +982,13 @@ paddle\_quantum.ansatz.circuit
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
       
-      .. py:method:: generalized_amplitude_damping(gamma, qubits_idx='full', num_qubits=None)
+      .. py:method:: generalized_amplitude_damping(gamma, prob, qubits_idx='full', num_qubits=None)
 
          添加广义振幅阻尼信道。
 
-         :param gamma: 减振概率。
+         :param gamma: 减振概率，其值应该在 :math:`[0, 1]` 区间内。
          :type prob: Union[paddle.Tensor, float]
-         :param prob: 激发概率。
+         :param prob: 激发概率，其值应该在 :math:`[0, 1]` 区间内。
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
@@ -1006,6 +1052,17 @@ paddle\_quantum.ansatz.circuit
         :param num_qubits: 总的量子比特个数，默认为 ``None``。
         :type num_qubits: int, optional
 
+      .. py:method:: mixed_unitary_channel(num_unitary, qubits_idx='full', num_qubits=None)
+
+         添加混合酉矩阵信道
+
+        :param num_unitary: 用于构成信道的酉矩阵的数量。
+        :type num_unitary: Union[paddle.Tensor, Iterable[int]]
+        :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
+        :type qubits_idx: Union[Iterable[int], int, str], optional
+        :param num_qubits: 总的量子比特个数，默认为 ``None``。
+        :type num_qubits: int, optional      
+
       .. py:method:: kraus_repr(kraus_oper, qubits_idx, num_qubits=None)
 
          添加一个 Kraus 表示的自定义量子信道。
@@ -1040,3 +1097,34 @@ paddle\_quantum.ansatz.circuit
 
          :return: 每个比特上的量子门的插入历史
          :rtype: List[List[Tuple[Dict[str, Union[str, List[int], paddle.Tensor]], int]]]
+
+      .. py:method:: plot(save_path, dpi=100, show=True, output=False, scale=1.0, tex=False)
+
+         画出量子电路图
+
+         :param save_path: 图像保存的路径，默认为 ``None``。
+         :type save_path: str, optional
+         :param dpi: 每英寸像素数，这里指分辨率, 默认为 `100`。
+         :type dpi: int, optional
+         :param show: 是否执行 ``plt.show()``, 默认为 ``True``。
+         :type show: bool, optional
+         :param output: 是否返回 ``matplotlib.figure.Figure`` 实例，默认为 ``False``。
+         :type output: bool, optional
+         :param scale: ``figure`` 的 ``scale`` 系数，默认为 `1.0`。
+         :type scale: float, optional
+         :param tex: 一个布尔变量，用于控制是否使用 TeX 字体，默认为 ``False``。
+         :type tex: bool, optional
+
+         :return: 根据 ``output`` 参数返回 ``matplotlib.figure.Figure`` 实例或 ``None``。
+         :rtype: Union[None, matplotlib.figure.Figure]
+
+      .. note:: 
+         
+         使用 ``plt.show()`` 或许会导致一些问题，但是在保存图片时不会发生。如果电路太深可能会有一些图形无法显示。如果设置 ``tex = True`` 则需要在你的系统上安装 TeX 及其相关的依赖包。更多细节参考 https://matplotlib.org/stable/gallery/text_labels_and_annotations/tex_demo.html
+
+      .. py:method:: extend(cir)
+
+         量子电路扩展
+
+         :param cir: 量子电路。
+         :type cir: Circuit

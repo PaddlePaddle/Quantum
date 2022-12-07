@@ -26,7 +26,9 @@ from .base import Gate, ParamGate
 from ..backend import Backend
 from ..intrinsic import _format_qubits_idx, _get_float_dtype
 from typing import Optional, Union, Iterable
-
+from .functional.visual import (_cnot_display, _cswap_display, _tofolli_display, _swap_display,
+                                _cx_like_display, _crx_like_display, _oracle_like_display, _rxx_like_display)
+import matplotlib
 
 class CNOT(Gate):
     r"""A collection of CNOT gates.
@@ -54,7 +56,11 @@ class CNOT(Gate):
     def __init__(self, qubits_idx: Optional[Union[Iterable, str]] = 'cycle', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits=2)
-        self.gate_name = 'cnot'
+        self.gate_info = {
+            'gatename': 'cnot',
+            'texname': r'$CNOT$',
+            'plot_width': 0.2,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -68,6 +74,10 @@ class CNOT(Gate):
             for qubits_idx in self.qubits_idx:
                 state = functional.cnot(state, qubits_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cnot_display(self, ax, x,)
+        
 
 
 class CX(Gate):
@@ -82,7 +92,11 @@ class CX(Gate):
                  num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits=2)
-        self.gate_name = 'cnot'
+        self.gate_info = {
+            'gatename': 'cnot',
+            'texname': r'$CNOT$',
+            'plot_width': 0.2,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -96,6 +110,10 @@ class CX(Gate):
             for qubits_idx in self.qubits_idx:
                 state = functional.cx(state, qubits_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cnot_display(self, ax, x,)
+
 
 
 class CY(Gate):
@@ -125,7 +143,11 @@ class CY(Gate):
                  num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits=2)
-        self.gate_name = 'cy'
+        self.gate_info = {
+            'gatename': 'cy',
+            'texname': r'$Y$',
+            'plot_width': 0.4,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -139,6 +161,9 @@ class CY(Gate):
             for qubits_idx in self.qubits_idx:
                 state = functional.cy(state, qubits_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cx_like_display(self, ax, x,)
 
 
 class CZ(Gate):
@@ -168,7 +193,11 @@ class CZ(Gate):
                  num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits=2)
-        self.gate_name = 'cz'
+        self.gate_info = {
+            'gatename': 'cz',
+            'texname': r'$Z$',
+            'plot_width': 0.4,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -182,6 +211,9 @@ class CZ(Gate):
             for qubits_idx in self.qubits_idx:
                 state = functional.cz(state, qubits_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cx_like_display(self, ax, x)
 
 
 class SWAP(Gate):
@@ -210,7 +242,11 @@ class SWAP(Gate):
                  num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits=2)
-        self.gate_name = 'swap'
+        self.gate_info = {
+            'gatename': 'swap',
+            'texname': r'$SWAP$',
+            'plot_width': 0.2,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -225,6 +261,9 @@ class SWAP(Gate):
                 state = functional.swap(state, qubits_idx, self.dtype, self.backend)
         return state
 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _swap_display(self, ax, x,)
+        
 
 class CP(ParamGate):
     r"""A collection of controlled P gates.
@@ -260,7 +299,11 @@ class CP(ParamGate):
         
         param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'cp'
+        self.gate_info = {
+            'gatename': 'cp',
+            'texname': r'$P$',
+            'plot_width': 0.9,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -274,6 +317,9 @@ class CP(ParamGate):
                     state = functional.cp(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
+
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _crx_like_display(self, ax, x)
 
 
 class CRX(ParamGate):
@@ -314,7 +360,11 @@ class CRX(ParamGate):
         
         param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'crx'
+        self.gate_info = {
+            'gatename': 'crx',
+            'texname': r'$R_{x}$',
+            'plot_width': 0.9,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -344,6 +394,9 @@ class CRX(ParamGate):
                     state = functional.crx(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
+
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _crx_like_display(self, ax, x)
 
 
 class CRY(ParamGate):
@@ -384,7 +437,11 @@ class CRY(ParamGate):
         
         param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'cry'
+        self.gate_info = {
+            'gatename': 'cry',
+            'texname': r'$R_{y}$',
+            'plot_width': 0.9,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -414,6 +471,9 @@ class CRY(ParamGate):
                     state = functional.cry(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _crx_like_display(self, ax, x,)
 
 
 class CRZ(ParamGate):
@@ -454,7 +514,11 @@ class CRZ(ParamGate):
         
         param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'crz'
+        self.gate_info = {
+            'gatename': 'crz',
+            'texname': r'$R_{z}$',
+            'plot_width': 0.9,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -484,6 +548,9 @@ class CRZ(ParamGate):
                     state = functional.crz(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _crx_like_display(self, ax, x)
 
 
 class CU(ParamGate):
@@ -527,7 +594,11 @@ class CU(ParamGate):
         else:
             param_shape = [depth, len(self.qubits_idx), 3]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'cu'
+        self.gate_info = {
+            'gatename': 'cu',
+            'texname': r'$U$',
+            'plot_width': 1.65,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -557,6 +628,9 @@ class CU(ParamGate):
                     state = functional.cu(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _crx_like_display(self, ax, x)
 
 
 class RXX(ParamGate):
@@ -596,7 +670,11 @@ class RXX(ParamGate):
         
         param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'rxx'
+        self.gate_info = {
+            'gatename': 'rxx',
+            'texname': r'$R_{xx}$',
+            'plot_width': 1.0,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -610,6 +688,9 @@ class RXX(ParamGate):
                     state = functional.rxx(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
+
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _rxx_like_display(self, ax, x)
 
 
 class RYY(ParamGate):
@@ -649,7 +730,11 @@ class RYY(ParamGate):
         
         param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'ryy'
+        self.gate_info = {
+            'gatename': 'ryy',
+            'texname': r'$R_{yy}$',
+            'plot_width': 1.0,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -663,7 +748,9 @@ class RYY(ParamGate):
                     state = functional.ryy(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
-
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _rxx_like_display(self, ax, x)
 
 class RZZ(ParamGate):
     r"""A collection of RZZ gates.
@@ -702,7 +789,11 @@ class RZZ(ParamGate):
         
         param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'rzz'
+        self.gate_info = {
+            'gatename': 'rzz',
+            'texname': r'$R_{zz}$',
+            'plot_width': 1.0,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -717,6 +808,8 @@ class RZZ(ParamGate):
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _rxx_like_display(self, ax, x)
 
 class MS(Gate):
     r"""A collection of Mølmer-Sørensen (MS) gates for trapped ion devices.
@@ -743,7 +836,11 @@ class MS(Gate):
     def __init__(self, qubits_idx: Optional[Union[Iterable, str]] = 'cycle', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits=2)
-        self.gate_name = 'ms'
+        self.gate_info = {
+            'gatename': 'ms',
+            'texname': r'$MS$',
+            'plot_width': 0.6,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -753,6 +850,8 @@ class MS(Gate):
                 state = functional.ms(state, qubits_idx, self.dtype, self.backend)
         return state
 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _oracle_like_display(self, ax, x)
 
 class CSWAP(Gate):
     r"""A collection of CSWAP (Fredkin) gates.
@@ -783,7 +882,11 @@ class CSWAP(Gate):
     def __init__(self, qubits_idx: Optional[Union[Iterable, str]] = 'cycle', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits=3)
-        self.gate_name = 'cswap'
+        self.gate_info = {
+            'gatename': 'cswap',
+            'texname': r'$CSWAP$',
+            'plot_width': 0.2,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -798,6 +901,9 @@ class CSWAP(Gate):
                 state = functional.cswap(state, qubits_idx, self.dtype, self.backend)
         return state
 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cswap_display(self, ax, x)
+        
 
 class Toffoli(Gate):
     r"""A collection of Toffoli gates.
@@ -827,7 +933,11 @@ class Toffoli(Gate):
     def __init__(self, qubits_idx: Optional[Union[Iterable, str]] = 'cycle', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
         super().__init__(depth)
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits=3)
-        self.gate_name = 'ccx'
+        self.gate_info = {
+            'gatename': 'ccx',
+            'texname': r'$Toffoli$',
+            'plot_width': 0.2,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -842,6 +952,9 @@ class Toffoli(Gate):
                 state = functional.toffoli(state, qubits_idx, self.dtype, self.backend)
         return state
 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _tofolli_display(self, ax, x,)
+        
 
 class UniversalTwoQubits(ParamGate):
     r"""A collection of universal two-qubit gates. One of such a gate requires 15 parameters.
@@ -869,7 +982,11 @@ class UniversalTwoQubits(ParamGate):
         else:
            param_shape = [depth, len(self.qubits_idx), 15]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'uni2'
+        self.gate_info = {
+            'gatename': 'uni2',
+            'texname': r'$U$',
+            'plot_width': 0.6,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -884,6 +1001,9 @@ class UniversalTwoQubits(ParamGate):
                     state = functional.universal_two_qubits(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _oracle_like_display(self, ax, x)
 
 
 class UniversalThreeQubits(ParamGate):
@@ -912,7 +1032,11 @@ class UniversalThreeQubits(ParamGate):
         else:
            param_shape = [depth, len(self.qubits_idx), 81]
         self.theta_generation(param, param_shape)
-        self.gate_name = 'uni3'
+        self.gate_info = {
+            'gatename': 'uni3',
+            'texname': r'$U$',
+            'plot_width': 0.6,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
@@ -927,3 +1051,6 @@ class UniversalThreeQubits(ParamGate):
                     state = functional.universal_three_qubits(
                         state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
         return state
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _oracle_like_display(self, ax, x)

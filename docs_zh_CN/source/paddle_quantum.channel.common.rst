@@ -157,10 +157,10 @@ paddle\_quantum.channel.common
 
    .. math::
 
-      E_0 = \sqrt{1-p} I,
-      E_1 = \sqrt{p/3} X,
-      E_2 = \sqrt{p/3} Y,
-      E_3 = \sqrt{p/3} Z.
+      E_0 = \sqrt{1-3p/4} I,
+      E_1 = \sqrt{p/4} X,
+      E_2 = \sqrt{p/4} Y,
+      E_3 = \sqrt{p/4} Z.
 
    :param prob: 该信道的参数，其值应该在 :math:`[0, 1]` 区间内。
    :type prob: Union[paddle.Tensor, float]
@@ -168,6 +168,11 @@ paddle\_quantum.channel.common
    :type qubits_idx: Union[Iterable[int], int, str], optional
    :param num_qubits: 总的量子比特个数，默认为 ``None``。
    :type num_qubits: int, optional
+
+   .. note::
+      该功能的实现逻辑已更新。
+      当前版本请参考 M.A.Nielsen and I.L.Chuang 所著 Quantum Computation and Quantum Information 第10版中的 (8.102) 式。
+      参考文献: Nielsen, M., & Chuang, I. (2010). Quantum Computation and Quantum Information: 10th Anniversary Edition. Cambridge: Cambridge University Press. doi:10.1017/CBO9780511976667
 
 .. py:class:: PauliChannel(prob, qubits_idx='full', num_qubits)
 
@@ -249,3 +254,16 @@ paddle\_quantum.channel.common
    .. note::
 
       时间常数必须满足 :math:`T_2 \le T_1`，见参考文献 https://arxiv.org/abs/2101.02109。
+
+.. py:class:: MixedUnitaryChannel(num_unitary, qubits_idx='full', num_qubits=None)
+
+   基类：:py:class:`paddle_quantum.channel.base.Channel`
+
+   混合酉矩阵信道。
+
+   :param num_unitary: 用于构成信道的酉矩阵数量。
+   :type num_unitary: int
+   :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+   :type qubits_idx: Union[Iterable[int], int, str], optional
+   :param num_qubits: 总的量子比特个数，默认为 ``None``。
+   :type num_qubits: int, optional

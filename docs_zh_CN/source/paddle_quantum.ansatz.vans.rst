@@ -3,6 +3,21 @@ paddle\_quantum.ansatz.vans
 
 可变结构电路的功能实现。
 
+.. py:function:: cir_decompose(cir)
+
+   将电路中的 Layer 分解成量子门, 如果需要的话可以把所有参数门的输入转为可训练参数
+
+   :param cir: 待分解电路
+   :type cir: Circuit
+   :param trainable: 是否将分解后的参数量子门输入转为参数baidu
+   :type trainable: bool, optional
+   :return: 分解后的电路
+   :rtype: Circuit
+
+   .. note::
+
+      该量子电路稳定支持原生门，不支持 oracle 等其他自定义量子门。
+
 .. py:class:: Inserter
 
    基类: :py:class:`object`
@@ -38,21 +53,6 @@ paddle\_quantum.ansatz.vans
       :type zero_init_state: bool, optional
       :return: 简化后的电路。
       :rtype: Circuit
-
-.. py:function:: cir_decompose(cir)
-
-   将电路中的 Layer 分解成量子门, 如果需要的话可以把所有参数门的输入转为可训练参数
-
-   :param cir: 待分解电路
-   :type cir: Circuit
-   :param trainable: 是否将分解后的参数量子门输入转为参数
-   :type trainable: bool, optional
-   :return: 分解后的电路
-   :rtype: Circuit
-
-   .. note::
-
-      该量子电路稳定支持原生门，不支持 oracle 等其他自定义量子门。
 
 .. py:class:: VAns(n, loss_func, *loss_func_args, epsilon=0.1, insert_rate=2, iter=100, iter_out=10, LR =0.1, threshold=0.002, accept_wall=100, zero_init_state=True)
 

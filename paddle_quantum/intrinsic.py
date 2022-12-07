@@ -21,12 +21,16 @@ import numpy as np
 import paddle
 from typing import Union, Iterable, List
 
+from .base import get_dtype
 
-def _zero(dtype):
+
+def _zero(dtype = None):
+    dtype = get_dtype() if dtype is None else dtype
     return paddle.to_tensor(0, dtype=dtype)
 
 
-def _one(dtype):
+def _one(dtype = None):
+    dtype = get_dtype() if dtype is None else dtype
     return paddle.to_tensor(1, dtype=dtype)
 
 
@@ -65,6 +69,7 @@ def _format_qubits_idx(
             raise TypeError(
                 "The qubits_idx should be iterable such as list, tuple, and so on whose elements are all integers."
                 "And the length of acted_qubits should be consistent with the corresponding gate."
+                f"\n    Received qubits_idx type {type(qubits_idx)}, qubits # {len(qubits_idx)}, gate dimension {num_acted_qubits}"
             )
     return qubits_idx
 

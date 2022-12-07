@@ -20,7 +20,7 @@ The source file of the Circuit class.
 import warnings
 import paddle
 from .container import Sequential
-from ..gate import Gate, H, S, T, X, Y, Z, P, RX, RY, RZ, U3
+from ..gate import Gate, H, S, Sdg, T, Tdg, X, Y, Z, P, RX, RY, RZ, U3
 from ..gate import CNOT, CX, CY, CZ, SWAP
 from ..gate import CP, CRX, CRY, CRZ, CU, RXX, RYY, RZZ
 from ..gate import MS, CSWAP, Toffoli
@@ -31,7 +31,7 @@ from ..gate import RealBlockLayer, RealEntangledLayer, ComplexBlockLayer, Comple
 from ..gate import QAOALayer
 from ..gate import AmplitudeEncoding
 from ..channel import BitFlip, PhaseFlip, BitPhaseFlip, AmplitudeDamping, GeneralizedAmplitudeDamping, PhaseDamping
-from ..channel import Depolarizing, PauliChannel, ResetChannel, ThermalRelaxation, KrausRepr
+from ..channel import Depolarizing, PauliChannel, ResetChannel, ThermalRelaxation, MixedUnitaryChannel, KrausRepr
 from ..intrinsic import _get_float_dtype
 from ..state import zero_state
 from ..operator import Collapse
@@ -39,6 +39,9 @@ from typing import Union, Iterable, Optional, Dict, List, Tuple
 from paddle_quantum import State, get_backend, get_dtype, Backend
 from math import pi
 import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+from ..gate.functional.visual import _circuit_plot
 
 
 class Circuit(Sequential):
@@ -47,14 +50,14 @@ class Circuit(Sequential):
     Args:
         num_qubits: Number of qubits. Defaults to None.
     """
-    
+
     def __init__(self, num_qubits: Optional[int] = None):
         super().__init__()
         self.__num_qubits = num_qubits
-        
+
         # whether the circuit is a dynamic quantum circuit
-        self.__isdynamic = True if num_qubits is None else False
-        
+        self.__isdynamic = num_qubits is None
+
         # alias for ccx
         self.toffoli = self.ccx
 
@@ -69,20 +72,20 @@ class Circuit(Sequential):
         r"""Whether the circuit is dynamic
         """
         return self.__dynamic
-    
+
     @num_qubits.setter
     def num_qubits(self, value: int) -> None:
         assert isinstance(value, int)
         self.__num_qubits = value
-    
-    @property    
+
+    @property
     def param(self) -> paddle.Tensor:
         r"""Flattened parameters in the circuit.
         """
         if len(self.parameters()) == 0:
             return []
         return paddle.concat([paddle.flatten(param) for param in self.parameters()])
-    
+
     @property
     def grad(self) -> np.ndarray:
         r"""Gradients with respect to the flattened parameters.
@@ -93,14 +96,7 @@ class Circuit(Sequential):
                 ' otherwise check where the gradient chain is broken'
             grad_list.append(paddle.flatten(param.grad))
         return paddle.concat(grad_list).numpy()
-    
-    @property
-    def depth(self) -> int:
-        r"""(current) Depth of this Circuit
-        """
-        qubit_depth = [len(qubit_gates) for qubit_gates in self.qubit_history]
-        return max(qubit_depth)
-    
+
     def update_param(self, theta: Union[paddle.Tensor, np.ndarray, float], idx: int = None) -> None:
         r"""Replace parameters of all/one layer(s) by ``theta``.
 
@@ -111,14 +107,15 @@ class Circuit(Sequential):
         if not isinstance(theta, paddle.Tensor):
             theta = paddle.to_tensor(theta, dtype='float32')
         theta = paddle.flatten(theta)
-        
+
         backend_dtype = _get_float_dtype(get_dtype())
         if backend_dtype != 'float32':
             warnings.warn(
                 f"\ndtype of parameters will be float32 instead of {backend_dtype}", UserWarning)
-        
+
         if idx is None:
-            assert self.param.shape == theta.shape, "the shape of input parameters is not correct"
+            assert self.param.shape == theta.shape, \
+                f"the shape of input parameters is not correct: expect {self.param.shape}, received {theta.shape}"
             for layer in self.sublayers():
                 for name, _ in layer.named_parameters():
                     param = getattr(layer, name)
@@ -135,11 +132,12 @@ class Circuit(Sequential):
                         return
                     theta = theta[num_param:]
         elif isinstance(idx, int):
-            assert idx < len(self.sublayers()), "the index is out of range, expect below " + str(len(self.sublayers()))
+            assert idx < len(self.sublayers()), f"the index is out of range, expect below {len(self.sublayers())}"
+
             layer = self.sublayers()[idx]
             assert theta.shape == paddle.concat([paddle.flatten(param) for param in layer.parameters()]).shape, \
-                "the shape of input parameters is not correct,"
-                
+                    "the shape of input parameters is not correct,"
+
             for name, _ in layer.named_parameters():
                 param = getattr(layer, name)
                 num_param = int(paddle.numel(param))
@@ -156,20 +154,20 @@ class Circuit(Sequential):
                 theta = theta[num_param:]
         else:
             raise ValueError("idx must be an integer or None")
-        
+
     def transfer_static(self) -> None:
-        r""" set ``stop_gradient`` of all parameters of the circuit as ``True``
-        
+        r"""
+        set ``stop_gradient`` of all parameters of the circuit as ``True``
         """
         for layer in self.sublayers():
             for name, _ in layer.named_parameters():
                 param = getattr(layer, name)
                 param.stop_gradient = True 
                 setattr(layer, 'theta', param)
-                
+
     def randomize_param(self, low: float = 0, high: Optional[float] = 2 * pi) -> None:
         r"""Randomize parameters of the circuit in a range from low to high.
-        
+
         Args:
             low: Lower bound.
             high: Upper bound.
@@ -187,7 +185,7 @@ class Circuit(Sequential):
 
     def __num_qubits_update(self, qubits_idx: Union[Iterable[int], int, str]) -> None:
         r"""Update ``self.num_qubits`` according to ``qubits_idx``, or report error.
-        
+
         Args:
             qubits_idx: Input qubit indices of a quantum gate.
         """
@@ -256,6 +254,30 @@ class Circuit(Sequential):
         self.append(
             S(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
 
+    def sdg(
+            self, qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
+    ) -> None:
+        r"""Add single-qubit S dagger (S inverse) gates.
+
+        The matrix form of such a gate is:
+
+        .. math::
+
+            S^\dagger =
+                \begin{bmatrix}
+                    1&0\\
+                    0&-i
+                \end{bmatrix}
+
+        Args:
+            qubits_idx: Indices of the qubits on which the gates are applied. Defaults to ``'full'``.
+            num_qubits: Total number of qubits. Defaults to ``None``.
+            depth: Number of layers. Defaults to ``1``.
+        """
+        self.__num_qubits_update(qubits_idx)
+        self.append(
+            Sdg(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
+
     def t(
             self, qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
     ) -> None:
@@ -279,6 +301,30 @@ class Circuit(Sequential):
         self.append(
             T(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
 
+    def tdg(
+            self, qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
+    ) -> None:
+        r"""Add single-qubit T dagger (T inverse) gates.
+
+        The matrix form of such a gate is:
+
+        .. math::
+
+            T^\dagger =
+                \begin{bmatrix}
+                    1&0\\
+                    0&e^{-\frac{i\pi}{4}}
+                \end{bmatrix}
+
+        Args:
+            qubits_idx: Indices of the qubits on which the gates are applied. Defaults to ``'full'``.
+            num_qubits: Total number of qubits. Defaults to None.
+            depth: Number of layers. Defaults to 1.
+        """
+        self.__num_qubits_update(qubits_idx)
+        self.append(
+            Tdg(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
+        
     def x(
             self, qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: Optional[int] = None, depth: int = 1
     ) -> None:
@@ -991,7 +1037,8 @@ class Circuit(Sequential):
 
     def oracle(
             self, oracle: paddle.tensor, qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int],
-            num_qubits: int = None, depth: int = 1, gate_name: str = 'O'
+            num_qubits: int = None, depth: int = 1,
+            gate_name: Optional[str] = 'O', latex_name: Optional[str] = None, plot_width: Optional[float] = None
     ) -> None:
         """Add an oracle gate.
 
@@ -1000,15 +1047,21 @@ class Circuit(Sequential):
             qubits_idx: Indices of the qubits on which the gates are applied.
             num_qubits: Total number of qubits. Defaults to None.
             depth: Number of layers. Defaults to 1.
-            gate_name: name of this oracle
+            gate_name: name of this oracle.
+            latex_name: latex name of this oracle, default to be the gate name.
+            plot_width: width of this gate in circuit plot, default to be proportional with the gate name.
         """
         self.__num_qubits_update(qubits_idx)
+        gate_info = {'gatename': gate_name, 
+                     'texname': f"${gate_name}$" if latex_name is None else latex_name, 
+                     'plot_width': 0.6 * len(gate_name) if plot_width is None else plot_width}
         self.append(Oracle(oracle, qubits_idx, 
-                           self.num_qubits if num_qubits is None else num_qubits, depth, gate_name))
+                           self.num_qubits if num_qubits is None else num_qubits, depth, gate_info))
 
     def control_oracle(
             self, oracle: paddle.Tensor, qubits_idx: Union[Iterable[Iterable[int]], Iterable[int]],
-            num_qubits: int = None, depth: int = 1, gate_name: str = 'cO'
+            num_qubits: int = None, depth: int = 1, 
+            gate_name: Optional[str] = 'O', latex_name: Optional[str] = None, plot_width: Optional[float] = None
     ) -> None:
         """Add a controlled oracle gate.
 
@@ -1017,11 +1070,16 @@ class Circuit(Sequential):
             qubits_idx: Indices of the qubits on which the gates are applied.
             num_qubits: Total number of qubits. Defaults to None.
             depth: Number of layers. Defaults to 1.
-            gate_name: name of this oracle
+            gate_name: name of this oracle.
+            latex_name: latex name of this oracle, default to be the gate name.
+            plot_width: width of this gate in circuit plot, default to be proportional with the gate name.
         """
         self.__num_qubits_update(qubits_idx)
+        gate_info = {'gatename': f"c{gate_name}", 
+                     'texname': f"${gate_name}$" if latex_name is None else latex_name, 
+                     'plot_width': 0.6 * len(gate_name) if plot_width is None else plot_width}
         self.append(ControlOracle(oracle, qubits_idx, 
-                                  self.num_qubits if num_qubits is None else num_qubits, depth, gate_name))
+                                  self.num_qubits if num_qubits is None else num_qubits, depth, gate_info))
         
     def collapse(self, qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None,
                  desired_result: Union[int, str] = None, if_print: bool = False,
@@ -1037,12 +1095,12 @@ class Circuit(Sequential):
         Raises:
             NotImplementedError: If the basis of measurement is not z. Other bases will be implemented in future.
             TypeError: cannot get probability of state when the backend is unitary_matrix.
-            
+
         Note:
             When desired_result is `None`, Collapse does not support gradient calculation
         """
         self.__num_qubits_update(qubits_idx)
-        self.append(Collapse(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, 
+        self.append(Collapse(qubits_idx, self.num_qubits if num_qubits is None else num_qubits,
                              desired_result, if_print, measure_basis))
 
     def superposition_layer(
@@ -1074,7 +1132,7 @@ class Circuit(Sequential):
             WeakSuperpositionLayer(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
         
     def linear_entangled_layer(
-        self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
+            self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
     ) -> None:
         r"""Add linear entangled layers consisting of Ry gates, Rz gates, and CNOT gates.
 
@@ -1088,7 +1146,7 @@ class Circuit(Sequential):
             LinearEntangledLayer(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
 
     def real_entangled_layer(
-        self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
+            self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
     ) -> None:
         r"""Add strongly entangled layers consisting of Ry gates and CNOT gates.
 
@@ -1102,7 +1160,7 @@ class Circuit(Sequential):
             RealEntangledLayer(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
 
     def complex_entangled_layer(
-        self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
+            self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
     ) -> None:
         r"""Add strongly entangled layers consisting of single-qubit rotation gates and CNOT gates.
 
@@ -1116,7 +1174,7 @@ class Circuit(Sequential):
             ComplexEntangledLayer(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
 
     def real_block_layer(
-        self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
+            self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
     ) -> None:
         r"""Add weakly entangled layers consisting of Ry gates and CNOT gates.
 
@@ -1130,7 +1188,7 @@ class Circuit(Sequential):
             RealBlockLayer(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
     
     def complex_block_layer(
-        self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
+            self, qubits_idx: Iterable[int] = 'full', num_qubits: int = None, depth: int = 1
     ) -> None:
         r"""Add weakly entangled layers consisting of single-qubit rotation gates and CNOT gates.
 
@@ -1144,7 +1202,7 @@ class Circuit(Sequential):
             ComplexBlockLayer(qubits_idx, self.num_qubits if num_qubits is None else num_qubits, depth))
 
     def bit_flip(
-        self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ) -> None:
         r"""Add bit flip channels.
 
@@ -1154,11 +1212,12 @@ class Circuit(Sequential):
             num_qubits: Total number of qubits. Defaults to None.
         """
         self.__num_qubits_update(qubits_idx)
-        self.append(BitFlip(prob, qubits_idx, 
+        self.append(BitFlip(prob, qubits_idx,
                             self.num_qubits if num_qubits is None else num_qubits))
-        
+
     def phase_flip(
-        self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+        self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full',
+        num_qubits: int = None
     ) -> None:
         r"""Add phase flip channels.
 
@@ -1168,11 +1227,12 @@ class Circuit(Sequential):
             num_qubits: Total number of qubits. Defaults to None.
         """
         self.__num_qubits_update(qubits_idx)
-        self.append(PhaseFlip(prob, qubits_idx, 
-                              self.num_qubits if num_qubits is None else num_qubits))    
-        
+        self.append(PhaseFlip(prob, qubits_idx,
+                              self.num_qubits if num_qubits is None else num_qubits))
+
     def bit_phase_flip(
-        self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full',
+            num_qubits: int = None
     ) -> None:
         r"""Add bit phase flip channels.
 
@@ -1184,9 +1244,9 @@ class Circuit(Sequential):
         self.__num_qubits_update(qubits_idx)
         self.append(BitPhaseFlip(prob, qubits_idx, 
                                  self.num_qubits if num_qubits is None else num_qubits)) 
-    
+
     def amplitude_damping(
-        self, gamma: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, gamma: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ) -> None:
         r"""Add amplitude damping channels.
 
@@ -1198,15 +1258,17 @@ class Circuit(Sequential):
         self.__num_qubits_update(qubits_idx)
         self.append(AmplitudeDamping(gamma, qubits_idx, 
                                      self.num_qubits if num_qubits is None else num_qubits)) 
-    
-    #TODO: change bug    
+
     def generalized_amplitude_damping(
-        self, gamma: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, gamma: Union[paddle.Tensor, float], prob: Union[paddle.Tensor, float],
+            qubits_idx: Union[Iterable[int], int, str] = 'full',
+            num_qubits: int = None
     ) -> None:
         r"""Add generalized amplitude damping channels.
 
         Args:
-            gamma: Damping probability.
+            gamma: Damping probability. Its value should be in the range :math:`[0, 1]`.
+            prob: Excitation probability. Its value should be in the range :math:`[0, 1]`.
             qubits_idx: Indices of the qubits on which the channels are applied. Defaults to 'full'.
             num_qubits: Total number of qubits. Defaults to None.
         """
@@ -1215,7 +1277,8 @@ class Circuit(Sequential):
                                                 self.num_qubits if num_qubits is None else num_qubits)) 
         
     def phase_damping(
-        self, gamma: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, gamma: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full',
+            num_qubits: int = None
     ) -> None:
         r"""Add phase damping channels.
 
@@ -1229,7 +1292,8 @@ class Circuit(Sequential):
                                  self.num_qubits if num_qubits is None else num_qubits)) 
 
     def depolarizing(
-        self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full',
+            num_qubits: int = None
     ) -> None:
         r"""Add depolarizing channels.
 
@@ -1243,7 +1307,8 @@ class Circuit(Sequential):
                                  self.num_qubits if num_qubits is None else num_qubits)) 
 
     def pauli_channel(
-        self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full',
+            num_qubits: int = None
     ) -> None:
         r"""Add Pauli channels.
 
@@ -1257,7 +1322,8 @@ class Circuit(Sequential):
                                  self.num_qubits if num_qubits is None else num_qubits)) 
         
     def reset_channel(
-        self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full',
+            num_qubits: int = None
     ) -> None:
         r"""Add reset channels.
 
@@ -1271,8 +1337,8 @@ class Circuit(Sequential):
                                  self.num_qubits if num_qubits is None else num_qubits)) 
 
     def thermal_relaxation(
-        self, const_t: Union[paddle.Tensor, Iterable[float]], exec_time: Union[paddle.Tensor, float], 
-        qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+            self, const_t: Union[paddle.Tensor, Iterable[float]], exec_time: Union[paddle.Tensor, float], 
+            qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ) -> None:
         r"""Add thermal relaxation channels.
 
@@ -1285,6 +1351,20 @@ class Circuit(Sequential):
         self.__num_qubits_update(qubits_idx)
         self.append(ThermalRelaxation(const_t, exec_time, qubits_idx, 
                                       self.num_qubits if num_qubits is None else num_qubits))
+
+    def mixed_unitary_channel(
+            self, num_unitary: Union[paddle.Tensor, int], qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
+    ) -> None:
+        r"""Add mixed random unitary channels
+
+        Args:
+            num_unitary: The amount of random unitaries to be generated.
+            qubits_idx: Indices of the qubits on which the channels act. Defaults to ``'full'``.
+            num_qubits: Total number of qubits. Defaults to ``None``.
+        """
+        self.__num_qubits_update(qubits_idx)
+        self.append(MixedUnitaryChannel(num_unitary, qubits_idx,
+                                        self.num_qubits if num_qubits is None else num_qubits))
 
     def kraus_repr(
             self, kraus_oper: Iterable[paddle.Tensor],
@@ -1321,7 +1401,7 @@ class Circuit(Sequential):
             num_qubits = self.__num_qubits
         else:
             assert num_qubits >= self.__num_qubits
-        
+
         backend = get_backend()
         self.to(backend=Backend.UnitaryMatrix)
         unitary = State(paddle.eye(2 ** num_qubits).cast(get_dtype()), 
@@ -1337,11 +1417,11 @@ class Circuit(Sequential):
 
         Returns:
             history of quantum gates of circuit
-            
+
         """
         gate_history = []
         for gate in self.sublayers():
-            if gate.gate_name is None:
+            if gate.gate_info['gatename'] is None:
                 raise NotImplementedError(f"Gate {type(gate)} has no gate name and hence cannot be recorded into history.")
             else:
                 gate.gate_history_generation()
@@ -1369,7 +1449,6 @@ class Circuit(Sequential):
                 if qubit[curr_qubit] > qubit_max:
                     length.append(5)
                     qubit_max = qubit[curr_qubit]
-            # Gates with params to print
             elif current_gate['gate'] in {'p', 'rx', 'ry', 'rz'}:
                 curr_qubit = current_gate['which_qubits']
                 gate.append(qubit[curr_qubit])
@@ -1379,13 +1458,9 @@ class Circuit(Sequential):
                 if qubit[curr_qubit] > qubit_max:
                     length.append(5)
                     qubit_max = qubit[curr_qubit]
-            # Two-qubit gates or Three-qubit gates
-            elif (
-                    current_gate['gate'] in {
-                'cnot', 'swap', 'rxx', 'ryy', 'rzz', 'ms',
-                'cy', 'cz', 'cu', 'cp', 'crx', 'cry', 'crz'} or
-                    current_gate['gate'] in {'cswap', 'ccx'}
-            ):
+            elif current_gate['gate'] in {'cnot', 'swap', 'rxx', 'ryy', 'rzz', 'ms', 
+                                          'cy', 'cz', 'cu', 'cp', 'crx', 'cry', 'crz', 
+                                          'cswap', 'ccx'}:
                 a = max(current_gate['which_qubits'])
                 b = min(current_gate['which_qubits'])
                 ind = max(qubit[b: a + 1])
@@ -1400,11 +1475,11 @@ class Circuit(Sequential):
                     qubit_max = ind + 1
 
         return length, gate
-    
+
     @property
     def qubit_history(self) -> List[List[Tuple[Dict[str, Union[str, List[int], paddle.Tensor]], int]]]:
         r""" gate information on each qubit
-        
+
         Returns:
             list of gate history on each qubit
         
@@ -1412,10 +1487,7 @@ class Circuit(Sequential):
             The entry ``qubit_history[i][j][0/1]`` returns the gate information / gate index of the j-th gate
             applied on the i-th qubit.
         """
-        history_qubit = []
-        for i in range(self.num_qubits):
-            history_i = []
-            history_qubit.append(history_i)
+        history_qubit = [[] for _ in range(self.num_qubits)]
         for idx, i in enumerate(self.gate_history):
             qubits = i["which_qubits"]
             if not isinstance(qubits, Iterable):
@@ -1542,6 +1614,67 @@ class Circuit(Sequential):
 
         return return_str
     
+    def plot(self, 
+             save_path: Optional[str] = None, 
+             dpi: Optional[int] = 100, 
+             show: Optional[bool] = True, 
+             output: Optional[bool] = False,
+             scale: Optional[float] = 1.0,
+             tex: Optional[bool] = False,
+             ) -> Union[None, matplotlib.figure.Figure]:
+        r'''display the circuit using matplotlib
+
+        Args:
+            save_path: the save path of image
+            dpi: dots per inches, here is resolution ratio
+            show: whether execute ``plt.show()``
+            output: whether return the ``matplotlib.figure.Figure`` instance
+            scale: scale coefficient of figure, default to 1.0
+            tex: a bool flag which controls latex fonts of gate display, default to ``False``. 
+
+        Returns:
+            a ``matplotlib.figure.Figure`` instance or ``None`` depends on ``output``
+        
+        Note:
+            Using ``plt.show()`` may cause a distortion, but it will not happen in the figure saved.
+            If the depth is too long, there will be some patches unable to display.
+            Setting ``tex = True`` requires that you have TeX and the other dependencies properly 
+            installed on your system. See 
+            https://matplotlib.org/stable/gallery/text_labels_and_annotations/tex_demo.html
+            for more details.
+        '''
+        _fig = _circuit_plot(self, dpi=dpi, scale=scale, tex = tex)
+
+        if save_path:  
+            plt.savefig(save_path, dpi=dpi,) 
+
+        if show:    # whether display in window
+            plt.show()
+
+        if output:  
+            return _fig    # return the ``matplotlib.pyplot.figure`` instance
+    
+    def extend(self, cir):
+        r""" extend for quantum circuit
+        
+        Args:
+            cir: a Circuit or a Sequential
+            
+        Returns:
+            concatenation of two quantum circuits
+        
+        """
+        if isinstance(cir, Circuit):
+            if self.__num_qubits is None:
+                self.__num_qubits = cir.num_qubits
+            else:
+                self.__num_qubits = self.__num_qubits if cir.num_qubits is None else max(self.__num_qubits, cir.num_qubits)
+            super().extend(cir)
+        elif isinstance(cir, Sequential):
+            super().extend(cir)
+        else:
+            raise TypeError("the input type must be Circuit or Sequential")
+    
     def forward(self, state: Optional[State] = None) -> State:
         r""" forward the input
         
@@ -1561,3 +1694,5 @@ class Circuit(Sequential):
                 f"num_qubits does not agree: expected {self.__num_qubits}, received {state.num_qubits}"
             
         return super().forward(state)
+    
+    

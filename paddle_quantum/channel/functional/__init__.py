@@ -29,3 +29,4 @@ from .common import reset_channel
 from .common import thermal_relaxation
 from .common import kraus_repr
 from .common import choi_repr
+from .common import stinespring_repr

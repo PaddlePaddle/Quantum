@@ -25,7 +25,8 @@ from paddle_quantum.gate import functional
 from paddle_quantum.intrinsic import _get_float_dtype
 from .base import Gate
 from typing import Iterable, List, Union, Tuple, Dict
-
+import matplotlib
+from .functional.visual import ( _linear_entangled_layer_display, _cr_block_layer_display, _qaoa_layer_display,_cr_entangled_layer_display)
 
 def qubits_idx_filter(qubits_idx: Union[Iterable[int], str], num_qubits: int) -> List[Iterable[int]]:
     r"""Check the validity of ``qubits_idx`` and ``num_qubits``.
@@ -64,7 +65,11 @@ class SuperpositionLayer(Gate):
     ):
         super().__init__(depth)
         self.qubits_idx = qubits_idx_filter(qubits_idx, num_qubits)
-        self.gate_name = 'SupLayer'
+        self.gate_info = {
+            'gatename': 'SupLayer',
+            'texname': r'$H$',
+            'plot_width': 0.4,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         for _ in range(0, self.depth):
@@ -79,6 +84,9 @@ class SuperpositionLayer(Gate):
                 gate_info = {'gate': 'h', 'which_qubits': qubit_idx, 'theta': None}
                 gate_history.append(gate_info)
         self.gate_history = gate_history
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return super().display_in_circuit(ax, x)
         
 
 
@@ -95,7 +103,11 @@ class WeakSuperpositionLayer(Gate):
     ):
         super().__init__(depth)
         self.qubits_idx = qubits_idx_filter(qubits_idx, num_qubits)
-        self.gate_name = 'WSupLayer'
+        self.gate_info = {
+            'gatename': 'WSupLayer',
+            'texname': r'$R_y(\pi/4)$',
+            'plot_width': 0.9,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         theta = paddle.to_tensor([np.pi / 4])
@@ -111,6 +123,9 @@ class WeakSuperpositionLayer(Gate):
                 gate_info = {'gate': 'ry', 'which_qubits': qubit_idx, 'theta': paddle.to_tensor([np.pi / 4])}
                 gate_history.append(gate_info)
         self.gate_history = gate_history
+
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return super().display_in_circuit(ax, x)
 
 
 class LinearEntangledLayer(Gate):
@@ -136,7 +151,11 @@ class LinearEntangledLayer(Gate):
             default_initializer=initializer
         )
         self.add_parameter('theta', theta)
-        self.gate_name = 'LEntLayer'
+        self.gate_info = {
+            'gatename': 'LEntLayer',
+            'texname': r'$LEntLayer$',
+            'plot_width': 0.9,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         for depth_idx in range(0, self.depth):
@@ -171,6 +190,9 @@ class LinearEntangledLayer(Gate):
                 gate_history.append({'gate': 'cnot', 'which_qubits': [qubits_idx[idx], qubits_idx[idx + 1]], 'theta': None})
         self.gate_history = gate_history
 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _linear_entangled_layer_display(self, ax, x)
+
 
 class RealEntangledLayer(Gate):
     r"""Strongly entangled layers consisting of Ry gates and CNOT gates.
@@ -200,7 +222,11 @@ class RealEntangledLayer(Gate):
             default_initializer=initializer
         )
         self.add_parameter('theta', theta)
-        self.gate_name = 'REntLayer'
+        self.gate_info = {
+            'gatename': 'REntLayer',
+            'texname': r'$REntLayer$',
+            'plot_width': 0.9,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         for depth_idx in range(0, self.depth):
@@ -227,6 +253,11 @@ class RealEntangledLayer(Gate):
                     'theta': None
                 })
         self.gate_history = gate_history
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cr_entangled_layer_display(self, ax, x)
+   
+   
 
 
 class ComplexEntangledLayer(Gate):
@@ -256,7 +287,11 @@ class ComplexEntangledLayer(Gate):
             default_initializer=initializer
         )
         self.add_parameter('theta', theta)
-        self.gate_name = 'CEntLayer'
+        self.gate_info = {
+            'gatename': 'CEntLayer',
+            'texname': r'$CEntLayer$',
+            'plot_width': 1.65,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         for depth_idx in range(0, self.depth):
@@ -283,6 +318,10 @@ class ComplexEntangledLayer(Gate):
                     'theta': None
                 })
         self.gate_history = gate_history
+
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cr_entangled_layer_display(self, ax, x)
+
 
 
 class RealBlockLayer(Gate):
@@ -313,7 +352,11 @@ class RealBlockLayer(Gate):
             default_initializer=initializer
         )
         self.add_parameter('theta', theta)
-        self.gate_name = 'RBLayer'
+        self.gate_info = {
+            'gatename': 'RBLayer',
+            'texname': r'$RBLayer$',
+            'plot_width': 0.9,
+        }
 
     def __add_real_block(self, theta: paddle.Tensor, position: List[int]) -> None:
         assert len(theta) == 4, 'the length of theta is not right'
@@ -379,6 +422,9 @@ class RealBlockLayer(Gate):
                 self.__add_real_layer(self.theta[depth_idx, int((n - 1) / 2):], [1, n - 1])
         self.count_history = False
 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cr_block_layer_display(self, ax, x)
+
 
 class ComplexBlockLayer(Gate):
     r"""Weakly entangled layers consisting of single-qubit rotation gates and CNOT gates.
@@ -406,7 +452,11 @@ class ComplexBlockLayer(Gate):
             default_initializer=initializer
         )
         self.add_parameter('theta', theta)
-        self.gate_name = 'CBLayer'
+        self.gate_info = {
+            'gatename': 'CBLayer',
+            'texname': r'$CBLayer$',
+            'plot_width': 1.65,
+        }
 
     def __add_complex_block(self, theta: paddle.Tensor, position: List[int]) -> None:
         assert len(theta) == 12, 'the length of theta is not right'
@@ -474,6 +524,9 @@ class ComplexBlockLayer(Gate):
                 self.__add_complex_layer(self.theta[depth_idx, :int((n - 1) / 2)], [0, n - 2])
                 self.__add_complex_layer(self.theta[depth_idx, int((n - 1) / 2):], [1, n - 1])
         self.count_history = False
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _cr_block_layer_display(self, ax, x)
 
 
 class QAOALayer(Gate):
@@ -503,7 +556,11 @@ class QAOALayer(Gate):
             default_initializer=paddle.nn.initializer.Uniform(low=0, high=2 * math.pi)
         )
         self.add_parameter('theta', theta)
-        self.gate_name = 'QAOALayer'
+        self.gate_info = {
+            'gatename': 'QAOALayer',
+            'texname': r'$QAOALayer$',
+            'plot_width': 0.9,
+        }
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         gamma = self.theta[:self.depth]
@@ -529,6 +586,8 @@ class QAOALayer(Gate):
             for node in self.nodes:
                 gate_history.append({'gate': 'rx', 'which_qubits': node, 'theta': beta[depth_idx]})
 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _qaoa_layer_display(self, ax, x)
 
 class QAOALayerWeighted(Gate):
     r""" QAOA driving layers with weights
@@ -556,6 +615,12 @@ class QAOALayerWeighted(Gate):
         )
         self.add_parameter('theta', theta)
         self.gate_history_generation()
+        self.gate_info = {
+            'gatename': 'WQAOALayer',
+            'texname': r'$WQAOALayer$',
+            'plot_width': 0.9,
+        }
+        
 
     def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
         gamma = self.theta[:self.depth]
@@ -582,3 +647,10 @@ class QAOALayerWeighted(Gate):
             for node in self.nodes:
                 gate_history.append({'gate': 'rx', 'which_qubits': node, 'theta': beta[depth_idx]})
                 
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        return _qaoa_layer_display(self, ax, x)
+
+        
+        
+
+

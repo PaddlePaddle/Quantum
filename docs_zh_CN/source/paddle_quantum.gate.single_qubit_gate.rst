@@ -49,6 +49,29 @@ paddle\_quantum.gate.single\_qubit\_gate
    :param depth: 层数，默认为 ``1``。
    :type depth: int, optional
 
+.. py:class:: Sdg(qubits_idx='full', num_qubits=None, depth=1)
+
+    基类：:py:class:`paddle_quantum.gate.base.Gate`
+
+    单量子比特S dagger（逆S）门。
+
+    其矩阵形式为：
+
+    .. math::
+
+        S ^\dagger =
+        \begin{bmatrix}
+            1 & 0\ \
+            0 & -i
+        \end{bmatrix}
+
+    :param qubits_idx:作用在的量子比特的编号，默认为``'full'``。
+    :type qubits_idx: Union[Iterable, int, str], optional
+    :param num_qubits:总的量子比特个数，默认为``None``。
+    :type num_qubits: int, optional
+    :param depth: 层数，默认为``1``。
+    :type depth: int, optional
+
 .. py:class:: T(qubits_idx='full', num_qubits=None, depth=1)
 
    基类：:py:class:`paddle_quantum.gate.base.Gate`
@@ -71,6 +94,29 @@ paddle\_quantum.gate.single\_qubit\_gate
    :type num_qubits: int, optional
    :param depth: 层数，默认为 ``1``。
    :type depth: int, optional
+
+.. py:class:: Tdg(qubits_idx='full', num_qubits=None, depth=1)
+
+    基类：:py:class:`paddle_quantum.gate.base.Gate`
+
+    单量子比特T dagger（逆T）门。
+
+    其矩阵形式为：
+
+    .. math::
+
+        T ^\dagger =
+        \begin{bmatrix}
+            1 & 0\ \
+            0 & e^{-\frac{i\pi}{4}}
+        \end{bmatrix}
+
+    :param qubits_idx:作用在的量子比特的编号，默认为``'full'``。
+    :type qubits_idx: Union[Iterable, int, str], optional
+    :param num_qubits:总的量子比特个数，默认为``None``。
+    :type num_qubits: int, optional
+    :param depth: 层数，默认为``1``。
+    :type depth: int, optional
 
 .. py:class:: X(qubits_idx='full', num_qubits=None, depth=1)
 

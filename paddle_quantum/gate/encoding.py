@@ -42,7 +42,7 @@ class BasisEncoding(Gate):
         super().__init__()
         self.num_qubits = num_qubits
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_name = 'BasisEnc'
+        self.gate_info['gatename'] = 'BasisEnc'
 
     def forward(self, feature: paddle.Tensor, state: 'paddle_quantum.State' = None) -> 'paddle_quantum.State':
         if state is None:
@@ -78,7 +78,7 @@ class AmplitudeEncoding(Gate):
         super().__init__()
         self.num_qubits = num_qubits
         self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_name = 'AmpEnc'
+        self.gate_info['gatename'] = 'AmpEnc'
 
     def forward(self, feature: paddle.Tensor) -> 'paddle_quantum.State':
         def calc_location(location_of_bits_list):
@@ -157,7 +157,7 @@ class AngleEncoding(Gate):
         feature = paddle.flatten(feature)
         self.feature = feature
         
-        self.gate_name = 'AngleEnc'
+        self.gate_info['gatename'] = 'AngleEnc'
 
     def forward(
             self, state: 'paddle_quantum.State' = None, invert: bool = False
@@ -206,7 +206,7 @@ class IQPEncoding(Gate):
             feature = paddle.flatten(feature)
             self.feature = feature
             
-        self.gate_name = 'IQPEnc'
+        self.gate_info['gatename'] = 'IQPEnc'
 
     def forward(
             self, state: paddle_quantum.State = None, invert: Optional[bool] = False

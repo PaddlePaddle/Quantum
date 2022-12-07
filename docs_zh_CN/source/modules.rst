@@ -19,7 +19,9 @@
    paddle_quantum.hamiltonian
    paddle_quantum.linalg
    paddle_quantum.qinfo
+   paddle_quantum.qml
    paddle_quantum.shadow
    paddle_quantum.trotter
    paddle_quantum.visual
    paddle_quantum.qsvt
+   paddle_quantum.qpp

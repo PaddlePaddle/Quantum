@@ -19,10 +19,13 @@ The source file of the basic class for the quantum gates.
 
 import paddle
 import paddle_quantum
-from typing import Union, List, Iterable
+from typing import Union, List, Iterable, Optional, Any
+
+from paddle_quantum.gate.functional.single_qubit_gate import x
 from ..intrinsic import _get_float_dtype
 from math import pi
-
+from .functional.visual import _base_gate_display, _base_param_gate_display
+import matplotlib
 
 class Gate(paddle_quantum.Operator):
     r"""Base class for quantum gates.
@@ -40,8 +43,12 @@ class Gate(paddle_quantum.Operator):
     ):
         super().__init__(backend, dtype, name_scope)
         self.depth = depth
-        self.gate_name = None
-
+        self.gate_info = {
+            'gatename': None,
+            'texname': None,
+            'plot_width': None,
+        }
+    
     def forward(self, *inputs, **kwargs):
         raise NotImplementedError
 
@@ -58,11 +65,34 @@ class Gate(paddle_quantum.Operator):
         
         """
         gate_history = []
-        for _ in range(0, self.depth):
+        for _ in range(self.depth):
             for qubit_idx in self.qubits_idx:
-                gate_info = {'gate': self.gate_name, 'which_qubits': qubit_idx, 'theta': None}
+                gate_info = {'gate': self.gate_info['gatename'], 'which_qubits': qubit_idx, 'theta': None}
                 gate_history.append(gate_info)
         self.gate_history = gate_history
+    
+    def set_gate_info(self, **kwargs: Any) -> None:  
+        r'''the interface to set `self.gate_info`
+
+        Args:
+            kwargs: parameters to set `self.gate_info`
+        '''
+        self.gate_info.update(kwargs)
+
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        r'''The display function called by circuit instance when plotting.
+
+        Args:
+            ax: the ``matplotlib.axes.Axes`` instance
+            x: the start horizontal position
+        
+        Returns:
+            the total width occupied
+        
+        Note:
+            Users could overload this function for custom display.
+        '''
+        return _base_gate_display(self, ax, x)
 
 
 class ParamGate(Gate):
@@ -88,7 +118,7 @@ class ParamGate(Gate):
         """
         
         float_dtype = _get_float_dtype(self.dtype)
-        
+
         if param is None:
             theta = self.create_parameter(
                 shape=param_shape, dtype=float_dtype,
@@ -97,16 +127,16 @@ class ParamGate(Gate):
             self.add_parameter('theta', theta)
 
         elif isinstance(param, paddle.fluid.framework.ParamBase):
-            assert param.shape == param_shape, "received: " + str(param.shape) + " expect: " + str(param_shape)
+            assert param.shape == param_shape, f"received: {str(param.shape)} expect: {param_shape}"
             self.add_parameter('theta', param)
-            
+
         elif isinstance(param, paddle.Tensor):
             param = param.reshape(param_shape)
             self.theta = param
-            
-        elif isinstance(param, float):
+
+        elif isinstance(param, (int, float)):
             self.theta = paddle.ones(param_shape, dtype=float_dtype) * param
-        
+
         else: # when param is a list of float
             self.theta = paddle.to_tensor(param, dtype=float_dtype).reshape(param_shape)
 
@@ -115,12 +145,27 @@ class ParamGate(Gate):
         
         """
         gate_history = []
-        for depth_idx in range(0, self.depth):
+        for depth_idx in range(self.depth):
             for idx, qubit_idx in enumerate(self.qubits_idx):
                 if self.param_sharing:
                     param = self.theta[depth_idx]
                 else:
                     param = self.theta[depth_idx][idx]
-                gate_info = {'gate': self.gate_name, 'which_qubits': qubit_idx, 'theta': param}
+                gate_info = {'gate': self.gate_info['gatename'], 'which_qubits': qubit_idx, 'theta': param}
                 gate_history.append(gate_info)
         self.gate_history = gate_history
+    
+    def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
+        r'''The display function called by circuit instance when plotting.
+
+        Argrs:
+            ax: the ``matplotlib.axes.Axes`` instance
+            x: the start horizontal position
+        
+        Returns:
+            the total width occupied
+        
+        Note:
+            Users could overload this function for custom display.
+        '''
+        return _base_param_gate_display(self, ax, x)
