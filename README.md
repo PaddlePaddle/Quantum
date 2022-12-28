@@ -205,7 +205,7 @@ For those who are looking for explanation on the python class and functions prov
 
 ## Feedbacks
 
-Users are encouraged to contact us through [Github Issues](https://github.com/PaddlePaddle/Quantum/issues) or email quantum@baidu.com with general questions, unfixed bugs, and potential improvements. We hope to make Paddle Quantum better together with the community!
+Users are encouraged to contact us through [GitHub Issues](https://github.com/PaddlePaddle/Quantum/issues) or email quantum@baidu.com with general questions, unfixed bugs, and potential improvements. We hope to make Paddle Quantum better together with the community!
 
 ## Research based on Paddle Quantum
 
