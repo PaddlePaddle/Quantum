@@ -182,7 +182,7 @@ msgstr ""
 
 #: ../../source/introduction.rst:118
 msgid ""
-"Users are encouraged to report issues and submit suggestions on `Github "
+"Users are encouraged to report issues and submit suggestions on `GitHub "
 "Issues <https://github.com/PaddlePaddle/Quantum/issues>`__."
 msgstr ""
 

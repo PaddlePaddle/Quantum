@@ -1,0 +1,22 @@
+# The config for testing the QNNMIC model.
+# The task of this config. Available values: 'train' | 'test'.
+task = 'test'
+
+# The path of the input image.
+image_path = 'pneumoniamnist'
+
+# The number of the data in the test dataset.
+# The value defaults to -1 which means using all data.
+num_samples = 10
+
+# The path of the trained model, which will be loaded.
+model_path = 'qnnmic.pdparams'
+
+# The number of qubits of quantum circuit in each layer.
+num_qubits = [8, 8]
+
+# The depth of quantum circuit in each layer.
+num_depths = [2, 2]
+
+# The observables of quantum circuit in each layer.
+observables = [['Z0', 'Z1', 'Z2', 'Z3'], ['X0', 'X1', 'X2', 'X3']]

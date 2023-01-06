@@ -17,3 +17,30 @@ paddle\_quantum.channel.base
       参数名为"my_layer_0.w_n"，其中 "w" 是参数的名称，"n" 为自动生成的具有唯一性的后缀。如果为 ``None``，
       前缀名将为小写的类名。默认为 ``None``。
    :type name_scope: str, optional
+
+   .. py:property:: choi_repr()
+
+      该信道的 Choi 表达式。
+
+      :raises NotImplementedError: 无法返回一个广义信道的 Choi 表达式。使用 ``ChoiRepr`` 来具体化你的信道。
+
+      :return: 一个形状为 :math:`[d_\text{out}^2, d_\text{in}^2]` 的 Tensor，这里 :math:`d_\text{in/out}` 为信道的输入/出维度。
+      :rtype: paddle.Tensor
+
+   .. py:property:: kraus_repr()
+
+      该信道的 Kraus 表达式。
+
+      :raises NotImplementedError: 无法返回一个广义信道的 Kraus 表达式。使用 ``KrausRepr`` 来具体化你的信道。
+
+      :return: 一个形状为 :math:`[d_\text{out}, d_\text{in}]` 的 Tensor，这里 :math:`d_\text{in/out}` 为信道的输入/出维度。
+      :rtype: paddle.Tensor
+   
+   .. py:property:: stinespring_repr()
+
+      该信道的 Stinespring 表达式。
+
+      :raises NotImplementedError: 无法返回一个广义信道的 Stinespring 表达式。使用 ``StinespringRepr`` 来具体化你的信道。
+
+      :return: 一个形状为 :math:`[r * d_\text{out}, d_\text{in}]` 的 Tensor，这里 :math:`r` 为信道的秩，且 :math:`d_\text{in/out}` 为信道的输入/出维度。
+      :rtype: paddle.Tensor

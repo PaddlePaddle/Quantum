@@ -56,17 +56,17 @@ Paddle Quantum（量桨）
 
 我们推荐通过 ``pip`` 完成安装,
 
-.. code:: shell
+.. code-block:: shell
 
    pip install paddle-quantum
 
 用户也可以选择下载全部文件后进行本地安装，
 
-.. code:: shell
+.. code-block:: shell
 
    git clone http://github.com/PaddlePaddle/quantum
 
-.. code:: shell
+.. code-block:: shell
 
    cd quantum
    pip install -e .
@@ -86,13 +86,13 @@ Paddle Quantum（量桨）
 在安装 ``psi4`` 时，我们建议您使用 conda。对于 **MacOS/Linux**
 的用户，可以使用如下指令。
 
-.. code:: shell
+.. code-block:: shell
 
    conda install psi4 -c psi4
 
 对于 **Windows** 用户，请使用
 
-.. code:: shell
+.. code-block:: shell
 
    conda install psi4 -c psi4 -c conda-forge
 
@@ -106,7 +106,7 @@ Paddle Quantum（量桨）
 
 现在，可以试着运行一段程序来验证量桨是否已安装成功。这里我们运行量桨提供的量子近似优化算法（QAOA）的例子。
 
-.. code:: shell
+.. code-block:: shell
 
    cd paddle_quantum/QAOA/example
    python main.py
@@ -120,7 +120,7 @@ Paddle Quantum（量桨）
 交流与反馈
 ----------
 
-- 我们非常欢迎您通过 `Github
+- 我们非常欢迎您通过 `GitHub
   Issues <https://github.com/PaddlePaddle/Quantum/issues>`__
   来提交问题、报告与建议。
 - 技术交流QQ群：1076223166

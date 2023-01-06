@@ -1,0 +1,42 @@
+# The full config for training the VSQL model.
+# The task of this config. Available values: 'train' | 'test'.
+task = 'train'
+# The name of the model, which is used to save the model.
+model_name = 'vsql-model'
+# The path to save the model. Both relative and absolute paths are allowed.
+# It saves the model to the current path by default.
+# saved_path = './'
+# The number of qubits which the quantum circuit contains.
+num_qubits = 10
+# The number of qubits which the shadow circuit contains.
+num_shadow = 2
+# The depth of the quantum circuit, default to 1.
+# depth = 1
+# The size of the batch samplers.
+batch_size = 16
+# The number of epochs to train the model.
+num_epochs = 10
+# The learning rate used to update the parameters, default to 0.01.
+# learning_rate = 0.01
+# The path of the dataset. It defaults to MNIST, which is a built-in dataset.
+dataset = 'MNIST'
+# The classes of handwrite digits to be predicted.
+# It will use all labels if the value is not provided.
+classes = [0, 1]
+# Whether use the validation.
+# It is true means the dataset contains training, validation and test datasets.
+# It is false means the dataset only contains training datasets and test datasets. 
+using_validation = false
+# The number of the data in the training dataset.
+# The value defaults to 0 which means using all data.
+# num_train = 0
+# The number of the data in the validation dataset.
+# The value defaults to 0 which means using all data.
+# num_dev = 0
+# The number of the data in the test dataset.
+# The value defaults to 0 which means using all data.
+# num_test = 0
+# Number of epochs with no improvement after which training will be stopped.
+# early_stopping = 1000
+# The number of subprocess to load data, 0 for no subprocess used and loading data in main process, defaults to 0.
+# num_workers = 0

@@ -32,6 +32,7 @@ from ..backend import state_vector, density_matrix, quleaf
 from ..hamiltonian import Hamiltonian
 from typing import Optional, Union, Iterable, Tuple
 
+
 class State(object):
     r"""The quantum state class.
 
@@ -55,7 +56,7 @@ class State(object):
         self.dtype = dtype if dtype is not None else paddle_quantum.get_dtype()
         if self.backend != Backend.QuLeaf and not isinstance(data, paddle.Tensor):
             data = paddle.to_tensor(data, dtype=self.dtype)
-        self.data = data
+        self.data = paddle.cast(data, self.dtype) if data.dtype != self.dtype else data
 
         # data input test
         if self.backend == Backend.StateVector:
@@ -301,7 +302,7 @@ class State(object):
         if shots == 0:
             func = paddle_quantum.loss.ExpecVal(hamiltonian)
             result = func(self)
-            return result
+            return result.item()
         result = 0
         gate_for_x = paddle.to_tensor([
             [1 / math.sqrt(2), 1 / math.sqrt(2)],
@@ -564,7 +565,7 @@ def is_state_vector(vec: Union[np.ndarray, paddle.Tensor],
     Returns:
         determine whether :math:`x^\dagger x = 1`, and return the number of qubits or an error message
         
-    Notes:
+    Note:
         error message is:
         * ``-1`` if the above equation does not hold
         * ``-2`` if the dimension of ``vec`` is not a power of 2
@@ -602,7 +603,7 @@ def is_density_matrix(rho: Union[np.ndarray, paddle.Tensor],
     Returns:
         determine whether ``rho`` is a PSD matrix with trace 1 and return the number of qubits or an error message.
     
-    Notes:
+    Note:
         error message is:
         * ``-1`` if ``rho`` is not PSD
         * ``-2`` if the trace of ``rho`` is not 1

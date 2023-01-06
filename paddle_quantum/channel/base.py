@@ -17,11 +17,14 @@ r"""
 The source file of the basic class for the quantum channels.
 """
 
-from typing import Any, Optional
-import paddle_quantum
+from typing import Any, Optional, List
+
+import paddle
+from ..base import Operator, get_backend, get_dtype
+from ..backend import Backend
 
 
-class Channel(paddle_quantum.Operator):
+class Channel(Operator):
     r"""Basic class for quantum channels.
 
     Args:
@@ -32,7 +35,7 @@ class Channel(paddle_quantum.Operator):
             auto-generated. If ``None``, prefix name will be snake cased class name. Defaults to ``None``.
     """
     def __init__(
-            self, backend: paddle_quantum.Backend = None, dtype: str = None, name_scope: str = None
+            self, backend: Backend = None, dtype: str = None, name_scope: str = None
     ) -> None:
         super().__init__(backend, dtype, name_scope)
 
@@ -49,6 +52,51 @@ class Channel(paddle_quantum.Operator):
         super().__setattr__(name, value)
         if isinstance(value, Channel):
             if value.backend is None:
-                value.backend = paddle_quantum.get_backend() if self.backend is None else self.backend
+                value.backend = get_backend() if self.backend is None else self.backend
             if value.dtype is None:
-                value.dtype = paddle_quantum.get_dtype() if self.dtype is None else self.dtype
+                value.dtype = get_dtype() if self.dtype is None else self.dtype
+
+    @property
+    def choi_repr(self) -> paddle.Tensor:
+        r"""Choi representation of a channel
+        
+        Returns:
+            a tensor with shape :math:`[d_\text{out}^2, d_\text{in}^2]`, where :math:`d_\text{in/out}` is the input/output 
+            dimension of this channel
+        
+        Raises:
+            Cannot return the Choi representation of a general channel: use ChoiRepr instead to specify your channel
+        
+        """
+        raise NotImplementedError(
+            "Cannot return the Choi representation of a general channel: use ChoiRepr instead to specify your channel")
+    
+    @property
+    def kraus_repr(self) -> List[paddle.Tensor]:
+        r"""Kraus representation of a channel
+        
+        Returns:
+            a list of tensors with shape :math:`[d_\text{out}, d_\text{in}]`, where :math:`d_\text{in/out}` is the input/output 
+            dimension of this channel
+        
+        Raises:
+            Cannot return the Kraus representation of a general channel: use KrausRepr instead to specify your channel
+        
+        """
+        raise NotImplementedError(
+            "Cannot return the Kraus representation of a general channel: use KrausRepr instead to specify your channel")
+    
+    @property
+    def stinespring_repr(self) -> paddle.Tensor:
+        r"""Stinespring representation of a channel
+        
+        Returns:
+            a tensor with shape :math:`[r * d_\text{out}, d_\text{in}]`, where :math:`r` is the rank of this channel and 
+            :math:`d_\text{in/out}` is the input/output dimension of this channel
+        
+        Raises:
+            Cannot return the Stinespring representation of a general channel: use StinespringRepr instead to specify your channel
+        
+        """
+        raise NotImplementedError(
+            "Cannot return the Stinespring representation of a general channel: use StinespringRepr instead to specify your channel")

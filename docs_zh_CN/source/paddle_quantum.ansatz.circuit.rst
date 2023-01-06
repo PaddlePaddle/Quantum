@@ -1016,6 +1016,17 @@ paddle\_quantum.ansatz.circuit
          :type qubits_idx: Union[Iterable[int], int, str], optional
          :param num_qubits: 总的量子比特个数，默认为 ``None``。
          :type num_qubits: int, optional
+
+      .. py:method:: generalized_depolarizing(prob, qubits_idx, num_qubits=None)
+
+         添加一个广义去极化信道。
+
+         :param prob: 该信道的参数。
+         :type prob: Union[paddle.Tensor, float]
+         :param qubits_idx: 作用在的量子比特的编号。
+         :type qubits_idx: Union[Iterable[int], int, str], optional
+         :param num_qubits: 总的量子比特个数，默认为 ``None``。
+         :type num_qubits: int, optional
       
       .. py:method:: pauli_channel(prob, qubits_idx='full', num_qubits=None)
 

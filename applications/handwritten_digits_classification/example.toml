@@ -1,0 +1,9 @@
+
+task = 'test'
+image_path = 'data_0.png'
+is_dir = false
+model_path = 'vsql.pdparams'
+num_qubits = 10
+num_shadow = 2
+depth = 1
+classes = [0, 1]

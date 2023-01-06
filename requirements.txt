@@ -11,3 +11,4 @@ scikit-learn
 opencv-python
 cvxpy
 rich
+imbalanced-learn

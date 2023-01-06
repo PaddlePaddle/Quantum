@@ -21,9 +21,10 @@ import paddle
 import math
 import numpy as np
 import scipy
+import itertools
 from scipy.stats import unitary_group
 from functools import reduce
-from typing import Optional, Union, Callable
+from typing import Optional, Union, Callable, List
 
 import paddle_quantum as pq
 from .intrinsic import _get_float_dtype
@@ -37,7 +38,7 @@ def abs_norm(mat: Union[np.ndarray, paddle.Tensor, State]) -> float:
         mat: matrix
 
     Returns:
-        norm of mat
+        norm of input matrix
 
     """
     mat = _type_transform(mat, "tensor")
@@ -70,13 +71,28 @@ def is_hermitian(mat: Union[np.ndarray, paddle.Tensor], eps: Optional[float] = 1
         determine whether :math:`P - P^\dagger = 0`
 
     """
-    mat = _type_transform(mat, "tensor")
+    mat = _type_transform(mat, "tensor").cast('complex128')
     shape = mat.shape
     if len(shape) != 2 or shape[0] != shape[1] or math.log2(shape[0]) != math.ceil(math.log2(shape[0])):
         # not a mat / not a square mat / shape is not in form 2^num_qubits x 2^num_qubits
         return False
     return abs_norm(mat - dagger(mat)) < eps
 
+def is_positive(mat: Union[np.ndarray, paddle.Tensor], eps: Optional[float] = 1e-6) -> bool:
+    r""" verify whether ``mat`` is a positive semi-definite matrix.
+
+    Args:
+        mat: positive operator candidate :math:`P`
+        eps: tolerance of error
+
+    Returns:
+        determine whether :math:`P` is Hermitian and eigenvalues are non-negative
+    
+    """
+    if is_hermitian(mat, eps):
+        mat = _type_transform(mat, "tensor").cast('complex128')
+        return (min(paddle.linalg.eigvalsh(mat)) >= -eps).item()
+    return False
 
 def is_projector(mat: Union[np.ndarray, paddle.Tensor], eps: Optional[float] = 1e-6) -> bool:
     r""" verify whether ``mat`` is a projector
@@ -89,7 +105,7 @@ def is_projector(mat: Union[np.ndarray, paddle.Tensor], eps: Optional[float] = 1
         determine whether :math:`PP - P = 0`
 
     """
-    mat = _type_transform(mat, "tensor")
+    mat = _type_transform(mat, "tensor").cast('complex128')
     shape = mat.shape
     if len(shape) != 2 or shape[0] != shape[1] or math.log2(shape[0]) != math.ceil(math.log2(shape[0])):
         # not a mat / not a square mat / shape is not in form 2^num_qubits x 2^num_qubits
@@ -444,3 +460,105 @@ def herm_transform(fcn: Callable[[float], float], mat: Union[paddle.Tensor, np.n
             continue
         mat += (fcn(eigval[i]) + 0j) * vec @ dagger(vec)
     return mat.numpy() if type_str == "numpy" else mat
+
+
+def pauli_basis_generation(num_qubits: int) -> List[paddle.Tensor]:
+    r"""Generate a Pauli basis.
+    
+    Args:
+        num_qubits: the number of qubits :math:`n`.
+        
+    Returns:
+        The Pauli basis of :math:`\mathbb{C}^{2^n \times 2^n}`.
+
+    """
+    
+    def __single_pauli_basis() -> List[paddle.Tensor]:
+        r"""The Pauli basis in single-qubit case.
+        """
+        complex_dtype = pq.get_dtype()
+        I = paddle.to_tensor([[0.5, 0],
+                            [0, 0.5]], dtype=complex_dtype)
+        X = paddle.to_tensor([[0, 0.5],
+                            [0.5, 0]], dtype=complex_dtype)
+        Y = paddle.to_tensor([[0, -0.5j],
+                            [0.5j, 0]], dtype=complex_dtype)
+        Z = paddle.to_tensor([[0.5, 0],
+                            [0, -0.5]], dtype=complex_dtype)
+        return [I, X, Y, Z]
+    
+    def __basis_kron(basis_A: List[paddle.Tensor], basis_B: List[paddle.Tensor]) -> List[paddle.Tensor]:
+        r"""Kronecker product between bases
+        """
+        return [
+            paddle.kron(basis_A[i], basis_B[j])
+            for i, j in itertools.product(range(len(basis_A)), range(len(basis_B)))
+        ]
+    
+    
+    list_bases = [__single_pauli_basis() for _ in range(num_qubits)]
+    if num_qubits == 1:
+        return list_bases[0]
+    
+    return reduce(lambda result, index: __basis_kron(result, index), list_bases[2:], __basis_kron(list_bases[0], list_bases[1]))
+
+
+def pauli_decomposition(mat: Union[np.ndarray, paddle.Tensor]) -> Union[np.ndarray, paddle.Tensor]:
+    r"""Decompose the matrix by the Pauli basis.
+    
+    Args:
+        mat: the matrix to be decomposed
+    
+    Returns:
+        The list of coefficients corresponding to Pauli basis.
+    
+    """
+    type_str = _type_fetch(mat)
+    mat = _type_transform(mat, "tensor")
+    
+    dimension = mat.shape[0]
+    num_qubits = int(math.log2(dimension))
+    assert 2 ** num_qubits == dimension, \
+        f"Input matrix is not a valid quantum data: received shape {mat.shape}"
+        
+    basis = pauli_basis_generation(num_qubits)
+    decomp = paddle.concat([paddle.trace(mat @ basis[i]) for i in range(dimension ** 2)])
+    return _type_transform(decomp, type_str)
+
+
+def subsystem_decomposition(mat: Union[np.ndarray, paddle.Tensor], 
+                            first_basis: Union[List[np.ndarray], List[paddle.Tensor]], 
+                            second_basis: Union[List[np.ndarray], List[paddle.Tensor]],
+                            inner_prod: Union[Callable[[np.ndarray, np.ndarray], np.ndarray], 
+                                              Callable[[paddle.Tensor, paddle.Tensor], paddle.Tensor]]
+                            ) -> Union[np.ndarray, paddle.Tensor]:
+    r"""Decompose the input matrix by two given bases in two subsystems.
+    
+    Args:
+        mat: the matrix :math:`w` to be decomposed
+        first_basis: a basis :math:`\{e_i\}_i` from the first space
+        second_basis: a basis :math:`\{f_j\}_j` from the second space
+        inner_prod: the inner product of these subspaces
+        
+    Returns:
+        a coefficient matrix :math:`[\beta_{ij}]` such that :math:`w = \sum_{i, j} \beta_{ij} e_i \otimes f_j`.
+    
+    """
+    type_str = _type_fetch(mat)
+    mat = _type_transform(mat, "tensor")
+    
+    if type_str == "numpy":
+        first_basis = [paddle.to_tensor(ele) for ele in first_basis]
+        second_basis = [paddle.to_tensor(ele) for ele in second_basis]
+    
+    assert mat.shape == paddle.kron(first_basis[0], second_basis[0]).shape, \
+        f"The shape does not agree: received {mat.shape, first_basis[0].shape, second_basis[0].shape}"
+    
+    first_dim, second_dim = len(first_basis), len(second_basis)
+    coef = [
+        inner_prod(paddle.kron(first_basis[i], second_basis[j]), mat)
+        for i, j in itertools.product(range(first_dim), range(second_dim))
+    ]
+    coef = paddle.concat(coef).reshape([first_dim, second_dim])
+    
+    return _type_transform(coef, type_str)

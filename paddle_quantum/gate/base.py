@@ -107,13 +107,13 @@ class ParamGate(Gate):
             param_shape: shape for theta
             
         Note:
-            in the following cases ``param`` will be transformed to a parameter:
+            In the following cases ``param`` will be transformed to a parameter:
                 - ``param`` is None
-            in the following cases ``param`` will be added to the parameter list:
-                - ``param`` is ParamBase
-            in the following cases ``param`` will keep unchange:
-                - ``param`` is a Tensor but not a parameter
-                - ``param`` is a float or list of floats
+            In the following cases ``param`` will be added to the parameter list:
+                - ``param`` is a ParamBase
+            In the following cases ``param`` will keep unchanged:
+                - ``param`` is a Tensor but not a ParamBase
+                - ``param`` is a float or a list of floats
             
         """
         
@@ -158,7 +158,7 @@ class ParamGate(Gate):
     def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
         r'''The display function called by circuit instance when plotting.
 
-        Argrs:
+        Args:
             ax: the ``matplotlib.axes.Axes`` instance
             x: the start horizontal position
         

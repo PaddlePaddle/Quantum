@@ -1,0 +1,18 @@
+# The path of the input matrix A. It should be a .npy file.
+A_dir = './A.npy'
+
+# The path of the input vector b. It should be a .npy file.
+b_dir = './b.npy'
+
+# The depth of the quantum ansatz circuit.
+depth = 4
+
+# Number optimization cycls. Use 100 as a starting point and adjust depend on how low the loss function reaches.
+# Ideally, you want to reach 0.0001
+iterations = 100
+
+# The learning rate of the optimizer.
+LR = 0.1
+
+# Threshold for loss value to end optimization early, default is 0.
+gamma = 0

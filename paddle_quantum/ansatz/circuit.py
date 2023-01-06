@@ -31,7 +31,8 @@ from ..gate import RealBlockLayer, RealEntangledLayer, ComplexBlockLayer, Comple
 from ..gate import QAOALayer
 from ..gate import AmplitudeEncoding
 from ..channel import BitFlip, PhaseFlip, BitPhaseFlip, AmplitudeDamping, GeneralizedAmplitudeDamping, PhaseDamping
-from ..channel import Depolarizing, PauliChannel, ResetChannel, ThermalRelaxation, MixedUnitaryChannel, KrausRepr
+from ..channel import Depolarizing, GeneralizedDepolarizing, PauliChannel, ResetChannel, ThermalRelaxation
+from ..channel import MixedUnitaryChannel, KrausRepr
 from ..intrinsic import _get_float_dtype
 from ..state import zero_state
 from ..operator import Collapse
@@ -1273,7 +1274,7 @@ class Circuit(Sequential):
             num_qubits: Total number of qubits. Defaults to None.
         """
         self.__num_qubits_update(qubits_idx)
-        self.append(GeneralizedAmplitudeDamping(gamma, qubits_idx, 
+        self.append(GeneralizedAmplitudeDamping(gamma, prob, qubits_idx, 
                                                 self.num_qubits if num_qubits is None else num_qubits)) 
         
     def phase_damping(
@@ -1304,7 +1305,22 @@ class Circuit(Sequential):
         """
         self.__num_qubits_update(qubits_idx)
         self.append(Depolarizing(prob, qubits_idx, 
-                                 self.num_qubits if num_qubits is None else num_qubits)) 
+                                 self.num_qubits if num_qubits is None else num_qubits))
+        
+    def generalized_depolarizing(
+            self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str], 
+            num_qubits: int = None
+    ) -> None:
+        r"""Add a general depolarizing channel.
+
+        Args:
+            prob: Probabilities corresponding to the Pauli basis.
+            qubits_idx: Indices of the qubits on which the channel is applied.
+            num_qubits: Total number of qubits. Defaults to None.
+        """
+        self.__num_qubits_update(qubits_idx)
+        self.append(PauliChannel(prob, qubits_idx, 
+                                 self.num_qubits if num_qubits is None else num_qubits))
 
     def pauli_channel(
             self, prob: Union[paddle.Tensor, float], qubits_idx: Union[Iterable[int], int, str] = 'full',

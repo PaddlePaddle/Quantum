@@ -3,9 +3,9 @@ paddle\_quantum.channel.common
 
 常用的量子信道的功能实现。
 
-.. py:class:: BitFlip(prob, qubits_idx='full', num_qubits)
+.. py:class:: BitFlip(prob, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    比特反转信道。
 
@@ -23,9 +23,9 @@ paddle\_quantum.channel.common
    :param num_qubits: 总的量子比特个数，默认为 ``None``。
    :type num_qubits: int, optional
 
-.. py:class:: PhaseFlip(prob, qubits_idx='full', num_qubits)
+.. py:class:: PhaseFlip(prob, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    相位反转信道。
 
@@ -43,9 +43,9 @@ paddle\_quantum.channel.common
    :param num_qubits: 总的量子比特个数，默认为 ``None``。
    :type num_qubits: int, optional
 
-.. py:class:: BitPhaseFlip(prob, qubits_idx='full', num_qubits)
+.. py:class:: BitPhaseFlip(prob, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    比特相位反转信道。
 
@@ -63,9 +63,9 @@ paddle\_quantum.channel.common
    :param num_qubits: 总的量子比特个数，默认为 ``None``。
    :type num_qubits: int, optional
 
-.. py:class:: AmplitudeDamping(gamma, qubits_idx='full', num_qubits)
+.. py:class:: AmplitudeDamping(gamma, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    振幅阻尼信道。
 
@@ -91,9 +91,9 @@ paddle\_quantum.channel.common
    :param num_qubits: 总的量子比特个数，默认为 ``None``。
    :type num_qubits: int, optional
 
-.. py:class:: GeneralizedAmplitudeDamping(gamma, prob, qubits_idx='full', num_qubits)
+.. py:class:: GeneralizedAmplitudeDamping(gamma, prob, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    广义振幅阻尼信道。
 
@@ -119,9 +119,9 @@ paddle\_quantum.channel.common
    :param num_qubits: 总的量子比特个数，默认为 ``None``。
    :type num_qubits: int, optional
 
-.. py:class:: PhaseDamping(gamma, qubits_idx='full', num_qubits)
+.. py:class:: PhaseDamping(gamma, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    相位阻尼信道。
 
@@ -147,9 +147,9 @@ paddle\_quantum.channel.common
    :param num_qubits: 总的量子比特个数，默认为 ``None``。
    :type num_qubits: int, optional
 
-.. py:class:: Depolarizing(prob, qubits_idx='full', num_qubits)
+.. py:class:: Depolarizing(prob, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    去极化信道。
 
@@ -174,9 +174,29 @@ paddle\_quantum.channel.common
       当前版本请参考 M.A.Nielsen and I.L.Chuang 所著 Quantum Computation and Quantum Information 第10版中的 (8.102) 式。
       参考文献: Nielsen, M., & Chuang, I. (2010). Quantum Computation and Quantum Information: 10th Anniversary Edition. Cambridge: Cambridge University Press. doi:10.1017/CBO9780511976667
 
-.. py:class:: PauliChannel(prob, qubits_idx='full', num_qubits)
+.. py:class:: GeneralizedDepolarizing(prob, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
+
+   广义去极化信道。
+
+   其 Kraus 算符为：
+
+   .. math::
+
+      E_0 = \sqrt{1-(D - 1)p/D} I, \text{ where } D = 4^n, \\
+      E_k = \sqrt{p/D} \sigma_k, \text{ for } 0 < k < D.
+
+   :param prob: 该信道的参数 :math:`p`，其值应该在 :math:`[0, 1]` 区间内。
+   :type prob: Union[paddle.Tensor, float]
+   :param qubits_idx: 长度为 :math:`n` 的作用在的量子比特的编号，默认为 ``'full'``。
+   :type qubits_idx: Union[Iterable[int], int, str], optional
+   :param num_qubits: 总的量子比特个数，默认为 ``None``。
+   :type num_qubits: int, optional
+
+.. py:class:: PauliChannel(prob, qubits_idx='full', num_qubits=None)
+
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    泡利信道。
 
@@ -191,9 +211,9 @@ paddle\_quantum.channel.common
 
       三个输入的概率加起来需要小于等于 1。
 
-.. py:class:: ResetChannel(prob, qubits_idx='full', num_qubits)
+.. py:class:: ResetChannel(prob, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    重置信道。
 
@@ -236,7 +256,7 @@ paddle\_quantum.channel.common
 
 .. py:class:: ThermalRelaxation(const_t, exec_time, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    热弛豫信道。
    
@@ -257,7 +277,7 @@ paddle\_quantum.channel.common
 
 .. py:class:: MixedUnitaryChannel(num_unitary, qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.channel.base.Channel`
+   基类：:py:class:`paddle_quantum.channel.custom.KrausRepr`
 
    混合酉矩阵信道。
 

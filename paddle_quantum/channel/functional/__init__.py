@@ -17,16 +17,6 @@ r"""
 The module that contains the functions of various quantum channels.
 """
 
-from .common import bit_flip
-from .common import phase_flip
-from .common import bit_phase_flip
-from .common import amplitude_damping
-from .common import generalized_amplitude_damping
-from .common import phase_damping
-from .common import depolarizing
-from .common import pauli_channel
-from .common import reset_channel
-from .common import thermal_relaxation
 from .common import kraus_repr
 from .common import choi_repr
 from .common import stinespring_repr

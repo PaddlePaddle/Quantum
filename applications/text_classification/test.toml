@@ -1,0 +1,23 @@
+# The full config for test the QSANN model.
+# The task of this config. Available values: 'train' | 'test'.
+task = 'test'
+# The text to be tested.
+text = 'The text to be predicted.'
+# The path of the trained model, which will be loaded.
+model_path = 'qsann.pdparams'
+# The path of the vocabulary file in the dataset.
+vocab_path = 'headlines500/vocab.txt'
+# The number of qubits which the quantum circuit contains.
+num_qubits = 6
+# The number of the self-attention layers.
+num_layers = 1
+# The depth of the embedding circuit.
+depth_ebd = 1
+# The depth of the query circuit.
+depth_query = 1
+# The depth of the key circuit.
+depth_key = 1
+# The depth of the value circuit.
+depth_value = 1
+# The classes of input text to be predicted.
+classes = ['房地产行业', '汽车行业']

@@ -1,0 +1,7 @@
+task = 'test'
+image_path = 'pneumoniamnist'
+num_samples = 10
+model_path = 'qnnmic.pdparams'
+num_qubits = [8, 8]
+num_depths = [2, 2]
+observables = [['Z0', 'Z1', 'Z2', 'Z3'], ['X0', 'X1', 'X2', 'X3']]

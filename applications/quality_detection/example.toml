@@ -1,0 +1,7 @@
+task = 'test'
+image_path = 'SurfaceCrack/test_data/'
+num_samples = 10
+model_path = 'qnnqd.pdparams'
+num_qubits = [4,4]
+num_depths = [2,2]
+observables = [['Z0','Z1','Z2','Z3'], ['Z0','Z1','Z2','Z3']]

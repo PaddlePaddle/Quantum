@@ -4,6 +4,7 @@ paddle\_quantum.qchem.qchem
 量子化学中的功能函数。
 
 .. py:function:: qubitOperator_to_Hamiltonian(spin_h,tol)
+
    将openfermion形式转化为量桨的哈密顿量形式。
 
    :param spin_h: openfermion形式的哈密顿量。
@@ -38,7 +39,7 @@ paddle\_quantum.qchem.qchem
    :type charge: int, optional
    :param multiplicity: 分子的多重度, 默认值为 ``1``。
    :type multiplicity: int, optional
-   :param basis: 常用的基组是 ``sto-3g、6-31g``等, 默认的基组是 ``sto-3g``，更多的基组选择可以参考网站 
+   :param basis: 常用的基组是 ``sto-3g、6-31g`` 等, 默认的基组是 ``sto-3g``，更多的基组选择可以参考网站 
                   https://psicode.org/psi4manual/master/basissets_byelement.html#apdx-basiselement。
    :type basis: str, optional
    :param method: 用于计算基态能量的方法, 包括 ``scf`` 和 ``fci``，默认的方法为 ``scf``。

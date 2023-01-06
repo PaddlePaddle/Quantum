@@ -35,6 +35,18 @@ paddle\_quantum.linalg
    :return: 决定是否 :math:`P - P^\dagger = 0`
    :rtype: bool
 
+.. py:function:: is_positive(mat, eps=1e-6)
+
+   验证矩阵 ``P`` 是否为半正定矩阵
+   
+   :param mat: 半正定矩阵
+   :type mat: Union[np.ndarray, paddle.Tensor]
+   :param eps: 容错率
+   :type eps: float, optional
+
+   :return: 决定是否 :math:`P` 为厄密矩阵且本征值均为非负实数
+   :rtype: bool
+
 .. py:function:: is_projector(mat, eps=1e-6)
 
    验证矩阵 ``P`` 是否为映射算子
@@ -230,3 +242,39 @@ paddle\_quantum.linalg
 
    :return: :math:`f(H)`
    :rtype: paddle.Tensor
+
+.. py:function:: pauli_basis_generation(num_qubits)
+
+   生成一组泡利基
+
+   :param num_qubits: 量子比特数 :math:`n`
+   :type num_qubits: int
+
+   :return: 空间 :math:`\mathbb{C}^{2^n \times 2^n}` 上的泡利基
+   :rtype: List[paddle.Tensor]
+
+.. py:function:: pauli_decomposition(mat)
+
+   目标矩阵在泡利基下的分解
+
+   :param mat: 目标矩阵
+   :type mat: Union[np.ndarray, paddle.Tensor]
+
+   :return: 泡利基的系数列表
+   :rtype: Union[np.ndarray, paddle.Tensor]
+
+.. py:function:: subsystem_decomposition(mat, first_basis, second_basis, inner_prod)
+
+   目标矩阵在两个子系统中给定两个基上的分解
+
+   :param mat: 目标矩阵 :math:`w`
+   :type mat: Union[np.ndarray, paddle.Tensor]
+   :param first_basis: 第一个空间上的基 :math:`\{e_i\}_i`
+   :type first_basis: Union[List[np.ndarray], List[paddle.Tensor]]
+   :param second_basis: 第二个空间上的基 :math:`\{f_j\}_j`
+   :type second_basis: Union[List[np.ndarray], List[paddle.Tensor]]
+   :param inner_prod: 两个空间上的内积
+   :type inner_prod: Union[Callable[[np.ndarray, np.ndarray], np.ndarray], Callable[[paddle.Tensor, paddle.Tensor], paddle.Tensor]]
+   
+   :return: 系数矩阵 :math:`[\beta_{ij}]` 满足 :math:`w = \sum_{i, j} \beta_{ij} e_i \otimes f_j`
+   :rtype: Union[np.ndarray, paddle.Tensor]

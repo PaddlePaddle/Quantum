@@ -14,20 +14,18 @@
 # limitations under the License.
 
 r"""
-The source file of the classes for several quantum channel.
+The source file of the classes for common quantum channels.
 """
 
 import paddle
-import paddle_quantum
+from .custom import KrausRepr
 from ..intrinsic import _format_qubits_idx
-from ..qinfo import kraus_oper_random
-from .base import Channel
-from . import functional
-from ..backend import Backend
+from ..qinfo import kraus_unitary_random
+from .representation import *
 from typing import Union, Iterable
 
 
-class BitFlip(Channel):
+class BitFlip(KrausRepr):
     r"""A collection of bit flip channels.
 
     Such a channel's Kraus operators are
@@ -46,19 +44,10 @@ class BitFlip(Channel):
             self, prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
+        super().__init__(bit_flip_kraus(prob), qubits_idx, num_qubits, check_complete=False)
+        
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.bit_flip(state, self.prob, qubit_idx, self.dtype, self.backend)
-        return state
-
-
-class PhaseFlip(Channel):
+class PhaseFlip(KrausRepr):
     r"""A collection of phase flip channels.
 
     Such a channel's Kraus operators are
@@ -77,19 +66,10 @@ class PhaseFlip(Channel):
             self, prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.phase_flip(state, self.prob, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(phase_flip_kraus(prob), qubits_idx, num_qubits, check_complete=False)
 
 
-class BitPhaseFlip(Channel):
+class BitPhaseFlip(KrausRepr):
     r"""A collection of bit phase flip channels.
 
     Such a channel's Kraus operators are
@@ -108,19 +88,10 @@ class BitPhaseFlip(Channel):
             self, prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.bit_phase_flip(state, self.prob, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(bit_phase_flip_kraus(prob), qubits_idx, num_qubits, check_complete=False)
 
 
-class AmplitudeDamping(Channel):
+class AmplitudeDamping(KrausRepr):
     r"""A collection of amplitude damping channels.
 
     Such a channel's Kraus operators are
@@ -147,19 +118,10 @@ class AmplitudeDamping(Channel):
             self, gamma: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gamma = paddle.to_tensor(gamma) if isinstance(gamma, (int, float)) else gamma
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.amplitude_damping(state, self.gamma, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(amplitude_damping_kraus(gamma), qubits_idx, num_qubits, check_complete=False)
 
 
-class GeneralizedAmplitudeDamping(Channel):
+class GeneralizedAmplitudeDamping(KrausRepr):
     r"""A collection of generalized amplitude damping channels.
 
     Such a channel's Kraus operators are
@@ -185,21 +147,10 @@ class GeneralizedAmplitudeDamping(Channel):
             self, gamma: Union[paddle.Tensor, float], prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
-        self.gamma = paddle.to_tensor(gamma) if isinstance(gamma, (int, float)) else gamma
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.generalized_amplitude_damping(
-                state, self.gamma, self.prob, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(generalized_amplitude_damping_kraus(gamma, prob), qubits_idx, num_qubits, check_complete=False)
 
 
-class PhaseDamping(Channel):
+class PhaseDamping(KrausRepr):
     r"""A collection of phase damping channels.
 
     Such a channel's Kraus operators are
@@ -226,19 +177,10 @@ class PhaseDamping(Channel):
             self, gamma: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gamma = paddle.to_tensor(gamma) if isinstance(gamma, (int, float)) else gamma
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.phase_damping(state, self.gamma, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(phase_damping_kraus(gamma), qubits_idx, num_qubits, check_complete=False)
 
 
-class Depolarizing(Channel):
+class Depolarizing(KrausRepr):
     r"""A collection of depolarizing channels.
 
     Such a channel's Kraus operators are
@@ -266,19 +208,35 @@ class Depolarizing(Channel):
             self, prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.prob = paddle.to_tensor(prob) if isinstance(prob, (int, float)) else prob
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.depolarizing(state, self.prob, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(depolarizing_kraus(prob), qubits_idx, num_qubits, check_complete=False)
 
 
-class PauliChannel(Channel):
+class GeneralizedDepolarizing(KrausRepr):
+    r"""A generalized depolarizing channel.
+
+    Such a channel's Kraus operators are
+
+    .. math::
+
+        E_0 = \sqrt{1-(D - 1)p/D} I, \text{ where } D = 4^n, \\
+        E_k = \sqrt{p/D} \sigma_k, \text{ for } 0 < k < D.
+    
+    Args:
+        prob: probability :math:`p`. Its value should be in the range :math:`[0, 1]`.
+        qubits_idx: Indices of the qubits on which the channels act, the length of which is :math:`n`.
+        num_qubits: Total number of qubits. Defaults to ``None``.
+    
+    """
+    def __init__(
+            self, prob: Union[paddle.Tensor, float],
+            qubits_idx: Union[Iterable[int], int, str], num_qubits: int = None
+    ):
+        num_acted_qubits = np.size(np.array(qubits_idx)).item()
+        super().__init__(generalized_depolarizing_kraus(prob, num_acted_qubits),
+                         qubits_idx, num_qubits, check_complete=False)
+
+
+class PauliChannel(KrausRepr):
     r"""A collection of Pauli channels.
 
     Args:
@@ -294,19 +252,10 @@ class PauliChannel(Channel):
             self, prob: Union[paddle.Tensor, Iterable[float]],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.prob = paddle.to_tensor(prob) if isinstance(prob, Iterable) else prob
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.pauli_channel(state, self.prob, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(pauli_kraus(prob), qubits_idx, num_qubits, check_complete=False)
 
 
-class ResetChannel(Channel):
+class ResetChannel(KrausRepr):
     r"""A collection of reset channels.
 
     Such a channel reset the state to :math:`|0\rangle` with a probability of p and to :math:`|1\rangle` with
@@ -349,19 +298,10 @@ class ResetChannel(Channel):
             self, prob: Union[paddle.Tensor, Iterable[float]],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.prob = paddle.to_tensor(prob) if isinstance(prob, Iterable) else prob
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.reset_channel(state, self.prob, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(reset_kraus(prob), qubits_idx, num_qubits, check_complete=False)
 
 
-class ThermalRelaxation(Channel):
+class ThermalRelaxation(KrausRepr):
     r"""A collection of thermal relaxation channels.
 
     Such a channel simulates the mixture of the :math:`T_1` and the :math:`T_2` processes on superconducting devices.
@@ -379,22 +319,11 @@ class ThermalRelaxation(Channel):
             self, const_t: Union[paddle.Tensor, Iterable[float]], exec_time: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.const_t = paddle.to_tensor(const_t) if isinstance(const_t, (int, float)) else const_t
-        self.exec_time = paddle.to_tensor(exec_time) if isinstance(exec_time, (int, float)) else exec_time
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.thermal_relaxation(
-                state, self.const_t, self.exec_time, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(thermal_relaxation_kraus(const_t, exec_time), qubits_idx, num_qubits, check_complete=False)
 
 
-class MixedUnitaryChannel(Channel):
-    r"""A collection of mixed unitary channels.
+class MixedUnitaryChannel(KrausRepr):
+    r"""A collection of single-qubit mixed unitary channels.
 
     Such a channel's Kraus operators are randomly generated unitaries times related probabilities
     .. math::
@@ -413,13 +342,7 @@ class MixedUnitaryChannel(Channel):
             self, num_unitary: int,
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__()
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.kraus_oper = kraus_oper_random(1, num_unitary)
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for qubit_idx in self.qubits_idx:
-            state = functional.kraus_repr(state, self.kraus_oper, qubit_idx, self.dtype, self.backend)
-        return state
+        #TODO: increase the number of acting qubits, currently only support 1
+        super().__init__(kraus_unitary_random(1, num_unitary), 
+                         _format_qubits_idx(qubits_idx, num_qubits, 1), 
+                         num_qubits, check_complete=False)

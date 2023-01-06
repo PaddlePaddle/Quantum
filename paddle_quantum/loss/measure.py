@@ -102,7 +102,8 @@ class ExpecVal(paddle_quantum.Operator):
             return expec_val
 
         num_qubits = state.num_qubits
-        expec_val = paddle.zeros([1])
+        float_dtype = _get_float_dtype(paddle_quantum.get_dtype())
+        expec_val = paddle.zeros([1], dtype=float_dtype)
         state_data = state.data
         for i in range(0, self.num_terms):
             pauli_site = self.sites[i]

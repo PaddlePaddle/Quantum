@@ -22,16 +22,22 @@ import warnings
 import re
 import numpy as np
 from scipy.linalg import logm, sqrtm
+from scipy.stats import unitary_group
 import cvxpy
 import matplotlib.image
+from itertools import product
 
 import paddle
 import paddle_quantum as pq
 from .state import State, _type_fetch, _type_transform
 from .base import get_dtype
-from .intrinsic import _get_float_dtype
-from .linalg import dagger, NKron, unitary_random
+from .linalg import abs_norm, dagger, NKron, unitary_random, is_positive
 from .channel.custom import ChoiRepr, KrausRepr, StinespringRepr
+from .channel.custom import (
+    _choi_to_kraus, _choi_to_stinespring, 
+    _kraus_to_choi, _kraus_to_stinespring, 
+    _stinespring_to_choi, _stinespring_to_kraus
+)
 from typing import Optional, Tuple, List, Union
 
 
@@ -399,6 +405,39 @@ def partial_transpose(density_op: Union[np.ndarray, paddle.Tensor, State],
     return density_op.numpy() if type_str == "numpy" else density_op
 
 
+def permute_systems(mat: Union[np.ndarray, paddle.Tensor, State], 
+                    perm_list: List[int], dim_list: List[int]) -> Union[np.ndarray, paddle.Tensor, State]:
+    r"""Permute quantum system based on a permute list
+
+    Args:
+        mat: A given matrix representation which is usually a quantum state.
+        perm: The permute list. e.g. input ``[0,2,1,3]`` will permute the 2nd and 3rd subsystems. 
+        dim: A list of dimension sizes of each subsystem. 
+
+    Returns:
+        The permuted matrix
+    """
+    #TODO: modifying the code with paddle.tranpose
+    if len(perm_list) != len(dim_list):
+        raise ValueError(f"The dimensions does not match: expected {len(perm_list)}, received {len(dim_list)}.")
+
+    mat_type = _type_fetch(mat)
+    mat = _type_transform(mat, "numpy")
+
+    shape = mat.shape
+    if any(np.array(shape) - 2**5 * np.ones(len(shape))):
+        warnings.warn("The method is inefficient for large systems.")
+    perm_mat = np.zeros(shape, dtype = "complex128")
+    perm_idx = np.array(list(product(range(dim_list[0]), repeat=len(dim_list))))[:, perm_list]
+    for i in range(shape[0]):
+        for j in range(shape[1]):
+            row_perm_idx = sum(perm_idx[i] * dim_list ** np.array(range(len(perm_idx[i])-1, -1, -1)))
+            col_perm_idx = sum(perm_idx[j] * dim_list ** np.array(range(len(perm_idx[i])-1, -1, -1)))
+            perm_mat[row_perm_idx, col_perm_idx] = mat[i,j].item()
+
+    return _type_transform(perm_mat, mat_type)
+
+
 def negativity(density_op: Union[np.ndarray, paddle.Tensor, State]) -> Union[np.ndarray, paddle.Tensor]:
     r"""Compute the Negativity :math:`N = ||\frac{\rho^{T_A}-1}{2}||` of the input quantum state.
 
@@ -449,6 +488,31 @@ def is_ppt(density_op: Union[np.ndarray, paddle.Tensor, State]) -> bool:
     """
     return bool(negativity(density_op) <= 0)
 
+
+def is_choi(op: Union[np.ndarray, paddle.Tensor]) -> bool:
+    r"""Check if the input op is a Choi operator of a quantum operation.
+
+    Args:
+        op: matrix form of the linear operation.
+
+    Returns:
+        Whether the input op is a valid quantum operation Choi operator.
+    
+    Note: 
+        The operation op is (default) applied to the second system.
+    """
+    op = _type_transform(op, "tensor").cast('complex128')
+    shape = op.shape
+    n = int(math.log2(shape[-1]))
+    sys_dim = 2 ** (n // 2)
+
+    # CP condition and Trace non-increasing condition
+    if is_positive(op):
+
+        op_partial = partial_trace(op, sys_dim, sys_dim, 2)
+            
+        return is_positive(paddle.eye(sys_dim) - op_partial)
+    return False
 
 def schmidt_decompose(psi: Union[np.ndarray, paddle.Tensor, State], 
                       sys_A: List[int]=None) -> Union[Tuple[paddle.Tensor, paddle.Tensor, paddle.Tensor],
@@ -670,7 +734,7 @@ def tensor_state(state_a: State, state_b: State, *args: State) -> State:
     Returns:
         tensor product state of input states
         
-    Notes:
+    Note:
         Need to be careful with the backend of states; 
         Use ``paddle_quantum.linalg.NKron`` if the input datatype is ``paddle.Tensor`` or ``numpy.ndarray``.
         
@@ -705,14 +769,14 @@ def diamond_norm(channel_repr: Union[ChoiRepr, KrausRepr, StinespringRepr, paddl
         Theory of Computing 5.1(2009):217-238.
     '''
     if isinstance(channel_repr, ChoiRepr):
-        choi_matrix = channel_repr.choi_oper
+        choi_matrix = channel_repr.choi_repr
 
     elif isinstance(channel_repr, paddle.Tensor):
         choi_matrix = channel_repr
 
     elif isinstance(channel_repr, (KrausRepr, StinespringRepr)):
         warnings.warn('`channel_repr` is not in Choi representaiton, and is converted into `ChoiRepr`')
-        choi_matrix = channel_convert(channel_repr, 'Choi').choi_oper
+        choi_matrix = channel_repr.to_choi().choi_repr
 
     else:
         raise RuntimeError('`channel_repr` must be `ChoiRepr`or `KrausRepr` or `StinespringRepr` or `paddle.Tensor`.')
@@ -753,19 +817,21 @@ def diamond_norm(channel_repr: Union[ChoiRepr, KrausRepr, StinespringRepr, paddl
     return prob.solve(**kwargs)
 
 
-def channel_convert(original_channel: Union[ChoiRepr, KrausRepr, StinespringRepr], target: str, tol: float = 1e-6) -> Union[ChoiRepr, KrausRepr, StinespringRepr]:
-    r"""convert the given channel to the target implementation
+def channel_repr_convert(representation: Union[paddle.Tensor, np.ndarray, List[paddle.Tensor], List[np.ndarray]], source: str, 
+                         target: str, tol: float = 1e-6) -> Union[paddle.Tensor, np.ndarray, List[paddle.Tensor], List[np.ndarray]]:
+    r"""convert the given representation of a channel to the target implementation
 
     Args:
-        original_channel: input quantum channel
-        target: target implementation, should to be ``Choi``, ``Kraus`` or ``Stinespring``
-        tol: error tolerance of the convert, 1e-6 by default
+        representation: input representation
+        source: input form, should be ``'Choi'``, ``'Kraus'`` or ``'Stinespring'``
+        target: target form, should be ``'Choi'``, ``'Kraus'`` or ``'Stinespring'``
+        tol: error tolerance for the conversion from Choi, :math:`10^{-6}` by default
 
     Raises:
         ValueError: Unsupported channel representation: require Choi, Kraus or Stinespring.
 
     Returns:
-        Union[ChoiRepr, KrausRepr]: quantum channel by the target implementation
+        quantum channel by the target implementation
         
     Note:
         choi -> kraus currently has the error of order 1e-6 caused by eigh
@@ -774,75 +840,145 @@ def channel_convert(original_channel: Union[ChoiRepr, KrausRepr, StinespringRepr
         NotImplementedError: does not support the conversion of input data type
         
     """
-    target = target.capitalize()
+    source, target = source.capitalize(), target.capitalize()
     if target not in ['Choi', 'Kraus', 'Stinespring']:
         raise ValueError(f"Unsupported channel representation: require Choi, Kraus or Stinespring, not {target}")
-    if type(original_channel).__name__ == f'{target}Repr':
-        return original_channel
-
-    if isinstance(original_channel, KrausRepr) and target == 'Choi':
-        kraus_oper = original_channel.kraus_oper
-        ndim = original_channel.kraus_oper[0].shape[0]
-        kraus_oper_tensor = paddle.concat([paddle.kron(x, x.conj().T) for x in kraus_oper]).reshape([len(kraus_oper), ndim, -1])
-        chan = paddle.sum(kraus_oper_tensor, axis=0).reshape([ndim for _ in range(4)]).transpose([2, 1, 0, 3])
-        choi_repr = chan.transpose([0, 2, 1, 3]).reshape([ndim * ndim, ndim * ndim])
-        result = ChoiRepr(choi_repr, original_channel.qubits_idx)
-        result.qubits_idx = original_channel.qubits_idx
-
-    elif isinstance(original_channel, KrausRepr) and target == 'Stinespring':
-        kraus_oper = original_channel.kraus_oper
-        j_dim = len(kraus_oper)
-        i_dim = kraus_oper[0].shape[0]
-        kraus_oper_tensor = paddle.concat(kraus_oper).reshape([j_dim, i_dim, -1])
-        stinespring_mat = kraus_oper_tensor.transpose([1, 0, 2])
-        stinespring_mat = stinespring_mat.reshape([i_dim * j_dim, i_dim])
-        result = StinespringRepr(stinespring_mat, original_channel.qubits_idx)
-        result.qubits_idx = original_channel.qubits_idx
-
-    elif isinstance(original_channel, ChoiRepr) and target == 'Kraus':
-        choi_repr = original_channel.choi_oper
-        ndim = int(math.sqrt(original_channel.choi_oper.shape[0]))
-        w, v = paddle.linalg.eigh(choi_repr)
-
-        # add abs to make eigvals safe
-        w = paddle.abs(w)
-        l_cut = 0
-        for l in range(len(w) - 1, -1, -1):
-            if paddle.sum(paddle.abs(w[l:])) / paddle.sum(paddle.abs(w)) > 1 - tol:
-                l_cut = l
-                break
-        kraus = [(v * paddle.sqrt(w))[:, l].reshape([ndim, ndim]).T for l in range(l_cut, ndim**2)]
-
-        result = KrausRepr(kraus, original_channel.qubits_idx)
-        result.qubits_idx = original_channel.qubits_idx
-
-    elif isinstance(original_channel, StinespringRepr) and target == 'Kraus':
-        stinespring_mat = original_channel.stinespring_matrix
-        i_dim = stinespring_mat.shape[1]
-        j_dim = stinespring_mat.shape[0] // i_dim
-        kraus_oper = stinespring_mat.reshape([i_dim, j_dim, i_dim]).transpose([1, 0, 2])
-        kraus_oper = [kraus_oper[j] for j in range(j_dim)]
-        result = KrausRepr(kraus_oper, original_channel.qubits_idx)
-        result.qubits_idx = original_channel.qubits_idx
-
-    else:
-        raise NotImplementedError(
-            f"does not support the conversion of {type(original_channel)}")
+    if source == target:
+        return representation
+    if source not in ['Choi', 'Kraus', 'Stinespring']:
+        raise ValueError(f"Unsupported channel representation: require Choi, Kraus or Stinespring, not {source}")
+    is_ndarray = False
+    if isinstance(representation, np.ndarray):
+        is_ndarray = True
+        representation = paddle.to_tensor(representation)
+    elif isinstance(representation, List) and isinstance(representation[0], np.ndarray):
+        is_ndarray = True
+        representation = [paddle.to_tensor(representation[i]) for i in range(len(representation))]
     
-    return result
+    if source == 'Choi':
+        if target == 'Kraus':
+            representation = _choi_to_kraus(representation, tol) 
+            return [representation[i].numpy() for i in range(len(representation))] if is_ndarray else representation
+        
+        # stinespring repr
+        representation = _choi_to_stinespring(representation, tol)
+
+    elif source == 'Kraus':
+        representation = representation if isinstance(representation, List) else [representation]
+        representation = _kraus_to_choi(representation) if target == 'Choi' else _kraus_to_stinespring(representation) 
+
+    else: # if source == 'Stinespring'
+        if target == 'Kraus':
+            representation = _stinespring_to_kraus(representation)
+            return [representation[i].numpy() for i in range(len(representation))] if is_ndarray else representation
+        
+        # choi repr
+        representation = _stinespring_to_choi(representation)
+
+    return representation.numpy() if is_ndarray else representation
 
 
-def kraus_oper_random(num_qubits: int, num_oper: int) -> list:
-    r""" randomly generate a set of kraus operators for quantum channel
+def random_channel(num_qubits: int, rank: int = None, target: str = 'Kraus') -> Union[paddle.Tensor, List[paddle.Tensor]]:
+    r"""Generate a random channel from its Stinespring representation
+    
+    Args:
+        num_qubits: number of qubits :math:`n`
+        rank: rank of this Channel. Defaults to be random sampled from :math:`[0, 2^n]`
+        target: target representation, should to be ``'Choi'``, ``'Kraus'`` or ``'Stinespring'``
+    
+    Returns:
+        the target representation of a random channel.
+    
+    """
+    target = target.capitalize()
+    dim = 2 ** num_qubits
+    rank = np.random.randint(dim) + 1 if rank is None else rank
+    assert 1 <= rank <= dim, \
+        f"rank must be positive and no larger than the dimension {dim} of the channel: received {rank}"
+    
+    # rank = 1
+    unitary = unitary_group.rvs(rank * dim)
+    stinespring_mat = paddle.to_tensor(unitary[:, :dim], dtype=pq.get_dtype()).reshape([rank, dim, dim])
+    list_kraus = [stinespring_mat[j] for j in list(range(rank))]
+    
+    if target == 'Choi':
+        return channel_repr_convert(list_kraus, source='Kraus', target='Choi')
+    elif target == 'Stinespring':
+        return channel_repr_convert(list_kraus, source='Kraus', target='Stinespring')
+    return list_kraus
+
+
+def kraus_unitary_random(num_qubits: int, num_oper: int) -> list:
+    r""" randomly generate a set of unitaries as kraus operators for a quantum channel
 
     Args:
         num_qubits: The amount of qubits of quantum channel.
-        num_oper: The amount of kraus operators to be generated.
+        num_oper: The amount of unitaries to be generated.
 
     Returns:
         a list of kraus operators
 
     """
-    float_dtype = _get_float_dtype(get_dtype())
-    prob = [paddle.sqrt(paddle.to_tensor(1/num_oper, dtype = float_dtype))] * num_oper
+    prob = paddle.rand([num_oper])
+    prob = paddle.sqrt(prob / paddle.sum(prob)).cast(get_dtype())
     return [prob[idx] * unitary_random(num_qubits) for idx in range(num_oper)]
+
+
+def grover_generation(oracle: Union[np.ndarray, paddle.Tensor]) -> Union[np.ndarray, paddle.Tensor]:
+    r"""Construct the Grover operator based on ``oracle``.
+    
+    Args:
+        oracle: the input oracle :math:`A` to be rotated.
+        
+    Returns:
+        Grover operator in form
+        
+    .. math::
+    
+        G = A (2 |0^n \rangle\langle 0^n| - I^n) A^\dagger \cdot (I - 2|1 \rangle\langle 1|) \otimes I^{n-1}
+    
+    """
+    type_str = _type_fetch(oracle)
+    oracle = _type_transform(oracle, "tensor")
+    complex_dtype = oracle.dtype
+    dimension = oracle.shape[0]
+    ket_zero = paddle.eye(dimension, 1).cast(complex_dtype)
+
+    diffusion_op = (2 + 0j) * ket_zero @ ket_zero.T - paddle.eye(dimension).cast(complex_dtype)
+    reflection_op = paddle.kron(paddle.to_tensor([[1, 0], [0, -1]], dtype=complex_dtype), paddle.eye(dimension // 2))
+
+    grover = oracle @ diffusion_op @ dagger(oracle) @ reflection_op
+    return grover.numpy() if type_str == 'numpy' else grover
+
+
+def qft_generation(num_qubits: int) -> paddle.Tensor:
+    r"""Construct the quantum fourier transpose (QFT) gate.
+    
+    Args:
+        num_qubits: number of qubits :math:`n` st. :math:`N = 2^n`.
+    
+    Returns:
+        a gate in below matrix form, here :math:`\omega_N = \text{exp}(\frac{2 \pi i}{N})`
+        
+    .. math::
+
+        \begin{align}
+            QFT = \frac{1}{\sqrt{N}}
+            \begin{bmatrix}
+                1 & 1 & .. & 1 \\
+                1 & \omega_N & .. & \omega_N^{N-1} \\
+                .. & .. & .. & .. \\
+                1 & \omega_N^{N-1} & .. & \omega_N^{(N-1)^2}
+            \end{bmatrix}
+        \end{align}
+    
+    """
+    N = 2 ** num_qubits
+    omega_N = np.exp(1j * 2 * math.pi / N)
+    
+    qft_mat = np.ones([N, N], dtype=get_dtype())
+    for i in range(1, N):
+        for j in range(1, N):
+            qft_mat[i, j] = omega_N ** ((i * j) % N)
+    
+    return paddle.to_tensor(qft_mat / math.sqrt(N))

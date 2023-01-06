@@ -34,7 +34,7 @@
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.2.2-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.3.0-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -91,23 +91,19 @@ pip install -e .
 
 ### 量子化学模块的环境设置
 
-我们的量子化学模块是基于 `Psi4` 进行开发的，所以在运行量子化学模块之前需要先行安装该 Python 包。
+当前我们的量子化学模块在后端使用 `PySCF` 来计算各类分子积分，所以在运行量子化学模块之前需要先行安装该 Python 包。
 
-> 推荐在 Python3.8 环境中安装。
+> 推荐在 Python>=3.6 环境中安装。
 
-在安装 `psi4` 时，我们建议您使用 conda。对于 **MacOS/Linux** 的用户，可以使用如下指令。
-
-```bash
-conda install psi4 -c psi4
-```
-
-对于 **Windows** 用户，请使用
+在安装 `PySCF` 时，我们建议您使用 conda。对于 **MacOS/Linux** 的用户，可以使用如下指令。
 
 ```bash
-conda install psi4 -c psi4 -c conda-forge
+conda install -c pyscf pyscf
 ```
 
-**注意：** 更多的下载方法请参考 [Psi4](https://psicode.org/installs/v14/)。
+> 注：对于 **Windows** 用户，如果操作系统为 Windows10，可以在其应用商店提供的 Ubuntu 子系统中利用上述命令安装 `PySCF`。`PySCF` 并不支持直接在 Windows 下运行，我们正在努力开发更多的量子化学后端，在量桨的下一版本中将会有对 Windows 更好的支持。 
+
+**注意：** 更多的下载方法请参考 [PySCF](https://pyscf.org/install.html)。
 
 ### 运行
 
@@ -217,7 +213,7 @@ Paddle Quantum 使用 setuptools 的 develop 模式进行安装，相关代码�
 
 ## 交流与反馈
 
-- 我们非常欢迎您通过 [Github Issues](https://github.com/PaddlePaddle/Quantum/issues) 来提交问题、报告与建议。
+- 我们非常欢迎您通过 [GitHub Issues](https://github.com/PaddlePaddle/Quantum/issues) 来提交问题、报告与建议。
 
 - 技术交流QQ群：1076223166
 

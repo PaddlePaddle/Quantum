@@ -1,0 +1,11 @@
+task = 'test'
+text = '奔驰GLS怎么样？'
+model_path = 'qsann.pdparams'
+vocab_path = 'headlines500/vocab.txt'
+num_qubits = 6
+num_layers = 1
+depth_ebd = 1
+depth_query = 1
+depth_key = 1
+depth_value = 1
+classes = ['房地产行业', '汽车行业']

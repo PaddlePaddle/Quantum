@@ -246,7 +246,7 @@ def _add_custom_block(circuit, tau, grouped_hamiltonian, custom_coefficients, pe
 def __add_first_order_trotter_block(circuit, tau, grouped_hamiltonian, reverse=False, optimization=False):
     r"""Add a time evolution block of the first order Trotter-Suzuki decompositon
 
-    Notes:
+    Note:
         This is an intrinsic function, user do not need to call this directly
     """
     if not reverse:
@@ -349,7 +349,7 @@ def optimal_circuit(circuit: paddle_quantum.ansatz.Circuit, theta: Union[paddle.
 def __add_second_order_trotter_block(circuit, tau, grouped_hamiltonian):
     r"""Add a time evolution block of the second order Trotter-Suzuki decompositon
 
-    Notes:
+    Note:
         This is an intrinsic function, user do not need to call this directly
     """
     __add_first_order_trotter_block(circuit, tau / 2, grouped_hamiltonian)
@@ -359,7 +359,7 @@ def __add_second_order_trotter_block(circuit, tau, grouped_hamiltonian):
 def __add_higher_order_trotter_block(circuit, tau, grouped_hamiltonian, order):
     r"""Add a time evolution block of the higher order (2k) Trotter-Suzuki decompositon 
 
-    Notes:
+    Note:
         This is an intrinsic function, user do not need to call this directly
     """
     assert order % 2 == 0
@@ -437,7 +437,7 @@ def __group_hamiltonian_xyz(hamiltonian):
     Args:
         hamiltonian: Hamiltonian class in Paddle Quantum
 
-    Notes:
+    Note:
         X, (Y, Z) means the terms whose Pauli word only include X, (Y, Z). For example, 'XXXY' would be a remainder term.
     """
     grouped_hamiltonian = []

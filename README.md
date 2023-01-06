@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.2.2-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.3.0-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -90,22 +90,19 @@ pip install -e .
 
 ### Environment setup for Quantum Chemistry module
 
-Our `qchem` module is based on `Psi4`, so before executing quantum chemistry, we have to install this Python package.
+Currently, our `qchem` module uses `PySCF` as its backend to compute molecular integrals, so before executing quantum chemistry, we have to install this Python package.
 
-> It is recommended that `Psi4` is installed in a Python 3.8 environment.
+> It is recommended that `PySCF` is installed in a Python environment whose Python version >=3.6.
 
-We highly recommend you to install `Psi4` via conda. **MacOS/Linux** user can use the command:
-
-```bash
-conda install psi4 -c psi4
-```
-
-For **Windows** user, the command is:
+We highly recommend you to install `PySCF` via conda. **MacOS/Linux** user can use the command:
 
 ```bash
-conda install psi4 -c psi4 -c conda-forge
+conda install -c pyscf pyscf
 ```
-**Note:** Please refer to [Psi4](https://psicode.org/installs/v14/) for more download options.
+
+> NOTE: For **Windows** user, if your operating system is Windows10, you can install `PySCF` in Ubuntu subsystem provided by Windows 10's App Store. `PySCF` can't run directly in Windows, so we are working hard to develop more quantum chemistry backends. Our support for Windows will be improved in the coming release of Paddle Quantum.
+
+**Note:** Please refer to [PySCF](https://pyscf.org/install.html) for more download options.
 
 ### Run example
 

@@ -23,3 +23,4 @@ paddle\_quantum.channel
    paddle_quantum.channel.base
    paddle_quantum.channel.common
    paddle_quantum.channel.custom
+   paddle_quantum.channel.representation

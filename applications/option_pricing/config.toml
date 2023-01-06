@@ -1,0 +1,13 @@
+# The overall profile used to calculate the option pricing model
+# initial price
+initial_price = 100
+# strike price
+strike_price = 110
+# risk-free rate
+interest_rate = 0.05
+# Market volatility
+volatility = 0.1
+# Option expiration date (in years)
+maturity_date = 1
+# Estimation accuracy index
+degree_of_estimation = 5

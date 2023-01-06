@@ -1,0 +1,19 @@
+# The full config for testing the VSQL model.
+# The task of this config. Available values: 'train' | 'test'.
+task = 'test'
+# The path of the input images.
+image_path = 'data_0.png'
+# Whether the image_path is a directory. Available values: true | false.
+# The value true means the path is a directory and all the images there will be predicted.
+is_dir = false
+# The path of the trained model, which will be loaded.
+model_path = 'vsql.pdparams'
+# The number of qubits which the quantum circuit contains.
+num_qubits = 10
+# The number of qubits which the shadow circuit contains.
+num_shadow = 2
+# The depth of the quantum circuit. Default to 1.
+depth = 1
+# The classes of handwrite digits to be predicted.
+# It will use all labels if the value is not provided.
+classes = [0, 1]

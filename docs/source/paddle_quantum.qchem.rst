@@ -11,10 +11,10 @@ paddle\_quantum.qchem
 .. toctree::
    :maxdepth: 4
 
-   paddle_quantum.qchem.complex_utils
-   paddle_quantum.qchem.density_matrix
-   paddle_quantum.qchem.hardware_efficient
-   paddle_quantum.qchem.loss
-   paddle_quantum.qchem.qchem
-   paddle_quantum.qchem.slater_determinant
-   paddle_quantum.qchem.uccsd
+   paddle_quantum.qchem.algorithm
+   paddle_quantum.qchem.ansatz
+   paddle_quantum.qchem.drivers
+   paddle_quantum.qchem.fermionic_state
+   paddle_quantum.qchem.molecule
+   paddle_quantum.qchem.properties
+   paddle_quantum.qchem.utils

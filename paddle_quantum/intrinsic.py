@@ -38,6 +38,8 @@ def _format_qubits_idx(
         qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int, str],
         num_qubits: int, num_acted_qubits: int = 1
 ) -> Union[List[List[int]], List[int]]:
+    assert not (isinstance(qubits_idx, str) and num_qubits is None), \
+        f"Cannot specify the qubit indices when num_qubits is None: received qubit_idx {qubits_idx} and num_qubits {num_qubits}"
     if num_acted_qubits == 1:
         if qubits_idx == 'full':
             qubits_idx = list(range(0, num_qubits))

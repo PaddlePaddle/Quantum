@@ -1,0 +1,57 @@
+# The config for training the QNNMIC model.
+# The task of this config. Available values: 'train' | 'test'.
+task = 'train'
+
+# The name of the model, which is used to save the model.
+model_name = 'qnnmic'
+
+# The path to save the model. Both relative and absolute paths are allowed.
+# It saves the model to the current path by default.
+# saved_path = './'
+
+# The number of qubits of the quantum circuit in each layer.
+num_qubits = [8, 8]
+
+# # The depth of the quantum circuit in each layer.
+num_depths = [2, 2]
+
+# The observables of the quantum circuit in each layer.
+observables = [['Z0', 'Z1', 'Z2', 'Z3'], ['X0', 'X1', 'X2', 'X3']]
+
+# The size of the batch samplers.
+batch_size = 40
+
+# The number of epochs to train the model.
+num_epochs = 20
+
+# The learning rate used to update the parameters, default to 0.01.
+learning_rate = 0.1
+
+# The path of the dataset. It defaults to breastmnist.
+dataset = 'pneumoniamnist'
+
+# The path used to save logs. Default to ``./``.
+saved_dir = './'
+
+# Whether use the validation.
+# It is true means the dataset contains training, validation and test datasets.
+# It is false means the dataset only contains training datasets and test datasets. 
+using_validation = true
+
+# The number of the data in the training dataset.
+# The value defaults to -1 which means using all data.
+num_train = 500
+
+# The number of the data in the validation dataset.
+# The value defaults to -1 which means using all data.
+num_val = -1
+
+# The number of the data in the test dataset.
+# The value defaults to -1 which means using all data.
+num_test = -1
+
+# Number of epochs with no improvement after which training will be stopped.
+early_stopping = 1000
+
+# The number of subprocess to load data, 0 for no subprocess used and loading data in main process, default to 0.
+num_workers = 0

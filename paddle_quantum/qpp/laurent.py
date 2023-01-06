@@ -236,7 +236,7 @@ class Laurent(object):
         Args:
             p: parity.
         
-        Returns
+        Returns:
             contains the following elements:
             * whether parity is p % 2;
             * if not, then return the the (maximum) absolute coef term breaking such parity;
@@ -367,7 +367,7 @@ def sqrt_generation(A: Laurent) -> Laurent:
     Returns:
         a Laurent polynomial :math:`Q` such that :math:`QQ^* = A`.
         
-    Notes:
+    Note:
         More details are in Lemma S1 of the paper https://arxiv.org/abs/2209.14278.  
     
     """
@@ -546,7 +546,7 @@ def deg_finder(fn: Callable[[np.ndarray], np.ndarray],
     Returns:
         the degree of approximation:
         
-    Notes:
+    Note:
         used to fix the problem of function `laurent_generator`.
     
     """
@@ -570,7 +570,7 @@ def step_laurent(deg: int) -> Laurent:
     Returns:
         a Laurent poly approximating :math:`f(x) = 0.5` if :math:`x <= 0` else :math:`0`.
     
-    Notes:
+    Note:
         used in Hamiltonian energy solver
     
     """
@@ -625,7 +625,7 @@ def ln_laurent(deg: int, t: float) -> Laurent:
     Returns:
         a Laurent poly approximating :math:`ln(cos(x)^2) / t`.
         
-    Notes:
+    Note:
         used in von Neumann entropy estimation.
         
     """

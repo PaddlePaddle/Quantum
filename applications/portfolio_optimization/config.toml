@@ -1,0 +1,38 @@
+# The configuration file of quantum portfolio optimization problem.
+
+
+# This field specifies whether to use random data for stocks, or stock data provided by the customer.
+
+
+# stock = 'random'
+# stock = 'custom'
+stock = 'demo'
+
+# Get stock data from demo file or custom file
+demo_data_path = 'demo_stock.csv'
+custom_data_path = 'file_name.csv'
+
+# Specifies the start_time and end_time of random stock 
+[random_data]
+start_time = [2016, 1, 1]
+end_time = [2016, 1, 30]
+
+# This field stores information about the asset, risk, etc.
+[stock_para]
+# Number of investable projects
+num_asset = 7
+# The risk factor of investment decision making
+risk_weight = 0.5
+# The budget
+budget = 0
+#The penalty
+penalty = 0
+
+# This field stores parameters for the parametric quantum circuits
+[train_para]
+# The depth of the quantum circuits
+circuit_depth = 2
+# Number of optimization cycles, default is 100.
+iterations = 600
+# The rate of optimization of gradient descent, default is 0.4.
+learning_rate = 0.2

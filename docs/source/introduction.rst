@@ -115,7 +115,7 @@ Now, you can try to run a program to verify whether the Paddle Quantum has been 
 Feedbacks
 ----------
 
-- Users are encouraged to report issues and submit suggestions on `Github Issues <https://github.com/PaddlePaddle/Quantum/issues>`__.
+- Users are encouraged to report issues and submit suggestions on `GitHub Issues <https://github.com/PaddlePaddle/Quantum/issues>`__.
 - QQ group: 1076223166
 
 .. _header-n118:

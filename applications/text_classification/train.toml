@@ -1,0 +1,34 @@
+# The full config for train the QSANN model.
+# The task of this config. Available values: 'train' | 'test'.
+task = 'train'
+# The name of the model, which is used to save the model.
+model_name = 'qsann-model'
+# The path to save the model. Both relative and absolute paths are allowed.
+# It save the model to the current path by default.
+# saved_path = './'
+# The number of qubits which the quantum circuit contains.
+num_qubits = 6
+# The number of the self-attention layers.
+num_layers = 1
+# The depth of the embedding circuit. Defaults to 1.
+depth_ebd = 1
+# The depth of the query circuit. Defaults to 1.
+depth_query = 1
+# The depth of the key circuit. Defaults to 1.
+depth_key = 1
+# The depth of the value circuit. Defaults to 1.
+depth_value = 1
+# The size of the batch samplers.
+batch_size = 8
+# The number of epochs to train the model.
+num_epochs = 10
+# The learning rate used to update the parameters, defaults to 0.01.
+# learning_rate = 0.01
+# The path of the dataset.
+dataset = 'headlines500'
+# Whether use the validation.
+# It is true means the dataset contains training, validation and test datasets.
+# It is false means the dataset only contains training datasets and test datasets. 
+using_validation = false
+# Number of epochs with no improvement after which training will be stopped.
+# early_stopping = 1000

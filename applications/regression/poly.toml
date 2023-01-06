@@ -1,0 +1,35 @@
+# The total configuration file of regression mode.
+# Input current task, should be either 'linear' or 'poly', for linear or polynomial regression.
+
+# The used regression model name.
+model_name = 'poly'
+
+# The saved path of 'dataset.csv'.
+data_file = './datasets/Fish.csv'
+
+# The list of independent variable names in the dataset.
+x_feature = ['Width']
+
+# The name of dependent variable.
+y_feature = ['Weight']
+
+# The number of optimized variables. 
+# NOTE: For linear regression, it gives the number of independent variables.
+# NOTE: For poly regression, it gives the degree of the polynomial.
+num_variable = 3
+
+# Initialization of the optimized variables. 
+# NOTE: The number of params should equal to num_variable + 1.
+init_params = [0.0, 0.45, 0.5, 0.5]
+
+# The number of required qubits. Defaults to 6.
+num_qubits = 6
+
+# The learning rate of optimization. Defaults to 0.1.
+learning_rate = 0.1
+
+# The total number of optimization iterations. Defaults to 100.
+iteration = 100
+
+# The print language. Defaults to 'CN'.
+language = 'CN'

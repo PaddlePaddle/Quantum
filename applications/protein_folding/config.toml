@@ -1,0 +1,40 @@
+# The configuration file for protein folding problem
+
+# The amino acids sequence that form a protein.
+# Valid amino acid labels are (https://en.wikipedia.org/wiki/Amino_acid):
+# C: Cysteine
+# M: Methionine
+# F: Phenylalanine
+# I: Isoleucine
+# L: Leucine
+# V: Valine
+# W: Tryptophan
+# Y: Tyrosine
+# A: Alanine
+# G: Glycine
+# T: Threonine
+# S: Serine
+# N: Asparagine
+# Q: Glutamine
+# D: Aspartate
+# E: Glutamate
+# H: Histidine
+# R: Arginine
+# K: Lysine
+# P: Proline
+# NOTE: the more amino acids in the sequence, the longer program will run
+# NOTE: the example below takes approximately 0.5h!
+amino_acids = ["A", "P", "R", "L", "R", "F", "Y"]
+# Pair of indices indicates the potentially interact amino acide pair, below indicates that
+# the 0-th and 5-th acids will interact and 1-th and 6-th acids will interact.
+possible_contractions = [[0, 5], [1, 6]]
+# Depth of the quantum circuit used in VQE
+depth = 1
+# Number of VQE iterations
+num_iterations = 200
+# The condition for VQE convergence
+tol = 1e-3
+# The number of steps between two consecutive loss records
+save_every = 10
+# learning rate for the optimizer
+learning_rate = 0.5

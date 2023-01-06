@@ -1,0 +1,8 @@
+[molecule]
+symbols = ['H', 'H']
+coords = [ [ 0.0, 0.0, 0.0 ], [ 0.0, 0.0, 0.74 ] ]
+
+# NOTE: currently only support HardwareEfficient ansatz, more ansatz will come later!
+# NOTE: on a personal laptop, we suggest the depth of the circuit should no more than 10.
+[ansatz.HardwareEfficient]
+depth = 2

@@ -1,0 +1,6 @@
+A_dir = './A.npy'
+b_dir = './b.npy'
+depth = 4
+iterations = 100
+LR = 0.1
+gamma = 0

@@ -34,7 +34,7 @@ from . import mbqc
 from . import operator
 from . import base
 from . import dataset
-from . import finance
+#from . import finance
 from . import fisher
 from . import gradtool
 from . import hamiltonian
@@ -44,6 +44,7 @@ from . import qml
 from . import shadow
 from . import trotter
 from . import visual
+from . import qchem
 
 name = 'paddle_quantum'
-__version__ = '2.2.2'
+__version__ = '2.3.0'

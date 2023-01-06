@@ -24,6 +24,7 @@ import numpy as np
 from scipy import sparse
 import paddle
 import paddle_quantum
+import openfermion
 
 
 class Hamiltonian:
@@ -201,7 +202,7 @@ class Hamiltonian:
         Raises:
             Exception: Operators should be defined with a string composed of Pauli operators followed by qubit index on which it act, separated with ",". i.e. "Z0, X1"
 
-        Notes:
+        Note:
             This is an intrinsic function, user do not need to call this directly
             This is a fundamental function, it decomposes the input Pauli string into different forms and stores them into private variables.
         """
@@ -253,7 +254,7 @@ class Hamiltonian:
     def __compress(self):
         r"""combine like terms
 
-        Notes:
+        Note:
             This is an intrinsic function, user do not need to call this directly
         """
         if self.__update_flag:
@@ -327,6 +328,19 @@ class Hamiltonian:
                     op = op.dot(spin_ops.sigz_p[sites[idx][site_idx]])
             h_matrix += op
         return h_matrix
+
+    @classmethod
+    def from_qubit_operator(cls, qubitOp: openfermion.QubitOperator):
+        pauli_strs = []
+        for xyz_tuple, coef in qubitOp.terms.items():
+            if len(xyz_tuple) == 0:
+                pauli_strs.append((coef, "I"))
+            else:
+                term = ", ".join(
+                    [f"{g:s}{i:d}" for i, g in xyz_tuple]
+                )
+                pauli_strs.append((coef, term))
+        return cls(pauli_strs)
 
 
 class SpinOps:
