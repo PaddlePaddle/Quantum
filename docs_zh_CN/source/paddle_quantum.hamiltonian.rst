@@ -60,19 +60,23 @@ paddle\_quantum.hamiltonian
 
       将 pauli_str 分解为系数、泡利字符串的简化形式以及它们分别作用的量子比特下标。
 
-      :return: 包含如下元素的 tuple:
-                  - coefficients: 元素为每一项的系数。
-                  - pauli_words_r: 元素为每一项的泡利字符串的简化形式，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZX'。
-                  - sites: 元素为每一项作用的量子比特下标，例如 'Z0, Z1, X3' 这一项的 site 为 [0, 1, 3]。
+      :return:
+         包含如下元素的 tuple:
+
+         - coefficients: 元素为每一项的系数。
+         - pauli_words_r: 元素为每一项的泡利字符串的简化形式，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZX'。
+         - sites: 元素为每一项作用的量子比特下标，例如 'Z0, Z1, X3' 这一项的 site 为 [0, 1, 3]。
       :rtype: Tuple[list]
 
    .. py:method:: decompose_pauli_words()
 
       将 pauli_str 分解为系数和泡利字符串。
 
-      :return: 包含如下元素的 tuple:
-                  - coefficients: 元素为每一项的系数。
-                  - pauli_words: 元素为每一项的泡利字符串，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZIX'。
+      :return:
+         包含如下元素的 tuple:
+
+         - coefficients: 元素为每一项的系数。
+         - pauli_words: 元素为每一项的泡利字符串，例如 'Z0, Z1, X3' 这一项的泡利字符串为 'ZZIX'。
       :rtype: Tuple[list]
    
    .. py:method:: construct_h_matrix(qubit_num=None)

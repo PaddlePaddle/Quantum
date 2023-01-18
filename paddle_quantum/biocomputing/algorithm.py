@@ -77,35 +77,30 @@ def cvar_expectation(psi: State, h: Hamiltonian, alpha: float) -> paddle.Tensor:
 
 
 class ProteinFoldingSolver(VQESolver):
+    r"""
+    Args:
+        penalty_factors: penalty factor ``[lambda0, lambda1]`` used in building the protein's Hamiltonian.
+        alpha: the cutoff probability for CVaR expectation value calculation.
+        optimizer: paddle's optimizer used to perform parameter update.
+        num_iterations : number of VQE iterations.
+        tol: convergence criteria.
+        save_every : number of steps between two recorded VQE loss.
+    """
     def __init__(
-        self,
-        penalty_factors: List[float],
-        alpha: float,
-        optimizer: Optimizer,
-        num_iterations: int,
-        tol: float = 1e-8,
-        save_every: int = 1,
+            self,
+            penalty_factors: List[float],
+            alpha: float,
+            optimizer: Optimizer,
+            num_iterations: int,
+            tol: float = 1e-8,
+            save_every: int = 1,
     ) -> None:
-        r"""
-        Args:
-            penalty_factors: penalty factor ``[lambda0, lambda1]`` used in building the protein's Hamiltonian.
-            alpha: the cutoff probability for CVaR expectation value calculation.
-            optimizer: paddle's optimizer used to perform parameter update.
-            num_iterations : number of VQE iterations.
-            tol: convergence criteria.
-            save_every : number of steps between two recorded VQE loss.
-        """
         super().__init__(optimizer, num_iterations, tol, save_every)
         self.lambda0 = penalty_factors[0]
         self.lambda1 = penalty_factors[1]
         self.alpha = alpha
 
-    def solve(
-        self,
-        protein: Protein,
-        ansatz: Circuit,
-        **optimizer_kwargs
-    ) -> Tuple[float, str]:
+    def solve(self, protein: Protein, ansatz: Circuit, **optimizer_kwargs) -> Tuple[float, str]:
         r"""Run VQE to calculate the structure of the protein that satisfies various constraints.
 
         Args:

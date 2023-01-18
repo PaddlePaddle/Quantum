@@ -258,7 +258,6 @@ paddle\_quantum.qinfo
       - 由施密特系数组成的一维数组，形状为 ``(k)``。
       - 由子系统A的基 :math:`\lvert i_A\rangle` 组成的高维数组，形状为 ``(k, 2**m, 1)``。
       - 由子系统B的基 :math:`\lvert i_B\rangle` 组成的高维数组，形状为 ``(k, 2**l, 1)``。
-
    :rtype: Union[Tuple[paddle.Tensor, paddle.Tensor, paddle.Tensor], Tuple[np.ndarray, np.ndarray, np.ndarray]]
 
 .. py:function:: image_to_density_matrix(image_filepath)

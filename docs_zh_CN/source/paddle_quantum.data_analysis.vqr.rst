@@ -28,10 +28,7 @@ paddle\_quantum.data_analysis.vqr
    :return: 返回计算的内积值（支持梯度分析）。
    :rtype: paddle.Tensor
 
-.. py:class:: QRegressionModel(data_file, model_name, x_feature,
-                               y_feature, num_variable, init_params, 
-                               num_qubits, learning_rate, 
-                               iteration, language)
+.. py:class:: QRegressionModel(data_file, model_name, x_feature, y_feature, num_variable, init_params, num_qubits, learning_rate, iteration, language)
 
    基类：:py:class: `object`
 
@@ -90,8 +87,7 @@ paddle\_quantum.data_analysis.vqr
       :param new_params: 输入的新参数值。
       :type new_params: Union[paddle.Tensor, np.ndarray]
 
-   .. py:method:: fit(X, y, learning_rate, iteration, 
-                      saved_dir, print_score, model_name)
+   .. py:method:: fit(X, y, learning_rate, iteration, saved_dir, print_score, model_name)
 
       输入训练集数据用来训练回归模型。
 

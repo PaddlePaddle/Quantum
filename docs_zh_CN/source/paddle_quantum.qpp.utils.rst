@@ -48,9 +48,11 @@ QPP 线路变换和其他相关工具。更多细节参考论文 https://arxiv.o
    :param initial_state: 输入量子态。
    :type initial_state: Union[np.ndarray, paddle.Tensor, State]
 
-   :return: 包含如下元素的 tuple:
-                - 一个 ``U`` 的本征相位；
-                - 其相位对应的，存在和 ``initial_state`` 内积不为零的本征态。
+   :return:
+      包含如下元素的 tuple:
+
+      - 一个 ``U`` 的本征相位；
+      - 其相位对应的，存在和 ``initial_state`` 内积不为零的本征态。
    :rtype: Tuple[float, State]
 
 .. py:function:: qubitize(block_enc, num_block_qubits)

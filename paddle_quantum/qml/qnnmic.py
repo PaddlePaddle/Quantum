@@ -43,17 +43,20 @@ class ImageDataset(Dataset):
     The class used for loading classical datasets.
 
     Args:
-    file_path: The path of the input image.
-    num_samples: The number of the data in the test dataset.
-    task: The training, validation, or testing task.
-    pca: Whether use principal component analysis. Defaults to None.
-    scaler: Whether scale the data. Defaults to None.
-    centering: Whether remove the mean. Defaults to None.
+        file_path: The path of the input image.
+        num_samples: The number of the data in the test dataset.
+        task: The training, validation, or testing task.
+        pca: Whether use principal component analysis. Defaults to None.
+        scaler: Whether scale the data. Defaults to None.
+        centering: Whether remove the mean. Defaults to None.
 
     Raises:
         ValueError: If the task is not training, validation, or test, raises the error.
     """
-    def __init__(self, file_path: str, num_samples: int, task: str, pca: PCA=None, scaler: StandardScaler=None, centering: MinMaxScaler=None):
+    def __init__(
+            self, file_path: str, num_samples: int, task: str, pca: PCA = None,
+            scaler: StandardScaler = None, centering: MinMaxScaler = None
+    ):
         super().__init__()
         # load data
         data, labels = [], []

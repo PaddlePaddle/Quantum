@@ -125,9 +125,9 @@ Fisher 信息的功能实现。
    :type model_type: str
    :param \*\*kwargs: 神经网络参数, 包含如下选项:
 
-      - size (list): 经典神经网络各层神经元的数量 \\
-      - num_qubits (int): 量子神经网络量子比特的数量 \\
-      - depth (int): 量子神经网络的深度 \\
+      - size (list): 经典神经网络各层神经元的数量
+      - num_qubits (int): 量子神经网络量子比特的数量
+      - depth (int): 量子神经网络的深度
       - encoding (str): 量子神经网络中经典数据的编码方式，目前支持 ``IQP`` 和 ``re-uploading``
       
    :type \*\*kwargs: Union[List[int], int, str]
