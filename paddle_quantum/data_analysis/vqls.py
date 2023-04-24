@@ -148,8 +148,8 @@ def hadamard_overlap_test(phi: State, b: State, An: paddle.Tensor, Am: paddle.Te
     # Return the real part
     cir = Circuit(2*num_qubits + 1)
     cir.h([0])
-    cir.control_oracle(An, range(num_qubits + 1), num_qubits=num_qubits+1)
-    cir.control_oracle(Am.conj().T, [0]+list(range(num_qubits+1, 2*num_qubits+1)), num_qubits=num_qubits+1)
+    cir.control_oracle(An, range(num_qubits + 1))
+    cir.control_oracle(Am.conj().T, [0]+list(range(num_qubits+1, 2*num_qubits+1)))
     for idx in range(num_qubits):
         cir.cnot([idx+1, idx+1+num_qubits])
     cir.h(range(num_qubits+1))
@@ -181,8 +181,8 @@ def hadamard_overlap_test(phi: State, b: State, An: paddle.Tensor, Am: paddle.Te
     # Return the imaginary part
     cir = Circuit(2*num_qubits + 1)
     cir.h([0])
-    cir.control_oracle(An, range(num_qubits + 1), num_qubits=num_qubits+1)
-    cir.control_oracle(Am.conj().T, [0]+list(range(num_qubits+1, 2*num_qubits+1)), num_qubits=num_qubits+1)
+    cir.control_oracle(An, range(num_qubits + 1))
+    cir.control_oracle(Am.conj().T, [0]+list(range(num_qubits+1, 2*num_qubits+1)))
     for idx in range(num_qubits):
         cir.cnot([idx+1,idx+1+num_qubits])
     cir.rz(qubits_idx=0, param=-np.pi/2)

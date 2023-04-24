@@ -272,6 +272,7 @@ def _is_continuous_list(qubits_idx: List[int]) -> bool:
 
 def _not_exist_intersection(list_a: List[float], list_b: List[float]) -> bool:
     r'''Check whether there is an overlap in ``List_a`` and ``List_b``.
+
     Args:
         List_a: a list with two elements
         List_b: a list with two elements
@@ -283,6 +284,20 @@ def _not_exist_intersection(list_a: List[float], list_b: List[float]) -> bool:
     min_ab = min(min_a, min_b)
     max_ab = max(max_a, max_b)
     return max_a+max_b-min_a-min_b < max_ab-min_ab
+
+
+def _index_no_intersection_(index_list: List[List[int]]):
+    r'''Check whether there is an overlap in ``index_list``, 
+        which is a List of the List with two interger.
+
+    Args:
+        index_list: List of the List with two interger
+    '''
+    for i in range(len(index_list)):
+        for j in range(i+1, len(index_list)):
+            if not _not_exist_intersection(index_list[i], index_list[j]):
+                return False
+    return True
 
 
 def _base_gate_display(gate, ax: matplotlib.axes.Axes, x: float,) -> float:
@@ -493,12 +508,16 @@ def _cnot_display(gate, ax: matplotlib.axes.Axes, x: float,) -> float:
     x_start = x
     h = __CIRCUIT_PLOT_PARAM['circuit_height']
     w = __CIRCUIT_PLOT_PARAM['scale'] * gate.gate_info['plot_width']
+    parallel = _index_no_intersection_(gate.qubits_idx)
     for _ in range(gate.depth):
         for act_qubits in gate.qubits_idx:
             x_c = x + 0.5 * w
             _patch_display(ax, x_c, act_qubits[0]*h, mode='.')
             _patch_display(ax, x_c, act_qubits[1]*h, mode='+')
             _vertical_line_display(ax, x_c, act_qubits[0]*h, act_qubits[1]*h)
+            if not parallel:
+                x += w
+        if parallel:
             x += w
     return x - x_start
 
@@ -517,12 +536,16 @@ def _swap_display(gate, ax: matplotlib.axes.Axes,  x: float,) -> float:
     x_start = x
     h = __CIRCUIT_PLOT_PARAM['circuit_height']
     w = __CIRCUIT_PLOT_PARAM['scale'] * gate.gate_info['plot_width']
+    parallel = _index_no_intersection_(gate.qubits_idx)
     for _ in range(gate.depth):
         for act_qubits in gate.qubits_idx:
             x_c = x + 0.5 * w
             _patch_display(ax, x_c, act_qubits[0]*h, mode='x')
             _patch_display(ax, x_c, act_qubits[1]*h, mode='x')
             _vertical_line_display(ax, x_c, act_qubits[0]*h, act_qubits[1]*h)
+            if not parallel:
+                x += w
+        if parallel:
             x += w
     return x - x_start
 
@@ -576,241 +599,4 @@ def _tofolli_display(gate, ax: matplotlib.axes.Axes, x: float,) -> float:
             _patch_display(ax, x_c, act_qubits[2]*h, mode='+')
             _vertical_line_display(ax, x_c, min(act_qubits)*h, max(act_qubits)*h)
             x += w
-    return x - x_start
-
-
-def _linear_entangled_layer_display(gate, ax: matplotlib.axes.Axes, x: float,) -> float:
-    r'''The display function for ``linear entangled layer`` gate.
-
-    Args:
-        gate: the ``paddle_quantum.gate.Gate`` instance
-        ax: the ``matplotlib.axes.Axes`` instance
-        x: the start horizontal position
-
-    Returns:
-        the total width occupied
-    '''
-    x_start = x
-    h = __CIRCUIT_PLOT_PARAM['circuit_height']
-    block_w = __CIRCUIT_PLOT_PARAM['scale'] * gate.gate_info['plot_width']
-    dot_w = __CIRCUIT_PLOT_PARAM['node_width']
-
-    for depth in range(gate.depth):
-        for param_idx, act_qubits in enumerate(gate.qubits_idx):   # `ry` layer
-            _single_qubit_gate_display(ax, x, act_qubits*h, h, block_w,
-                                       f'$R_y({float(gate.theta[depth][param_idx][0]):.2f})$')
-        x += block_w
-
-        for idx in range(len(gate.qubits_idx)-1):   # `cnot` layer
-            act_qubits = [gate.qubits_idx[idx], gate.qubits_idx[idx + 1]]
-            x_c = x + 0.5 * dot_w
-            _patch_display(ax, x_c, act_qubits[0]*h, mode='.')
-            _patch_display(ax, x_c, act_qubits[1]*h, mode='+')
-            _vertical_line_display(ax, x_c, act_qubits[0]*h, act_qubits[1]*h)
-            x += dot_w
-
-        for param_idx, act_qubits in enumerate(gate.qubits_idx):   # `rz` layer
-            _single_qubit_gate_display(ax, x, act_qubits*h, h, block_w,
-                                       f'$R_z({float(gate.theta[depth][param_idx][1]):.2f})$')
-        x += block_w
-
-        for idx in range(len(gate.qubits_idx)-1):  # `cnot` layer
-            act_qubits = [gate.qubits_idx[idx], gate.qubits_idx[idx + 1]]
-            x_c = x + 0.5 * dot_w
-            _patch_display(ax, x_c, act_qubits[0]*h, mode='.')
-            _patch_display(ax, x_c, act_qubits[1]*h, mode='+')
-            _vertical_line_display(ax, x_c, act_qubits[0]*h, act_qubits[1]*h)
-            x += dot_w
-    return x - x_start
-
-
-def _cr_entangled_layer_display(gate, ax: matplotlib.axes.Axes, x: float,) -> float:
-    r'''The display function for ``complex or real entangled layer`` gate.
-
-    Args:
-        gate: the ``paddle_quantum.gate.Gate`` instance
-        ax: the ``matplotlib.axes.Axes`` instance
-        x: the start horizontal position
-
-    Returns:
-        the total width occupied
-    '''
-    tex_name = gate.gate_info['texname']
-    x_start = x
-    h = __CIRCUIT_PLOT_PARAM['circuit_height']
-    block_w = __CIRCUIT_PLOT_PARAM['scale'] * gate.gate_info['plot_width']
-    dot_w = __CIRCUIT_PLOT_PARAM['node_width']
-
-    if tex_name == '$REntLayer$':   # define the tex name generator for deferent gates
-        def _name_generator(theta):
-            return f'$R_y({float(theta):.2f})$'
-    elif tex_name == '$CEntLayer$':
-        def _name_generator(theta):
-            name = '$U('
-            for value in theta:
-                name += f'{float(value):.2f},'
-            name = name.strip(',')
-            name += ')$'
-            return name
-
-    for depth in range(gate.depth):
-        for param_idx, act_qubits in enumerate(gate.qubits_idx):
-            _single_qubit_gate_display(ax, x, act_qubits*h, h, block_w,
-                                       _name_generator(gate.theta[depth][param_idx]))
-        x += block_w
-        for idx in range(len(gate.qubits_idx)):
-            act_qubits = [gate.qubits_idx[idx], gate.qubits_idx[(idx + 1) % len(gate.qubits_idx)]]
-            x_c = x + 0.5 * dot_w
-            _patch_display(ax, x_c, act_qubits[0]*h, mode='.')
-            _patch_display(ax, x_c, act_qubits[1]*h, mode='+')
-            _vertical_line_display(ax, x_c, act_qubits[0]*h, act_qubits[1]*h)
-            x += dot_w
-    return x - x_start
-
-
-def _cr_block_layer_display(gate, ax: matplotlib.axes.Axes, x: float,) -> float:
-    r'''The display function for ``complex or real block layer`` gate.
-
-    Args:
-        gate: the ``paddle_quantum.gate.Gate`` instance
-        ax: the ``matplotlib.axes.Axes`` instance
-        x: the start horizontal position
-
-    Returns:
-        the total width occupied
-    '''
-    x_start = x
-    h = __CIRCUIT_PLOT_PARAM['circuit_height']
-    block_w = __CIRCUIT_PLOT_PARAM['scale'] * gate.gate_info['plot_width']
-    tex_name = gate.gate_info['texname']
-    dot_w = __CIRCUIT_PLOT_PARAM['node_width']
-
-    if tex_name == '$RBLayer$':
-        def _add_block(ax, x, theta, pos):  # add a block including 4 `ry` and 1 `cnot`
-            _single_qubit_gate_display(ax, x, pos[0]*h, h, block_w,
-                                       tex_name=f'$R_y({float(theta[0]):.2f})$')
-            _single_qubit_gate_display(ax, x, pos[1]*h, h, block_w,
-                                       tex_name=f'$R_y({float(theta[1]):.2f})$')
-            _single_qubit_gate_display(ax, x+block_w+dot_w, pos[0]*h, h, block_w,
-                                       tex_name=f'$R_y({float(theta[2]):.2f})$')
-            _single_qubit_gate_display(ax, x+block_w+dot_w, pos[1]*h, h, block_w,
-                                       tex_name=f'$R_y({float(theta[3]):.2f})$')
-            _patch_display(ax, x+block_w+0.5*dot_w, pos[0]*h, mode='.')
-            _patch_display(ax, x+block_w+0.5*dot_w, pos[1]*h, mode='+')
-            _vertical_line_display(ax, x+block_w+0.5*dot_w, pos[0]*h, pos[1]*h)
-
-    elif tex_name == '$CBLayer$':
-        def _add_block(ax, x, theta, pos,):     # add a block including 4 `u3` and 1 `cnot`
-            _single_qubit_gate_display(ax, x, pos[0]*h, h, block_w,
-                                       tex_name=f'$U({float(theta[0]):.2f},\
-                                        {float(theta[1]):.2f},{float(theta[2]):.2f})$')
-            _single_qubit_gate_display(ax, x, pos[1]*h, h, block_w,
-                                       tex_name=f'$U({float(theta[3]):.2f},\
-                                        {float(theta[4]):.2f},{float(theta[5]):.2f})$')
-            _single_qubit_gate_display(ax, x+block_w+dot_w, pos[0]*h, h, block_w,
-                                       tex_name=f'$U({float(theta[6]):.2f},\
-                                        {float(theta[7]):.2f},{float(theta[8]):.2f})$')
-            _single_qubit_gate_display(ax, x+block_w+dot_w, pos[1]*h, h, block_w,
-                                       tex_name=f'$U({float(theta[9]):.2f},\
-                                        {float(theta[10]):.2f},{float(theta[11]):.2f})$')
-            _patch_display(ax, x+block_w+0.5*dot_w, pos[0]*h, mode='.')
-            _patch_display(ax, x+block_w+0.5*dot_w, pos[1]*h, mode='+')
-            _vertical_line_display(ax, x+block_w+0.5*dot_w, pos[0]*h, pos[1]*h)
-
-    def _get_display_layer():  # arrange the order of block and compress
-        display_layer = []
-        num_theta_layer = [0, 0]
-        act_qubits = gate.qubits_idx
-        for layer in range(2):
-            indices = []
-            for i in range(1, len(act_qubits), 2):
-                indices.append([act_qubits[i-1], act_qubits[i]])
-            while len(indices) > 0:
-                indcs_list = [indices.pop(0)]
-                num_theta_layer[layer] += 1
-                for _ in range(len(indices)):
-                    candidate = indices.pop(0)
-                    if all(_not_exist_intersection(indcs, candidate) for indcs in indcs_list):
-                        indcs_list.append(candidate)
-                    else:
-                        indices.append(candidate)
-                display_layer.append(indcs_list)
-            act_qubits = act_qubits[1:]
-        return display_layer, num_theta_layer
-
-    def _add_layer(ax, x, theta, pos_list,):  # add block into layer
-        plotted_list = []
-        for pos in pos_list:
-            _add_block(ax, x, theta[int((gate.qubits_idx.index(pos[0])) / 2)], pos,)
-            plotted_list.extend(list(range(min(pos), max(pos)+1)))
-
-    display_layer, num_theta_layer = _get_display_layer()    # get layers
-    for depth in range(gate.depth):
-        for num_theta, layer in enumerate(display_layer):
-            if num_theta < num_theta_layer[0]:   # get parameters
-                _add_layer(ax, x, gate.theta[depth, :int((len(gate.qubits_idx)) / 2)], layer)
-            else:
-                _add_layer(ax, x, gate.theta[depth, int((len(gate.qubits_idx)) / 2):], layer)
-            x += 2 * block_w + dot_w
-    return x - x_start
-
-
-def _qaoa_layer_display(gate, ax: matplotlib.axes.Axes, x: float,) -> float:
-    r'''The display function for ``qaoa layer`` gate.
-
-    Args:
-        gate: the ``paddle_quantum.gate.Gate`` instance
-        ax: the ``matplotlib.axes.Axes`` instance
-        x: the start horizontal position
-
-    Returns:
-        the total width occupied
-    '''
-
-    x_start = x
-    h = __CIRCUIT_PLOT_PARAM['circuit_height']
-    block_w = __CIRCUIT_PLOT_PARAM['scale'] * gate.gate_info['plot_width']
-    dot_w = __CIRCUIT_PLOT_PARAM['node_width']
-
-    def _get_display_layer():    # arrange the order of block and compress
-        indices = gate.edges
-        display_layer = []
-        while len(indices) > 0:
-            indcs_list = [indices.pop(0)]
-            for _ in range(len(indices)):
-                candidate = indices.pop(0)
-                if all(_not_exist_intersection(indcs, candidate) for indcs in indcs_list):
-                    indcs_list.append(candidate)
-                else:
-                    indices.append(candidate)
-            display_layer.append(indcs_list)
-        return display_layer
-
-    def _add_block(ax, x, theta, pos):  # add a block including 2 `cnot` and 1 `rz`
-        _single_qubit_gate_display(ax, x+dot_w, pos[1]*h, h, block_w, tex_name=f'$R_z({float(theta):.2f})$')
-        _patch_display(ax, x+0.5*dot_w, pos[0]*h, mode='.')
-        _patch_display(ax, x+0.5*dot_w, pos[1]*h, mode='+')
-        _vertical_line_display(ax, x+0.5*dot_w, pos[0]*h, pos[1]*h)
-        _patch_display(ax, x+block_w+1.5*dot_w, pos[0]*h, mode='.')
-        _patch_display(ax, x+block_w+1.5*dot_w, pos[1]*h, mode='+')
-        _vertical_line_display(ax, x+block_w+1.5*dot_w, pos[0]*h, pos[1]*h)
-
-    def _add_layer(axis, x, theta, pos_list):  # add block into layer
-        plotted_list = []
-        for pos in pos_list:
-            _add_block(axis, x, theta, pos)
-            plotted_list.extend(list(range(min(pos), max(pos)+1)))
-
-    x_start = x
-    gamma = gate.theta[:gate.depth]
-    beta = gate.theta[gate.depth:]
-    display_layer = _get_display_layer()
-
-    for depth in range(gate.depth):
-        for layer in display_layer:
-            _add_layer(ax, x, gamma[depth], layer)
-            x += block_w + 2 * dot_w
-        for y in gate.nodes:
-            _single_qubit_gate_display(ax, x, y*h, h, block_w, tex_name=f'$R_x({float(beta[depth]):.2f})$')
-        x += block_w
     return x - x_start

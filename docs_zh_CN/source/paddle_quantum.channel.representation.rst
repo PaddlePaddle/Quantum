@@ -224,3 +224,15 @@ paddle\_quantum.channel.representation
 
    :return: 返回对应的 Kraus 算符
    :rtype: List[paddle.Tensor]
+
+.. py:function:: replacement_choi(sigma, dtype=None)
+
+   置换信道的Choi表达式。
+
+   :param sigma: 这个信道的输出态。
+   :type sigma: Union[np.ndarray, paddle.Tensor, State]
+   :param dtype: 数据类型。默认为 ``None``。
+   :type dtype: str
+
+   :return: 返回对应的 Choi 算符
+   :rtype: paddle.Tensor

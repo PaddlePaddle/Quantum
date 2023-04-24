@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = 'paddle-quantum'
-copyright = '2022, Baidu Inc'
+copyright = '2023, Baidu Inc'
 author = 'Baidu Inc'
 
 # The full version, including alpha/beta/rc tags
-release = '2.2.1'
+release = '2.4.0'
 
 
 # -- General configuration ---------------------------------------------------

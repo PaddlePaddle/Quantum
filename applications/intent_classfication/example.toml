@@ -1,0 +1,10 @@
+task = 'test'
+text = '查宁波到北京的火车票'
+num_filter = 1
+kernel_size = 5
+circuit_depth = 2
+padding = 2
+model_path = 'decoder.pdparams'
+bert_model = 'bert-base-chinese'
+hidden_size = 768
+classes = ['火车', '音乐', '天气', '短信', '电话', '航班', '新闻']

@@ -16,11 +16,12 @@
 CNOT test
 """
 
+import paddle
+import paddle_quantum
 from paddle_quantum.mbqc.utils import random_state_vector, compare_by_vector, compare_by_density
 from paddle_quantum.mbqc.simulator import MBQC
 from paddle_quantum.mbqc.qobject import Circuit, State
 from paddle_quantum.mbqc.mcalculus import MCalculus
-from paddle_quantum.circuit import UAnsatz
 
 n = 2  # Set the circuit width
 # Generate a random state vector
@@ -56,9 +57,10 @@ mbqc.run_pattern()
 state_out = mbqc.get_quantum_output()
 
 # Find the standard result
-cir_std = UAnsatz(n)
+cir_std = paddle_quantum.Circuit(n)
 cir_std.cnot([0, 1])
-vec_std = cir_std.run_state_vector(input_psi.astype("complex128"))
+vec_std = cir_std(paddle_quantum.state.to_state(paddle.flatten(input_psi)))
+vec_std = vec_std.data
 system_std = state_out.system
 state_std = State(vec_std, system_std)
 # Compare with the standard result in UAnsatz

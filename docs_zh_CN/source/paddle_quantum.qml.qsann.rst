@@ -4,6 +4,7 @@ paddle\_quantum.qml.qsann
 量子自注意力神经网络（Quantum Self-Attention Neural Network, QSANN）模型
 
 .. py:function:: generate_observable(num_qubits, num_terms)
+   :noindex:
 
    生成测量量子态所需要的可观测量。
 
@@ -57,6 +58,7 @@ paddle\_quantum.qml.qsann
    :rtype: Dict[str, int]
 
 .. py:class:: TextDataset(file_path, word_idx, pad_size)
+   :noindex:
 
    基类：:py:class:`paddle.io.Dataset`
 
@@ -84,7 +86,8 @@ paddle\_quantum.qml.qsann
    :rtype: list
 
 .. py:function:: train(model_name, dataset, num_qubits, num_layers, depth_ebd, depth_query, depth_key, depth_value, batch_size, num_epochs, learning_rate, saved_dir, using_validation, early_stopping)
-
+   :noindex:
+   
    训练 VSQL 模型的函数。
 
    :param model_name: 模型的名字，用于作为保存的模型参数的文件名。
@@ -117,6 +120,7 @@ paddle\_quantum.qml.qsann
    :type early_stopping: int
 
 .. py:function:: evaluate(model, data_loader)
+   :noindex:
 
    对模型进行评估。
 
@@ -129,6 +133,7 @@ paddle\_quantum.qml.qsann
    :rtype: Tuple[float, float]
 
 .. py:function:: test(model, model_path, test_loader)
+   :noindex:
 
    使用测试集对模型进行测试。
 
@@ -139,7 +144,8 @@ paddle\_quantum.qml.qsann
    :param test_loader: 测试集的数据加载器。
    :type test_loader: list
 
-.. py:function:: inference()
+.. py:function:: inference(text, model_path, vocab_path, classes, num_qubits, num_layers, depth_ebd, depth_query, depth_key, depth_value)
+   :noindex:
 
    推理函数。使用训练好的模型对输入的图片进行预测。
 
@@ -147,6 +153,10 @@ paddle\_quantum.qml.qsann
    :type text: str
    :param model_path: 保存的模型参数的文件路径。
    :type model_path: str
+   :param vocab_path: 词表文件的路径。
+   :type vocab_path: str
+   :param classes: 要预测的文本的类别。
+   :type classes: List[str]
    :param num_qubits: 量子电路所包含的量子比特的数量。
    :type num_qubits: int
    :param num_layers: 自注意力层的层数。

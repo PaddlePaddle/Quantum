@@ -23,6 +23,7 @@ import numpy as np
 import paddle
 from paddle.optimizer import Optimizer
 from paddle_quantum.loss import ExpecVal
+from paddle_quantum import Hamiltonian
 from ..ansatz import Circuit
 from ..state import State
 from .molecule import Molecule
@@ -77,31 +78,46 @@ class GroundStateSolver(VQESolver):
 
     def solve(
         self,
-        mol: Molecule,
         ansatz: Circuit,
+        mol: Optional[Molecule] = None,
+        ham: Optional[Hamiltonian] = None,
         init_state: Optional[State] = None,
         **optimizer_kwargs
     ) -> Tuple[float, paddle.Tensor]:
         r"""Run VQE to calculate the ground state energy for a given molecule.
 
         Args:
-            mol: the molecule object.
-            ansatz : the quantum circuit represents the wfn transformation.
-            init_state: default is None, the initial state passed to the ansatz.
-            **optimizer_kwargs: The other args.
+            ansatz (Circuit): the quantum circuit represents the wfn transformation.
+            mol (Molecule): default is None, the molecule object.
+            ham (Hamiltonian): default is None, the Hamiltonian on which to calculate the ground state energy.
+            init_state (State): default is None, the initial state passed to the ansatz.
+            optimizer_kwargs.
 
         Returns:
             The estimated ground state energy and the ground state wave function.
         """
+        if mol is None:
+            if ham is None:
+                raise ValueError("`mol` and `ham` can't be None simultaneously.")
+            elif isinstance(ham, Hamiltonian):
+                num_qubits = ham.n_qubits
+                h = ham
+            else:
+                raise ValueError("`ham` must be an instance of `paddle_quantum.Hamiltonian`.")
+        elif isinstance(mol, Molecule):
+            num_qubits = mol.num_qubits
+            h = mol.get_molecular_hamiltonian()
+        else:
+            raise ValueError("`mol` must be an instance of `paddle_quantum.qchem.Molecule`")
+
         logging.info("\n#######################################\nVQE (Ground State)\n#######################################")
-        logging.info(f"Number of qubits: {mol.num_qubits:d}")
+        logging.info(f"Number of qubits: {num_qubits:d}")
         logging.info(f"Ansatz: {ansatz.__class__.__name__:s}")
         logging.info(f"Optimizer: {self.optimizer.__name__:s}")
 
         optimizer = self.optimizer(parameters=ansatz.parameters(), **optimizer_kwargs)
         logging.info(f"\tlearning_rate: {optimizer.get_lr()}")
 
-        h = mol.get_molecular_hamiltonian()
         energy_fn = ExpecVal(h)
 
         logging.info("\nOptimization:")

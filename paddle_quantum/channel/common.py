@@ -17,15 +17,22 @@ r"""
 The source file of the classes for common quantum channels.
 """
 
+import numpy as np
 import paddle
-from .custom import KrausRepr
+from .base import Channel
 from ..intrinsic import _format_qubits_idx
 from ..qinfo import kraus_unitary_random
-from .representation import *
+from ..state import State
+from .representation import (
+    bit_flip_kraus, phase_flip_kraus, bit_phase_flip_kraus,
+    amplitude_damping_kraus, generalized_amplitude_damping_kraus, phase_damping_kraus,
+    depolarizing_kraus, generalized_depolarizing_kraus, pauli_kraus, reset_kraus,
+    thermal_relaxation_kraus, replacement_choi
+)
 from typing import Union, Iterable
 
 
-class BitFlip(KrausRepr):
+class BitFlip(Channel):
     r"""A collection of bit flip channels.
 
     Such a channel's Kraus operators are
@@ -44,10 +51,10 @@ class BitFlip(KrausRepr):
             self, prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(bit_flip_kraus(prob), qubits_idx, num_qubits, check_complete=False)
-        
+        super().__init__('kraus', bit_flip_kraus(prob), qubits_idx, num_qubits, check_legality=False)
 
-class PhaseFlip(KrausRepr):
+
+class PhaseFlip(Channel):
     r"""A collection of phase flip channels.
 
     Such a channel's Kraus operators are
@@ -66,10 +73,10 @@ class PhaseFlip(KrausRepr):
             self, prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(phase_flip_kraus(prob), qubits_idx, num_qubits, check_complete=False)
+        super().__init__('kraus', phase_flip_kraus(prob), qubits_idx, num_qubits, check_legality=False)
 
 
-class BitPhaseFlip(KrausRepr):
+class BitPhaseFlip(Channel):
     r"""A collection of bit phase flip channels.
 
     Such a channel's Kraus operators are
@@ -88,10 +95,10 @@ class BitPhaseFlip(KrausRepr):
             self, prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(bit_phase_flip_kraus(prob), qubits_idx, num_qubits, check_complete=False)
+        super().__init__('kraus', bit_phase_flip_kraus(prob), qubits_idx, num_qubits, check_legality=False)
 
 
-class AmplitudeDamping(KrausRepr):
+class AmplitudeDamping(Channel):
     r"""A collection of amplitude damping channels.
 
     Such a channel's Kraus operators are
@@ -118,10 +125,10 @@ class AmplitudeDamping(KrausRepr):
             self, gamma: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(amplitude_damping_kraus(gamma), qubits_idx, num_qubits, check_complete=False)
+        super().__init__('kraus', amplitude_damping_kraus(gamma), qubits_idx, num_qubits, check_legality=False)
 
 
-class GeneralizedAmplitudeDamping(KrausRepr):
+class GeneralizedAmplitudeDamping(Channel):
     r"""A collection of generalized amplitude damping channels.
 
     Such a channel's Kraus operators are
@@ -147,10 +154,11 @@ class GeneralizedAmplitudeDamping(KrausRepr):
             self, gamma: Union[paddle.Tensor, float], prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(generalized_amplitude_damping_kraus(gamma, prob), qubits_idx, num_qubits, check_complete=False)
+        super().__init__(
+            'kraus', generalized_amplitude_damping_kraus(gamma, prob), qubits_idx, num_qubits, check_legality=False)
 
 
-class PhaseDamping(KrausRepr):
+class PhaseDamping(Channel):
     r"""A collection of phase damping channels.
 
     Such a channel's Kraus operators are
@@ -177,10 +185,10 @@ class PhaseDamping(KrausRepr):
             self, gamma: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(phase_damping_kraus(gamma), qubits_idx, num_qubits, check_complete=False)
+        super().__init__('kraus', phase_damping_kraus(gamma), qubits_idx, num_qubits, check_legality=False)
 
 
-class Depolarizing(KrausRepr):
+class Depolarizing(Channel):
     r"""A collection of depolarizing channels.
 
     Such a channel's Kraus operators are
@@ -208,10 +216,10 @@ class Depolarizing(KrausRepr):
             self, prob: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(depolarizing_kraus(prob), qubits_idx, num_qubits, check_complete=False)
+        super().__init__('kraus', depolarizing_kraus(prob), qubits_idx, num_qubits, check_legality=False)
 
 
-class GeneralizedDepolarizing(KrausRepr):
+class GeneralizedDepolarizing(Channel):
     r"""A generalized depolarizing channel.
 
     Such a channel's Kraus operators are
@@ -220,23 +228,26 @@ class GeneralizedDepolarizing(KrausRepr):
 
         E_0 = \sqrt{1-(D - 1)p/D} I, \text{ where } D = 4^n, \\
         E_k = \sqrt{p/D} \sigma_k, \text{ for } 0 < k < D.
-    
+
     Args:
         prob: probability :math:`p`. Its value should be in the range :math:`[0, 1]`.
         qubits_idx: Indices of the qubits on which the channels act, the length of which is :math:`n`.
+            Defaults to be ``None``.
         num_qubits: Total number of qubits. Defaults to ``None``.
-    
     """
     def __init__(
             self, prob: Union[paddle.Tensor, float],
-            qubits_idx: Union[Iterable[int], int, str], num_qubits: int = None
+            qubits_idx: Union[Iterable[int], int, str] = None, num_qubits: int = None
     ):
-        num_acted_qubits = np.size(np.array(qubits_idx)).item()
-        super().__init__(generalized_depolarizing_kraus(prob, num_acted_qubits),
-                         qubits_idx, num_qubits, check_complete=False)
+        num_acted_qubits = np.size(np.array(qubits_idx))
+        if qubits_idx is None:
+            qubits_idx = 'full' if num_acted_qubits == 1 else 'cycle'
+        super().__init__(
+            'kraus', generalized_depolarizing_kraus(prob, num_acted_qubits),
+            qubits_idx, num_qubits, check_legality=False)
 
 
-class PauliChannel(KrausRepr):
+class PauliChannel(Channel):
     r"""A collection of Pauli channels.
 
     Args:
@@ -252,10 +263,10 @@ class PauliChannel(KrausRepr):
             self, prob: Union[paddle.Tensor, Iterable[float]],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(pauli_kraus(prob), qubits_idx, num_qubits, check_complete=False)
+        super().__init__('kraus', pauli_kraus(prob), qubits_idx, num_qubits, check_legality=False)
 
 
-class ResetChannel(KrausRepr):
+class ResetChannel(Channel):
     r"""A collection of reset channels.
 
     Such a channel reset the state to :math:`|0\rangle` with a probability of p and to :math:`|1\rangle` with
@@ -298,10 +309,10 @@ class ResetChannel(KrausRepr):
             self, prob: Union[paddle.Tensor, Iterable[float]],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(reset_kraus(prob), qubits_idx, num_qubits, check_complete=False)
+        super().__init__('kraus', reset_kraus(prob), qubits_idx, num_qubits, check_legality=False)
 
 
-class ThermalRelaxation(KrausRepr):
+class ThermalRelaxation(Channel):
     r"""A collection of thermal relaxation channels.
 
     Such a channel simulates the mixture of the :math:`T_1` and the :math:`T_2` processes on superconducting devices.
@@ -319,13 +330,16 @@ class ThermalRelaxation(KrausRepr):
             self, const_t: Union[paddle.Tensor, Iterable[float]], exec_time: Union[paddle.Tensor, float],
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        super().__init__(thermal_relaxation_kraus(const_t, exec_time), qubits_idx, num_qubits, check_complete=False)
+        super().__init__(
+            'kraus', thermal_relaxation_kraus(const_t, exec_time),
+            qubits_idx, num_qubits, check_legality=False)
 
 
-class MixedUnitaryChannel(KrausRepr):
+class MixedUnitaryChannel(Channel):
     r"""A collection of single-qubit mixed unitary channels.
 
     Such a channel's Kraus operators are randomly generated unitaries times related probabilities
+    
     .. math::
 
         N(\rho) = \sum_{i}  p_{i} U_{i} \rho U_{i}^{\dagger}
@@ -336,13 +350,37 @@ class MixedUnitaryChannel(KrausRepr):
         num_qubits: Total number of qubits. Defaults to ``None``.
 
     Note:
-    The probability distribution of unitaries is set to be uniform distribution.
+        The probability distribution of unitaries is set to be uniform distribution.
     """
     def __init__(
             self, num_unitary: int,
             qubits_idx: Union[Iterable[int], int, str] = 'full', num_qubits: int = None
     ):
-        #TODO: increase the number of acting qubits, currently only support 1
-        super().__init__(kraus_unitary_random(1, num_unitary), 
-                         _format_qubits_idx(qubits_idx, num_qubits, 1), 
-                         num_qubits, check_complete=False)
+        # TODO: increase the number of acting qubits, currently only support 1
+        super().__init__(
+            'kraus', kraus_unitary_random(1, num_unitary),
+            _format_qubits_idx(qubits_idx, num_qubits, 1), num_qubits, check_legality=False)
+
+
+class ReplacementChannel(Channel):
+    r"""A collection of quantum replacement channels.
+
+    For a quantum state :math:`\sigma`, the corresponding replacement channel :math:`R` is defined as
+
+    .. math::
+
+        R(\rho) = \text{tr}(\rho)\sigma
+
+    Args:
+        sigma: The state to be replaced.
+        qubits_idx: Indices of the qubits on which the channels act, the length of which is :math:`n`.
+            Defaults to be ``None``.
+        num_qubits: Total number of qubits. Defaults to ``None``.
+    """
+    def __init__(
+            self, sigma: State,
+            qubits_idx: Union[Iterable[int], int, str] = None, num_qubits: int = None
+    ):
+        if qubits_idx is None:
+            qubits_idx = list(range(sigma.num_qubits))
+        super().__init__('choi', replacement_choi(sigma), qubits_idx, num_qubits)

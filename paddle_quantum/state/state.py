@@ -18,6 +18,7 @@ The basic class of the quantum state.
 """
 
 import collections
+import copy
 import math
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,11 +27,10 @@ import random
 
 import paddle
 import QCompute
-import paddle_quantum
-from ..backend import Backend
-from ..backend import state_vector, density_matrix, quleaf
-from ..hamiltonian import Hamiltonian
-from typing import Optional, Union, Iterable, Tuple
+import paddle_quantum as pq
+from ..backend import Backend, state_vector, density_matrix, quleaf
+from ..base import get_backend, get_dtype
+from typing import Optional, Union, Iterable, List, Dict
 
 
 class State(object):
@@ -42,60 +42,65 @@ class State(object):
             backend: Used to specify the backend used. Defaults to ``None``, which means to use the default backend.
             dtype: Used to specify the data dtype of the data. Defaults to ``None``, which means to use the default data type.
             override: whether override the input test. ONLY for internal use. Defaults to ``False``.
-        
+
         Raises:
             ValueError: Cannot recognize the backend.
         """
     def __init__(
             self, data: Union[paddle.Tensor, np.ndarray, QCompute.QEnv], num_qubits: Optional[int] = None,
-            backend: Optional[paddle_quantum.Backend] = None, dtype: Optional[str] = None, override: Optional[bool] = False
+            backend: Optional[Backend] = None, dtype: Optional[str] = None, override: Optional[bool] = False
     ):
         # TODO: need to check whether it is a legal quantum state
         super().__init__()
-        self.backend = paddle_quantum.get_backend() if backend is None else backend
-        self.dtype = dtype if dtype is not None else paddle_quantum.get_dtype()
-        if self.backend != Backend.QuLeaf and not isinstance(data, paddle.Tensor):
+        self.backend = get_backend() if backend is None else backend
+        self.dtype = dtype if dtype is not None else get_dtype()
+        # TODO: If the dtype is right, don't do the cast operation.
+        if isinstance(data, paddle.Tensor):
+            self.data = paddle.cast(data, self.dtype) if data.dtype != self.dtype else data
+        elif self.backend != Backend.QuLeaf:
             data = paddle.to_tensor(data, dtype=self.dtype)
-        self.data = paddle.cast(data, self.dtype) if data.dtype != self.dtype else data
-
+            self.data = paddle.cast(data, self.dtype)
         # data input test
         if self.backend == Backend.StateVector:
             if data.shape[-1] == 1:
                 self.data = paddle.squeeze(data)
-
             if not override:
-                is_vec, data_message = is_state_vector(data)
-                assert is_vec, \
-                        f"The input data is not a legal state vector: error message {data_message}"
-                assert num_qubits is None or num_qubits == data_message, \
-                        f"num_qubits does not agree: expected {num_qubits}, received {data_message}"
+                is_vec, data_message = pq.linalg.is_state_vector(data)
+                assert is_vec, f"The input data is not a legal state vector: error message {data_message}"
+                assert num_qubits is None or num_qubits == data_message, (
+                    f"num_qubits does not agree: expected {num_qubits}, received {data_message}")
                 num_qubits = data_message
-
         elif self.backend == Backend.DensityMatrix:
-
             if not override:
-                is_den, data_message = is_density_matrix(data)
-                assert is_den, \
-                        f"The input data is not a legal density matrix: error message {data_message}"
-                assert num_qubits is None or num_qubits == data_message, \
-                        f"num_qubits does not agree: expected {num_qubits}, received {data_message}"
+                is_den, data_message = pq.linalg.is_density_matrix(data)
+                assert is_den, f"The input data is not a legal density matrix: error message {data_message}"
+                assert num_qubits is None or num_qubits == data_message, (
+                    f"num_qubits does not agree: expected {num_qubits}, received {data_message}")
                 num_qubits = data_message
-
         elif self.backend == Backend.UnitaryMatrix:
             # no need to check the state in unitary backend
             if num_qubits is None:
                 num_qubits = int(math.log2(data.shape[0]))
-
         elif self.backend == Backend.QuLeaf:
+            self.data = data
             if quleaf.get_quleaf_backend() != QCompute.BackendName.LocalBaiduSim2:
                 assert quleaf.get_quleaf_token() is not None, "You must input token tu use cloud server."
-            self.gate_history = []
-            self.param_list = []
-            self.num_param = 0
         else:
             raise ValueError(
                 f"Cannot recognize the backend {self.backend}")
         self.num_qubits = num_qubits
+        
+        # initialize default qubit sequence 
+        self.qubit_sequence = list(range(num_qubits))
+
+        # whether use the old doubly-swap logic to compute the matrix multiplication. Defaults to ``False``.
+        self.is_swap_back = True
+
+    def __getitem__(self, key: Union[int, slice]) -> 'State':
+        r"""Indexing of the State class
+        """
+        qubits = list(range(self.num_qubits))[key]
+        return pq.qinfo.partial_trace_discontiguous(self, qubits if isinstance(qubits, List) else [qubits])
 
     @property
     def ket(self) -> paddle.Tensor:
@@ -113,7 +118,7 @@ class State(object):
                 f"the backend must be in StateVector: received {self.backend}")
 
         return self.data.reshape([2 ** self.num_qubits, 1])
-    
+
     @property
     def bra(self) -> paddle.Tensor:
         r"""Return the bra form in state_vector backend
@@ -130,13 +135,12 @@ class State(object):
                 f"the backend must be in StateVector: received {self.backend}")
 
         return paddle.conj(self.data.reshape([1, 2 ** self.num_qubits]))
-    
+
     def normalize(self) -> None:
         r"""Normalize this state
-        
+
         Raises:
             NotImplementedError: does not support normalization for the backend
-
         """
         data = self.data
         if self.backend == Backend.StateVector:
@@ -147,28 +151,29 @@ class State(object):
             raise NotImplementedError(
                 f"Does not support normalization for the backend {self.backend}")
         self.data = data
-        
-    def evolve(self, H: Union[np.ndarray, paddle.Tensor, Hamiltonian], t: float) -> None:
+
+    def evolve(self, H: Union[np.ndarray, paddle.Tensor, 'pq.Hamiltonian'], t: float) -> None:
         r"""Evolve the state under the Hamiltonian `H` i.e. apply unitary operator :math:`e^{-itH}`
-        
+
         Args:
             H: the Hamiltonian of the system
             t: the evolution time
-        
+
         Raises:
             NotImplementedError: does not support evolution for the backend
 
         """
-        if isinstance(H, Hamiltonian):
+        if isinstance(H, pq.Hamiltonian):
             num_qubits = max(self.num_qubits, H.n_qubits)
             H = H.construct_h_matrix(qubit_num=num_qubits)
         else:
             num_qubits = int(math.log2(H.shape[0]))
-            H = _type_transform(H, "numpy")
-        assert num_qubits == self.num_qubits, \
-            f"the # of qubits of Hamiltonian and this state are not the same: received {num_qubits}, expect {self.num_qubits}"
+            H = pq.intrinsic._type_transform(H, "numpy")
+        assert num_qubits == self.num_qubits, (
+            "the # of qubits of Hamiltonian and this state are not the same: "
+            f"received {num_qubits}, expect {self.num_qubits}")
         e_itH = paddle.to_tensor(expm(-1j * t * H), dtype=self.dtype)
-        
+
         if self.backend == Backend.StateVector:
             self.data = paddle.squeeze(e_itH @ self.ket)
         elif self.backend == Backend.DensityMatrix:
@@ -176,31 +181,29 @@ class State(object):
         else:
             raise NotImplementedError(
                 f"Does not support evolution for the backend {self.backend}")
-    
+
     def kron(self, other: 'State') -> 'State':
         r"""Kronecker product between states
-        
+
         Args:
             other: a quantum state
-            
+
         Returns:
             the tensor product of these two states
-            
         """
         backend, dtype = self.backend, self.dtype
         assert backend == other.backend, \
             f"backends between two States are not the same: received {backend} and {other.backend}"
         assert dtype == other.dtype, \
             f"dtype between two States are not the same: received {dtype} and {other.dtype}"
-        
         if backend == Backend.StateVector:
             return State(paddle.kron(self.ket, other.ket), backend=backend)
         else:
             return State(paddle.kron(self.data, other.data), backend=backend, dtype=dtype)
-        
+
     def __matmul__(self, other: 'State') -> paddle.Tensor:
         r"""Matrix product between states or between tensor and state
-        
+
         Args:
             other: a quantum state
 
@@ -218,10 +221,10 @@ class State(object):
             raise ValueError(
                 "Cannot multiply two state vectors: check the backend")
         return self.data @ other.data
-    
+
     def __rmatmul__(self, other: 'State') -> paddle.Tensor:
         r"""Matrix product between states or between state and tensor
-        
+
         Args:
             other: a quantum state
 
@@ -231,7 +234,6 @@ class State(object):
 
         Returns:
             the product of these two states
-
         """
         if not isinstance(other, State):
             raise NotImplementedError(
@@ -240,7 +242,7 @@ class State(object):
             raise ValueError(
                 "Cannot multiply two state vectors: check your backend")
         return other.data @ self.data
-    
+
     def numpy(self) -> np.ndarray:
         r"""Get the data in numpy.
 
@@ -257,22 +259,23 @@ class State(object):
             dtype: Specify the new data type of the state.
             device: Specify the new device of the state.
             blocking: Specify the new blocking of the state.
-        
+
         Raises
             NotImplementedError: only support transformation between StateVector and DensityMatrix
             NotImplementedError: Transformation for device or blocking is not supported.
-
         """
-        if (backend not in {"state_vector", "density_matrix"} or 
-            self.backend not in {Backend.StateVector, Backend.DensityMatrix}):
+        if (
+            backend not in {"state_vector", "density_matrix"} or
+            self.backend not in {Backend.StateVector, Backend.DensityMatrix}
+        ):
             raise NotImplementedError(
                 "Only support transformation between StateVector and DensityMatrix")
-        
+
         if device is not None or blocking is not None:
             raise NotImplementedError(
                 "Transformation for device or blocking is not supported")
-        
-        self.data = _type_transform(self, backend).data
+
+        self.data = pq.intrinsic._type_transform(self, backend).data
         self.dtype = self.dtype if dtype is None else dtype
 
     def clone(self) -> 'State':
@@ -281,12 +284,43 @@ class State(object):
         Returns:
             A new state which is identical to this state.
         """
-        return State(self.data, self.num_qubits, self.backend, self.dtype, override=True)
+        new_state = State(paddle.clone(self.data), self.num_qubits, self.backend, self.dtype, override=True)
+        new_state.qubit_sequence = self.qubit_sequence
+        new_state.is_swap_back = self.is_swap_back
+        return new_state
+
+    def __copy__(self) -> 'State':
+        return self.clone()
 
     def __str__(self):
         return str(self.data.numpy())
+    
+    @property
+    def oper_history(self) -> List[Dict[str, Union[str, List[int], paddle.Tensor]]]:
+        r"""The operator history stored for the QPU backend
+        
+        Raises:
+            NotImplementedError: This property should be called for the backend ``quleaf`` only.
+            ValueError: This state does not have operator history: run the circuit first.
+        
+        """
+        if self.backend != Backend.QuLeaf:
+            raise NotImplementedError(
+                "This property should be called for backend `quleaf only.")
+        
+        if not hasattr(self, '_State__oper_history'):
+            raise ValueError(
+                "This state does not have operator history: run the circuit first.")
+        return self.__oper_history
 
-    def expec_val(self, hamiltonian: Hamiltonian, shots: Optional[int] = 0) -> float:
+    @oper_history.setter
+    def oper_history(self, oper_history: List[Dict[str, Union[str, List[int], paddle.Tensor]]]) -> None:
+        if self.backend != Backend.QuLeaf:
+            raise NotImplementedError(
+                "This property should be changed for backend `quleaf only.")
+        self.__oper_history = oper_history
+
+    def expec_val(self, hamiltonian: 'pq.Hamiltonian', shots: Optional[int] = 0) -> float:
         r"""The expectation value of the observable with respect to the quantum state.
 
         Args:
@@ -300,7 +334,7 @@ class State(object):
             The expectation value of the input observable for the quantum state.
         """
         if shots == 0:
-            func = paddle_quantum.loss.ExpecVal(hamiltonian)
+            func = pq.loss.ExpecVal(hamiltonian)
             result = func(self)
             return result.item()
         result = 0
@@ -337,9 +371,9 @@ class State(object):
                     state_data = simulator(
                         state_data, gate_for_y, idx, self.num_qubits
                     )
-            if self.backend == paddle_quantum.Backend.StateVector:
+            if self.backend == Backend.StateVector:
                 prob_amplitude = paddle.multiply(paddle.conj(state_data), state_data).real()
-            elif self.backend == paddle_quantum.Backend.DensityMatrix:
+            elif self.backend == Backend.DensityMatrix:
                 prob_amplitude = paddle.zeros([2 ** self.num_qubits])
                 for idx in range(2 ** self.num_qubits):
                     prob_amplitude[idx] += state_data[idx, idx].real()
@@ -354,8 +388,10 @@ class State(object):
             result += coeff * temp_res
         return result
 
-    def measure(self, shots: Optional[int] = 0, qubits_idx: Optional[Union[Iterable[int], int]] = None, 
-                plot: Optional[bool] = False) -> dict:
+    def measure(
+            self, shots: Optional[int] = 0, qubits_idx: Optional[Union[Iterable[int], int]] = None,
+            plot: Optional[bool] = False, record: Optional[bool] = False
+    ) -> dict:
         r"""Measure the quantum state
 
         Args:
@@ -363,270 +399,121 @@ class State(object):
                 Default is ``0``, which means the exact probability distribution of measurement results are returned.
             qubits_idx: The index of the qubit to be measured. Defaults to ``None``, which means all qubits are measured.
             plot: Whether to draw the measurement result plot. Defaults to ``False`` which means no plot.
+            record: Whether to return the original measurement record. Defaults to ``False`` which means no record.
 
         Raises:
-            Exception: The number of shots should be greater than 0.
+            ValueError: The number of shots should be greater than 0.
+            NotImplementedError: When the backend is Quleaf, record is not supprted .
             NotImplementedError: If the backend is wrong or not implemented.
             NotImplementedError: The qubit index is wrong or not supported.
+            ValueError: Returning records requires the number of shots to be greater than 0.
 
         Returns:
             Measurement results
         """
-        if self.backend == paddle_quantum.Backend.QuLeaf:
+        if self.backend == Backend.QuLeaf:
             if shots == 0:
-                    raise Exception("The quleaf server requires the number of shots to be greater than 0.")
-            state_data = self.data
-            QCompute.MeasureZ(*state_data.Q.toListPair())
-            result = state_data.commit(shots, fetchMeasure=True)['counts']
-            result = {''.join(reversed(key)): value for key, value in result.items()}
-        elif self.backend == paddle_quantum.Backend.StateVector:
-            prob_amplitude = paddle.multiply(paddle.conj(self.data), self.data).real()
-        elif self.backend == paddle_quantum.Backend.DensityMatrix:
-            prob_amplitude = paddle.zeros([2 ** self.num_qubits])
-            for idx in range(2 ** self.num_qubits):
-                prob_amplitude[idx] += self.data[idx, idx].real()
-        else:
-            raise NotImplementedError
-        if qubits_idx is None:
-            prob_array = prob_amplitude
-            num_measured = self.num_qubits
-        elif isinstance(qubits_idx, (Iterable, int)):
-            qubits_idx = [qubits_idx] if isinstance(qubits_idx, int) else list(qubits_idx)
+                raise ValueError("The quleaf server requires the number of shots to be greater than 0.")
+            if record == True:
+                raise NotImplementedError
+            state_data = copy.deepcopy(self.data)
+            if qubits_idx is None:
+                qubits_idx = list(range(self.num_qubits))
+            elif isinstance(qubits_idx, int):
+                qubits_idx = [qubits_idx]
             num_measured = len(qubits_idx)
-            prob_array = paddle.zeros([2 ** num_measured])
-            for idx in range(2 ** self.num_qubits):
-                binary = bin(idx)[2:].zfill(self.num_qubits)
-                target_qubits = ''.join(binary[qubit_idx] for qubit_idx in qubits_idx)
-                prob_array[int(target_qubits, base=2)] += prob_amplitude[idx]
+            q_reg, _ = state_data.Q.toListPair()
+            q_reg = [q_reg[idx] for idx in qubits_idx]
+            c_reg = list(range(num_measured))
+            state_data = quleaf._act_gates_to_state(self.oper_history, state_data)
+            QCompute.MeasureZ(q_reg, c_reg)
+            result = state_data.commit(shots, fetchMeasure=True)['counts']
+            result = {key[::-1]: value for key, value in result.items()}
+            basis_list = [bin(idx)[2:].zfill(num_measured) for idx in range(2 ** num_measured)]
+            freq = [0 if basis not in result else result[basis] / shots for basis in basis_list]
         else:
-            raise NotImplementedError
-        if shots == 0:
-            freq = prob_array.tolist()
-            result = {bin(idx)[2:].zfill(num_measured): val for idx, val in enumerate(freq)}
-        else:
-            samples = random.choices(range(0, 2 ** num_measured), weights=prob_array, k=shots)
-            freq = [0] * (2 ** num_measured)
-            for item in samples:
-                freq[item] += 1
-            freq = [val / shots for val in freq]
-            result = {bin(idx)[2:].zfill(num_measured): val for idx, val in enumerate(freq)}
+            if self.backend == Backend.StateVector:
+                prob_amplitude = paddle.multiply(paddle.conj(self.data), self.data).real()
+            elif self.backend == Backend.DensityMatrix:
+                prob_amplitude = paddle.zeros([2 ** self.num_qubits])
+                for idx in range(2 ** self.num_qubits):
+                    prob_amplitude[idx] += self.data[idx, idx].real()
+            else:
+                raise NotImplementedError
+            if qubits_idx is None:
+                prob_array = prob_amplitude
+                num_measured = self.num_qubits
+            elif isinstance(qubits_idx, (Iterable, int)):
+                qubits_idx = [qubits_idx] if isinstance(qubits_idx, int) else list(qubits_idx)
+                num_measured = len(qubits_idx)
+                prob_array = paddle.zeros([2 ** num_measured])
+                for idx in range(2 ** self.num_qubits):
+                    binary = bin(idx)[2:].zfill(self.num_qubits)
+                    target_qubits = ''.join(binary[qubit_idx] for qubit_idx in qubits_idx)
+                    prob_array[int(target_qubits, base=2)] += prob_amplitude[idx]
+            else:
+                raise NotImplementedError
+            if shots == 0:
+                if record == True:
+                    raise ValueError("Returning records requires the number of shots to be greater than 0.")
+                freq = prob_array.tolist()
+            else:
+                result_record = [] # record of original measurement results
+                samples = random.choices(range(2 ** num_measured), weights=prob_array, k=shots)
+                freq = [0] * (2 ** num_measured)
+                for item in samples:
+                    freq[item] += 1
+                    result_record.append(bin(item)[2:].zfill(num_measured))
+                freq = [val / shots for val in freq]
+            if record == False:
+                result = {bin(idx)[2:].zfill(num_measured): val for idx, val in enumerate(freq)}
+            else:
+                result = {"Measurement Record": result_record}
         if plot:
             assert num_measured < 6, "Too many qubits to plot"
             ylabel = "Measured Probabilities" if shots == 0 else "Probabilities"
-            state_list = [bin(idx)[2:].zfill(num_measured) for idx in range(0, 2 ** num_measured)]
-            plt.bar(range(2 ** num_measured), freq, tick_label=state_list)
+            basis_list = [bin(idx)[2:].zfill(num_measured) for idx in range(2 ** num_measured)]
+            plt.bar(range(2 ** num_measured), freq, tick_label=basis_list)
             plt.xticks(rotation=90)
             plt.xlabel("Qubit State")
             plt.ylabel(ylabel)
             plt.show()
         return result
+    
+    def __set_qubit_seq__(self, qubit_sequence: List[int]) -> None:
 
+        data = self.data
+        perm_map = pq.intrinsic._perm_of_list(self.qubit_sequence, qubit_sequence)
+        if self.backend == Backend.StateVector:
+            higher_dims = data.shape[:-1]
+            data = pq.intrinsic._base_transpose(data, perm_map)
+            data = paddle.reshape(data, higher_dims.copy() + [2 ** self.num_qubits])
 
-def _type_fetch(data: Union[np.ndarray, paddle.Tensor, State]) -> str:
-    r""" fetch the type of ``data``
-    
-    Args:
-        data: the input data, and datatype of which should be either ``numpy.ndarray``,
-    ''paddle.Tensor'' or ``paddle_quantum.State``
-    
-    Returns:
-        string of datatype of ``data``, can be either ``"numpy"``, ``"tensor"``,
-    ``"state_vector"`` or ``"density_matrix"``
-    
-    Raises:
-        ValueError: does not support the current backend of input state.
-        TypeError: cannot recognize the current type of input data.
-    
-    """
-    if isinstance(data, np.ndarray):
-        return "numpy"
-    
-    if isinstance(data, paddle.Tensor):
-        return "tensor"
-    
-    if isinstance(data, State):
-        if data.backend == Backend.StateVector:
-            return "state_vector"
-        if data.backend == Backend.DensityMatrix:
-            return "density_matrix"
-        raise ValueError(
-            f"does not support the current backend {data.backend} of input state.")
-        
-    raise TypeError(
-        f"cannot recognize the current type {type(data)} of input data.")
+        elif self.backend == Backend.DensityMatrix:
+            higher_dims = data.shape[:-2]
+            data = pq.intrinsic._base_transpose_for_dm(data, perm_map)
+            data = paddle.reshape(data, higher_dims.copy() + [2 ** self.num_qubits] * 2)
+        else:
+            raise NotImplementedError
 
+        self.data = data
+        self.qubit_sequence = qubit_sequence
 
-def _density_to_vector(rho: Union[np.ndarray, paddle.Tensor]) -> Union[np.ndarray, paddle.Tensor]:
-    r""" transform a density matrix to a state vector
-    
-    Args:
-        rho: a density matrix (pure state)
-        
-    Returns:
-        a state vector
-    
-    Raises:
-        ValueError: the output state may not be a pure state
-    
-    """
-    type_str = _type_fetch(rho)
-    rho = paddle.to_tensor(rho)
-    eigval, eigvec = paddle.linalg.eigh(rho)
-            
-    max_eigval = paddle.max(eigval).item()
-    err = np.abs(max_eigval - 1)
-    if err > 1e-6:
-        raise ValueError(
-            f"the output state may not be a pure state, maximum distance: {err}")
-    
-    state = eigvec[:, paddle.argmax(eigval)]
-    
-    return state.numpy() if type_str == "numpy" else state
-    
+    def reset_sequence(self, target_sequence: Optional[List[int]] = None) -> None: 
+        r"""reset the qubit order to a given sequence
 
-def _type_transform(data: Union[np.ndarray, paddle.Tensor, State],
-                   output_type: str) -> Union[np.ndarray, paddle.Tensor, State]:
-    r""" transform the datatype of ``input`` to ``output_type``
-    
-    Args:
-        data: data to be transformed
-        output_type: datatype of the output data, type is either ``"numpy"``, ``"tensor"``,
-    ``"state_vector"`` or ``"density_matrix"``
-    
-    Returns:
-        the output data with expected type
-        
-    Raises:
-        ValueError: does not support transformation to type.
-    
-    """
-    current_type = _type_fetch(data)
-    
-    support_type = {"numpy", "tensor", "state_vector", "density_matrix"}
-    if output_type not in support_type:
-        raise ValueError(
-            f"does not support transformation to type {output_type}")
-        
-    if current_type == output_type:
-        return data
-    
-    if current_type == "numpy":
-        if output_type == "tensor":
-            return paddle.to_tensor(data)
-        
-        data = np.squeeze(data)        
-        # state_vector case
-        if output_type == "state_vector":
-            if len(data.shape) == 2:
-                data = _density_to_vector(data)
-            return State(data, backend=Backend.StateVector)
-        # density_matrix case
-        if len(data.shape) == 1:
-            data = data.reshape([len(data), 1])
-            data = data @ np.conj(data.T)
-        return State(data, backend=Backend.DensityMatrix)
-    
-    if current_type == "tensor":
-        if output_type == "numpy":
-            return data.numpy()
-        
-        data = paddle.squeeze(data)
-        # state_vector case
-        if output_type == "state_vector":
-            if len(data.shape) == 2:
-                data = _density_to_vector(data)
-            return State(data, backend=Backend.StateVector)
-        
-        # density_matrix case
-        if len(data.shape) == 1:
-            data = data.reshape([len(data), 1])
-            data = data @ paddle.conj(data.T)
-        return State(data, backend=Backend.DensityMatrix)
+        Args:
+            target_sequence: target sequence. Defaults to None.
 
-    if current_type == "state_vector":
-        if output_type == "density_matrix":
-            return State(data.ket @ data.bra, backend=Backend.DensityMatrix, num_qubits=data.num_qubits, override=True)
-        return data.ket.numpy() if output_type == "numpy" else data.ket
-    
-    # density_matrix data
-    if output_type == "state_vector":
-        return State(_density_to_vector(data.data), backend=Backend.StateVector, num_qubits=data.num_qubits, override=True)
-    return data.numpy() if output_type == "numpy" else data.data
+        Returns:
+            State: state with given qubit order
+        """
 
-
-def is_state_vector(vec: Union[np.ndarray, paddle.Tensor], 
-                    eps: Optional[float] = None) -> Tuple[bool, int]:
-    r""" verify whether ``vec`` is a legal quantum state vector
-    
-    Args:
-        vec: state vector candidate :math:`x`
-        eps: tolerance of error, default to be `None` i.e. no testing for data correctness
-    
-    Returns:
-        determine whether :math:`x^\dagger x = 1`, and return the number of qubits or an error message
-        
-    Note:
-        error message is:
-        * ``-1`` if the above equation does not hold
-        * ``-2`` if the dimension of ``vec`` is not a power of 2
-        * ``-3`` if ``vec`` is not a vector
-    
-    """
-    vec = _type_transform(vec, "tensor")
-    vec = paddle.squeeze(vec)
-    
-    dimension = vec.shape[0]
-    if len(vec.shape) != 1:
-        return False, -3
-    
-    num_qubits = int(math.log2(dimension))
-    if 2 ** num_qubits != dimension:
-        return False, -2
-    
-    if eps is None:
-        return True, num_qubits
-    
-    vec = vec.reshape([dimension, 1])
-    vec_bra = paddle.conj(vec.T)   
-    eps = min(eps * dimension, 1e-2)
-    return {False, -1} if paddle.abs(vec_bra @ vec - (1 + 0j)) > eps else {True, num_qubits}
-
-
-def is_density_matrix(rho: Union[np.ndarray, paddle.Tensor], 
-                      eps: Optional[float] = None) -> Tuple[bool, int]:
-    r""" verify whether ``rho`` is a legal quantum density matrix
-    
-    Args:
-        rho: density matrix candidate
-        eps: tolerance of error, default to be `None` i.e. no testing for data correctness
-    
-    Returns:
-        determine whether ``rho`` is a PSD matrix with trace 1 and return the number of qubits or an error message.
-    
-    Note:
-        error message is:
-        * ``-1`` if ``rho`` is not PSD
-        * ``-2`` if the trace of ``rho`` is not 1
-        * ``-3`` if the dimension of ``rho`` is not a power of 2 
-        * ``-4`` if ``rho`` is not a square matrix
-    
-    """
-    rho = _type_transform(rho, "tensor")
-    
-    dimension = rho.shape[0]
-    if len(rho.shape) != 2 or dimension != rho.shape[1]:
-        return False, -4
-    
-    num_qubits = int(math.log2(dimension))
-    if 2 ** num_qubits != dimension:
-        return False, -3
-    
-    if eps is None:
-        return True, num_qubits
-    
-    eps = min(eps * dimension, 1e-2)
-    if paddle.abs(paddle.trace(rho) - (1 + 0j)).item() > eps:
-        return False, -2
-    
-    min_eigval = paddle.min(paddle.linalg.eigvalsh(rho))
-    return {False, -1} if paddle.abs(min_eigval) > eps else {True, num_qubits}
+        if target_sequence is None:
+            self.__set_qubit_seq__(list(range(self.num_qubits)))
+        elif target_sequence == self.qubit_sequence:
+            pass
+        else:
+            if len(target_sequence) != self.num_qubits:
+                raise ValueError(f"The length of target sequence does not match! expected {self.num_qubits}, received {len(target_sequence)}")
+            self.__set_qubit_seq__(target_sequence)

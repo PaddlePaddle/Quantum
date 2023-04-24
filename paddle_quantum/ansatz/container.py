@@ -18,32 +18,33 @@ The source file of the Sequential class.
 """
 
 import collections
-from paddle_quantum import Operator
-from typing import Optional, Union, Iterable, Any, List
+import warnings
+import paddle
+import paddle_quantum as pq
+from typing import Optional, Union, Iterable, Any, List, Dict
 
 
-class Sequential(Operator):
+class Sequential(pq.Operator):
     r"""Sequential container.
 
     Args:
         *operators: initial operators ready to be a sequential
-    
+
     Note:
         Sublayers will be added to this container in the order of argument in the constructor.
         The argument passed to the constructor can be iterable Layers or iterable name Layer pairs.
-    
     """
-    def __init__(self, *operators: Operator):
+    def __init__(self, *operators: pq.Operator):
         super().__init__()
         self.index = 0
-        if len(operators) > 0 and isinstance(operators[0], (list, tuple)):
+        if operators and isinstance(operators[0], (list, tuple)):
             for name, oper in operators:
                 self.add_sublayer(name, oper)
         else:
             for idx, oper in enumerate(operators):
                 self.add_sublayer(str(idx), oper)
 
-    def __getitem__(self, name: Union[str, slice]) -> Operator:
+    def __getitem__(self, name: Union[str, slice]) -> pq.Operator:
         if isinstance(name, slice):
             return self.__class__(*(list(self._sub_layers.values())[name]))
         if isinstance(name, str):
@@ -56,8 +57,8 @@ class Sequential(Operator):
             raise IndexError(f'index {name:s} is out of range')
         return self._sub_layers[str(name)]
 
-    def __setitem__(self, name: Any, layer: Operator) -> None:
-        assert isinstance(layer, Operator)
+    def __setitem__(self, name: Any, layer: pq.Operator) -> None:
+        assert isinstance(layer, pq.Operator)
         setattr(self, str(name), layer)
 
     def __delitem__(self, name: Any) -> None:
@@ -68,7 +69,7 @@ class Sequential(Operator):
     def __iter__(self):
         return self
 
-    def __next__(self) -> Union[Operator, StopIteration]:
+    def __next__(self) -> Union[pq.Operator, StopIteration]:
         if self.index < len(self._sub_layers):
             oper = self._sub_layers[str(self.index)]
             self.index += 1
@@ -78,30 +79,54 @@ class Sequential(Operator):
 
     def __len__(self):
         return len(self._sub_layers)
+    
+    @property
+    def oper_history(self) -> List[Dict[str, Union[str, List[int], paddle.Tensor]]]:
+        r"""Return the operator history of this Sequential
+        """
+        oper_history = []
+        for op in self.sublayers():
+            if isinstance(op, pq.gate.ParamGate):
+                oper_history.append({
+                    'name': op.__class__.__name__,
+                    'qubits_idx': op.qubits_idx,
+                    'depth': op.depth,
+                    'param': op.theta,
+                    'param_sharing': op.param_sharing
+                })
+            elif hasattr(op, 'qubits_idx'):
+                oper_history.append({
+                    'name': op.__class__.__name__,
+                    'qubits_idx': op.qubits_idx,
+                    'depth': op.depth if hasattr(op, 'depth') else 1
+                })
+            else:
+                warnings.warn(
+                    f"Cannot recognize the operator: expected an operator with attribute qubits_idx, received {type(op)}.", UserWarning)
+                oper_history.append(None)
+        return oper_history
 
-    def append(self, operator: Union[Iterable, Operator]) -> None:
+    # TODO: append only a operator, don't allow to append a list of operators
+    def append(self, operator: Union[Iterable, pq.Operator]) -> None:
         r""" append an operator
-        
+
         Args:
             operator: operator with a name or just an operator
-        
         """
-        if isinstance(operator, Operator):
+        if isinstance(operator, pq.Operator):
             idx = len(self._sub_layers)
             self.add_sublayer(str(idx), operator)
         elif isinstance(operator, Iterable):
             name, oper = operator
             self.add_sublayer(name, oper)
 
-
-    def extend(self, operators: List[Operator]) -> None:
+    def extend(self, operators: List[pq.Operator]) -> None:
         r""" append a list of operators
-        
+
         Args:
             operator: list of operators
-        
         """
-        if len(operators) > 0 and isinstance(operators[0], (list, tuple)):
+        if operators and isinstance(operators[0], (list, tuple)):
             for name, oper in operators:
                 self.add_sublayer(name, oper)
         else:
@@ -109,16 +134,15 @@ class Sequential(Operator):
             for idx, oper in enumerate(operators):
                 self.add_sublayer(str(idx + origin_len), oper)
 
-    def insert(self, index: int, operator: Operator) -> None:
+    def insert(self, index: int, operator: pq.Operator) -> None:
         r""" insert an operator at ``index``
-        
+
         Args:
             index: index to be inserted
             operator: an operator
-        
         """
         new_operators = collections.OrderedDict()
-        assert index <= len(self._sub_layers), 'the index ' + str(index) + ' should be no more than ' + str(len(self._sub_layers))
+        assert index <= len(self._sub_layers), f'the index {index} should be no more than {len(self._sub_layers)}'
         if index == len(self._sub_layers):
             self.append(operator)
         for idx, name in enumerate(self._sub_layers):
@@ -128,7 +152,7 @@ class Sequential(Operator):
                 if isinstance(operator, (list, tuple)):
                     name, oper = operator
                     new_operators[name] = oper
-                elif isinstance(operator, Operator):
+                elif isinstance(operator, pq.Operator):
                     new_operators[str(index)] = operator
                 if name.isdigit():
                     new_operators[str(int(name) + 1)] = self._sub_layers[name]
@@ -140,16 +164,15 @@ class Sequential(Operator):
                 new_operators[name] = self._sub_layers[name]
         self._sub_layers = new_operators
 
-    def pop(self, index: int = None, operator:  Optional[Operator] = None):
+    def pop(self, index: int = None, operator:  Optional[pq.Operator] = None):
         r""" remove the operator at ``index`` or matched with ``operator``
-        
+
         Args:
             index: at which the operator will be popped
             operator: matched with which the operator will be popped
-        
         """
         if index is not None:
-            assert index < len(self._sub_layers), 'the index ' + str(index) + ' should be less than ' + str(len(self._sub_layers))
+            assert index < len(self._sub_layers), f'the index {index} should be less than {len(self._sub_layers)}'
             if isinstance(index, int):
                 index = str(index)
             operator = self._sub_layers[index]
@@ -167,17 +190,16 @@ class Sequential(Operator):
             else:
                 new_operators[name] = self._sub_layers[name]
         self._sub_layers = new_operators
-
+        
     def forward(self, state: Any) -> Any:
         r""" forward the input
-        
+
         Args:
             state: initial state
-            
+
         Returns:
             output state
-        
-        """        
+        """
         for layer in self._sub_layers.values():
             state = layer(state)
         return state

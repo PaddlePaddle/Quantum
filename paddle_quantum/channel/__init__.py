@@ -19,5 +19,5 @@ The module of the quantum channels.
 
 from .base import Channel
 from .common import *
-from .custom import ChoiRepr, KrausRepr, StinespringRepr
+from .custom import *
 from .representation import *

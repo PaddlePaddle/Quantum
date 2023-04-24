@@ -45,7 +45,7 @@ paddle\_quantum.base
    :return: 当前的数据类型。
    :rtype: str
 
-.. py:class:: paddle_quantum.base.Operator(backend=None, dtype=None, name_scope=None)
+.. py:class:: Operator(backend=None, dtype=None, name_scope=None)
 
    基类：:py:class:`paddle.fluid.dygraph.layers.Layer`
    

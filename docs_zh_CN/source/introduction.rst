@@ -64,7 +64,7 @@ Paddle Quantum（量桨）
 
 .. code-block:: shell
 
-   git clone http://github.com/PaddlePaddle/quantum
+   git clone https://github.com/PaddlePaddle/quantum
 
 .. code-block:: shell
 

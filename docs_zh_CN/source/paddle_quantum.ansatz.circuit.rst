@@ -43,16 +43,20 @@ paddle\_quantum.ansatz.circuit
 
          将该线路的所有参数的 ``stop_grdient`` 设为 ``True``
 
-      .. py:method:: randomize_param(low=0, high=2 * pi)
+      .. py:method:: randomize_param(arg0=0, arg1=2 * pi, initializer_type='Uniform')
 
-         在 ``[low, high)`` 的范围内随机化电路参数
+         在 ``Uniform`` 和 ``Normal`` 的分布中随机化电路参数。
 
-         :param low: 随机参数的下界, 默认为 ``0``。
-         :type low: float, optional
-         :param high: 随机参数的上界, 默认为 ``2*pi``。
-         :type high: float, optional
+         关于 initializer 的介绍，可以查看 https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/nn/initializer/Uniform_cn.html
 
-      .. py:method:: h(qubits_idx='full', num_qubits=None, depth=1)
+         :param arg0: 分布中的第一个参数, 默认为 ``0``。
+         :type arg0: float
+         :param arg1: 分布中的第二个, 默认为 ``2*pi``。
+         :type arg1: float
+         :param initializer_type: 分布类型， 默认为 ``Uniform``。
+         :type initializer_type: str
+
+      .. py:method:: h(qubits_idx='full', depth=1)
 
          添加一个单量子比特的 Hadamard 门。
 
@@ -68,12 +72,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: s(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: s(qubits_idx='full', depth=1)
 
          添加单量子比特 S 门。
 
@@ -89,12 +91,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: sdg(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: sdg(qubits_idx='full', depth=1)
 
          添加单量子比特 S dagger (逆S)门。
 
@@ -110,12 +110,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: t(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: t(qubits_idx='full', depth=1)
 
          添加单量子比特 T 门。
 
@@ -131,12 +129,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: tdg(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: tdg(qubits_idx='full', depth=1)
 
          添加单量子比特 T dagger (逆T)门。
 
@@ -152,12 +148,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: x(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: x(qubits_idx='full', depth=1)
 
          添加单量子比特 X 门。
 
@@ -172,12 +166,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable, int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: y(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: y(qubits_idx='full', depth=1)
 
          添加单量子比特 Y 门。
 
@@ -192,12 +184,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable, int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: z(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: z(qubits_idx='full', depth=1)
 
          添加单量子比特 Z 门。
 
@@ -212,12 +202,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable, int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: p(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: p(qubits_idx='full', depth=1, param=None, param_sharing=False)
 
          添加单量子比特 P 门。
 
@@ -233,8 +221,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable, int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -242,7 +228,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: rx(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: rx(qubits_idx='full', depth=1, param=None, param_sharing=False)
 
          添加关于 x 轴的单量子比特旋转门。
 
@@ -257,8 +243,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable, int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -266,7 +250,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: ry(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: ry(qubits_idx='full', depth=1, param=None, param_sharing=False)
 
          添加关于 y 轴的单量子比特旋转门。
          
@@ -281,8 +265,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable, int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -290,7 +272,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: rz(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: rz(qubits_idx='full', depth=1, param=None, param_sharing=False)
 
          添加关于 z 轴的单量子比特旋转门。
 
@@ -305,8 +287,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable, int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -314,7 +294,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: u3(qubits_idx='full', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: u3(qubits_idx='full', depth=1, param=None, param_sharing=False)
 
          添加单量子比特旋转门。
 
@@ -332,8 +312,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
          :type qubits_idx: Union[Iterable, int, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -341,7 +319,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: cnot(qubits_idx='cycle', num_qubits=None, depth=1)
+      .. py:method:: cnot(qubits_idx='cycle', depth=1)
 
          添加 CNOT 门。
 
@@ -362,23 +340,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
-         :param depth: 层数，默认为 ``1``。
-         :type depth: int, optional
-
-      .. py:method:: cx(qubits_idx='cycle', num_qubits=None, depth=1)
-
-         与 cnot 相同。
-
-         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
-         :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: cy(qubits_idx='cycle', num_qubits=None, depth=1)
+      .. py:method:: cy(qubits_idx='cycle', depth=1)
 
          添加受控 Y 门。
 
@@ -399,12 +364,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: cz(qubits_idx='cycle', num_qubits=None, depth=1)
+      .. py:method:: cz(qubits_idx='cycle', depth=1)
 
          添加受控 Z 门。
 
@@ -425,12 +388,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: swap(qubits_idx='cycle', num_qubits=None, depth=1)
+      .. py:method:: swap(qubits_idx='cycle', depth=1)
 
          添加 SWAP 门。
 
@@ -450,12 +411,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: cp(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: cp(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加受控 P 门。
 
@@ -475,8 +434,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -484,7 +441,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: crx(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: crx(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加关于 x 轴的受控单量子比特旋转门。
 
@@ -505,8 +462,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -514,7 +469,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: cry(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: cry(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加关于 y 轴的受控单量子比特旋转门。
 
@@ -535,8 +490,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -544,7 +497,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: crz(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: crz(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加关于 z 轴的受控单量子比特旋转门。
 
@@ -565,8 +518,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -575,7 +526,7 @@ paddle\_quantum.ansatz.circuit
          :type param_sharing: bool, optional
 
 
-      .. py:method:: cu(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: cu(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加受控单量子比特旋转门。
 
@@ -597,8 +548,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -606,7 +555,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: rxx(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: rxx(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加 RXX 门。
 
@@ -626,8 +575,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -635,7 +582,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: ryy(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: ryy(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加 RYY 门。
 
@@ -655,8 +602,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -664,7 +609,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
 
-      .. py:method:: rzz(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: rzz(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加 RZZ 门。
 
@@ -684,8 +629,6 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -693,7 +636,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: ms(qubits_idx='cycle', num_qubits=None, depth=1)
+      .. py:method:: ms(qubits_idx='cycle', depth=1)
 
          添加 Mølmer-Sørensen (MS) 门。
 
@@ -713,12 +656,10 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: cswap(qubits_idx='cycle', num_qubits=None, depth=1)
+      .. py:method:: cswap(qubits_idx='cycle', depth=1)
 
          添加 CSWAP (Fredkin) 门。
 
@@ -742,14 +683,12 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: ccx(qubits_idx='cycle', num_qubits=None, depth=1)
+      .. py:method:: ccx(qubits_idx='cycle', depth=1)
 
-         添加 CCX 门。
+         添加 CCX (Toffoli) 门。
 
          其矩阵形式为：
 
@@ -770,19 +709,15 @@ paddle\_quantum.ansatz.circuit
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: universal_two_qubits(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: universal_two_qubits(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加两量子比特通用门，该通用门需要 15 个参数。
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -790,14 +725,12 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: universal_three_qubits(qubits_idx='cycle', num_qubits=None, depth=1, param=None, param_sharing=False)
+      .. py:method:: universal_three_qubits(qubits_idx='cycle', depth=1, param=None, param_sharing=False)
 
          添加三量子比特通用门，该通用门需要 81 个参数。
 
          :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
          :type qubits_idx: Union[Iterable, str], optional
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param param: 量子门参数，默认为 ``None``。
@@ -805,7 +738,7 @@ paddle\_quantum.ansatz.circuit
          :param param_sharing: 同一层中的量子门是否共享参数，默认为 ``False``。
          :type param_sharing: bool, optional
       
-      .. py:method:: oracle(oracle, qubits_idx, num_qubits=None, depth=1, gate_name='0', latex_name=None, plot_width=None)
+      .. py:method:: oracle(oracle, qubits_idx, depth=1, gate_name='0', latex_name=None, plot_width=None)
 
          添加一个 oracle 门。
 
@@ -813,18 +746,16 @@ paddle\_quantum.ansatz.circuit
          :type oracle: paddle.tensor
          :param qubits_idx: 作用在的量子比特的编号。
          :type qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int]
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param gate_name: oracle 的名字，默认为 ``O``。
          :type gate_name: str, optional
-         :param latex_name: oracle 的Latex名字，默认为 None, 此时用 gate_name。
+         :param latex_name: oracle 的Latex名字，默认为 ``None``，此时用 gate_name。
          :type latex_name: str, optional
-         :param plot_width: 电路图中此门的宽度，默认为None，此时与门名称成比例。
-         :type gate_name: float, optional
+         :param plot_width: 电路图中此门的宽度，默认为 ``None``，此时与门名称成比例。
+         :type plot_width: float, optional
       
-      .. py:method:: control_oracle(oracle, qubits_idx, num_qubits=None, depth=1, gate_name='0', latex_name=None, plot_width=None)
+      .. py:method:: control_oracle(oracle, qubits_idx, depth=1, gate_name='0', latex_name=None, plot_width=None)
 
          添加一个受控 oracle 门。
 
@@ -832,25 +763,21 @@ paddle\_quantum.ansatz.circuit
          :type oracle: paddle.tensor
          :param qubits_idx: 作用在的量子比特的编号。
          :type qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int]
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
          :param gate_name: oracle 的名字，默认为 ``cO``。
          :type gate_name: str, optional
-         :param latex_name: oracle 的Latex名字，默认为 None, 此时用 gate_name。
+         :param latex_name: oracle 的Latex名字，默认为 ``None``，此时用 gate_name。
          :type latex_name: str, optional
-         :param plot_width: 电路图中此门的宽度，默认为None，此时与门名称成比例。
+         :param plot_width: 电路图中此门的宽度，默认为 ``None``，此时与门名称成比例。
          :type gate_name: float, optional
 
-      .. py:method:: collapse(qubits_idx='full', num_qubits=None, desired_result=None, if_print=False, measure_basis='z')
+      .. py:method:: collapse(qubits_idx='full', desired_result=None, if_print=False, measure_basis='z')
 
          添加一个坍缩算子
 
          :param qubits_idx: 作用的量子比特的编号。
          :type qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int]
-         :param num_qubits: 总共的量子比特数量，默认为 ``None``。
-         :type num_qubits: int, optional
          :param desired_result: 期望的坍缩态（现只支持输入计算基），默认为 ``None`` （随机坍缩）。
          :type desired_result: Union[int, str]
          :param if_print: 是否要打印坍缩的信息，默认为 ``True``。
@@ -861,84 +788,70 @@ paddle\_quantum.ansatz.circuit
          :raises NotImplementdError: 要观测的测量基底只能为 ``z``，其他测量基底会在之后推出。
          :raises TypeError: 当 ``backend`` 为 ``unitary_matrix`` 时，无法获取输入态的概率。
       
-      .. py:method:: superposition_layer(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: superposition_layer(qubits_idx=None, depth=1)
 
          添加一个 Hadamard 门组成的层。
 
-         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``None``。
          :type qubits_idx: Union[Iterable[int], str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
 
-      .. py:method:: weak_superposition_layer(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: weak_superposition_layer(qubits_idx=None, depth=1)
 
          转角度为 :math:`\pi/4` 的 Ry 门组成的层。
       
-         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``None``。
          :type qubits_idx: Union[Iterable[int], str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: linear_entangled_layer(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: linear_entangled_layer(qubits_idx=None, depth=1)
          
          包含 Ry 门、Rz 门，和 CNOT 门的线性纠缠层。
 
-         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``None``。
          :type qubits_idx: Union[Iterable[int], str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: real_entangled_layer(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: real_entangled_layer(qubits_idx=None, depth=1)
 
          包含 Ry 门和 CNOT 门的强纠缠层。
 
-         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``None``。
          :type qubits_idx: Union[Iterable[int], str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: complex_entangled_layer(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: complex_entangled_layer(qubits_idx=None, depth=1)
 
          包含 U3 门和 CNOT 门的强纠缠层。
 
-         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``None``。
          :type qubits_idx: Union[Iterable[int], str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: real_block_layer(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: real_block_layer(qubits_idx=None, depth=1)
 
          包含 Ry 门和 CNOT 门的弱纠缠层。
 
-         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``None``。
          :type qubits_idx: Union[Iterable[int], str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: complex_block_layer(qubits_idx='full', num_qubits=None, depth=1)
+      .. py:method:: complex_block_layer(qubits_idx=None, depth=1)
 
          包含 U3 门和 CNOT 门的弱纠缠层。
 
-         :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
+         :param qubits_idx: 作用在的量子比特的编号，默认为 ``None``。
          :type qubits_idx: Union[Iterable[int], str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
          :param depth: 层数，默认为 ``1``。
          :type depth: int, optional
       
-      .. py:method:: bit_flip(prob, qubits_idx='full', num_qubits=None)
+      .. py:method:: bit_flip(prob, qubits_idx='full')
 
          添加比特反转信道。
 
@@ -946,10 +859,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
       
-      .. py:method:: phase_flip(prob, qubits_idx='full', num_qubits=None)
+      .. py:method:: phase_flip(prob, qubits_idx='full')
 
          添加相位反转信道。
 
@@ -957,10 +868,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
 
-      .. py:method:: bit_phase_flip(prob, qubits_idx='full', num_qubits=None)
+      .. py:method:: bit_phase_flip(prob, qubits_idx='full')
 
          添加比特相位反转信道。
 
@@ -968,10 +877,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
       
-      .. py:method:: amplitude_damping(gamma, qubits_idx='full', num_qubits=None)
+      .. py:method:: amplitude_damping(gamma, qubits_idx='full')
 
          添加振幅阻尼信道。
 
@@ -979,10 +886,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
       
-      .. py:method:: generalized_amplitude_damping(gamma, prob, qubits_idx='full', num_qubits=None)
+      .. py:method:: generalized_amplitude_damping(gamma, prob, qubits_idx='full')
 
          添加广义振幅阻尼信道。
 
@@ -992,10 +897,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
       
-      .. py:method:: phase_damping(gamma, qubits_idx='full', num_qubits=None)
+      .. py:method:: phase_damping(gamma, qubits_idx='full')
 
          添加相位阻尼信道。
 
@@ -1003,10 +906,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
 
-      .. py:method:: depolarizing(prob, qubits_idx='full', num_qubits=None)
+      .. py:method:: depolarizing(prob, qubits_idx='full')
 
          添加去极化信道。
 
@@ -1014,10 +915,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
 
-      .. py:method:: generalized_depolarizing(prob, qubits_idx, num_qubits=None)
+      .. py:method:: generalized_depolarizing(prob, qubits_idx)
 
          添加一个广义去极化信道。
 
@@ -1025,10 +924,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
       
-      .. py:method:: pauli_channel(prob, qubits_idx='full', num_qubits=None)
+      .. py:method:: pauli_channel(prob, qubits_idx='full')
 
          添加泡利信道。
 
@@ -1036,10 +933,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
       
-      .. py:method:: reset_channel(prob, qubits_idx='full', num_qubits=None)
+      .. py:method:: reset_channel(prob, qubits_idx='full')
 
          添加重置信道。
 
@@ -1047,10 +942,8 @@ paddle\_quantum.ansatz.circuit
          :type prob: Union[paddle.Tensor, float]
          :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
          :type qubits_idx: Union[Iterable[int], int, str], optional
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
       
-      .. py:method:: thermal_relaxation(const_t, exec_time, qubits_idx='full', num_qubits=None)
+      .. py:method:: thermal_relaxation(const_t, exec_time, qubits_idx='full')
 
          添加热弛豫信道。
 
@@ -1060,58 +953,74 @@ paddle\_quantum.ansatz.circuit
         :type exec_time: Union[paddle.Tensor, float]
         :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
         :type qubits_idx: Union[Iterable[int], int, str], optional
-        :param num_qubits: 总的量子比特个数，默认为 ``None``。
-        :type num_qubits: int, optional
 
-      .. py:method:: mixed_unitary_channel(num_unitary, qubits_idx='full', num_qubits=None)
+      .. py:method:: mixed_unitary_channel(num_unitary, qubits_idx='full')
 
-         添加混合酉矩阵信道
+         添加混合酉矩阵信道。
 
         :param num_unitary: 用于构成信道的酉矩阵的数量。
         :type num_unitary: Union[paddle.Tensor, Iterable[int]]
         :param qubits_idx: 作用在的量子比特的编号, 默认为 ``'full'``。
         :type qubits_idx: Union[Iterable[int], int, str], optional
-        :param num_qubits: 总的量子比特个数，默认为 ``None``。
-        :type num_qubits: int, optional      
 
-      .. py:method:: kraus_repr(kraus_oper, qubits_idx, num_qubits=None)
+      .. py:method:: choi_channel(choi_repr, qubits_idx)
+
+         添加一个 Choi 表示的自定义量子信道。
+
+         :param choi_repr: 该信道的 Choi 表示。
+         :type choi_repr: Iterable[paddle.Tensor]
+         :param qubits_idx: 作用在的量子比特的编号。
+         :type qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int]
+
+      .. py:method:: kraus_channel(kraus_oper, qubits_idx)
 
          添加一个 Kraus 表示的自定义量子信道。
 
-         :param kraus_oper: 该信道的 Kraus 算符。
+         :param kraus_oper: 该信道的 Kraus 表示。
          :type kraus_oper: Iterable[paddle.Tensor]
          :param qubits_idx: 作用在的量子比特的编号。
          :type qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int]
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
 
-      .. py:method:: unitary_matrix(num_qubits=None)
+      .. py:method:: stinespring_channel(stinespring_repr, qubits_idx)
 
-         电路的酉矩阵形式
+         添加一个 Stinespring 表示的自定义量子信道。
 
-         :param num_qubits: 总的量子比特个数，默认为 ``None``。
-         :type num_qubits: int, optional
+         :param stinespring_repr: 该信道的 Stinespring 表示。
+         :type stinespring_repr: Iterable[paddle.Tensor]
+         :param qubits_idx: 作用在的量子比特的编号。
+         :type qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int]
+
+      .. py:method:: unitary_matrix()
+
+         电路的酉矩阵形式。
 
          :return: 返回电路的酉矩阵形式
          :rtype: paddle.Tensor
 
       .. py:property:: gate_history()
       
-         量子门的插入信息
+         量子门的插入信息。
 
          :return: 量子门的插入历史
          :rtype: List[Dict[str, Union[str, List[int], paddle.Tensor]]]
 
+      .. py:property:: depth()
+
+         量子门序列的深度。
+
+         :return: 电路的深度
+         :rtype: int
+
       .. py:property:: qubit_history()
       
-         每个比特上的量子门的插入信息
+         每个比特上的量子门的插入信息。
 
          :return: 每个比特上的量子门的插入历史
          :rtype: List[List[Tuple[Dict[str, Union[str, List[int], paddle.Tensor]], int]]]
 
       .. py:method:: plot(save_path, dpi=100, show=True, output=False, scale=1.0, tex=False)
 
-         画出量子电路图
+         画出量子电路图。
 
          :param save_path: 图像保存的路径，默认为 ``None``。
          :type save_path: str, optional
@@ -1129,13 +1038,13 @@ paddle\_quantum.ansatz.circuit
          :return: 根据 ``output`` 参数返回 ``matplotlib.figure.Figure`` 实例或 ``None``。
          :rtype: Union[None, matplotlib.figure.Figure]
 
-      .. note:: 
+      .. note::
          
          使用 ``plt.show()`` 或许会导致一些问题，但是在保存图片时不会发生。如果电路太深可能会有一些图形无法显示。如果设置 ``tex = True`` 则需要在你的系统上安装 TeX 及其相关的依赖包。更多细节参考 https://matplotlib.org/stable/gallery/text_labels_and_annotations/tex_demo.html
 
       .. py:method:: extend(cir)
 
-         量子电路扩展
+         量子电路扩展。
 
          :param cir: 量子电路。
          :type cir: Circuit

@@ -18,7 +18,8 @@ The source file of the density_matrix backend.
 """
 
 import paddle
-from typing import List, Iterable, Union
+import paddle_quantum as pq
+from typing import List, Iterable, Union, Tuple
 
 
 def unitary_transformation(
@@ -70,10 +71,12 @@ def unitary_transformation(
         shape.append(2 ** (2 * num_qubits - last_idx - 1))
         state = paddle.reshape(state, shape)
         state = paddle.transpose(
-            state, list(range(0, num_higher_dims)) + [item + num_higher_dims for item in [0, 3, 2, 1, 4]]
+            state, list(range(0, num_higher_dims)) +
+            [item + num_higher_dims for item in [0, 3, 2, 1, 4]]
         )
     state = paddle.reshape(
-        state, higher_dims.copy() + [2 ** num_acted_qubits, 2 ** (2 * num_qubits - num_acted_qubits)]
+        state, higher_dims.copy() +
+        [2 ** num_acted_qubits, 2 ** (2 * num_qubits - num_acted_qubits)]
     )
     state = paddle.matmul(gate, state)
     swap_ops.reverse()
@@ -87,7 +90,8 @@ def unitary_transformation(
         shape.append(2 ** (2 * num_qubits - last_idx - 1))
         state = paddle.reshape(state, shape)
         state = paddle.transpose(
-            state, list(range(0, num_higher_dims)) + [item + num_higher_dims for item in [0, 3, 2, 1, 4]]
+            state, list(range(0, num_higher_dims)) +
+            [item + num_higher_dims for item in [0, 3, 2, 1, 4]]
         )
     swap_ops.reverse()
     for idx, swap_op in enumerate(swap_ops):
@@ -102,10 +106,13 @@ def unitary_transformation(
         shape.append(2 ** (2 * num_qubits - last_idx - 1))
         state = paddle.reshape(state, shape)
         state = paddle.transpose(
-            state, list(range(0, num_higher_dims)) + [item + num_higher_dims for item in [0, 3, 2, 1, 4]]
+            state, list(range(0, num_higher_dims)) +
+            [item + num_higher_dims for item in [0, 3, 2, 1, 4]]
         )
     state = paddle.reshape(
-        state, higher_dims.copy() + [2 ** num_qubits, 2 ** num_acted_qubits, 2 ** (num_qubits - num_acted_qubits)]
+        state, higher_dims.copy() +
+        [2 ** num_qubits, 2 ** num_acted_qubits,
+            2 ** (num_qubits - num_acted_qubits)]
     )
     # gate_dagger = paddle.conj(paddle.t(gate))
     # state = paddle.einsum('abc,bx->axc', state, gate_dagger)
@@ -123,8 +130,51 @@ def unitary_transformation(
         shape.append(2 ** (2 * num_qubits - last_idx - 1))
         state = paddle.reshape(state, shape)
         state = paddle.transpose(
-            state, list(range(0, num_higher_dims)) + [item + num_higher_dims for item in [0, 3, 2, 1, 4]]
+            state, list(range(0, num_higher_dims)) +
+            [item + num_higher_dims for item in [0, 3, 2, 1, 4]]
         )
 
-    state = paddle.reshape(state, higher_dims.copy() + [2 ** num_qubits, 2 ** num_qubits])
+    state = paddle.reshape(state, higher_dims.copy() +
+                           [2 ** num_qubits, 2 ** num_qubits])
     return state
+
+
+def unitary_transformation_without_swapback(
+        state: paddle.Tensor, gate: List[paddle.Tensor], qubit_idx: List[int], num_qubits: int, qubit_sequence: List[int]
+) -> Tuple[paddle.Tensor, List[int]]:
+    r"""The function of unitary transformation in the mode of density matrix.
+
+    Args:
+        state: The input quantum state.
+        gate: The gate that represents the unitary transformation.
+        qubit_idx: The indices of the qubits on which the gate is acted.
+        num_qubits: The number of the qubits in the input quantum state.
+        qubit_sequence: The sequence of qubit indices at this moment.
+
+    Returns:
+        The transformed quantum state.
+    """
+    # The order of the tensor in paddle is less than 10.
+    higher_dims = state.shape[:-2]
+    gate = pq.intrinsic._gate_tensor(gate)
+
+    # generate swap_list
+    num_acted_qubits = len(qubit_idx)
+    seq_for_acted = qubit_idx + \
+        [x for x in qubit_sequence if x not in qubit_idx]
+    perm_map = pq.intrinsic._perm_of_list(qubit_sequence, seq_for_acted)
+    
+    # mat multiplication
+    state = pq.intrinsic._base_transpose_for_dm(state, perm=perm_map)
+    state = paddle.reshape(state, higher_dims.copy(
+    ) + [2 ** num_acted_qubits, 2 ** (2 * num_qubits - num_acted_qubits)])
+    state = paddle.matmul(gate, state)
+
+    state = paddle.reshape(state, higher_dims.copy(
+    ) + [2 ** num_qubits, 2 ** num_acted_qubits, 2 ** (num_qubits - num_acted_qubits)])
+    gate_dagger = paddle.conj(gate)
+    state = paddle.matmul(gate_dagger, state)
+
+    state = paddle.reshape(state, higher_dims.copy() +
+                           [2 ** num_qubits, 2 ** num_qubits])
+    return state, seq_for_acted

@@ -25,7 +25,8 @@ QNNQD 模型。
       :rtype: paddle.Tensor
 
 .. py:function:: train(model_name, num_qubits, num_depths, observables, batch_size: int=20, num_epochs: int=4, learning_rate: float=0.1, dataset: str='SurfaceCrack', saved_dir: str='./', using_validation: bool=False, num_train: int=-1, num_val: int=-1, num_test: int=-1)
-
+   :noindex:
+   
    训练 QNNQD 模型。
 
    :param model_name: 模型的名字，用于保存模型。
@@ -56,8 +57,9 @@ QNNQD 模型。
    :type num_test: Optional[int]
 
 .. py:function:: inference(image_path: str, num_samples: int, model_path: str, num_qubits: List, num_depths: List, observables: List)
+   :noindex:
 
-    使用 QNNQD 模型进行推理。
+   使用 QNNQD 模型进行推理。
 
    :param image_path: 需要推理的数据集。
    :type image_path: str

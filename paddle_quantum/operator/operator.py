@@ -84,7 +84,12 @@ class Collapse(Operator):
         self.measure_basis = []
 
         # the qubit indices must be sorted
-        self.qubits_idx = sorted(_format_qubits_idx(qubits_idx, num_qubits))
+        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
+        idx_shape = np.array(self.qubits_idx).shape
+        assert len(idx_shape) < 2, \
+            f"The input qubit indices for Collapse must be a flattened list or a integer: received {idx_shape}"
+        assert sorted(self.qubits_idx) == self.qubits_idx, \
+            f"The input qubit indices for Collapse must be sorted: received {self.qubits_idx}"
 
         self.desired_result = desired_result
         self.if_print = if_print

@@ -94,7 +94,8 @@ paddle\_quantum.qsvt.qsp
    :rtype: bool
 
 .. py:function:: update_polynomial(poly_p, poly_q, phi)
-
+   :noindex:
+   
    计算 :math:`P, Q` 经过一层量子信号处理后的多项式 :math:`\tilde{P}, \tilde{Q}`
 
    :param poly_p: 多项式 :math:`P(x)`

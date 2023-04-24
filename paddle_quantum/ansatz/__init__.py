@@ -19,4 +19,5 @@ The module that contains the various ansatzes.
 
 from .container import Sequential
 from .circuit import Circuit
+from .layer import Layer
 from .vans import VAns

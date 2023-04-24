@@ -26,23 +26,20 @@ from scipy.stats import unitary_group
 import cvxpy
 import matplotlib.image
 from itertools import product
+from typing import Optional, Tuple, List, Union
 
 import paddle
 import paddle_quantum as pq
-from .state import State, _type_fetch, _type_transform
 from .base import get_dtype
-from .linalg import abs_norm, dagger, NKron, unitary_random, is_positive
-from .channel.custom import ChoiRepr, KrausRepr, StinespringRepr
-from .channel.custom import (
-    _choi_to_kraus, _choi_to_stinespring, 
-    _kraus_to_choi, _kraus_to_stinespring, 
-    _stinespring_to_choi, _stinespring_to_kraus
-)
-from typing import Optional, Tuple, List, Union
+from .intrinsic import _type_fetch, _type_transform
+from .linalg import dagger, NKron, unitary_random, is_positive
+from .channel import Channel
+from .hamiltonian import Hamiltonian
+from .shadow import shadow_sample
 
 
-def partial_trace(state: Union[np.ndarray, paddle.Tensor, State], 
-                  dim1: int, dim2: int, A_or_B: int) -> Union[np.ndarray, paddle.Tensor, State]:
+def partial_trace(state: Union[np.ndarray, paddle.Tensor, pq.State], 
+                  dim1: int, dim2: int, A_or_B: int) -> Union[np.ndarray, paddle.Tensor, pq.State]:
     r"""Calculate the partial trace of the quantum state.
 
     Args:
@@ -71,8 +68,8 @@ def partial_trace(state: Union[np.ndarray, paddle.Tensor, State],
     return _type_transform(new_state, type_str)
 
 
-def partial_trace_discontiguous(state: Union[np.ndarray, paddle.Tensor, State], 
-                                preserve_qubits: list=None) -> Union[np.ndarray, paddle.Tensor, State]:
+def partial_trace_discontiguous(state: Union[np.ndarray, paddle.Tensor, pq.State], 
+                                preserve_qubits: list=None) -> Union[np.ndarray, paddle.Tensor, pq.State]:
     r"""Calculate the partial trace of the quantum state with arbitrarily selected subsystem
 
     Args:
@@ -110,8 +107,8 @@ def partial_trace_discontiguous(state: Union[np.ndarray, paddle.Tensor, State],
     return _type_transform(rho, type_str)
 
 
-def trace_distance(rho: Union[np.ndarray, paddle.Tensor, State], 
-                   sigma: Union[np.ndarray, paddle.Tensor, State]) -> Union[np.ndarray, paddle.Tensor]:
+def trace_distance(rho: Union[np.ndarray, paddle.Tensor, pq.State], 
+                   sigma: Union[np.ndarray, paddle.Tensor, pq.State]) -> Union[np.ndarray, paddle.Tensor]:
     r"""Calculate the trace distance of two quantum states.
 
     .. math::
@@ -135,8 +132,8 @@ def trace_distance(rho: Union[np.ndarray, paddle.Tensor, State],
     return dist.item() if type_rho == "numpy" and type_sigma == "numpy" else dist
 
 
-def state_fidelity(rho: Union[np.ndarray, paddle.Tensor, State], 
-                   sigma: Union[np.ndarray, paddle.Tensor, State]) -> Union[np.ndarray, paddle.Tensor]:
+def state_fidelity(rho: Union[np.ndarray, paddle.Tensor, pq.State], 
+                   sigma: Union[np.ndarray, paddle.Tensor, pq.State]) -> Union[np.ndarray, paddle.Tensor]:
     r"""Calculate the fidelity of two quantum states.
 
     .. math::
@@ -154,8 +151,7 @@ def state_fidelity(rho: Union[np.ndarray, paddle.Tensor, State],
     sigma = _type_transform(sigma, "density_matrix").numpy()
     
     assert rho.shape == sigma.shape, 'The shape of two quantum states are different'
-    fidelity = np.trace(sqrtm(sqrtm(rho) @ sigma @ sqrtm(rho))).real
-
+    fidelity = np.trace(sqrtm(sqrtm(rho) @ sigma @ sqrtm(rho)).astype(rho.dtype)).real
     if type_rho == "numpy" and type_sigma == "numpy":
         return fidelity
     return paddle.to_tensor(fidelity)
@@ -189,7 +185,7 @@ def gate_fidelity(U: Union[np.ndarray, paddle.Tensor],
     return fidelity.item() if type_u == "numpy" or type_v == "numpy" else fidelity
 
 
-def purity(rho: Union[np.ndarray, paddle.Tensor, State]) -> Union[np.ndarray, paddle.Tensor]:
+def purity(rho: Union[np.ndarray, paddle.Tensor, pq.State]) -> Union[np.ndarray, paddle.Tensor]:
     r"""Calculate the purity of a quantum state.
 
     .. math::
@@ -209,7 +205,7 @@ def purity(rho: Union[np.ndarray, paddle.Tensor, State]) -> Union[np.ndarray, pa
     return gamma.item() if type_rho == "numpy" else gamma
 
 
-def von_neumann_entropy(rho: Union[np.ndarray, paddle.Tensor, State], base: Optional[int] = 2) -> Union[np.ndarray, paddle.Tensor]:
+def von_neumann_entropy(rho: Union[np.ndarray, paddle.Tensor, pq.State], base: Optional[int] = 2) -> Union[np.ndarray, paddle.Tensor]:
     r"""Calculate the von Neumann entropy of a quantum state.
 
     .. math::
@@ -231,8 +227,8 @@ def von_neumann_entropy(rho: Union[np.ndarray, paddle.Tensor, State], base: Opti
     return entropy.item() if type_rho == "numpy" else entropy
 
 
-def relative_entropy(rho: Union[np.ndarray, paddle.Tensor, State], 
-                     sig: Union[np.ndarray, paddle.Tensor, State], base: Optional[int] = 2) -> Union[np.ndarray, paddle.Tensor]:
+def relative_entropy(rho: Union[np.ndarray, paddle.Tensor, pq.State], 
+                     sig: Union[np.ndarray, paddle.Tensor, pq.State], base: Optional[int] = 2) -> Union[np.ndarray, paddle.Tensor]:
     r"""Calculate the relative entropy of two quantum states.
 
     .. math::
@@ -258,7 +254,7 @@ def relative_entropy(rho: Union[np.ndarray, paddle.Tensor, State],
     return paddle.to_tensor(entropy)
 
 
-def random_pauli_str_generator(n: int, terms: Optional[int] = 3) -> List:
+def random_pauli_str_generator(num_qubits: int, terms: Optional[int] = 3) -> List:
     r"""Generate a random observable in list form.
 
     An observable :math:`O=0.3X\otimes I\otimes I+0.5Y\otimes I\otimes Z`'s list form is
@@ -266,21 +262,54 @@ def random_pauli_str_generator(n: int, terms: Optional[int] = 3) -> List:
     ``random_pauli_str_generator(3, terms=2)`` 
 
     Args:
-        n: Number of qubits.
+        num_qubits: Number of qubits.
         terms: Number of terms in the observable. Defaults to 3.
 
     Returns:
-        The randomly generated observable's list form.
+        The Hamiltonian of randomly generated observable.
     """
     pauli_str = []
-    for sublen in np.random.randint(1, high=n + 1, size=terms):
+    for sublen in np.random.randint(1, high=num_qubits + 1, size=terms):
         # Tips: -1 <= coeff < 1
         coeff = np.random.rand() * 2 - 1
         ops = np.random.choice(['x', 'y', 'z'], size=sublen)
-        pos = np.random.choice(range(n), size=sublen, replace=False)
+        pos = np.random.choice(range(num_qubits), size=sublen, replace=False)
         op_list = [ops[i] + str(pos[i]) for i in range(sublen)]
+        op_list.sort(key=lambda x: int(x[1:]))
         pauli_str.append([coeff, ','.join(op_list)])
     return pauli_str
+
+
+def pauli_str_convertor(observable: List) -> List:
+    r"""Concatenate the input observable with coefficient 1.
+    
+    For example, if the input ``observable`` is ``[['z0,x1'], ['z1']]``, 
+    then this function returns the observable ``[[1, 'z0,x1'], [1, 'z1']]``.
+
+    Args:
+        observable: The observable to be concatenated with coefficient 1.
+
+    Returns:
+        The observable with coefficient 1
+    """
+
+    for i in range(len(observable)):
+        assert len(observable[i]) == 1, 'Each term should only contain one string'
+
+    return [[1, term] for term in observable]
+
+
+def random_hamiltonian_generator(num_qubits: int, terms: Optional[int] = 3) -> List:
+    r"""Generate a random Hamiltonian. 
+
+    Args:
+        num_qubits: Number of qubits.
+        terms: Number of terms in the Hamiltonian. Defaults to 3.
+
+    Returns:
+        The randomly generated Hamiltonian.
+    """
+    return Hamiltonian(random_pauli_str_generator(num_qubits, terms))
 
 
 def pauli_str_to_matrix(pauli_str: list, n: int) -> paddle.Tensor:
@@ -332,7 +361,7 @@ def pauli_str_to_matrix(pauli_str: list, n: int) -> paddle.Tensor:
     return paddle.to_tensor(sum(matrices), dtype=get_dtype())
 
 
-def partial_transpose_2(density_op: Union[np.ndarray, paddle.Tensor, State], 
+def partial_transpose_2(density_op: Union[np.ndarray, paddle.Tensor, pq.State], 
                         sub_system: int = None) -> Union[np.ndarray, paddle.Tensor]:
     r"""Calculate the partial transpose :math:`\rho^{T_A}` of the input quantum state.
 
@@ -381,7 +410,7 @@ def partial_transpose_2(density_op: Union[np.ndarray, paddle.Tensor, State],
     return paddle.to_tensor(transposed_density_op)
 
 
-def partial_transpose(density_op: Union[np.ndarray, paddle.Tensor, State], 
+def partial_transpose(density_op: Union[np.ndarray, paddle.Tensor, pq.State], 
                       n: int) -> Union[np.ndarray, paddle.Tensor]:
     r"""Calculate the partial transpose :math:`\rho^{T_A}` of the input quantum state.
 
@@ -405,8 +434,8 @@ def partial_transpose(density_op: Union[np.ndarray, paddle.Tensor, State],
     return density_op.numpy() if type_str == "numpy" else density_op
 
 
-def permute_systems(mat: Union[np.ndarray, paddle.Tensor, State], 
-                    perm_list: List[int], dim_list: List[int]) -> Union[np.ndarray, paddle.Tensor, State]:
+def permute_systems(mat: Union[np.ndarray, paddle.Tensor, pq.State], 
+                    perm_list: List[int], dim_list: List[int]) -> Union[np.ndarray, paddle.Tensor, pq.State]:
     r"""Permute quantum system based on a permute list
 
     Args:
@@ -438,7 +467,7 @@ def permute_systems(mat: Union[np.ndarray, paddle.Tensor, State],
     return _type_transform(perm_mat, mat_type)
 
 
-def negativity(density_op: Union[np.ndarray, paddle.Tensor, State]) -> Union[np.ndarray, paddle.Tensor]:
+def negativity(density_op: Union[np.ndarray, paddle.Tensor, pq.State]) -> Union[np.ndarray, paddle.Tensor]:
     r"""Compute the Negativity :math:`N = ||\frac{\rho^{T_A}-1}{2}||` of the input quantum state.
 
     Args:
@@ -462,7 +491,7 @@ def negativity(density_op: Union[np.ndarray, paddle.Tensor, State]) -> Union[np.
     return n if type_str == "numpy" else paddle.to_tensor(n)
 
 
-def logarithmic_negativity(density_op: Union[np.ndarray, paddle.Tensor, State]) -> Union[np.ndarray, paddle.Tensor]:
+def logarithmic_negativity(density_op: Union[np.ndarray, paddle.Tensor, pq.State]) -> Union[np.ndarray, paddle.Tensor]:
     r"""Calculate the Logarithmic Negativity :math:`E_N = ||\rho^{T_A}||` of the input quantum state.
 
     Args:
@@ -477,7 +506,7 @@ def logarithmic_negativity(density_op: Union[np.ndarray, paddle.Tensor, State]) 
     return paddle.log2(2 * n + 1)
 
 
-def is_ppt(density_op: Union[np.ndarray, paddle.Tensor, State]) -> bool:
+def is_ppt(density_op: Union[np.ndarray, paddle.Tensor, pq.State]) -> bool:
     r"""Check if the input quantum state is PPT.
 
     Args:
@@ -514,7 +543,7 @@ def is_choi(op: Union[np.ndarray, paddle.Tensor]) -> bool:
         return is_positive(paddle.eye(sys_dim) - op_partial)
     return False
 
-def schmidt_decompose(psi: Union[np.ndarray, paddle.Tensor, State], 
+def schmidt_decompose(psi: Union[np.ndarray, paddle.Tensor, pq.State], 
                       sys_A: List[int]=None) -> Union[Tuple[paddle.Tensor, paddle.Tensor, paddle.Tensor],
                                                       Tuple[np.ndarray, np.ndarray, np.ndarray]]:
     r"""Calculate the Schmidt decomposition of a quantum state :math:`\lvert\psi\rangle=\sum_ic_i\lvert i_A\rangle\otimes\lvert i_B \rangle`.
@@ -557,7 +586,7 @@ def schmidt_decompose(psi: Union[np.ndarray, paddle.Tensor, State],
     return paddle.to_tensor(c), paddle.to_tensor(u), paddle.to_tensor(v)
 
 
-def image_to_density_matrix(image_filepath: str) -> State:
+def image_to_density_matrix(image_filepath: str) -> pq.State:
     r"""Encode image to density matrix
 
     Args:
@@ -577,10 +606,10 @@ def image_to_density_matrix(image_filepath: str) -> State:
     # Density matrix whose trace  is 1
     rho = image_matrix@image_matrix.T
     rho = rho/np.trace(rho)
-    return State(rho, backend=pq.Backend.DensityMatrix)
+    return _type_transform(rho, "density_matrix")
 
 
-def shadow_trace(state: 'State', hamiltonian: pq.Hamiltonian, 
+def shadow_trace(state: pq.State, hamiltonian: Hamiltonian, 
                  sample_shots: int, method: Optional[str] = 'CS') -> float:
     r"""Estimate the expectation value :math:`\text{trace}(H\rho)`  of an observable :math:`H`.
 
@@ -601,9 +630,9 @@ def shadow_trace(state: 'State', hamiltonian: pq.Hamiltonian,
     num_qubits = state.num_qubits
     mode = state.backend
     if method == "LBCS":
-        result, beta = pq.shadow.shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian, method)
+        result, beta = shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian, method)
     else:
-        result = pq.shadow.shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian, method)
+        result = shadow_sample(state, num_qubits, sample_shots, mode, hamiltonian, method)
 
     def prepare_hamiltonian(hamiltonian, num_qubits):
         new_hamiltonian = []
@@ -723,7 +752,7 @@ def shadow_trace(state: 'State', hamiltonian: pq.Hamiltonian,
     return trace_estimation
 
 
-def tensor_state(state_a: State, state_b: State, *args: State) -> State:
+def tensor_state(state_a: pq.State, state_b: pq.State, *args: pq.State) -> pq.State:
     r"""calculate tensor product (kronecker product) between at least two state. This function automatically returns State instance
 
     Args:
@@ -740,20 +769,20 @@ def tensor_state(state_a: State, state_b: State, *args: State) -> State:
         
     """
     state_a, state_b = _type_transform(state_a, "tensor"), _type_transform(state_b, "tensor")
-    return State(NKron(state_a, state_b, [_type_transform(st, "tensor") for st in args]))
+    return pq.State(NKron(state_a, state_b, [_type_transform(st, "tensor") for st in args]))
 
 
-def diamond_norm(channel_repr: Union[ChoiRepr, KrausRepr, StinespringRepr, paddle.Tensor],
+def diamond_norm(channel_repr: Union[Channel, paddle.Tensor],
                  dim_io: Union[int, Tuple[int, int]] = None, **kwargs) -> float:
     r'''Calculate the diamond norm of input.
 
     Args:
-        channel_repr: A ``ChoiRepr`` or ``KrausRepr`` or ``StinespringRepr`` instance or a ``paddle.Tensor`` instance.
+        channel_repr: A ``Channel`` or a ``paddle.Tensor`` instance.
         dim_io: The input and output dimensions.
         **kwargs: Parameters to set cvx.
 
     Raises:
-        RuntimeError: `channel_repr` must be `ChoiRepr`or `KrausRepr` or `StinespringRepr` or `paddle.Tensor`.
+        RuntimeError: `channel_repr` must be `Channel` or `paddle.Tensor`.
         TypeError: "dim_io" should be "int" or "tuple".
 
     Warning:
@@ -768,15 +797,11 @@ def diamond_norm(channel_repr: Union[ChoiRepr, KrausRepr, StinespringRepr, paddl
         Watrous, J. . "Semidefinite Programs for Completely Bounded Norms." 
         Theory of Computing 5.1(2009):217-238.
     '''
-    if isinstance(channel_repr, ChoiRepr):
+    if isinstance(channel_repr, Channel):
         choi_matrix = channel_repr.choi_repr
 
     elif isinstance(channel_repr, paddle.Tensor):
         choi_matrix = channel_repr
-
-    elif isinstance(channel_repr, (KrausRepr, StinespringRepr)):
-        warnings.warn('`channel_repr` is not in Choi representaiton, and is converted into `ChoiRepr`')
-        choi_matrix = channel_repr.to_choi().choi_repr
 
     else:
         raise RuntimeError('`channel_repr` must be `ChoiRepr`or `KrausRepr` or `StinespringRepr` or `paddle.Tensor`.')
@@ -847,35 +872,38 @@ def channel_repr_convert(representation: Union[paddle.Tensor, np.ndarray, List[p
         return representation
     if source not in ['Choi', 'Kraus', 'Stinespring']:
         raise ValueError(f"Unsupported channel representation: require Choi, Kraus or Stinespring, not {source}")
-    is_ndarray = False
-    if isinstance(representation, np.ndarray):
-        is_ndarray = True
-        representation = paddle.to_tensor(representation)
-    elif isinstance(representation, List) and isinstance(representation[0], np.ndarray):
-        is_ndarray = True
-        representation = [paddle.to_tensor(representation[i]) for i in range(len(representation))]
+    
+    if isinstance(representation, List):
+        assert source == 'Kraus', \
+            f"Unsupported data input: expected Kraus representation, received {source}"
+        type_str = _type_fetch(representation[0])
+        representation = [_type_transform(repr, 'tensor') for repr in representation]
+    else:
+        type_str = _type_fetch(representation)
+        representation = _type_transform(repr, 'tensor')
+        
+    oper = Channel(source, representation)
     
     if source == 'Choi':
         if target == 'Kraus':
-            representation = _choi_to_kraus(representation, tol) 
-            return [representation[i].numpy() for i in range(len(representation))] if is_ndarray else representation
+            representation = oper.kraus_repr
+            return [_type_transform(repr, type_str) for repr in representation]
         
         # stinespring repr
-        representation = _choi_to_stinespring(representation, tol)
+        representation = oper.stinespring_repr
 
     elif source == 'Kraus':
-        representation = representation if isinstance(representation, List) else [representation]
-        representation = _kraus_to_choi(representation) if target == 'Choi' else _kraus_to_stinespring(representation) 
+        representation = oper.choi_repr if target == 'Choi' else oper.stinespring_repr
 
     else: # if source == 'Stinespring'
         if target == 'Kraus':
-            representation = _stinespring_to_kraus(representation)
-            return [representation[i].numpy() for i in range(len(representation))] if is_ndarray else representation
+            representation = oper.kraus_repr
+            return [_type_transform(repr, type_str) for repr in representation]
         
         # choi repr
-        representation = _stinespring_to_choi(representation)
+        representation = oper.choi_repr
 
-    return representation.numpy() if is_ndarray else representation
+    return _type_transform(representation, type_str)
 
 
 def random_channel(num_qubits: int, rank: int = None, target: str = 'Kraus') -> Union[paddle.Tensor, List[paddle.Tensor]]:
@@ -898,7 +926,7 @@ def random_channel(num_qubits: int, rank: int = None, target: str = 'Kraus') -> 
     
     # rank = 1
     unitary = unitary_group.rvs(rank * dim)
-    stinespring_mat = paddle.to_tensor(unitary[:, :dim], dtype=pq.get_dtype()).reshape([rank, dim, dim])
+    stinespring_mat = paddle.to_tensor(unitary[:, :dim], dtype=get_dtype()).reshape([rank, dim, dim])
     list_kraus = [stinespring_mat[j] for j in list(range(rank))]
     
     if target == 'Choi':

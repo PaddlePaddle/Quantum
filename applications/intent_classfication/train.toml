@@ -1,0 +1,34 @@
+# The full config for train the BERT-QTC model.
+# The task of this config. Available values: 'train' | 'test'.
+task = 'train'
+# The name of the model, which is used to save the model.
+model_name = 'decoder'
+# The path to save the model. Both relative and absolute paths are allowed.
+# It save the model to the current path by default.
+# saved_path = './'
+# The number of the filters
+num_filter = 1
+# The size of the kernel
+kernel_size = 5
+# The depth of the quantum circuit
+circuit_depth = 2
+# The length to pad
+padding = 2
+# The pretrained bert model
+bert_model = 'bert-base-chinese'
+# The size of the hidden state obtained through the BERT model
+hidden_size = 768
+# The size of the batch samplers.
+batch_size = 8
+# The number of epochs to train the model.
+num_epochs = 10
+# The learning rate used to update the parameters, defaults to 0.01.
+# learning_rate = 0.01
+# The path of the dataset.
+dataset = 'smp_data'
+# Whether use the validation.
+# It is true means the dataset contains training, validation and test datasets.
+# It is false means the dataset only contains training datasets and test datasets. 
+using_validation = true
+# Number of epochs with no improvement after which training will be stopped.
+# early_stopping = 1000

@@ -21,7 +21,7 @@ import math
 import numpy as np
 import paddle
 import re
-import paddle_quantum
+import paddle_quantum as pq
 from paddle_quantum import Hamiltonian
 from typing import List, Optional
 
@@ -31,8 +31,8 @@ __all__ = [
 
 
 def shadow_sample(
-        state: 'paddle_quantum.State', num_qubits: int, sample_shots: int, mode: paddle_quantum.Backend,
-        hamiltonian: Optional[paddle_quantum.Hamiltonian] = None, method: str = 'CS'
+        state: 'pq.State', num_qubits: int, sample_shots: int, mode: pq.Backend,
+        hamiltonian: Optional[pq.Hamiltonian] = None, method: str = 'CS'
 ) -> list:
     r"""Measure a given quantum state with random Pauli operators and return the measurement results.
 
@@ -96,15 +96,15 @@ def shadow_sample(
             # Convert to tensor form
             for qubit in range(num_qubits):
                 if pauli_str[qubit] == 'x':
-                    input_state = paddle_quantum.gate.functional.h(input_state, qubit, input_state.dtype, input_state.backend)
+                    input_state = pq.gate.H(qubits_idx=qubit)(input_state)
                 elif pauli_str[qubit] == 'y':
-                    input_state = paddle_quantum.gate.functional.s(input_state, qubit, input_state.dtype, input_state.backend)
-                    input_state = paddle_quantum.gate.functional.z(input_state, qubit, input_state.dtype, input_state.backend)
-                    input_state = paddle_quantum.gate.functional.h(input_state, qubit, input_state.dtype, input_state.backend)
-            if input_state.backend == paddle_quantum.Backend.StateVector:
+                    input_state = pq.gate.S(qubits_idx=qubit)(input_state)
+                    input_state = pq.gate.Z(qubits_idx=qubit)(input_state)
+                    input_state = pq.gate.H(qubits_idx=qubit)(input_state)
+            if input_state.backend == pq.Backend.StateVector:
                 data = input_state.data.numpy()
                 prob_array = np.real(np.multiply(data, np.conj(data)))
-            elif input_state.backend == paddle_quantum.Backend.DensityMatrix:
+            elif input_state.backend == pq.Backend.DensityMatrix:
                 data = input_state.data.numpy()
                 prob_array = np.real(np.diag(data))
             else:

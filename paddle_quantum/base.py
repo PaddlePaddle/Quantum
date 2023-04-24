@@ -97,7 +97,7 @@ def get_dtype() -> 'str':
 
 
 class Operator(paddle.nn.Layer):
-    r"""The basic class to implement the quantum operation.
+    r"""The basic class to implement the operation in Paddle Quantum.
 
     Args:
         backend: The backend implementation of the operator.
@@ -106,20 +106,25 @@ class Operator(paddle.nn.Layer):
             Defaults to ``None``, which means to use the default data type.
         name_scope: Prefix name used by the operator to name parameters. Defaults to ``None``.
     """
-    def __init__(self, backend: Optional[paddle_quantum.Backend] = None, dtype: Optional[str] = None,
-                 name_scope: Optional[str] = None):
+    def __init__(
+            self, backend: Optional[paddle_quantum.Backend] = None,
+            dtype: Optional[str] = None, name_scope: Optional[str] = None
+    ):
         if dtype is None:
             super().__init__(name_scope)
         else:
             super().__init__(name_scope, dtype)
         self.dtype = dtype if dtype is not None else get_dtype()
 
-        if backend == paddle_quantum.Backend.StateVector:
-            self.backend = backend
-        elif backend == paddle_quantum.Backend.DensityMatrix:
-            self.backend = backend
-        elif backend is None:
-            self.backend = get_backend()
+        self.backend = backend if backend is not None else get_backend()
+
+    def __setattr__(self, name, value):
+        super().__setattr__(name, value)
+        if isinstance(value, Operator):
+            if value.backend is None:
+                value.backend = get_backend() if self.backend is None else self.backend
+            if value.dtype is None:
+                value.dtype = get_dtype() if self.dtype is None else self.dtype
 
     def to(self, backend: Optional[paddle_quantum.Backend] = None, device: Optional[str] = None,
            dtype: Optional[str] = None, blocking: Optional[str] = None):

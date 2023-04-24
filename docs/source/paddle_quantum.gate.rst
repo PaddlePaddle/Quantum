@@ -5,13 +5,6 @@ paddle\_quantum.gate
    :members:
    :show-inheritance:
 
-.. rubric:: Subpackages
-
-.. toctree::
-   :maxdepth: 4
-
-   paddle_quantum.gate.functional
-
 .. rubric:: Submodules
 
 .. toctree::
@@ -21,6 +14,6 @@ paddle\_quantum.gate
    paddle_quantum.gate.clifford
    paddle_quantum.gate.custom
    paddle_quantum.gate.encoding
-   paddle_quantum.gate.layer
+   paddle_quantum.gate.matrix
    paddle_quantum.gate.multi_qubit_gate
    paddle_quantum.gate.single_qubit_gate

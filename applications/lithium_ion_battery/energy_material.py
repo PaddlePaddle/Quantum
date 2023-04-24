@@ -88,7 +88,7 @@ def main(args):
     else:
         vqe_settings = parsed_configs["VQE"]
     solver = GroundStateSolver(optimizer, **vqe_settings)
-    _, psi = solver.solve(mol, ansatz, **optimizer_settings[optimizer_name])
+    _, psi = solver.solve(ansatz, mol=mol, **optimizer_settings[optimizer_name])
     e = energy(psi, mol)
     d = dipole_moment(psi, mol)
 

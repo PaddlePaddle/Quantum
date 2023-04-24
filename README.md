@@ -33,7 +33,7 @@ English | [简体中文](README_CN.md)
   </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/paddle-quantum/">
-    <img src="https://img.shields.io/badge/pypi-v2.3.0-orange.svg?style=flat-square&logo=pypi"/>
+    <img src="https://img.shields.io/badge/pypi-v2.4.0-orange.svg?style=flat-square&logo=pypi"/>
   </a>
   <!-- Python -->
   <a href="https://www.python.org/">
@@ -83,7 +83,7 @@ pip install paddle-quantum
 or download all the files and finish the installation locally,
 
 ```bash
-git clone http://github.com/PaddlePaddle/quantum
+git clone https://github.com/PaddlePaddle/quantum
 cd quantum
 pip install -e .
 ```

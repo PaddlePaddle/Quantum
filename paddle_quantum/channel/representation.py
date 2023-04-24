@@ -23,6 +23,7 @@ import paddle
 from ..base import get_dtype
 from ..intrinsic import _zero, _one, _get_float_dtype
 from ..linalg import pauli_basis_generation
+from ..state import State
 from typing import List, Union
 
 
@@ -37,10 +38,10 @@ def bit_flip_kraus(prob: Union[float, np.ndarray, paddle.Tensor], dtype: str = N
     Args:
         prob: probability :math:`p`.
         dtype: data type. Defaults to be ``None``.
-    
+
     Returns:
         a list of Kraus operators
-        
+
     """
     dtype = get_dtype() if dtype is None else dtype
     prob = prob if isinstance(prob, paddle.Tensor) else paddle.to_tensor(prob, dtype=_get_float_dtype(dtype))
@@ -66,14 +67,13 @@ def phase_flip_kraus(prob: Union[float, np.ndarray, paddle.Tensor], dtype: str =
 
         E_0 = \sqrt{1 - p} I,
         E_1 = \sqrt{p} Z.
-    
+
     Args:
         prob: probability :math:`p`.
         dtype: data type. Defaults to be ``None``.
-    
+
     Returns:
         a list of Kraus operators
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     prob = prob if isinstance(prob, paddle.Tensor) else paddle.to_tensor(prob, dtype=_get_float_dtype(dtype))
@@ -99,14 +99,13 @@ def bit_phase_flip_kraus(prob: Union[float, np.ndarray, paddle.Tensor], dtype: s
 
         E_0 = \sqrt{1 - p} I,
         E_1 = \sqrt{p} Y.
-    
+
     Args:
         prob: probability :math:`p`.
         dtype: data type. Defaults to be ``None``.
-    
+
     Returns:
         a list of Kraus operators
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     prob = prob if isinstance(prob, paddle.Tensor) else paddle.to_tensor(prob, dtype=_get_float_dtype(dtype))
@@ -117,7 +116,7 @@ def bit_phase_flip_kraus(prob: Union[float, np.ndarray, paddle.Tensor], dtype: s
         ],
         [
             _zero(dtype), -1j * paddle.sqrt(prob),
-            1j * -paddle.sqrt(prob), _zero(dtype),
+            1j * paddle.sqrt(prob), _zero(dtype),
         ]
     ]
     for idx, oper in enumerate(kraus_oper):
@@ -140,14 +139,13 @@ def amplitude_damping_kraus(gamma: Union[float, np.ndarray, paddle.Tensor], dtyp
             0 & \sqrt{\gamma} \\
             0 & 0
         \end{bmatrix}.
-    
+
     Args:
         gamma: coefficient :math:`\gamma`.
         dtype: data type. Defaults to be ``None``.
-    
+
     Returns:
         a list of Kraus operators
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     gamma = gamma if isinstance(gamma, paddle.Tensor) else paddle.to_tensor(gamma, dtype=_get_float_dtype(dtype))
@@ -166,8 +164,10 @@ def amplitude_damping_kraus(gamma: Union[float, np.ndarray, paddle.Tensor], dtyp
     return kraus_oper
 
 
-def generalized_amplitude_damping_kraus(gamma: Union[float, np.ndarray, paddle.Tensor], 
-                                  prob: Union[float, np.ndarray, paddle.Tensor], dtype: str = None) -> List[paddle.Tensor]:
+def generalized_amplitude_damping_kraus(
+        gamma: Union[float, np.ndarray, paddle.Tensor],
+        prob: Union[float, np.ndarray, paddle.Tensor], dtype: str = None
+) -> List[paddle.Tensor]:
     r"""Kraus representation of a generalized amplitude damping channel with form
 
     .. math::
@@ -176,15 +176,14 @@ def generalized_amplitude_damping_kraus(gamma: Union[float, np.ndarray, paddle.T
         E_1 = \sqrt{p} \begin{bmatrix} 0 & \sqrt{\gamma} \\ 0 & 0 \end{bmatrix},\\
         E_2 = \sqrt{1-p} \begin{bmatrix} \sqrt{1-\gamma} & 0 \\ 0 & 1 \end{bmatrix},
         E_3 = \sqrt{1-p} \begin{bmatrix} 0 & 0 \\ \sqrt{\gamma} & 0 \end{bmatrix}.
-    
+
     Args:
         gamma: coefficient :math:`\gamma`.
         prob: probability :math:`p`.
         dtype: data type. Defaults to be ``None``.
-    
+
     Returns:
         a list of Kraus operators
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     float_dtype = _get_float_dtype(dtype)
@@ -228,14 +227,13 @@ def phase_damping_kraus(gamma: Union[float, np.ndarray, paddle.Tensor], dtype: s
             0 & 0 \\
             0 & \sqrt{\gamma}
         \end{bmatrix}.
-    
+
     Args:
         gamma: coefficient :math:`\gamma`.
         dtype: data type. Defaults to be ``None``.
-    
+
     Returns:
         a list of Kraus operators
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     gamma = gamma if isinstance(gamma, paddle.Tensor) else paddle.to_tensor(gamma, dtype=_get_float_dtype(dtype))
@@ -263,14 +261,13 @@ def depolarizing_kraus(prob: Union[float, np.ndarray, paddle.Tensor], dtype: str
         E_1 = \sqrt{p/4} X,
         E_2 = \sqrt{p/4} Y,
         E_3 = \sqrt{p/4} Z.
-    
+
     Args:
         prob: probability :math:`p`.
         dtype: data type. Defaults to be ``None``.
-    
+
     Returns:
         a list of Kraus operators
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     prob = prob if isinstance(prob, paddle.Tensor) else paddle.to_tensor(prob, dtype=_get_float_dtype(dtype))
@@ -299,42 +296,42 @@ def depolarizing_kraus(prob: Union[float, np.ndarray, paddle.Tensor], dtype: str
 
 def generalized_depolarizing_kraus(prob: float, num_qubits: int, dtype: str = None) -> List[paddle.Tensor]:
     r"""Kraus representation of a generalized depolarizing channel with form
-    
+
     .. math::
 
         E_0 = \sqrt{1-(D - 1)p/D} I, \text{ where } D = 4^n,
         E_k = \sqrt{p/D} \sigma_k, \text{ for } 0 < k < D.
-    
+
     Args:
         prob: probability :math:`p`.
         num_qubits: number of qubits :math:`n` of this channel.
         dtype: data type. Defaults to be ``None``.
-        
+
     Returns:
         a list of Kraus operators
-    
     """
     dtype = get_dtype() if dtype is None else dtype
     prob = prob if isinstance(prob, paddle.Tensor) else paddle.to_tensor(prob, dtype=_get_float_dtype(dtype))
-    
+
     basis = [ele.cast(dtype) * (2 ** num_qubits + 0j) for ele in pauli_basis_generation(num_qubits)]
     I, other_elements = basis[0], basis[1:]
-    
+
     dim = 4 ** num_qubits
-    return ([I * (paddle.sqrt(1 - (dim - 1) * prob / dim) + 0j)] +
-            [ele * (paddle.sqrt(prob / dim) + 0j) for ele in other_elements])
+    return (
+        [I * (paddle.sqrt(1 - (dim - 1) * prob / dim) + 0j)] +
+        [ele * (paddle.sqrt(prob / dim) + 0j) for ele in other_elements]
+    )
 
 
 def pauli_kraus(prob: Union[List[float], np.ndarray, paddle.Tensor], dtype: str = None) -> List[paddle.Tensor]:
     r"""Kraus representation of a pauli channel
-    
+
     Args:
         prob: a list of three probabilities corresponding to X, Y, Z gate :math:`p`.
         dtype: data type. Defaults to be ``None``.
-    
+
     Returns:
         a list of Kraus operators
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     float_dtype = _get_float_dtype(dtype)
@@ -343,7 +340,7 @@ def pauli_kraus(prob: Union[List[float], np.ndarray, paddle.Tensor], dtype: str 
     prob_sum = paddle.sum(prob)
     assert prob_sum <= 1, \
         f"The sum of input probabilities should not be greater than 1: received {prob_sum.item()}"
-    prob_i = paddle.sqrt(1 - prob_sum)
+    prob_i = 1 - prob_sum
     kraus_oper = [
         [
             paddle.sqrt(prob_i).cast(dtype), _zero(dtype),
@@ -400,7 +397,6 @@ def reset_kraus(prob: Union[List[float], np.ndarray, paddle.Tensor], dtype: str 
 
     Returns:
         a list of Kraus operators
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     float_dtype = _get_float_dtype(dtype)
@@ -437,8 +433,10 @@ def reset_kraus(prob: Union[List[float], np.ndarray, paddle.Tensor], dtype: str 
     return kraus_oper
 
 
-def thermal_relaxation_kraus(const_t: Union[List[float], np.ndarray, paddle.Tensor], 
-                       exec_time: Union[List[float], np.ndarray, paddle.Tensor], dtype: str = None) -> List[paddle.Tensor]:
+def thermal_relaxation_kraus(
+        const_t: Union[List[float], np.ndarray, paddle.Tensor],
+        exec_time: Union[List[float], np.ndarray, paddle.Tensor], dtype: str = None
+) -> List[paddle.Tensor]:
     r"""Kraus representation of a thermal relaxation channel
 
     Args:
@@ -448,15 +446,19 @@ def thermal_relaxation_kraus(const_t: Union[List[float], np.ndarray, paddle.Tens
 
     Returns:
         a list of Kraus operators.
-        
     """
     dtype = get_dtype() if dtype is None else dtype
     float_dtype = _get_float_dtype(dtype)
+    
     const_t = const_t.cast(float_dtype) if isinstance(const_t, paddle.Tensor) else paddle.to_tensor(const_t, dtype=float_dtype)
     t1, t2 = const_t[0], const_t[1]
+    assert t2 <= t1, \
+        f"The relaxation time T2 and T1 must satisfy T2 <= T1: received T2 {t2} and T1{t1}"
+    
     exec_time = exec_time.cast(float_dtype) / 1000 if isinstance(exec_time, paddle.Tensor) else paddle.to_tensor(exec_time / 1000, dtype=float_dtype)
     prob_reset = 1 - paddle.exp(-exec_time / t1)
     prob_z = (1 - prob_reset) * (1 - paddle.exp(-exec_time / t2) * paddle.exp(exec_time / t1)) / 2
+    prob_z = _zero(float_dtype) if paddle.abs(prob_z) <= 0 else prob_z
     prob_i = 1 - prob_reset - prob_z
     kraus_oper = [
         [
@@ -479,3 +481,24 @@ def thermal_relaxation_kraus(const_t: Union[List[float], np.ndarray, paddle.Tens
     for idx, oper in enumerate(kraus_oper):
         kraus_oper[idx] = paddle.reshape(paddle.concat(oper), [2, 2])
     return kraus_oper
+
+
+def replacement_choi(sigma: Union[np.ndarray, paddle.Tensor, State], dtype: str = None) -> paddle.Tensor:
+    r"""Choi representation of a replacement channel
+
+    Args:
+        sigma: output state of this channel.
+        dtype: data type. Defaults to be ``None``.
+
+    Returns:
+        a Choi operator.
+    """
+    dtype = get_dtype() if dtype is None else dtype
+
+    # sanity check
+    sigma = sigma if isinstance(sigma, State) else State(sigma)
+    sigma.to('density_matrix')
+    sigma = sigma.data
+
+    dim = sigma.shape[0]
+    return paddle.kron(paddle.eye(dim), sigma).cast(dtype)

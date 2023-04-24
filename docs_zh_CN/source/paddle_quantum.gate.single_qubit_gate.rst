@@ -12,12 +12,14 @@ paddle\_quantum.gate.single\_qubit\_gate
    其矩阵形式为：
 
    .. math::
-
-      H = \frac{1}{\sqrt{2}}
+      
+      \begin{align}
+         H = \frac{1}{\sqrt{2}}
          \begin{bmatrix}
                1&1\\
                1&-1
          \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -36,11 +38,13 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      S =
+      \begin{align}
+         S =
          \begin{bmatrix}
                1&0\\
                0&i
          \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -53,23 +57,25 @@ paddle\_quantum.gate.single\_qubit\_gate
 
     基类：:py:class:`paddle_quantum.gate.base.Gate`
 
-    单量子比特S dagger（逆S）门。
+    单量子比特:math: S^\dagger（逆S）门。
 
     其矩阵形式为：
 
     .. math::
 
-        S ^\dagger =
-        \begin{bmatrix}
-            1 & 0\ \
-            0 & -i
-        \end{bmatrix}
+      \begin{align}
+         S ^\dagger =
+         \begin{bmatrix}
+               1 & 0\\
+               0 & -i
+         \end{bmatrix}
+      \end{align}
 
-    :param qubits_idx:作用在的量子比特的编号，默认为``'full'``。
+    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
     :type qubits_idx: Union[Iterable, int, str], optional
-    :param num_qubits:总的量子比特个数，默认为``None``。
+    :param num_qubits: 总的量子比特个数，默认为 ``None``。
     :type num_qubits: int, optional
-    :param depth: 层数，默认为``1``。
+    :param depth: 层数，默认为 ``1``。
     :type depth: int, optional
 
 .. py:class:: T(qubits_idx='full', num_qubits=None, depth=1)
@@ -82,12 +88,14 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      T =
+      \begin{align}
+         T =
          \begin{bmatrix}
                1&0\\
                0&e^\frac{i\pi}{4}
          \end{bmatrix}
-
+      \end{align}
+      
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
    :param num_qubits: 总的量子比特个数，默认为 ``None``。
@@ -99,23 +107,25 @@ paddle\_quantum.gate.single\_qubit\_gate
 
     基类：:py:class:`paddle_quantum.gate.base.Gate`
 
-    单量子比特T dagger（逆T）门。
+    单量子比特:math: T^\dagger（逆T）门。
 
     其矩阵形式为：
 
     .. math::
 
-        T ^\dagger =
-        \begin{bmatrix}
-            1 & 0\ \
-            0 & e^{-\frac{i\pi}{4}}
-        \end{bmatrix}
+      \begin{align}
+         T ^\dagger =
+         \begin{bmatrix}
+               1 & 0\\
+               0 & e^{-\frac{i\pi}{4}}
+         \end{bmatrix}
+      \end{align}
 
-    :param qubits_idx:作用在的量子比特的编号，默认为``'full'``。
+    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
     :type qubits_idx: Union[Iterable, int, str], optional
-    :param num_qubits:总的量子比特个数，默认为``None``。
+    :param num_qubits: 总的量子比特个数，默认为 ``None``。
     :type num_qubits: int, optional
-    :param depth: 层数，默认为``1``。
+    :param depth: 层数，默认为 ``1``。
     :type depth: int, optional
 
 .. py:class:: X(qubits_idx='full', num_qubits=None, depth=1)
@@ -128,10 +138,13 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      \begin{bmatrix}
-         0 & 1 \\
-         1 & 0
-      \end{bmatrix}
+      \begin{align}
+         X =
+         \begin{bmatrix}
+               0 & 1 \\
+               1 & 0
+         \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -150,10 +163,13 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      \begin{bmatrix}
-         0 & -i \\
-         i & 0
-      \end{bmatrix}
+      \begin{align}
+         Y =
+         \begin{bmatrix}
+               0 & -i \\
+               i & 0
+         \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -172,10 +188,13 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      \begin{bmatrix}
-         1 & 0 \\
-         0 & -1
-      \end{bmatrix}
+      \begin{align}
+         Z =
+         \begin{bmatrix}
+               1 & 0 \\
+               0 & -1
+         \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -194,10 +213,13 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      \begin{bmatrix}
-         1 & 0 \\
-         0 & e^{i\theta}
-      \end{bmatrix}
+      \begin{align}
+         P =
+         \begin{bmatrix}
+               1 & 0 \\
+               0 & e^{i\theta}
+         \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -221,10 +243,13 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      \begin{bmatrix}
-         \cos\frac{\theta}{2} & -i\sin\frac{\theta}{2} \\
-         -i\sin\frac{\theta}{2} & \cos\frac{\theta}{2}
-      \end{bmatrix}
+      \begin{align}
+         R_X =
+         \begin{bmatrix}
+               \cos\frac{\theta}{2} & -i\sin\frac{\theta}{2} \\
+               -i\sin\frac{\theta}{2} & \cos\frac{\theta}{2}
+         \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -248,10 +273,13 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      \begin{bmatrix}
-         \cos\frac{\theta}{2} & -\sin\frac{\theta}{2} \\
-         \sin\frac{\theta}{2} & \cos\frac{\theta}{2}
-      \end{bmatrix}
+      \begin{align}
+         R_Y =
+         \begin{bmatrix}
+               \cos\frac{\theta}{2} & -\sin\frac{\theta}{2} \\
+               \sin\frac{\theta}{2} & \cos\frac{\theta}{2}
+         \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -275,10 +303,13 @@ paddle\_quantum.gate.single\_qubit\_gate
 
    .. math::
 
-      \begin{bmatrix}
-         e^{-i\frac{\theta}{2}} & 0 \\
-         0 & e^{i\frac{\theta}{2}}
-      \end{bmatrix}
+      \begin{align}
+         R_Z =
+         \begin{bmatrix}
+               e^{-i\frac{\theta}{2}} & 0 \\
+               0 & e^{i\frac{\theta}{2}}
+         \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'full'``。
    :type qubits_idx: Union[Iterable, int, str], optional
@@ -303,7 +334,7 @@ paddle\_quantum.gate.single\_qubit\_gate
    .. math::
 
       \begin{align}
-         U3(\theta, \phi, \lambda) =
+         U_3(\theta, \phi, \lambda) =
                \begin{bmatrix}
                   \cos\frac\theta2&-e^{i\lambda}\sin\frac\theta2\\
                   e^{i\phi}\sin\frac\theta2&e^{i(\phi+\lambda)}\cos\frac\theta2

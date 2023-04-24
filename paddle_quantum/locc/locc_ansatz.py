@@ -23,7 +23,7 @@ import paddle_quantum
 from ..gate import H, S, T, X, Y, Z, P, RX, RY, RZ, U3
 from ..gate import CNOT, CX, CY, CZ, SWAP
 from ..gate import CP, CRX, CRY, CRZ, CU, RXX, RYY, RZZ
-from ..gate import MS, CSWAP, Toffoli
+from ..gate import MS, CSWAP, CCX
 from ..gate import UniversalTwoQubits, UniversalThreeQubits
 from ..gate import Oracle, ControlOracle
 from .locc_party import LoccParty
@@ -685,7 +685,7 @@ class LoccAnsatz(paddle_quantum.ansatz.Circuit):
         self.append(oper)
         if num_qubits is None:
             num_qubits = self.num_local_qubits
-        oper = Toffoli(qubits_idx, num_qubits, depth)
+        oper = CCX(qubits_idx, num_qubits, depth)
         self.append(oper)
 
     def universal_two_qubits(

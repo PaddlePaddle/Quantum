@@ -62,7 +62,7 @@ or download all the files and finish the installation locally,
 
 .. code:: shell
 
-   git clone http://github.com/PaddlePaddle/quantum
+   git clone https://github.com/PaddlePaddle/quantum
 
 .. code:: shell
 

@@ -69,6 +69,21 @@ class LoccState(paddle_quantum.State):
         assert backend == paddle_quantum.Backend.DensityMatrix
         self.backend = backend
         self.dtype = dtype if dtype is not None else paddle_quantum.get_dtype()
+    
+    @property
+    def is_swap_back(self) -> bool:
+        return True
+    
+    @is_swap_back.setter
+    def is_swap_back(self, value: bool) -> None:
+        # Currently is_swap_back for LOCC state is banned.
+        # TODO: add optimization logic for LOCC module
+        pass
+    
+    def reset_sequence(self) -> None:
+        # Currently reset_sequence for LOCC state is banned.
+        # TODO: add optimization logic for LOCC module
+        pass
 
     def clone(self) -> "LoccState":
         r"""Create a copy of the current object.

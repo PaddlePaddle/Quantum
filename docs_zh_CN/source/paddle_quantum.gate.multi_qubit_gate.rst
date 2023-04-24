@@ -60,8 +60,8 @@ paddle\_quantum.gate.multi\_qubit\_gate
          \begin{bmatrix}
                1 & 0 & 0 & 0 \\
                0 & 1 & 0 & 0 \\
-               0 & 0 & 0 & -1j \\
-               0 & 0 & 1j & 0
+               0 & 0 & 0 & -i \\
+               0 & 0 & i & 0
          \end{bmatrix}
       \end{align}
 
@@ -137,12 +137,15 @@ paddle\_quantum.gate.multi\_qubit\_gate
 
    .. math::
 
-      \begin{bmatrix}
-         1 & 0 & 0 & 0\\
-         0 & 1 & 0 & 0\\
-         0 & 0 & 1 & 0\\
-         0 & 0 & 0 & e^{i\theta}
-      \end{bmatrix}
+      \begin{align}
+         CP =
+         \begin{bmatrix}
+               1 & 0 & 0 & 0\\
+               0 & 1 & 0 & 0\\
+               0 & 0 & 1 & 0\\
+               0 & 0 & 0 & e^{i\theta}
+         \end{bmatrix}
+      \end{align}
 
    :param qubits_idx: 作用在的量子比特的编号，默认为 ``'cycle'``。
    :type qubits_idx: Union[Iterable, str], optional
@@ -167,7 +170,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
    .. math::
 
       \begin{align}
-         CRx &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes Rx\\
+         CR_X &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes R_X\\
          &=
          \begin{bmatrix}
                1 & 0 & 0 & 0 \\
@@ -200,7 +203,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
    .. math::
 
       \begin{align}
-         CRy &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes Ry\\
+         CR_Y &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes R_Y\\
          &=
          \begin{bmatrix}
                1 & 0 & 0 & 0 \\
@@ -233,7 +236,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
    .. math::
 
       \begin{align}
-         CRz &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes Rz\\
+         CR_Z &=|0\rangle \langle 0|\otimes I + |1 \rangle \langle 1|\otimes R_Z\\
          &=
          \begin{bmatrix}
                1 & 0 & 0 & 0 \\
@@ -453,6 +456,7 @@ paddle\_quantum.gate.multi\_qubit\_gate
    .. math::
 
       \begin{align}
+         Toffoli =
          \begin{bmatrix}
                1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
                0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\

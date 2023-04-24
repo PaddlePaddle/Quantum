@@ -128,7 +128,7 @@ paddle\_quantum.qinfo
    :return: 输入的量子态之间的相对熵。
    :rtype: Union[np.ndarray, paddle.Tensor]
 
-.. py:function:: random_pauli_str_generator(n, terms=3)
+.. py:function:: random_pauli_str_generator(num_qubits, terms=3)
 
    随机生成一个可观测量（observable）的列表（ ``list`` ）形式。
 
@@ -136,12 +136,38 @@ paddle\_quantum.qinfo
    列表形式为 ``[[0.3, 'x0'], [0.5, 'y0,z2']]`` 。这样一个可观测量是由
    调用 ``random_pauli_str_generator(3, terms=2)`` 生成的。
 
-   :param n: 量子比特数量。
-   :type n: int
+   :param num_qubits: 量子比特数量。
+   :type num_qubits: int
    :param terms: 可观测量的项数, 默认为 3。
    :type terms: int, optional
 
    :return: 随机生成的可观测量的列表形式。
+   :rtype: List
+
+.. py:function:: pauli_str_convertor(observable: List)
+
+   在可观测量（observable）中加入系数 1。
+
+   一个可观测量 :math:`O=0.3X\otimes I\otimes I+0.5Y\otimes I\otimes Z` 的
+   列表形式为 ``[['z0,x1'], ['z1']]`` 。这样一个可观测量将变化为 
+   ``[[1, 'z0,x1'], [1, 'z1']]``。
+
+   :param observable: 在输入的可观测量（observable）中加入系数 1。
+   :type observable: List
+
+   :return: 返回加入系数 1 的可观测量（observable）。
+   :rtype: List
+
+.. py:function:: random_hamiltonian_generator(num_qubits, terms=3)
+
+   随机生成一个哈密顿量（Hamiltonian）。
+
+   :param num_qubits: 量子比特数量。
+   :type n: int
+   :param terms: 哈密顿量的最高项数, 默认为 3。
+   :type terms: int, optional
+
+   :return: 随机生成的哈密顿量。
    :rtype: List
 
 .. py:function:: pauli_str_to_matrix(pauli_str, n)
@@ -186,7 +212,7 @@ paddle\_quantum.qinfo
    :return: 输入的量子态的 partial transpose。
    :rtype: Union[np.ndarray, paddle.Tensor]
 
-.. py:function:: partial_transpose(mat, perm_list, dim_list)
+.. py:function:: permute_systems(mat, perm_list, dim_list)
 
    根据输入顺序组合量子系统。
 
@@ -311,14 +337,14 @@ paddle\_quantum.qinfo
 
    计算输入的菱形范数
 
-   :param channel_repr: 信道对应的表示, ``ChoiRepr`` 或 ``KrausRepr`` 或 ``StinespringRepr`` 或 ``paddle.Tensor``。
-   :type channel_repr: Union[ChoiRepr, KrausRepr, StinespringRepr, paddle.Tensor]
+   :param channel_repr: 信道对应的表示, ``Channel`` 或 ``paddle.Tensor`` 的实例。
+   :type channel_repr: Union[Channel, paddle.Tensor]
    :param dim_io: 输入和输出的维度。
    :type dim_io: Union[int, Tuple[int, int]], optional.
    :param kwargs: 使用cvx所需的参数。
    :type kwargs: Any
 
-   :raises RuntimeError: ``channel_repr`` 必须是 ``ChoiRepr`` 或 ``KrausRepr`` 或 ``StinespringRepr`` 或 ``paddle.Tensor``。
+   :raises RuntimeError: ``channel_repr`` 必须是 ``Channel`` 或 ``paddle.Tensor``。
    :raises TypeError: "dim_io" 必须是 "int" 或者 "tuple"。
 
    :warning: 输入的 ``channel_repr`` 不是choi表示，已被转换成 ``ChoiRepr``。

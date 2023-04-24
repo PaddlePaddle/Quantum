@@ -10,3 +10,5 @@ paddle\_quantum.data_analysis
 
    paddle_quantum.data_analysis.vqr
    paddle_quantum.data_analysis.vqls
+   paddle_quantum.data_analysis.power_flow
+   paddle_quantum.data_analysis.rand_num

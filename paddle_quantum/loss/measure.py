@@ -20,9 +20,9 @@ The source file of the class for the measurement.
 import paddle
 import paddle_quantum
 from ..backend import quleaf
-from ..backend import Backend
-from ..intrinsic import _get_float_dtype
-from typing import Optional, Union, Iterable
+from ..backend import Backend, state_vector
+from ..intrinsic import _get_float_dtype, _perm_of_list, _base_transpose, _base_transpose_for_dm
+from typing import Optional, Union, Iterable, List
 
 
 class ExpecVal(paddle_quantum.Operator):
@@ -34,6 +34,7 @@ class ExpecVal(paddle_quantum.Operator):
         hamiltonian: The input observable.
         shots: The number of measurement shots. Defaults to ``0``. Now it just need to be input when the backend is QuLeaf.
     """
+
     def __init__(self, hamiltonian: paddle_quantum.Hamiltonian, shots: Optional[int] = 0):
         super().__init__()
         self.hamiltonian = hamiltonian
@@ -43,46 +44,15 @@ class ExpecVal(paddle_quantum.Operator):
         self.sites = self.hamiltonian.sites
         self.matrices = self.hamiltonian.pauli_words_matrix
 
-    def __state_qubits_swap(self, pauli_site, state_data, num_qubits):
-        # generate swap_list
-        origin_seq = list(range(0, num_qubits))
-        target_seq = pauli_site + [x for x in origin_seq if x not in pauli_site]
-        swapped = [False] * num_qubits
-        swap_list = []
-        for idx in range(0, num_qubits):
-            if not swapped[idx]:
-                next_idx = idx
-                swapped[next_idx] = True
-                while not swapped[target_seq[next_idx]]:
-                    swapped[target_seq[next_idx]] = True
-                    if next_idx < target_seq[next_idx]:
-                        swap_list.append((next_idx, target_seq[next_idx]))
-                    else:
-                        swap_list.append((target_seq[next_idx], next_idx))
-                    next_idx = target_seq[next_idx]
-
-        # function for swapping ath and bth qubit in state
-        def swap_a_and_b(target_state, size, pos_a, pos_b):
-            target_state = target_state.reshape([2 ** pos_a, 2, 2 ** (pos_b - pos_a - 1), 2, 2 ** (size - pos_b - 1)])
-            return paddle.transpose(target_state, [0, 3, 2, 1, 4])
-
-        # begin swap
-        if self.backend == paddle_quantum.Backend.DensityMatrix:
-            for a, b in swap_list:
-                state_data = swap_a_and_b(state_data, 2 * num_qubits, a, b)
-                state_data = swap_a_and_b(state_data, 2 * num_qubits, a + num_qubits, b + num_qubits)
-        else:
-            for a, b in swap_list:
-                state_data = swap_a_and_b(state_data, num_qubits, a, b)
-        return state_data
-
-    def forward(self, state: paddle_quantum.State) -> paddle.Tensor:
+    def forward(self, state: paddle_quantum.State, decompose: Optional[bool] = False) -> Union[
+        paddle.Tensor, List[paddle.Tensor]]:
         r"""Compute the expectation value of the observable with respect to the input state.
 
         The value computed by this function can be used as a loss function to optimize.
 
         Args:
             state: The input state which will be used to compute the expectation value.
+            decompose: Defaults to ``False``.  If decompose is ``True``, it will return the expectation value of each term.
 
         Raises:
             NotImplementedError: The backend is wrong or not supported.
@@ -91,45 +61,63 @@ class ExpecVal(paddle_quantum.Operator):
             The expectation value. If the backend is QuLeaf, it is computed by sampling.
         """
         if self.backend == Backend.QuLeaf:
-            if len(state.param_list) > 0:
-                param = paddle.concat(state.param_list)
-            else:
-                param = paddle.to_tensor(state.param_list)
+            param_list = [history['param'] for history in filter(lambda x: 'param' in x, state.oper_history)]
             expec_val = quleaf.ExpecValOp.apply(
-                param,
-                state, self.hamiltonian, self.shots
+                state,
+                self.hamiltonian,
+                paddle.to_tensor([self.shots], dtype=paddle.get_default_dtype()),
+                *param_list
             )
             return expec_val
 
         num_qubits = state.num_qubits
         float_dtype = _get_float_dtype(paddle_quantum.get_dtype())
-        expec_val = paddle.zeros([1], dtype=float_dtype)
+        origin_seq = list(range(num_qubits))
         state_data = state.data
-        for i in range(0, self.num_terms):
+        if self.backend == Backend.StateVector:
+            expec_val = paddle.zeros([state_data.reshape([-1, 2 ** num_qubits]).shape[0]], dtype=float_dtype)
+        elif self.backend == Backend.DensityMatrix:
+            expec_val = paddle.zeros([state_data.reshape([-1, 2 ** num_qubits, 2 ** num_qubits]).shape[0]],
+                                     dtype=float_dtype)
+        else:
+            raise NotImplementedError
+        expec_val_each_term = []
+        for i in range(self.num_terms):
             pauli_site = self.sites[i]
             if pauli_site == ['']:
                 expec_val += self.coeffs[i]
+                expec_val_each_term.append(self.coeffs[i])
                 continue
             num_applied_qubits = len(pauli_site)
             matrix = self.matrices[i]
-            # extract current state and do swap operation
-            if num_qubits != 1:
-                _state_data = self.__state_qubits_swap(pauli_site, state_data, num_qubits)
-            else:
-                _state_data = state_data
-            # use einstein sum notation to shrink the size of operation of matrix multiplication
+
             if self.backend == Backend.StateVector:
-                _state_data = _state_data.reshape([2 ** num_applied_qubits, 2 ** (num_qubits - num_applied_qubits)])
-                output_state = paddle.einsum('ia, ab->ib', matrix, _state_data).reshape([2 ** num_qubits])
-                _state_data = paddle.conj(_state_data.reshape([2 ** num_qubits]))
-                expec_val += paddle.real(paddle.matmul(_state_data, output_state)) * self.coeffs[i]
+                output_state, seq_for_acted = state_vector.unitary_transformation_without_swapback(
+                    state_data, [matrix], pauli_site, num_qubits, origin_seq)
+                perm_map = _perm_of_list(seq_for_acted, origin_seq)
+                output_state = _base_transpose(output_state, perm_map).reshape([-1, 2 ** num_qubits, 1])
+                state_data_bra = paddle.conj(state_data.reshape([-1, 1, 2 ** num_qubits]))
+                batch_values = paddle.squeeze(paddle.real(paddle.matmul(state_data_bra, output_state)), axis=[-2, -1]) * \
+                               self.coeffs[i]
+                expec_val_each_term.append(batch_values)
+                expec_val += batch_values
+
             elif self.backend == Backend.DensityMatrix:
-                _state_data = _state_data.reshape([2 ** num_applied_qubits, 2 ** (2 * num_qubits - num_applied_qubits)])
-                output_state = paddle.einsum('ia, ab->ib', matrix, _state_data)
-                output_state = output_state.reshape([2 ** num_qubits, 2 ** num_qubits])
-                expec_val += paddle.real(paddle.trace(output_state)) * self.coeffs[i]
+                seq_for_acted = pauli_site + [x for x in origin_seq if x not in pauli_site]
+                perm_map = _perm_of_list(origin_seq, seq_for_acted)
+                output_state = _base_transpose_for_dm(state_data, perm=perm_map).reshape(
+                    [-1, 2 ** num_applied_qubits, 2 ** (2 * num_qubits - num_applied_qubits)])
+                output_state = paddle.matmul(matrix, output_state).reshape(
+                    [-1, 2 ** num_qubits, 2 ** num_qubits])
+                batch_values = paddle.real(paddle.trace(output_state, axis1=-2, axis2=-1)) * self.coeffs[i]
+                expec_val_each_term.append(batch_values)
+                expec_val += batch_values
+
             else:
                 raise NotImplementedError
+
+        if decompose:
+            return expec_val_each_term
         return expec_val
 
 
@@ -142,6 +130,7 @@ class Measure(paddle_quantum.Operator):
     Raises:
         NotImplementedError: Currently we just support the z basis.
     """
+
     def __init__(self, measure_basis: Optional[Union[Iterable[paddle.Tensor], str]] = 'z'):
         super().__init__()
         if measure_basis == 'z' or measure_basis == 'computational_basis':
@@ -164,7 +153,7 @@ class Measure(paddle_quantum.Operator):
             NotImplementedError: The backend is wrong or not supported.
             NotImplementedError: The qubit index is wrong or not supported.
             NotImplementedError: Currently we just support the z basis.
-            
+
         Returns:
             The probability of the measurement.
         """
@@ -198,7 +187,7 @@ class Measure(paddle_quantum.Operator):
             else:
                 raise NotImplementedError("The qubit index is wrong or not supported.")
 
-            prob_array = prob_array / paddle.sum(prob_array) # normalize calculation error
+            prob_array = prob_array / paddle.sum(prob_array)  # normalize calculation error
             if desired_result is None:
                 return prob_array
             if isinstance(desired_result, str):

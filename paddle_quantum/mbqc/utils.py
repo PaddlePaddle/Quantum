@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-此模块包含计算所需的各种常用类和函数。
+r"""
+This module contains various common classes and functions used for computation.
 """
 
 from numpy import array, exp, pi, linalg
@@ -58,18 +58,18 @@ __all__ = ["plus_state",
 
 
 def plus_state():
-    r"""定义加态。
+    r"""Define plus state.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \frac{1}{\sqrt{2}}  \begin{bmatrix}  1 \\ 1 \end{bmatrix}
 
     Returns:
-        Tensor: 加态对应的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of plus state.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -86,18 +86,18 @@ def plus_state():
 
 
 def minus_state():
-    r"""定义减态。
+    r"""Define minus state.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \frac{1}{\sqrt{2}}  \begin{bmatrix}  1 \\ -1 \end{bmatrix}
 
     Returns:
-        Tensor: 减态对应的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of minus state.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -114,18 +114,18 @@ def minus_state():
 
 
 def zero_state():
-    r"""定义零态。
+    r"""Define zero state.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \begin{bmatrix}  1 \\ 0 \end{bmatrix}
 
     Returns:
-        Tensor: 零态对应的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of zero state.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -142,18 +142,18 @@ def zero_state():
 
 
 def one_state():
-    r"""定义一态。
+    r"""Define one state.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \begin{bmatrix}  0 \\ 1 \end{bmatrix}
 
     Returns:
-        Tensor: 一态对应的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of one state.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -170,18 +170,18 @@ def one_state():
 
 
 def h_gate():
-    r"""定义 ``Hadamard`` 门。
+    r"""Define ``Hadamard`` gate.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \frac{1}{\sqrt{2}} \begin{bmatrix}  1 & 1 \\ 1 & -1 \end{bmatrix}
 
     Returns:
-        Tensor: ``Hadamard`` 门对应矩阵的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of ``Hadamard`` gate.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -198,9 +198,9 @@ def h_gate():
 
 
 def s_gate():
-    r"""定义 ``S`` 门。
+    r"""Define ``S`` gate.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
@@ -209,7 +209,7 @@ def s_gate():
     Returns:
         Tensor: ``S`` 门矩阵对应的 ``Tensor`` 形式
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -226,18 +226,18 @@ def s_gate():
 
 
 def t_gate():
-    r"""定义 ``T`` 门。
+    r"""Define ``T`` gate.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \begin{bmatrix}  1 & 0 \\ 0 & e^{i \pi / 4} \end{bmatrix}
 
     Returns:
-        Tensor: ``T`` 门矩阵对应的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of ``T`` gate.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -254,18 +254,18 @@ def t_gate():
 
 
 def cz_gate():
-    r"""定义 ``Controlled-Z`` 门。
+    r"""Define ``Controlled-Z`` gate.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \begin{bmatrix}  1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & -1 \end{bmatrix}
 
     Returns:
-        Tensor: ``Controlled-Z`` 门矩阵对应的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of ``Controlled-Z`` gate.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -287,18 +287,18 @@ def cz_gate():
 
 
 def cnot_gate():
-    r"""定义 ``Controlled-NOT (CNOT)`` 门。
+    r"""Define ``Controlled-NOT (CNOT)`` gate.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \begin{bmatrix}  1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{bmatrix}
 
     Returns:
-        Tensor: ``Controlled-NOT (CNOT)`` 门矩阵对应的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of ``Controlled-NOT (CNOT)`` gate.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -320,18 +320,18 @@ def cnot_gate():
 
 
 def swap_gate():
-    r"""定义 ``SWAP`` 门。
+    r"""Define ``SWAP`` gate.
 
-    其矩阵形式为：
+    The matrix form is:
 
     .. math::
 
         \begin{bmatrix}  1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
 
     Returns:
-        Tensor: ``SWAP`` 门矩阵对应的 ``Tensor`` 形式
+        Tensor: The ``Tensor`` form of ``SWAP`` gate.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -353,39 +353,39 @@ def swap_gate():
 
 
 def pauli_gate(gate):
-    r"""定义 ``Pauli`` 门。
+    r"""Define ``Pauli`` gate.
 
-    单位阵 ``I`` 的矩阵形式为：
+    The matrix form of Identity gate ``I`` is:
 
     .. math::
 
         \begin{bmatrix}  1 & 0 \\ 0 & 1 \end{bmatrix}
 
-    ``Pauli X`` 门的矩阵形式为：
+    The matrix form of Pauli gate ``X`` is:
 
     .. math::
 
         \begin{bmatrix}  0 & 1 \\ 1 & 0 \end{bmatrix}
 
-    ``Pauli Y`` 门的矩阵形式为：
+    The matrix form of Pauli gate ``Y`` is:
 
     .. math::
 
         \begin{bmatrix}  0 & - i \\ i & 0 \end{bmatrix}
 
-    ``Pauli Z`` 门的矩阵形式为：
+    The matrix form of Pauli gate ``Z`` is:
 
     .. math::
 
         \begin{bmatrix}  1 & 0 \\ 0 & - 1 \end{bmatrix}
 
     Args:
-        gate (str): Pauli 门的索引字符，"I", "X", "Y", "Z" 分别表示对应的门
+        gate (str): Index of Pauli gate. “I”, “X”, “Y”, or “Z” denotes the corresponding gate.
 
     Returns:
-        Tensor: Pauli 门对应的矩阵
+        Tensor: The matrix form of the Pauli gate.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -428,7 +428,7 @@ def pauli_gate(gate):
 
 
 def rotation_gate(axis, theta):
-    r"""定义旋转门矩阵。
+    r"""Define Rotation gate.
 
     .. math::
 
@@ -439,13 +439,13 @@ def rotation_gate(axis, theta):
         R_{z}(\theta) = \cos(\theta / 2) I - i\sin(\theta / 2) Z
 
     Args:
-        axis (str): 旋转轴，绕 ``X`` 轴旋转输入 'x'，绕 ``Y`` 轴旋转输入 'y'，绕 ``Z`` 轴旋转输入 'z'
-        theta (Tensor): 旋转的角度
+        axis (str): Rotation axis. 'x', 'y' or 'z' denotes the corresponding axis.
+        theta (Tensor): Rotation angle.
 
     Returns:
-        Tensor: 旋转门对应的矩阵
+        Tensor: The matrix form of Rotation gate.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -495,19 +495,19 @@ def rotation_gate(axis, theta):
 
 
 def to_projector(vector):
-    r"""把列向量转化为密度矩阵（或测量基对应的投影算符）。
+    r"""Transform a vector into its density matrix (or measurement projector).
 
     .. math::
 
         |\psi\rangle \to |\psi\rangle\langle\psi|
 
     Args:
-        vector (Tensor): 量子态列向量（或投影测量中的测量基向量）
+        vector (Tensor): Vector of a quantum state or a measurement basis
 
     Returns:
-        Tensor: 密度矩阵（或测量基对应的投影算符）
+        Tensor: Density matrix (or measurement projector)
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -534,10 +534,10 @@ def to_projector(vector):
 
 
 def basis(label, theta=to_tensor([0], dtype='float64')):
-    r"""测量基。
+    r"""Measurement basis.
 
     Note:
-        常用的测量方式有 XY-平面测量，YZ-平面测量，X 测量，Y 测量，Z 测量。
+        Commonly used measurements are measurements in the XY and YZ planes, and Pauli X, Y, Z measurements.
 
     .. math::
         \begin{align*}
@@ -549,13 +549,15 @@ def basis(label, theta=to_tensor([0], dtype='float64')):
         \end{align*}
 
     Args:
-        label (str): 测量基索引字符，"XY" 表示 XY-平面测量，"YZ" 表示 YZ-平面测量，"X" 表示 X 测量，"Y" 表示 Y 测量，"Z" 表示 Z 测量
-        theta (Tensor, optional): 测量角度，这里只有 XY-平面测量和 YZ-平面测量时需要
+        label (str): the labels of the measurement basis, "XY" denotes XY plane, "YZ" denotes YZ plane, 
+            "X" denotes X measurement, "Y" denotes Y measurement, "Z" denotes Z measurement.
+        theta (Tensor, optional): measurement angle, the parameter is needed when the measurement is in
+            XY plane or YZ plane.
 
     Returns:
-        list: 测量基向量构成的列表，列表元素为 ``Tensor`` 类型
+        list: the list composed of measurement basis, the elements are of type ``Tensor``.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -634,19 +636,20 @@ def basis(label, theta=to_tensor([0], dtype='float64')):
 
 
 def kron(tensor_list):
-    r"""把列表中的所有元素做张量积。
+    r"""Take the tensor product of all the elements in the list.
 
     .. math::
 
         [A, B, C, \cdots] \to A \otimes B \otimes C \otimes \cdots
 
     Args:
-        tensor_list (list): 需要做张量积的元素组成的列表
+        tensor_list (list): a list contains the element to taking tensor product.
 
     Returns:
-        Tensor: 所有元素做张量积运算得到的 ``Tensor``，当列表中只有一个 ``Tensor`` 时，返回该 ``Tensor`` 本身
+        Tensor: the results of the tensor product are of type ``Tensor``. If there is only
+        one ``Tensor`` in the list, return the ``Tensor``.
 
-    代码示例 1：
+    Code example 1:
 
     .. code-block:: python
 
@@ -671,7 +674,7 @@ def kron(tensor_list):
          [0. 0. 0. 0. 1. 2. 1. 2.]
          [0. 0. 0. 0. 3. 4. 3. 4.]]
 
-    代码示例 2：
+    Code example 2:
 
     .. code-block:: python
 
@@ -698,35 +701,35 @@ def kron(tensor_list):
 
 
 def permute_to_front(state, which_system):
-    r"""将一个量子态中某个子系统的顺序变换到最前面。
+    r"""Move a subsystem of a system to the first.
 
-    假设当前系统的量子态列向量 :math:`\psi\rangle` 可以分解成多个子系统列向量的 tensor product 形式：
+    Assume that a quantum state :math:`\psi\rangle` can be decomposed to tensor product form: 
 
     .. math::
 
         |\psi\rangle = |\psi_1\rangle \otimes |\psi_2\rangle \otimes |\psi_3\rangle \otimes \cdots
 
 
-    每个 :math:`|\psi_i\rangle` 的系统标签为 :math:`i` ，则当前总系统的标签为：
+    the labels of each :math:`|\psi_i\rangle` is :math:`i` , so the total labels of the current system are: 
 
     .. math::
 
         \text{label} = \{1, 2, 3, \cdots \}
 
-    假设需要操作的子系统的标签为：i
+    Assume that the label of the subsystem to be moved is: i
 
-    输出新系统量子态的列向量为：
+    The output new quantum state is: 
 
     .. math::
 
         |\psi_i\rangle \otimes |\psi_1\rangle \otimes \cdots |\psi_{i-1}\rangle \otimes |\psi_{i+1}\rangle \otimes \cdots
 
     Args:
-        state (State): 需要操作的量子态
-        which_system (str): 要变换到最前面的子系统标签
+        state (State): the quantum state to be processed
+        which_system (str): the labels of the subsystem to be moved.
 
     Returns:
-        State: 系统顺序变换后的量子态
+        State: the final state after the move operation.
     """
     assert which_system in state.system, 'the system to permute must be in the state systems.'
     system_idx = state.system.index(which_system)
@@ -746,38 +749,38 @@ def permute_to_front(state, which_system):
 
 
 def permute_systems(state, new_system):
-    r"""变换量子态的系统到指定顺序。
+    r""" Permute the quantum system to given order
 
-    假设当前系统的量子态列向量 :math:`|\psi\rangle` 可以分解成多个子系统列向量的 tensor product 形式：
+    Assume that a quantum state :math:`\psi\rangle` can be decomposed to tensor product form: 
 
     .. math::
 
         |\psi\rangle = |\psi_1\rangle \otimes |\psi_2\rangle \otimes |\psi_3\rangle \otimes \cdots
 
-    每个 :math:`\psi_i\rangle` 的系统标签为 :math:`i` ，则当前总系统的标签为：
+    the labels of each :math:`|\psi_i\rangle` is :math:`i` , so the total labels of the current system are: 
 
     .. math::
 
         \text{label} = \{1, 2, 3, \cdots \}
 
-    给定新系统的标签顺序为：
+    the order of labels of the given new system is: 
 
     .. math::
 
         \{i_1, i_2, i_3, \cdots \}
 
-    输出新系统量子态的列向量为：
+    The output new quantum state is: 
 
     .. math::
 
         |\psi_{i_1}\rangle \otimes |\psi_{i_2}\rangle \otimes |\psi_{i_3}\rangle \otimes \cdots
 
     Args:
-        state (State): 需要操作的量子态
-        new_system (list): 目标系统顺序
+        state (State): the quantum state to be processed
+        new_system (list): target order of the system
 
     Returns:
-        State: 系统顺序变换后的量子态
+        State: the quantum state after permutation.
     """
     for label in reversed(new_system):
         state = permute_to_front(state, label)
@@ -785,11 +788,11 @@ def permute_systems(state, new_system):
 
 
 def compare_by_density(state1, state2):
-    r"""通过密度矩阵形式比较两个量子态是否相同。
+    r"""Compare whether two quantum states are the same by their density operators.
 
     Args:
-        state1 (State): 第一个量子态
-        state2 (State): 第二个量子态
+        state1 (State): the first quantum state
+        state2 (State): the second quantum state
     """
     assert state1.size == state2.size, "two state vectors compared are not of the same length."
 
@@ -812,11 +815,11 @@ def compare_by_density(state1, state2):
 
 
 def compare_by_vector(state1, state2):
-    r"""通过列向量形式比较两个量子态是否相同。
+    r"""Compare whether two quantum states are the same by their column vector form.
 
     Args:
-        state1 (State): 第一个量子态
-        state2 (State): 第二个量子态
+        state1 (State): the first quantum state
+        state2 (State): the second quantum state
     """
     assert state1.size == state2.size, "two state vectors compared are not of the same length."
     # Check if they are normalized quantum states
@@ -847,16 +850,17 @@ def compare_by_vector(state1, state2):
 
 
 def random_state_vector(n, is_real=False):
-    r"""随机生成一个量子态列向量。
+    r"""Generate a state vector randomly.
 
     Args:
-        n (int): 随机生成的量子态的比特数
-        is_real (int, optional): ``True`` 表示实数量子态，``False`` 表示复数量子态，默认为 ``False``
+        n (int): the number of qubits of the random state.
+        is_real (int, optional): ``True`` denotes a state vector with real values, ``False`` denotes a quantum
+        state with complex values, default to ``False``
 
     Returns:
-        Tensor: 随机生成量子态的列向量
+        Tensor: the column vector of the random quantum state.
 
-    代码示例：
+    Code example:
 
     .. code-block:: python
 
@@ -890,17 +894,17 @@ def random_state_vector(n, is_real=False):
 
 
 def div_str_to_float(div_str):
-    r"""将除式字符串转化为对应的浮点数。
+    r"""Converts the division string to the corresponding floating point number.
 
-    例如将字符串 '3/2' 转化为 1.5。
+    For example, the string '3/2' to the float number 1.5.
 
     Args:
-        div_str (str): 除式字符串
+        div_str (str): division string
 
     Returns:
-        float: 除式对应的浮点数结果
+        float: the float number
 
-    代码示例：
+    Code example:
 
     ..  code-block:: python
 
@@ -918,16 +922,16 @@ def div_str_to_float(div_str):
 
 
 def int_to_div_str(idx1, idx2=1):
-    r"""将两个整数转化为除式字符串。
+    r"""Transform two integers to a division string.
 
     Args:
-        idx1 (int): 第一个整数
-        idx2 (int): 第二个整数
+        idx1 (int): the first integer
+        idx2 (int): the second integer
 
     Returns:
-        str: 对应的除式字符串
+        str: the division string
 
-    代码示例：
+    Code example:
 
     ..  code-block:: python
 
@@ -946,14 +950,14 @@ def int_to_div_str(idx1, idx2=1):
 
 
 def print_progress(current_progress, progress_name, track=True):
-    r"""画出当前步骤的进度条。
+    r"""Plot the progress bar.
 
     Args:
-        current_progress (float / int): 当前的进度百分比
-        progress_name (str): 当前步骤的名称
-        track (bool): 是否绘图的布尔开关
+        current_progress (float / int): the percentage of the current progress.
+        progress_name (str): the name of the current progress.
+        track (bool): the boolean switch of whether plot.
 
-    代码示例：
+    Code example:
 
     ..  code-block:: python
 
@@ -978,18 +982,19 @@ def print_progress(current_progress, progress_name, track=True):
 
 
 def plot_results(dict_lst, bar_label, title, xlabel, ylabel, xticklabels=None):
-    r"""根据字典的键值对，以键为横坐标，对应的值为纵坐标，画出柱状图。
+    r"""Plot the histogram based on the key-value pair of the dict.
+        The key is the abscissa, and the corresponding value is the ordinate
 
     Note:
-        该函数主要调用来画出采样分布或时间比较的柱状图。
+        The function is mainly used for plotting the sampling statistics or histogram.
 
     Args:
-        dict_lst (list): 待画图的字典列表
-        bar_label (list): 每种柱状图对应的名称
-        title (str): 整个图的标题
-        xlabel (str): 横坐标的名称
-        ylabel (str): 纵坐标的名称
-        xticklabels (list, optional): 柱状图中每个横坐标的名称
+        dict_lst (list): a list contains the data to be plotted
+        bar_label (list): the name of different bars in the histogram
+        title (str): the title of the figure
+        xlabel (str): the label of the x axis.
+        ylabel (str): the label of the y axis.
+        xticklabels (list, optional): the label of each ticks of the x-axis.
     """
     assert isinstance(dict_lst, list), "please input a list with dictionaries."
     assert isinstance(bar_label, list), "please input a list with bar_labels."
@@ -1023,23 +1028,25 @@ def plot_results(dict_lst, bar_label, title, xlabel, ylabel, xticklabels=None):
 
 
 def write_running_data(textfile, eg, width, mbqc_time, reference_time):
-    r"""写入电路模拟运行的时间。
+    r"""Write the running times of the quantum circuit.
 
-    由于在许多电路模型模拟案例中，需要比较我们的 ``MBQC`` 模拟思路与 ``Qiskit`` 或量桨平台的 ``UAnsatz`` 电路模型模拟思路的运行时间。
-    因而单独定义了写入文件函数。
+    In many cases of circuit models, we need to compare the simulation time of our MBQC model with other methods
+    such as qiskit or ``UAnsatz`` circuit model in paddle_quantum. So we define this function.
 
     Hint:
-        该函数与 ``read_running_data`` 函数配套使用。
+        this function is used with the ``read_running_data`` function.
 
     Warning:
-        在调用该函数之前，需要调用 ``open`` 打开 ``textfile``；在写入结束之后，需要调用 ``close`` 关闭 ``textfile``。
+        Before using this function, we need to open a textfile. After using this function,
+        we need to close the textfile.
 
     Args:
-        textfile (TextIOWrapper): 待写入的文件
-        eg (str): 当前案例的名称
-        width (float): 电路宽度（比特数）
-        mbqc_time (float): ``MBQC`` 模拟电路运行时间
-        reference_time (float):  ``Qiskit`` 或量桨平台的 ``UAnsatz`` 电路模型运行时间
+        textfile (TextIOWrapper): the file to be written in.
+        eg (str): the name of the current case
+        width (float): the width of the circuit(number of qubits)
+        mbqc_time (float): `the simulation time of the ``MBQC`` model.
+        reference_time (float):  the simulation time of the circuit
+        based model in qiskit or ``UAnsatz`` in paddle_quantum.
     """
     textfile.write("The current example is: " + eg + "\n")
     textfile.write("The qubit number is: " + str(width) + "\n")
@@ -1048,20 +1055,21 @@ def write_running_data(textfile, eg, width, mbqc_time, reference_time):
 
 
 def read_running_data(file_name):
-    r"""读取电路模拟运行的时间。
+    r"""Read the running time of the quantum circuit.
 
-    由于在许多电路模型模拟案例中，需要比较我们的 ``MBQC`` 模拟思路与 ``Qiskit`` 或量桨平台的 ``UAnsatz`` 电路模型模拟思路的运行时间。
-    因而单独定义了读取文件函数读取运行时间，将其处理为一个列表，
-    列表中的两个元素分别为 ``Qiskit`` 或 ``UAnsatz`` 电路模型模拟思路运行时间的字典和 ``MBQC`` 模拟思路运行时间的字典。
+    In many cases of circuit models, we need to compare the simulation time of our MBQC model with other methods
+    such as qiskit or ``UAnsatz`` circuit model in paddle_quantum. So we define this function and save the running
+    time to a list. There are two dicts in the list, the first dict contains the running time of qiskit or ``UAnsatz``,
+    the second contains the simulation time of our MBQC model.
 
     Hint:
-        该函数与 ``write_running_data`` 函数配套使用。
+        This function is used with the ``write_running_data`` function.
 
     Args:
-        file_name (str): 待读取的文件名
+        file_name (str): the name of the file to be read.
 
     Returns:
-        list: 运行时间列表
+        list: The list of running time.
     """
     bit_num_lst = []
     mbqc_list = []

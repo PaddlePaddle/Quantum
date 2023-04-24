@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-此模块包含构造 MBQC 模型的常用类和配套的运算模拟工具。
+r"""
+This module contains the commonly used class and simulation tools in MBQC.
 """
 
 from numpy import random, pi
@@ -33,14 +33,11 @@ __all__ = [
 
 
 class MBQC:
-    r"""定义基于测量的量子计算模型 ``MBQC`` 类。
+    r""" Define a ``MBQC`` class used for measurement based quantum computation.
 
-    用户可以通过实例化该类来定义自己的 MBQC 模型。
+    The users can define their MBQC models by instantiate the objects of this class.
     """
-
     def __init__(self):
-        r"""MBQC 类的构造函数，用于实例化一个 ``MBQC`` 对象。
-        """
         self.__graph = None  # Graph in a MBQC model
         self.__pattern = None  # Measurement pattern in a MBQC model
 
@@ -58,41 +55,36 @@ class MBQC:
         self.__pos = None  # Position for drawing
 
     class Vertex:
-        r"""定义维护点列表，用于实例化一个 ``Vertex`` 对象。
+        r"""Define the list of maintenance point used for instantiate a ``Vertex`` object.
 
-        将 MBQC 算法中图的节点分为三类，并进行动态维护。
+        Device the nodes in MBQC to three classes and maintain them dynamically.
 
         Note:
-            这是内部类，用户不需要直接调用到该类。
+            This is an internal class and the users don't need to use it directly.
 
-        Attributes:
-            total (list): MBQC 算法中图上的全部节点，不随运算而改变
-            pending (list): 待激活的节点，随着运算的执行而逐渐减少
-            active (list): 激活的节点，与当前测量步骤直接相关的节点
-            measured (list): 已被测量过的节点，随着运算的执行而逐渐增加
+        Args:
+            total (list): a list contains all the nodes in MBQC diagram, irrespective of the computation process.
+            pending (list): a list contains the nodes to be activated. The number of nodes decreases as the operations
+            are performed.
+            active (list): a list contains the active nodes directly related to the current measurement operations.
+            measured (list): a list contains the nodes which have been measured. The number of nodes decreases as the
+            operations are performed.
+            
+        :meta private:
         """
-
         def __init__(self, total=None, pending=None, active=None, measured=None):
-            r"""``Vertex`` 类的构造函数，用于实例化一个 ``Vertex`` 对象。
-
-            Args:
-                total (list): MBQC 算法中图上的全部节点，不随运算而改变
-                pending (list): 待激活的节点，随着运算的执行而逐渐减少
-                active (list): 激活的节点，与当前测量步骤直接相关的节点
-                measured (list): 已被测量过的节点，随着运算的执行而逐渐增加
-            """
             self.total = [] if total is None else total
             self.pending = [] if pending is None else pending
             self.active = [] if active is None else active
             self.measured = [] if measured is None else measured
 
     def set_graph(self, graph):
-        r"""设置 MBQC 模型中的图。
+        r"""Set the graphs in MBQC model.
 
-        该函数用于将用户自己构造的图传递给 ``MBQC`` 实例。
+        The users can use this function to transport their own graphs to the ``MBQC`` object.
         
         Args:
-            graph (list): MBQC 模型中的图，由列表 ``[V, E]`` 给出， 其中 ``V`` 为节点列表，``E`` 为边列表
+            graph: The graphs in MBQC model. The list takes the form ``[V, E]``, where ``V`` are nodes, and ``E`` are edges.
         """
         vertices, edges = graph
 
@@ -106,23 +98,24 @@ class MBQC:
         self.vertex = self.Vertex(total=vertices, pending=vertices, active=[], measured=[])
 
     def get_graph(self):
-        r"""获取图的信息。
+        r"""Get the information of graphs.
 
         Returns:
-            nx.Graph: 图
+            nx.Graph: graph
         """
         return self.__graph
 
     def set_pattern(self, pattern):
-        r"""设置 MBQC 模型的测量模式。
+        r"""Set the measurement patterns of the MBQC model.
 
-        该函数用于将用户由电路图翻译得到或自己构造的测量模式传递给 ``MBQC`` 实例。
+        This function is used for transport the measurement patterns to ``MBQC`` object. The measurement patterns
+        are acquired by either translation from the quantum circuit or the construction of users.
 
         Warning:
-            输入的 pattern 参数是 ``Pattern`` 类型，其中命令列表为标准 ``EMC`` 命令。
+            The input pattern parameter is of type ``Pattern``, in which the command list contains ``EMC`` commands.
 
         Args:
-            pattern (Pattern): MBQC 算法对应的测量模式
+            pattern (Pattern): The measurement patterns corresponding to the MBQC algorithms.
         """
         assert isinstance(pattern, Pattern), "please input a pattern of type 'Pattern'."
 
@@ -143,22 +136,24 @@ class MBQC:
         self.set_graph(graph)
 
     def get_pattern(self):
-        r"""获取测量模式的信息。
+        r"""Get the information of the measurement patterns.
 
         Returns:
-            Pattern: 测量模式
+            Pattern: measurement pattern
         """
         return self.__pattern
 
     def set_input_state(self, state=None):
-        r"""设置需要替换的输入量子态。
+        r"""Set the input state to be replaced.
 
         Warning:
-            与电路模型不同，MBQC 模型通常默认初始态为加态。如果用户不调用此方法设置初始量子态，则默认为加态。
-            如果用户以测量模式运行 MBQC，则此处输入量子态的系统标签会被限制为从零开始的自然数，类型为整型。
+            Unlike the circuit model, the initial state of MBQC model is |+> state. If the users don't use
+            this method to initialize the quantum state, the initial state will be |+> state.
+            If the users run the MBQC model in measurement mode, the system labels of the input state here
+            will be restricted to natural number(start from 0) of ``int`` type.
 
         Args:
-            state (State): 需要替换的量子态，默认为加态
+            state: the input state to be replaced, the default is |+> state.
         """
         assert self.__graph is not None, "please set 'graph' or 'pattern' before calling 'set_input_state'."
         assert isinstance(state, State) or state is None, "please input a state of type 'State'."
@@ -189,14 +184,15 @@ class MBQC:
         self.max_active = len(self.vertex.active)
 
     def __set_position(self, pos):
-        r"""设置动态过程图绘制时节点的位置坐标。
+        r"""Set the coordinates of the nodes during the dynamical plotting process.
 
         Note:
-            这是内部方法，用户并不需要直接调用到该方法。
+            This is an internal method and the users don't need to use it directly.
 
         Args:
-            pos (dict or bool, optional): 节点坐标的字典数据或者内置的坐标选择，
-                                          内置的坐标选择有：``True`` 为测量模式自带的坐标，``False`` 为 ``spring_layout`` 坐标
+            pos (dict or bool, optional): the dict of the nodes' labels or built-in choice of coordinates.
+            The built-in choice of coordinates are: ``True`` is the coordinates of the measurement patterns,
+            ``False`` is the ``spring_layout`` coordinates.
         """
         assert isinstance(pos, bool) or isinstance(pos, dict), "'pos' should be either bool or dict."
         if isinstance(pos, dict):
@@ -208,14 +204,16 @@ class MBQC:
             self.__pos = spring_layout(self.__graph)  # Use 'spring_layout' otherwise
 
     def __draw_process(self, which_process, which_qubit):
-        r"""根据当前节点状态绘图，用以实时展示 MBQC 模型的模拟计算过程。
+        r""" Draw pictures according to the status of the nodes. This method is used for showing the
+            computation process of the MBQC model.
 
         Note:
-            这是内部方法，用户并不需要直接调用到该方法。
+            This is an internal method and the users don't need to use directly.
 
         Args:
-            which_process (str): MBQC 执行的阶段，"measuring", "active" 或者 "measured"
-            which_qubit (any): 当前关注的节点，可以是 ``str``, ``tuple`` 等任意数据类型，但需要和图的标签类型匹配
+            which_process (str): The status of MBQC model, "measuring", "active" or "measured"
+            which_qubit (any): the current focal node. Any type(e.g. ``str``, ``tuple``) can be input, but should
+            match the type of the labels of the graph.
         """
         if self.__draw:
             assert which_process in ["measuring", "active", "measured"]
@@ -269,13 +267,14 @@ class MBQC:
             plt.pause(self.__pause_time)
 
     def draw_process(self, draw=True, pos=False, pause_time=0.5):
-        r"""动态过程图绘制，用以实时展示 MBQC 模型的模拟计算过程。
+        r"""Dynamically plot the computation process of the MBQC model.
 
         Args:
-            draw (bool, optional): 是否绘制动态过程图的布尔开关
-            pos (bool or dict, optional): 节点坐标的字典数据或者内置的坐标选择，内置的坐标选择有：
-                                            ``True`` 为测量模式自带的坐标，``False`` 为 `spring_layout` 坐标
-            pause_time (float, optional): 绘制动态过程图时每次更新的停顿时间
+            draw (bool, optional): The boolean switch of whether plot the computation process.
+            pos (bool or dict, optional): the dict of the nodes' labels or built-in choice of coordinates. 
+                The built-in choice of coordinates are: ``True`` is the coordinates of the measurement patterns, 
+                ``False`` is the ``spring_layout`` coordinates.
+            pause_time (float, optional): The time step for updating the picture.
         """
         assert self.__graph is not None, "please set 'graph' or 'pattern' before calling 'draw_process'."
         assert isinstance(draw, bool), "'draw' must be bool."
@@ -291,25 +290,26 @@ class MBQC:
             self.__set_position(pos)
 
     def track_progress(self, track=True):
-        r""" 显示 MBQC 模型运行进度的开关。
+        r""" A switch for whether showing the progress bar of MBQC computation process.
 
         Args:
-            track (bool, optional): ``True`` 打开进度条显示功能， ``False`` 关闭进度条显示功能
+            track (bool, optional): ``True`` open the progress bar,  ``False`` close the progress bar.
         """
         assert isinstance(track, bool), "the parameter 'track' must be bool."
         self.__track = track
 
     def __apply_cz(self, which_qubits_list):
-        r"""对给定的两个比特作用控制 Z 门。
+        r"""Apply a controlled-Z gate to given two qubits.
 
         Note:
-            这是内部方法，用户并不需要直接调用到该方法。
+            This is an internal method and the users don't use it directly.
 
         Warning:
-            作用控制 Z 门的两个比特一定是被激活的。
+            The two qubits that the CZ gate applies to must be active.
 
         Args:
-            which_qubits_list (list): 作用控制 Z 门的比特对标签列表，例如 ``[(1, 2), (3, 4),...]``
+            which_qubits_list (list): A list contains the qubits that the CZ gate applies to.
+            e.g.``[(1, 2), (3, 4),...]``
         """
         for which_qubits in which_qubits_list:
             assert set(which_qubits).issubset(self.vertex.active), \
@@ -333,15 +333,16 @@ class MBQC:
             self.__bg_state = State(new_state.vector, new_state.system)
 
     def __apply_pauli_gate(self, gate, which_qubit):
-        r"""对给定的单比特作用 Pauli 门。
+        r"""Apply a Pauli gate to the given single qubit.
 
         Note:
-            这是内部方法，用户并不需要直接调用到该方法。
+            This is an internal method and the users don't use it directly.
 
         Args:
-            gate (str): Pauli 门的索引字符，"I", "X", "Y", "Z" 分别表示对应的门，在副产品处理时用 "X" 和 "Z" 门
-            which_qubit (any): 作用 Pauli 门的系统标签，
-                               可以是 ``str``, ``tuple`` 等任意数据类型，但需要和 MBQC 模型中节点的标签类型匹配
+            gate (str): Pauli gate, "I", "X", "Y", "Z". Use "X" and "Z" gate when correcting the byproduct.
+            which_qubit (any): The label of the system that the Pauli gate applies to. Any type
+            (e.g. ``str``, ``tuple`` ) can be used, as long as the type matches the type of labels of the
+            nodes in MBQC model.
         """
         new_state = permute_to_front(self.__bg_state, which_qubit)
         new_state_len = new_state.length
@@ -354,14 +355,15 @@ class MBQC:
         self.__bg_state = State(new_state.vector, new_state.system)
 
     def __create_graph_state(self, which_qubit):
-        r"""以待测量的比特为输入参数，生成测量当前节点所需要的最小的量子图态。
+        r""" Generate the minimal graph state for measuring the current node.
 
         Note:
-            这是内部方法，用户并不需要直接调用到该方法。
+            This is an internal method and the users don't use it directly.
 
         Args:
-            which_qubit (any): 待测量比特的系统标签。
-                                可以是 ``str``, ``tuple`` 等任意数据类型，但需要和 MBQC 模型中节点的标签类型匹配
+            which_qubit (any): The system labels of the qubit to be measured. Any type
+            (e.g. ``str``, ``tuple`` ) can be used, as long as the type matches the type of labels of the
+            nodes in MBQC model.
         """
         # Find the neighbors of 'which_qubit'
         which_qubit_neighbors = set(self.__graph.neighbors(which_qubit))
@@ -384,28 +386,32 @@ class MBQC:
         self.__draw_process("active", which_qubit)
 
     def __update(self):
-        r"""更新历史列表和量子态信息。
+        r"""Update the history and the quantum states' information.
         """
         self.__history.append(self.__bg_state)
         self.__status = self.__history[-1]
 
     def measure(self, which_qubit, basis_list):
-        r"""以待测量的比特和测量基为输入参数，对该比特进行测量。
+        r"""Measure given qubits with given measurement basis.
 
         Note:
-            这是用户在实例化 MBQC 类之后最常调用的方法之一，此处我们对单比特测量模拟进行了最大程度的优化，
-            随着用户对该函数的调用，MBQC 类将自动完成激活相关节点、生成所需的图态以及对特定比特进行测量的全过程，
-            并记录测量结果和对应测量后的量子态。用户每调用一次该函数，就完成一次对单比特的测量操作。
+            This is one of the most common methods we use after instantiating an MBQC object.
+            Here we optimize the single bit measurement simulation to the maximum extent.
+            Once use this method, the MBQC class will automatically activate the related nodes, generate
+            the corresponding graph state, measure specific qubits and store the results of the numerical
+            simulations.
 
         Warning:
-            当且仅当用户调用 ``measure`` 类方法时，MBQC 模型才真正进行运算。
+            If and only if the users use this method, the MBQC model carries out the computation.
 
         Args:
-            which_qubit (any): 待测量量子比特的系统标签，
-                                可以是 ``str``, ``tuple`` 等任意数据类型，但需要和 MBQC 模型的图上标签匹配
-            basis_list (list): 测量基向量构成的列表，列表元素为 ``Tensor`` 类型的列向量
+            which_qubit (any): The system labels of the qubit to be measured. Any type
+                (e.g. ``str``, ``tuple`` ) can be used, as long as the type matches the type of labels 
+                of the nodes in MBQC model.
+            basis_list (list): a list composed of measurement basis, the elements are column vectors
+                of type ``Tensor``.
 
-        代码示例：
+        Code example:
 
         .. code-block:: python
 
@@ -474,19 +480,22 @@ class MBQC:
         self.__draw_process("measured", which_qubit)
 
     def sum_outcomes(self, which_qubits, start=0):
-        r"""根据输入的量子系统标签，在存储测量结果的字典中找到对应的测量结果，并进行求和。
+        r"""Based on the input system labels, find the corresponding measurement results in the dict and sum over.
+
 
         Note:
-            在进行副产品纠正操作和定义适应性测量角度时，用户可以调用该方法对特定比特的测量结果求和。
-
+            When correcting the byproduct or defining the angle of adaptive measurement, one
+            can use this method to sum over the measurement results of given qubits.
+        
         Args:
-            which_qubits (list): 需要查找测量结果并求和的比特的系统标签列表
-            start (int): 对结果进行求和后需要额外相加的整数
+            which_qubits (list):the list contains the system labels of the nodes whose measurement
+                results should be find out and summed over.
+            start (int): an extra integer added to the results.
 
         Returns:
-            int: 指定比特的测量结果的和
+            int: The sum of the measurement results of given qubit.
 
-        代码示例：
+        Code example:
 
         .. code-block:: python
 
@@ -517,19 +526,20 @@ class MBQC:
         return sum([self.__outcome[label] for label in which_qubits], start)
 
     def correct_byproduct(self, gate, which_qubit, power):
-        r"""对测量后的量子态进行副产品纠正。
+        r"""Correct the byproduct of the measured quantum state.
 
         Note:
-            这是用户在实例化 MBQC 类并完成测量后，经常需要调用的一个方法。
+            This is a commonly used method after the measurement process of the MBQC model.
 
         Args:
-            gate (str): ``'X'`` 或者 ``'Z'``，分别表示 Pauli X 或 Z 门修正
-            which_qubit (any): 待操作的量子比特的系统标签，可以是 ``str``, ``tuple`` 等任意数据类型，但需要和 MBQC 中图的标签类型匹配
-            power (int): 副产品纠正算符的指数
+            gate (str): ``'X'`` or ``'Z'``, representing Pauli X or Pauli Z correction respectively.
+                which_qubit (any): The system labels of the qubit to be processed. Any type
+                (e.g. ``str``, ``tuple`` ) can be used, as long as the type matches the type of labels of the
+                nodes in MBQC model.
+            power (int): the index of the byproduct correcting.
 
-        代码示例：
-
-            此处展示的是 MBQC 模型下实现隐形传态的一个例子。
+        Code example:
+            Here is an example of quantum teleportation in MBQC framework.
 
         .. code-block:: python
 
@@ -565,10 +575,11 @@ class MBQC:
         self.__update()
 
     def __run_cmd(self, cmd):
-        r"""执行测量或副产品处理命令。
+        r"""Carry out the command of measurement or byproduct correction.
 
         Args:
-            cmd (Pattern.CommandM / Pattern.CommandX / Pattern.CommandZ): 测量或副产品处理命令
+            cmd (Pattern.CommandM / Pattern.CommandX / Pattern.CommandZ): the command of measurement
+            or byproduct correction.
         """
         assert cmd.name in ["M", "X", "Z"], "the input 'cmd' must be CommandM, CommandX or CommandZ."
         if cmd.name == "M":  # Execute measurement commands
@@ -583,12 +594,12 @@ class MBQC:
             self.correct_byproduct(cmd.name, cmd.which_qubit, power)
 
     def __run_cmd_lst(self, cmd_lst, bar_start, bar_end):
-        r"""对列表执行测量或副产品处理命令。
+        r"""Carry out a list of commands, including measurement and byproduct correction.
 
         Args:
-            cmd_lst (list): 命令列表，包含测量或副产品处理命令
-            bar_start (int): 进度条的开始点
-            bar_end (int): 进度条的结束点
+            cmd_lst (list): the list of commands, including measurement and byproduct correction.
+            bar_start (int): the starting point of the progress bar.
+            bar_end (int): the end point of the progress bar.
         """
         for i in range(len(cmd_lst)):
             cmd = cmd_lst[i]
@@ -596,10 +607,12 @@ class MBQC:
             print_progress((bar_start + i + 1) / bar_end, "Pattern Running Progress", self.__track)
 
     def __kron_unmeasured_qubits(self):
-        r"""该方法将没有被作用 CZ 纠缠的节点初始化为 |+> 态，并与当前的量子态做张量积。
+        r"""This method initialize the nodes without being applied by CZ gate to |+> state, and take the tensor
+        product between these nodes and the current quantum state.
 
         Warning:
-            该方法仅在用户输入测量模式时调用，当用户输入图时，如果节点没有被激活，我们默认用户没有对该节点进行任何操作。
+            This method is used when the users input the measurement patterns. When the users input a graph,
+            if the nodes are not activated, we deem the users do nothing to the node by default.
         """
         # Turn off the plot switch
         self.__draw = False
@@ -618,10 +631,10 @@ class MBQC:
         self.vertex.measured = measured_qubits
 
     def run_pattern(self):
-        r"""按照设置的测量模式对 MBQC 模型进行模拟。
+        r"""Run the MBQC model by the measurement patterns set before.
 
         Warning:
-            该方法必须在 ``set_pattern`` 调用后调用。
+            This method must be used after ``set_pattern``.
         """
         assert self.__pattern is not None, "please use this method after calling 'set_pattern'!"
 
@@ -643,18 +656,20 @@ class MBQC:
 
     @staticmethod
     def __map_qubit_to_row(out_lst):
-        r"""将输出比特的标签与行数对应起来，便于查找其对应关系。
+        r"""Construct a map between the labels of output qubits and the number of rows.
 
         Returns:
-            dict: 返回字典，代表行数与标签的对应关系
+            dict: return a dict representing the correspondence between labels and number of rows.
         """
         return {int(div_str_to_float(qubit[0])): qubit for qubit in out_lst}
 
     def get_classical_output(self):
-        r"""获取 MBQC 模型运行后的经典输出结果。
+        r"""Get the classical output of the MBQC model.
 
         Returns:
-            str or dict: 如果用户输入是测量模式，则返回测量输出节点得到的比特串，与原电路的测量结果相一致，没有被测量的比特位填充 "？"，如果用户输入是图，则返回所有节点的测量结果
+            str or dict: if the users input the measurement patterns, the method returns the bit strings of the
+            measurement results of the output qubits which is the same as the results of the circuit based model. The
+            qubits haven't been measured fills "?". If the input is graph, return the measurement results of all nodes.
         """
         # If the input is pattern, return the equivalent result as the circuit model
         if self.__pattern is not None:
@@ -678,40 +693,41 @@ class MBQC:
             return self.__outcome
 
     def get_history(self):
-        r"""获取 MBQC 计算模拟时的中间步骤信息。
+        r"""Get the information during the MBQC computation process.
 
         Returns:
-            list: 生成图态、进行测量、纠正副产品后运算结果构成的列表
+            list: the list of the results, including generate graph state, measurement and byproduct correction.
         """
         return self.__history
 
     def get_quantum_output(self):
-        r"""获取 MBQC 模型运行后的量子态输出结果。
+        r"""Get the quantum state output of the MBQC model.
 
         Returns:
-            State: MBQC 模型运行后的量子态
+            State: the quantum state output of the MBQC model.
         """
         return self.__status
 
 
 def simulate_by_mbqc(circuit, input_state=None):
-    r"""使用等价的 MBQC 模型模拟量子电路。
+    r"""Simulate the quantum circuit by equivalent MBQC model.
 
-    该函数通过将量子电路转化为等价的 MBQC 模型并运行，从而获得等价于原始量子电路的输出结果。
+    This function transform the quantum circuit to equivalent MBQC models and acquire output equivalent to the circuit
+    based model.
 
     Warning:
-        与 ``UAnsatz`` 不同，此处输入的 ``circuit`` 参数包含了测量操作。
-        另，MBQC 模型默认初始态为加态，因此，如果用户不输入参数 ``input_state`` 设置初始量子态，则默认为加态。
+        Unlike the ``UAnsatz``, the input ``circuit`` here contains the measurement operations.
+        By the way, if the users set ``input_state=None``, the initial state of the MBQC is |+> state.
 
     Args:
-        circuit (Circuit): 量子电路图
-        input_state (State, optional): 量子电路的初始量子态，默认为 :math:`|+\rangle` 态
+        circuit (Circuit): quantum circuit
+        input_state (State, optional): the initial state of quantum circuit, default to :math:`|+\rangle`.
 
     Returns:
-        tuple: 包含如下两个元素:
+        tuple: contains two elements:
 
-            - str: 经典输出
-            - State: 量子输出
+            - str: classical output
+            - State: quantum output
     """
     if input_state is not None:
         assert isinstance(input_state, State), "the 'input_state' must be of type 'State'."
@@ -729,15 +745,16 @@ def simulate_by_mbqc(circuit, input_state=None):
 
 
 def __get_sample_dict(bit_num, mea_bits, samples):
-    r"""根据比特数和测量比特索引的列表，统计采样结果。
+    r"""Make statistics of the sampling results based on the number of qubits and the list of the
+        index of the measured qubits.
 
     Args:
-        bit_num (int): 比特数
-        mea_bits (list): 测量的比特列表
-        samples (list): 采样结果
+        bit_num (int): number of qubits.
+        mea_bits (list): the list of the measured qubits.
+        samples (list): the list of the measurement results.
 
     Returns:
-        dict: 统计得到的采样结果
+        dict: the statistical results
     """
     sample_dict = {}
     for i in range(2 ** len(mea_bits)):
@@ -760,22 +777,24 @@ def __get_sample_dict(bit_num, mea_bits, samples):
 
 
 def sample_by_mbqc(circuit, input_state=None, plot=False, shots=1024, print_or_not=True):
-    r"""将 MBQC 模型重复运行多次，获得经典结果的统计分布。
+    r""" Repeatedly run the MBQC model and acquire the distributions of the results.
    
     Warning:
-        与 ``UAnsatz`` 不同，此处输入的 circuit 参数包含了测量操作。
-        另，MBQC 模型默认初始态为加态，因此，如果用户不输入参数 `input_state` 设置初始量子态，则默认为加态。
+        Unlike the ``UAnsatz``, the input ``circuit`` here contains the measurement operations.
+        By the way, if the users set ``input_state=None``, the initial state of the MBQC is |+> state.
 
     Args:
-        circuit (Circuit): 量子电路图
-        input_state (State, optional): 量子电路的初始量子态，默认为加态
-        plot (bool, optional): 绘制经典采样结果的柱状图开关，默认为关闭状态
-        shots (int, optional): 采样次数，默认为 1024 次
-        print_or_not (bool, optional): 是否打印采样结果和绘制采样进度，默认为开启状态
+        circuit (Circuit): quantum circuit
+        input_state (State, optional): the initial state of quantum circuit, default to |+>
+        plot (bool, optional): the boolean switch of whether plotting the histogram of the sampling results,
+        default to ``False``.
+        shots (int, optional): the number of samples, default to 1024.
+        print_or_not (bool, optional): boolean switch of whether print the sampling results and the progress bar,
+        default to open.
 
     Returns:
-        dict: 经典结果构成的频率字典
-        list: 经典测量结果和所有采样结果（包括经典输出和量子输出）的列表
+        dict: the frequency dict composed of the classical results.
+        list: the list contains all the sampling results(both quantum and classical).
     """
     # Initialize
     if shots == 1:

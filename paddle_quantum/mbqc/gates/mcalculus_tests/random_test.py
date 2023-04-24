@@ -14,7 +14,8 @@
 
 from numpy import random, pi
 from paddle import to_tensor
-from paddle_quantum.circuit import UAnsatz
+import paddle
+import paddle_quantum
 from paddle_quantum.mbqc.simulator import MBQC
 from paddle_quantum.mbqc.transpiler import transpile
 from paddle_quantum.mbqc.qobject import Circuit, State
@@ -26,18 +27,24 @@ theta = to_tensor(random.rand(n) * 2 * pi, dtype='float64')  # Generate random a
 # Instantiate a Circuit class
 cir_mbqc = Circuit(n)
 # Instantiate a UAnsatz class
-cir_ansatz = UAnsatz(n)
+cir_ansatz = paddle_quantum.Circuit(n)
 
 # Construct a circuit
-for cir in [cir_mbqc, cir_ansatz]:
-    for i in range(n):
-        cir.h(i)
-        cir.rx(theta[i], i)
-    cir.cnot([0, 1])
-    for i in range(n):
-        cir.ry(theta[i], i)
-        cir.rz(theta[i], i)
-
+# for cir in [cir_mbqc, cir_ansatz]:
+for i in range(n):
+    cir_mbqc.h(i)
+    cir_mbqc.rx(theta[i], i)
+cir_mbqc.cnot([0, 1])
+for i in range(n):
+    cir_mbqc.ry(theta[i], i)
+    cir_mbqc.rz(theta[i], i)
+for i in range(n):
+    cir_ansatz.h(i)
+    cir_ansatz.rx(i, param=theta[i])
+cir_ansatz.cnot([0, 1])
+for i in range(n):
+    cir_ansatz.ry(i, param=theta[i])
+    cir_ansatz.rz(i, param=theta[i])
 # Generate a random state vector
 input_psi = random_state_vector(n, is_real=False)
 # Transpile circuit to measurement pattern
@@ -50,7 +57,8 @@ mbqc.run_pattern()
 state_out = mbqc.get_quantum_output()
 
 # Find the standard result
-vec_ansatz = cir_ansatz.run_state_vector(input_psi.astype("complex128"))
+vec_ansatz = cir_ansatz(paddle_quantum.state.to_state(paddle.flatten(input_psi)))
+vec_ansatz = vec_ansatz.data
 system_ansatz = state_out.system
 state_ansatz = State(vec_ansatz, system_ansatz)
 compare_by_vector(state_out, state_ansatz)

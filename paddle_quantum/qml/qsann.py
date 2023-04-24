@@ -119,52 +119,34 @@ class QSANN(paddle.nn.Layer):
         embedding_state = pq.state.zero_state(num_qubits)
         for d in range(depth):
             for idx in range(num_qubits):
+                qubits_idx = [idx, (idx + 1) % num_qubits]
                 param_idx = 2 * num_qubits * d + 2 * idx
-                embedding_state = functional.rx(
-                    state=embedding_state, qubit_idx=idx,
-                    theta=params[param_idx][0],
-                    dtype=embedding_state.dtype, backend=embedding_state.backend
-                )
-                embedding_state = functional.ry(
-                    state=embedding_state, qubit_idx=idx,
-                    theta=params[param_idx][1],
-                    dtype=embedding_state.dtype, backend=embedding_state.backend
-                )
-                embedding_state = functional.rx(
-                    state=embedding_state, qubit_idx=(idx + 1) % num_qubits,
-                    theta=params[param_idx + 1][0],
-                    dtype=embedding_state.dtype, backend=embedding_state.backend
-                )
-                embedding_state = functional.ry(
-                    state=embedding_state, qubit_idx=(idx + 1) % num_qubits,
-                    theta=params[param_idx + 1][1],
-                    dtype=embedding_state.dtype, backend=embedding_state.backend
-                )
-                embedding_state = functional.cnot(
-                    state=embedding_state, qubit_idx=[idx, (idx + 1) % num_qubits],
-                    dtype=embedding_state.dtype, backend=embedding_state.backend
-                )
+                
+                cir = pq.Circuit(embedding_state.num_qubits)
+                cir.rx(qubits_idx, param=params[param_idx:param_idx+2][0])
+                cir.ry(qubits_idx, param=params[param_idx:param_idx+2][1])
+                cir.cnot(qubits_idx)
+                embedding_state = cir(embedding_state)
+        
         for idx in range(num_qubits):
             param_idx = 2 * num_qubits * depth + idx
-            embedding_state = functional.rx(
-                state=embedding_state, qubit_idx=idx, theta=params[param_idx][0],
-                dtype=embedding_state.dtype, backend=embedding_state.backend
-            )
-            embedding_state = functional.ry(
-                state=embedding_state, qubit_idx=idx, theta=params[param_idx][1],
-                dtype=embedding_state.dtype, backend=embedding_state.backend
-            )
+            
+            cir = pq.Circuit(embedding_state.num_qubits)
+            cir.rx(idx, param=params[param_idx][0])
+            cir.ry(idx, param=params[param_idx][1])
+            embedding_state = cir(embedding_state)
+        
         return embedding_state
 
     def forward(self, batch_text: List[List[int]]) -> List[paddle.Tensor]:
         r"""
-        The forward function to excute the model.
+        The forward function to execute the model.
 
         Args:
             batch_text: The batch of input texts. Each of them is a list of int.
 
         Returns:
-            Retrun a list which contains the predictions of the input texts.
+            Return a list which contains the predictions of the input texts.
         """
         predictions = []
         for text in batch_text:
@@ -477,7 +459,7 @@ def test(model: paddle.nn.Layer, model_path: str, test_loader: list) -> None:
 def inference(
         text: str, model_path: str, vocab_path: str, classes: List[str],
         num_qubits: int, num_layers: int, depth_ebd: int,
-        depth_query: int, depth_key: int, depth_value: int,
+        depth_query: int, depth_key: int, depth_value: int
 ) -> str:
     r"""
     The inference function. Using the trained model to predict new data.

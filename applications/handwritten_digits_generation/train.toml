@@ -1,0 +1,30 @@
+# The full config for training the QC-AAN model.
+# The mode of this config. Available values: 'train' | 'inference'.
+mode = 'train'
+# The name of the model, which is used to save the model.
+#model_name = 'qcaan-model'
+# The path to save the model. Both relative and absolute paths are allowed.
+# It saves the model to the current path by default.
+# saved_path = './'
+# The number of qubits which the quantum circuit contains.
+num_qubits = 8
+# The number of depths of complex entangled layers which the quantum circuit contains.
+num_depths = 4
+# The learning rate used to update the QNN parameters, default to 0.005.
+lr_qnn = 0.005
+# The batch size in each iteration
+batch_size = 128
+# Latent feature numbers which represents the input dimension of the generator.
+latent_dim = 16
+# The number of epochs to train the model.
+epochs = 21
+# The learning rate used to update the generator parameters, default to 0.0002.
+lr_g = 0.0002
+# The learning rate used to update the discriminator parameters, default to 0.0002.
+lr_d = 0.0002
+# The beta1 used in Adam optimizer of generator and discriminator, default to 0.5.
+beta1 = 0.5
+# The beta2 used in Adam optimizer of generator and discriminator, default to 0.9.
+beta2 = 0.9
+# The manual seed for reproducibility.
+manual_seed = 888

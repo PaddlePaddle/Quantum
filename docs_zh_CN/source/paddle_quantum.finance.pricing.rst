@@ -85,3 +85,51 @@ paddle\_quantum.finance.pricing
    .. py:method:: plot()
 
       画出在该方案中使用的量子电路。
+
+.. py:function:: cra_oracle(prob, param, lgd, threshold)
+
+    构建用于信贷风险估计的 Oracle。
+
+    :param prob: 隐变量的概率分布。
+    :type prob: numpy.ndarray
+    :param param: 资产对应的伯努利变量参数。
+    :type param: numpy.ndarray
+    :param lgd: 资产违约损失。
+    :type lgd: List[int]
+    :param threshold: VaR 的猜测值。
+    :type threshold: float
+   
+    :return: 即将用于 QAE 算法的 Grover 算子。
+    :rtype: paddle.Tensor
+
+.. py:class:: CreditRiskAnalyzer(num_assets, base_default_prob, sensitivity, lgd, confidence_level, degree_of_simulation=4, even_sample=True)
+
+   基类: :py:class:`object`
+
+   使用量子算法加速的信贷风险估计模拟器。
+
+   :param num_assets: 资产数量。
+   :type num_assets: int
+   :param base_default_prob: 基础违约概率。
+   :type base_default_prob: numpy.ndarray
+   :param sensitivity: 敏感度。
+   :type sensitivity: numpy.ndarray
+   :param lgd: 违约损失。
+   :type lgd: numpy.ndarray
+   :param confidence_level: 置信度。
+   :type confidence_level: float
+   :param degree_of_simulation: 模拟精度系数，默认为 ``4``。
+   :type degree_of_simulation: int
+   :param even_sample: 是否按照概率分布均匀采样，默认为 ``True``。
+   :type even_sample: bool
+
+   .. note::
+
+        信贷风险估计的数学模型根据 `Tarca 和 Silvio 提供的模型 <https://arxiv.org/abs/1412.1183>`_ 构建，即金融系统风险默认遵从标准正态分布。
+
+   .. py:method:: estimate_var()
+
+      使用量子振幅估计算法分析配置好的风险资产。
+
+    :return: 资产组合的在险价值。
+    :rtype: float

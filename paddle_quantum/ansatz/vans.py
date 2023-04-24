@@ -51,7 +51,7 @@ def cir_decompose(cir: Circuit, trainable: Optional[bool] = False) -> Circuit:
             continue
         
         if trainable:
-            param = param.reshape([1] + param.shape)
+            param = param.reshape([1] + [1] + param.shape)
             param = paddle.create_parameter(
                 shape=param.shape, dtype=param.dtype,
                 default_initializer=paddle.nn.initializer.Assign(param))

@@ -20,7 +20,6 @@ The source file of the unitary_matrix backend.
 import paddle
 from typing import List, Iterable, Union
 
-
 def unitary_transformation(
         state: paddle.Tensor, gate: paddle.Tensor, qubit_idx: Union[List[int], int], num_qubits: int
 ) -> paddle.Tensor:
@@ -91,3 +90,5 @@ def unitary_transformation(
         )
     state = paddle.reshape(state, higher_dims.copy() + [2 ** num_qubits, 2 ** num_qubits])
     return state
+
+# TODO Update same tensor contraction logic

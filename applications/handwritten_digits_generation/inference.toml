@@ -1,0 +1,15 @@
+# The full config for inferring the QC-AAN model.
+# The mode of this config. Available values: 'train' | 'inference'.
+mode = 'inference'
+# The name of the model, which is used to save the model.
+# model_name = 'qcaan-model'
+# The path to load the parameters of the trained model. Both relative and absolute paths are allowed.
+params_path = "params"
+# The number of qubits which the quantum circuit contains.
+num_qubits = 8
+# The number of depths of complex entangled layers which the quantum circuit contains.
+num_depths = 4
+# latent feature numbers which represents the input dimension of the generator.
+latent_dim = 16
+# The manual seed for reproducibility.
+manual_seed = 20230313

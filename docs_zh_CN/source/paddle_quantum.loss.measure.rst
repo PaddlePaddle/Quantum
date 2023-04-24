@@ -3,7 +3,7 @@ paddle\_quantum.loss.measure
 
 测量的损失函数的功能实现。
 
-.. py:class:: ExpecVal(hamiltonian, shots)
+.. py:class:: ExpecVal(hamiltonian, shots=0)
 
    基类：:py:class:`paddle_quantum.Operator`
 
@@ -16,7 +16,7 @@ paddle\_quantum.loss.measure
    :param shots: 测量的次数。默认是 ``0``，使用解析解。只有当后端为 QuLeaf 时，才需要指定该参数。
    :type shots: int, optional
 
-   .. py:method:: forward(state)
+   .. py:method:: forward(state, decompose=False)
 
       计算可观测量对于输入的量子态的期望值。
 
@@ -24,6 +24,8 @@ paddle\_quantum.loss.measure
 
       :param state: 输入量子态，它将被用来计算期望值。
       :type state: paddle_quantum.State
+      :param decompose: 输出每项可观测量的期望值。默认为 ``False``，表示返回输入量子态的期望值之和。
+      :type decompose: bool, optional
       :raises NotImplementedError: 所指定的后端必须为量桨已经实现的后端。
       :return: 计算得到的期望值，如果后端是 QuLeaf，则返回根据采样计算的到的结果。
       :rtype: paddle.Tensor

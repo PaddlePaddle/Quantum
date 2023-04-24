@@ -23,4 +23,4 @@ from .finance import(
     portfolio_diversification_hamiltonian,
     arbitrage_opportunities_hamiltonian
 )
-from .pricing import qae_alg, qae_cir, qmc_alg, EuroOptionEstimator
+from .pricing import qae_alg, qae_cir, qmc_alg, EuroOptionEstimator, CreditRiskAnalyzer

@@ -20,14 +20,14 @@ The source file of the oracle class and the control oracle class.
 import math
 import matplotlib
 import paddle
+from typing import Callable, List, Union, Iterable
 
 import warnings
 import paddle_quantum as pq
 from . import functional
-from .base import Gate
-from ..intrinsic import _format_qubits_idx
-from typing import Union, Iterable
+from .base import Gate, ParamGate
 from .functional.visual import _c_oracle_like_display, _oracle_like_display
+from ..intrinsic import _format_qubits_idx
 
 
 class Oracle(Gate):
@@ -40,36 +40,10 @@ class Oracle(Gate):
         depth: Number of layers. Defaults to ``1``.
     """
     def __init__(
-            self, oracle: paddle.Tensor, qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int],
+            self, oracle: paddle.Tensor, qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int] = None,
             num_qubits: int = None, depth: int = 1, gate_info: dict = None
     ):
-        super().__init__(depth)
-        complex_dtype = pq.get_dtype()
-        oracle = oracle.cast(complex_dtype)
-
-        dimension = oracle.shape[0]
-        err = paddle.norm(paddle.abs(oracle @ paddle.conj(oracle.T) - paddle.cast(paddle.eye(dimension), complex_dtype))).item()
-        if err > min(1e-6 * dimension, 0.01):
-            warnings.warn(
-                f"\nThe input oracle may not be a unitary: norm(U * U^d - I) = {err}.", UserWarning)
-
-        num_acted_qubits = int(math.log2(dimension))
-        self.oracle = oracle
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits)
-
-        self.gate_info = {
-            'gatename': 'O',
-            'texname': r'$O$',
-            'plot_width': 0.6,
-        }
-        if gate_info:
-            self.gate_info.update(gate_info)
-
-    def forward(self, state: pq.State) -> pq.State:
-        for _ in range(self.depth):
-            for qubits_idx in self.qubits_idx:
-                state = functional.oracle(state, self.oracle, qubits_idx, self.backend)
-        return state
+        super().__init__(oracle, qubits_idx, depth, gate_info, num_qubits)
     
     def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
         return _oracle_like_display(self, ax, x)
@@ -88,38 +62,47 @@ class ControlOracle(Gate):
             self, oracle: paddle.Tensor, qubits_idx: Union[Iterable[Iterable[int]], Iterable[int]],
             num_qubits: int = None, depth: int = 1, gate_info: dict = None
     ) -> None:
-        super().__init__(depth)
-        complex_dtype = pq.get_dtype()
-        oracle = oracle.cast(complex_dtype)
+        complex_dtype = oracle.dtype
         
         dimension = oracle.shape[0]
-        err = paddle.norm(paddle.abs(oracle @ paddle.conj(oracle.T) - paddle.cast(paddle.eye(dimension), complex_dtype))).item()
-        if  err > min(1e-6 * dimension, 0.01):
-            warnings.warn(
-                f"\nThe input oracle may not be a unitary: norm(U * U^d - I) = {err}.", UserWarning)
-
-        num_acted_qubits = int(math.log2(dimension))
         oracle = (
-            paddle.kron(paddle.to_tensor([[1.0, 0], [0, 0]], dtype=complex_dtype), paddle.eye(2 ** num_acted_qubits)) +
+            paddle.kron(paddle.to_tensor([[1.0, 0], [0, 0]], dtype=complex_dtype), paddle.eye(dimension).cast(complex_dtype)) +
             paddle.kron(paddle.to_tensor([[0.0, 0], [0, 1]], dtype=complex_dtype), oracle)
         )
-        num_acted_qubits += 1
-        self.oracle = oracle
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits, num_acted_qubits)
 
-        self.gate_info = {
+        default_gate_info = {
             'gatename': 'cO',
             'texname': r'$O$',
             'plot_width': 0.6,
         }
-        if gate_info:
-            self.gate_info.update(gate_info)
-
-    def forward(self, state: pq.State) -> pq.State:
-        for _ in range(self.depth):
-            for qubits_idx in self.qubits_idx:
-                state = functional.oracle(state, self.oracle, qubits_idx, self.backend)
-        return state
+        if gate_info is not None:
+            default_gate_info.update(gate_info)
+        super().__init__(oracle, qubits_idx, depth, gate_info, num_qubits)
 
     def display_in_circuit(self, ax: matplotlib.axes.Axes, x: float,) -> float:
         return _c_oracle_like_display(self, ax, x)
+
+
+class ParamOracle(ParamGate):
+    """An parameterized oracle as a gate
+
+    Args:
+        generator: function that generates the oracle.
+        param: input parameters of quantum parameterized gates. Defaults to ``None`` i.e. randomized.
+        qubits_idx: indices of the qubits on which this gate acts on. Defaults to ``None`` i.e. list(range(num_qubits)).
+        depth: number of layers. Defaults to ``1``.
+        num_acted_param: the number of parameters required for a single operation.
+        param_sharing: whether all operations are shared by the same parameter set.
+        gate_info: information of this gate that will be placed into the gate history or plotted by a Circuit. 
+        Defaults to ``None``.
+        num_qubits: total number of qubits. Defaults to ``None``.
+
+    """
+    def __init__(
+            self, generator: Callable[[paddle.Tensor], paddle.Tensor],
+            param: Union[paddle.Tensor, float, List[float]] = None,
+            depth: int = 1, num_acted_param: int = 1, param_sharing: bool = False,
+            qubits_idx: Union[Iterable[Iterable[int]], Iterable[int], int] = None,
+            gate_info: dict = None, num_qubits: int = None
+    ):
+        super().__init__(generator, param, depth, num_acted_param, param_sharing, qubits_idx, gate_info, num_qubits)

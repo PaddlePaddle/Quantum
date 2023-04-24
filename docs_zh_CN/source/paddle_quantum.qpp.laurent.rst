@@ -12,15 +12,6 @@ paddle\_quantum.qpp.laurent
    :param coef: 劳伦多项式系数的列表，排列为 :math:`\{p_{-L}, ..., p_{-1}, p_0, p_1, ..., p_L\}`
    :type coef: np.ndarray
 
-   .. py:method:: __call__(X)
-
-      计算P(X)的值
-      :param X: 输入X
-      :type X: Union[int, float, complex]
-
-      :return: P(X)
-      :rtype: complex
-
    .. py:property:: coef()
 
       以上升顺序给出多项式的系数序列
@@ -44,51 +35,6 @@ paddle\_quantum.qpp.laurent
    .. py:property:: parity()
 
       给出多项式的宇称
-      
-   .. py:method:: __copy__()
-
-      复制劳伦多项式
-
-      :return: 复制后的多项式
-      :rtype: Laurent
-
-   .. py:method:: __add__(other)
-
-      劳伦多项式的相加
-
-      :param other: 一个标量或一个劳伦多项式 :math:`Q(x) = \sum_{j = -L}^{L} q_{j} X^j`
-      :type other: Any
-
-      :raises TypeError: 不支持劳伦多项式和others的相加
-
-   .. py:method:: __mul__(other)
-
-      劳伦多项式的相乘
-
-      :param other: 一个标量或一个劳伦多项式 :math:`Q(x) = \sum_{j = -L}^{L} q_{j} X^j`
-      :type other: Any
-
-      :raises TypeError: 不支持劳伦多项式和others的相乘
-
-   .. py:method:: __sub__(other)
-
-      劳伦多项式的相减
-
-      :param other: 一个标量或一个劳伦多项式 :math:`Q(x) = \sum_{j = -L}^{L} q_{j} X^j`
-      :type other: Any
-
-   .. py:method:: __eq__(other)
-
-      劳伦多项式的相等
-
-      :param other: 一个标量或一个劳伦多项式 :math:`Q(x) = \sum_{j = -L}^{L} q_{j} X^j`
-      :type other: Any
-
-      :raises TypeError: 不支持劳伦多项式和 ``others`` 的相等
-
-   .. py:method:: __str__()
-
-      打印劳伦多项式
 
    .. py:method:: is_parity(p)
 

@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-此模块包含量子信息处理的常用对象，如量子态、量子电路、测量模式等。
+r"""
+This module contains the commonly used class in quantum information, e.g. quantum state, quantum circuit and measurement
+patterns.
 """
 
 from numpy import log2, sqrt
@@ -27,19 +28,19 @@ __all__ = [
 
 
 class State:
-    r"""定义量子态。
+    r"""Define the quantum state.
 
     Attributes:
-        vector (Tensor): 量子态的列向量
-        system (list): 量子态的系统标签列表
+        vector (Tensor): the column vector of the quantum state.
+        system (list): the list of system labels of the quantum state.
     """
 
     def __init__(self, vector=None, system=None):
-        r"""构造函数，用于实例化一个 ``"State"`` 量子态对象。
+        r""" the constructor for initialize an object of the class `` "State`` .
 
         Args:
-            vector (Tensor, optional): 量子态的列向量
-            system (list, optional): 量子态的系统标签列表
+            vector (Tensor, optional): the column vector of the quantum state.
+            system (list, optional): the list of system labels of the quantum state.
         """
         if vector is None and system is None:
             self.vector = to_tensor([1], dtype='float64')  # A trivial state
@@ -62,7 +63,7 @@ class State:
         self.norm = sqrt(matmul(t(conj(self.vector)), self.vector).numpy())
 
     def __str__(self):
-        r"""打印该 ``State`` 类的信息，便于用户查看。
+        r"""print the information of this class
         """
         class_type_str = "State"
         vector_str = str(self.vector.numpy())
@@ -78,23 +79,25 @@ class State:
 
 
 class Circuit:
-    r"""定义量子电路。
+    r"""Define the quantum circuit.
 
     Note:
-        该类与 ``UAnsatz`` 类似，用户可以仿照 ``UAnsatz`` 电路的调用方式对此类进行实例化，完成电路图的构建。
+        This class is similar to ``UAnsatz``, one can imitate the use of ``UAnsatz`` to instantiate this class and
+        construct the circuit diagram.
 
     Warning:
-        当前版本仅支持 ``H, X, Y, Z, S, T, Rx, Ry, Rz, Rz_5, U, CNOT, CNOT_15, CZ`` 中的量子门以及测量操作。
+        The current version supports the quantum operations(gates and measurement) in ``H, X, Y, Z, S, T, Rx, Ry,
+        Rz, Rz_5, U, CNOT, CNOT_15, CZ``.
 
     Attributes:
-        width (int): 电路的宽度（比特数）
+        width (int): The width of the circuit(number of qubits).
     """
 
     def __init__(self, width):
-        r"""``Circuit`` 的构造函数，用于实例化一个 ``Circuit`` 对象。
+        r""" The constructor of the class ``Circuit`` used of instantiate an object.
 
         Args:
-            width (int): 电路的宽度（比特数）
+            width (int): The width of the circuit(number of qubits).
         """
         assert isinstance(width, int), "circuit 'width' must be a int."
         self.__history = []  # A list to record the circuit information
@@ -102,18 +105,18 @@ class Circuit:
         self.__width = width  # The width of circuit
 
     def h(self, which_qubit):
-        r"""添加 ``Hadamard`` 门。
+        r"""Add a ``Hadamard`` gate.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \frac{1}{\sqrt{2}}\begin{bmatrix} 1&1\\1&-1 \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用量子门的量子位编号
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         .. code-block:: python
 
@@ -134,18 +137,18 @@ class Circuit:
         self.__history.append(['h', [which_qubit], None])
 
     def x(self, which_qubit):
-        r"""添加 ``Pauli X`` 门。
+        r"""Add a ``Pauli X`` gate.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用量子门的量子位编号
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         .. code-block:: python
 
@@ -166,18 +169,18 @@ class Circuit:
         self.__history.append(['x', [which_qubit], None])
 
     def y(self, which_qubit):
-        r"""添加 ``Pauli Y`` 门。
+        r"""Add a ``Pauli Y`` gate.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} 0 & -i \\ i & 0 \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用量子门的量子位编号
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         .. code-block:: python
 
@@ -198,18 +201,18 @@ class Circuit:
         self.__history.append(['y', [which_qubit], None])
 
     def z(self, which_qubit):
-        r"""添加 ``Pauli Z`` 门。
+        r"""Add a ``Pauli Z`` gate.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用量子门的量子位编号
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         .. code-block:: python
 
@@ -230,18 +233,18 @@ class Circuit:
         self.__history.append(['z', [which_qubit], None])
 
     def s(self, which_qubit):
-        r"""添加 ``S`` 门。
+        r"""Add a ``S`` gate.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} 1&0\\0& i \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用量子门的量子位编号
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         .. code-block:: python
 
@@ -262,18 +265,18 @@ class Circuit:
         self.__history.append(['s', [which_qubit], None])
 
     def t(self, which_qubit):
-        r"""添加 ``T`` 门。
+        r"""Add ``T`` gate.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} 1&0\\0& e^{i\pi/ 4} \end{bmatrix}
 
         Args:
-            which_qubit (int): 作用量子门的量子位编号
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         .. code-block:: python
 
@@ -294,19 +297,19 @@ class Circuit:
         self.__history.append(['t', [which_qubit], None])
 
     def rx(self, theta, which_qubit):
-        r"""添加关于 x 轴的旋转门。
+        r"""Add a rotation gate in x direction.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} \cos\frac{\theta}{2} & -i\sin\frac{\theta}{2} \\ -i\sin\frac{\theta}{2} & \cos\frac{\theta}{2} \end{bmatrix}
 
         Args:
-            theta (Tensor): 旋转角度
-            which_qubit (int): 作用量子门的量子位编号
+            theta (Tensor): rotation angle
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         ..  code-block:: python
 
@@ -330,19 +333,19 @@ class Circuit:
         self.__history.append(['rx', [which_qubit], theta])
 
     def ry(self, theta, which_qubit):
-        r"""添加关于 y 轴的旋转门。
+        r"""Add a rotation gate in y direction.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} \cos\frac{\theta}{2} & -\sin\frac{\theta}{2} \\ \sin\frac{\theta}{2} & \cos\frac{\theta}{2} \end{bmatrix}
 
         Args:
-            theta (Tensor): 旋转角度
-            which_qubit (int): 作用量子门的量子位编号
+            theta (Tensor): rotation angle
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         ..  code-block:: python
 
@@ -366,19 +369,19 @@ class Circuit:
         self.__history.append(['ry', [which_qubit], theta])
 
     def rz(self, theta, which_qubit):
-        r"""添加关于 z 轴的旋转门。
+        r"""Add a rotation gate in z direction.
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} 1 & 0 \\ 0 & e^{i\theta} \end{bmatrix}
 
         Args:
-            theta (Tensor): 旋转角度
-            which_qubit (int): 作用量子门的量子位编号
+            theta (Tensor): rotation angle
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         ..  code-block:: python
 
@@ -402,19 +405,20 @@ class Circuit:
         self.__history.append(['rz', [which_qubit], theta])
 
     def rz_5(self, theta, which_qubit):
-        r"""添加关于 z 轴的旋转门（该旋转门对应的测量模式由五个量子比特构成）。
+        r"""Add a rotation gate in the z direction(the measurement pattern corresponding to this gate
+        is composed of five qubits).
 
-        其矩阵形式为：
+        The matrix form:
 
         .. math::
 
             \begin{bmatrix} 1 & 0 \\ 0 & e^{i\theta} \end{bmatrix}
 
         Args:
-            theta (Tensor): 旋转角度
-            which_qubit (int): 作用量子门的量子位编号
+            theta (Tensor): rotation angle
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         ..  code-block:: python
 
@@ -438,22 +442,23 @@ class Circuit:
         self.__history.append(['rz_5', [which_qubit], theta])
 
     def u(self, params, which_qubit):
-        r"""添加单量子比特的任意酉门。
+        r"""Add a general single qubit gate.
 
         Warning:
-            与 ``UAnsatz`` 类中的 U3 的三个参数不同，这里的酉门采用 ``Rz Rx Rz`` 分解，
+            Different from the 3 parameters of the U3 gate in ``UAnsatz``  class，
+            the unitary here adopts a ``Rz Rx Rz`` decomposition.
 
-        其分解形式为：
+        The decomposition takes the form:
 
         .. math::
 
             U(\alpha, \beta, \gamma) = Rz(\gamma) Rx(\beta) Rz(\alpha)
 
         Args:
-            params (list): 单比特酉门的三个旋转角度
-            which_qubit (int): 作用量子门的量子位编号
+            params (list): three rotation angles of the unitary gate
+            which_qubit (int): The number(No.) of the qubit that the gate applies to.
 
-        代码示例：
+        Code example:
 
         ..  code-block:: python
 
@@ -485,18 +490,19 @@ class Circuit:
         self.__history.append(['u', [which_qubit], params])
 
     def cnot(self, which_qubits):
-        r"""添加控制非门。
+        r"""Add a CNOT gate.
 
-        当 ``which_qubits`` 为 ``[0, 1]`` 时，其矩阵形式为：
+        When  ``which_qubits`` is ``[0, 1]`` ，the matrix form is:
 
         .. math::
 
             \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{bmatrix}
 
         Args:
-            which_qubits (list): 作用量子门的量子位，其中列表第一个元素为控制位，第二个元素为受控位
+            which_qubits (list): A two element list contains the qubits that the CNOT gate applies to, the first
+                element is the control qubit, the second is the target qubit.
 
-        代码示例：
+        Code example:
 
         ..  code-block:: python
 
@@ -522,18 +528,19 @@ class Circuit:
         self.__history.append(['cnot', which_qubits, None])
 
     def cnot_15(self, which_qubits):
-        r"""添加控制非门 （该门对应的测量模式由十五个量子比特构成）。
+        r"""Add a CNOT gate(the measurement pattern corresponding to this gate is composed of 15 qubits).
 
-        当 ``which_qubits`` 为 ``[0, 1]`` 时，其矩阵形式为：
+        When ``which_qubits`` is ``[0, 1]`` ，the matrix form is:
 
         .. math::
 
             \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{bmatrix}
 
         Args:
-            which_qubits (list): 作用量子门的量子位，其中列表第一个元素为控制位，第二个元素为受控位
+            which_qubits (list): A two element list contains the qubits that the CNOT gate applies to, the first
+                element is the control qubit, the second is the target qubit.
 
-        代码示例：
+        Code example:
 
         ..  code-block:: python
 
@@ -559,18 +566,19 @@ class Circuit:
         self.__history.append(['cnot_15', which_qubits, None])
 
     def cz(self, which_qubits):
-        r"""添加控制 Z 门。
+        r"""Add a controlled-Z gate.
 
-        当 ``which_qubits`` 为 ``[0, 1]`` 时，其矩阵形式为：
+        When ``which_qubits`` is ``[0, 1]`` ，the matrix form is:
 
         .. math::
 
             \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & -1 \end{bmatrix}
 
         Args:
-            which_qubits (list): 作用量子门的量子位，其中列表第一个元素为控制位，第二个元素为受控位
+            which_qubits (list): A two element list contains the qubits that the CZ gate applies to, the first
+                element is the control qubit, the second is the target qubit.
 
-        代码示例：
+        Code example:
 
         ..  code-block:: python
 
@@ -596,22 +604,25 @@ class Circuit:
         self.__history.append(['cz', which_qubits, None])
 
     def measure(self, which_qubit=None, basis_list=None):
-        r"""对量子电路输出的量子态进行测量。
+        r"""Measure the output state of the quantum circuit.
 
         Note:
-            与 ``UAnsatz`` 类中的测量不同，除默认的 Z 测量外，此处的测量方式可以由用户自定义，但需要将测量方式与测量比特相对应。
+            Unlike the measurement operations in the ``UAnsatz`` class, besides the default measurement in Z basis,
+            the users can define the measurement ways themselves by providing the measurement basis and the qubits
+            to be measured.
 
         Warning:
-            此方法只接受三种输入方式：
-            1. 不输入任何参数，表示对所有的量子位进行 Z 测量；
-            2. 输入量子位，但不输入测量基，表示对输入的量子位进行 Z 测量；
-            3. 输入量子位和对应测量基，表示对输入量子位进行指定的测量。
-            如果用户希望自定义测量基参数，需要注意输入格式为 ``[angle, plane, domain_s, domain_t]``，
-            且当前版本的测量平面 ``plane`` 只能支持 ``XY`` 或 ``YZ``。
+            There are three kinds of inputs:
+            1. which_qubit=None,basis_list=None(default): measure all the qubits in Z basis.
+            2. which_qubit=input, basis_list=None: measure the input qubit in Z basis.
+            3. which_qubit=input1, basis_list=input2: measure the input1 qubit by the basis in input2.
+            If the users want to define the measurement basis themselves, the input format looks like:
+            ``[angle,plane,domain_s,domain_t]``. By the way,in the current version paddle_quantum, the
+            ``plane`` parameter can only take ``XY`` or ``YZ``.
 
         Args:
-            which_qubit (int, optional): 被测量的量子位
-            basis_list (list, optional): 测量方式
+            which_qubit (int, optional): the qubit to be measured
+            basis_list (list, optional): measurement basis
         """
         # Measure all the qubits by Z measurement
         if which_qubit is None and basis_list is None:
@@ -645,12 +656,12 @@ class Circuit:
             raise ValueError("such a combination of input parameters is not supported. Please see our API for details.")
 
     def is_valid(self):
-        r"""检查输入的量子电路是否符合规定。
+        r"""Check that if the circuit is valid.
 
-        我们规定输入的量子电路中，每一个量子位上至少作用一个量子门。
+        We require that for each qubit in the quantum circuit, at least one quantum gate should be applied to it.
 
         Returns:
-            bool: 量子电路是否符合规定的布尔值
+            bool: the boolean values of whether the quantum circuit is valid.
         """
         all_qubits = []
         for gate in self.__history:
@@ -661,36 +672,36 @@ class Circuit:
         return self.__width == len(effective_qubits)
 
     def get_width(self):
-        r"""返回量子电路的宽度。
+        r"""Return the width of the quantum circuit.
 
         Returns:
-           int: 量子电路的宽度
+           int: the width of the quantum circuit.
         """
         return self.__width
 
     def get_circuit(self):
-        r"""返回量子电路列表。
+        r"""Return the list of quantum circuits.
 
         Returns:
-            list: 量子电路列表
+            list: the list of quantum circuits
         """
         return self.__history
 
     def get_measured_qubits(self):
-        r"""返回量子电路中测量的比特位。
+        r"""Return the list of measured qubits in the quantum circuit.
 
         Returns:
-            list: 量子电路中测量的比特位列表
+            list: the list of measured qubits in the quantum circuit.
         """
         return self.__measured_qubits
 
     def print_circuit_list(self):
-        r"""打印电路图的列表。
+        r"""Print the list of the circuit.
 
         Returns:
-            string: 用来打印的字符串
+            string: the strings to be printed
 
-        代码示例:
+        Code example:
 
         .. code-block:: python
 
@@ -742,27 +753,27 @@ class Circuit:
 
 
 class Pattern:
-    r"""定义测量模式。
+    r"""Define the measurement pattern.
 
-    该测量模式的结构依据文献 [The measurement calculus, arXiv: 0704.1263]。
+    see more details of the measurement pattern in [The measurement calculus, arXiv: 0704.1263].
 
     Attributes:
-        name (str): 测量模式的名称
-        space (list): 测量模式所有节点列表
-        input_ (list): 测量模式的输入节点列表
-        output_ (list): 测量模式的输出节点列表
-        commands (list): 测量模式的命令列表
+        name (str): the name of the measurement pattern.
+        space (list): the list contains all the nodes of the measurement pattern.
+        input_ (list): the list contains the input nodes of the measurement pattern.
+        output_ (list): the list contains the output nodes of the measurement pattern.
+        commands (list): the list contains the commands of the measurement pattern.
     """
 
     def __init__(self, name, space, input_, output_, commands):
-        r"""构造函数，用于实例化一个 ``Pattern`` 对象。
+        r"""Constructor of the class ``Pattern`` used for instantiated an object.
 
         Args:
-            name (str): 测量模式的名称
-            space (list): 测量模式所有节点列表
-            input_ (list): 测量模式的输入节点列表
-            output_ (list): 测量模式的输出节点列表
-            commands (list): 测量模式的命令列表
+            name (str): the name of the measurement pattern.
+            space (list): the list contains all the nodes of the measurement pattern.
+            input_ (list): the list contains the input nodes of the measurement pattern.
+            output_ (list): the list contains the output nodes of the measurement pattern.
+            commands (list): the list contains the commands of the measurement pattern.
         """
         self.name = name
         self.space = space
@@ -771,59 +782,67 @@ class Pattern:
         self.commands = commands
 
     class CommandE:
-        r"""定义纠缠命令类。
+        r"""Define the class ``CommandE`` corresponding to some entanglement commands.
 
         Note:
-            此处纠缠命令对应作用控制 Z 门。
+            The entanglement command here corresponds to the controlled-Z gate.
 
         Attributes:
-            which_qubits (list): 作用纠缠命令的两个节点标签构成的列表
+            which_qubits (list): A two-element list contains the labels of the node
+            that the entanglement command applies to.
         """
 
         def __init__(self, which_qubits):
-            r"""纠缠命令类构造函数，用于实例化一个 ``CommandE`` 对象。
+            r""" Constructor of the ``CommandE`` class used for instantiate an object.
 
             Args:
-                which_qubits (list): 作用纠缠命令的两个节点标签构成的列表
+                which_qubits (list): A two-element list contains the labels of the node
+            that the entanglement command applies to.
             """
             self.name = "E"
             self.which_qubits = which_qubits
 
     class CommandM:
-        r"""定义测量命令类。
+        r"""Define the ``CommandM`` class corresponding to the measurement commands.
 
-        测量命令有五个属性，分别为测量比特的标签 ``which_qubit``，原始的测量角度 ``angle``，
-        测量平面 ``plane``，域 s 对应的节点标签列表 ``domain_s``，域 t 对应的节点标签列表 ``domain_t``。
-        设原始角度为 :math:`\alpha`，则考虑域中节点依赖关系后的测量角度 :math:`\theta` 为：
+        ``CommandM`` has 5 attributes, including:
+            1.which_qubit: the qubit to be measured.
+            2.angle: the original measurement angle.
+            3.plane: the measurement plane.
+            4.domain_s: the node list corresponding to domain s.
+            5.domain_t: the node list corresponding to domain t.
 
+        The original angle :math:`\alpha` is transformed into :math:`\theta` as:
         .. math::
 
             \theta = (-1)^s \times \alpha + t \times \pi
+        after considering the node dependence in the domain.
 
         Note:
-            域 s 和域 t 是 MBQC 模型中的概念，分别记录了 Pauli X 算符和 Pauli Z 算符对测量角度产生的影响，
-            二者共同记录了该测量节点对其他节点的测量结果的依赖关系。
+            Domain s(domain t) is the concept in MBQC containing the influence on the measurement angles induced
+            by Pauli X(Pauli Z) operator. Both of them record the dependence of the measurement node on the
+            measurement results of other nodes.
 
         Warning:
-            该命令当前只支持 XY 和 YZ 平面的测量。
+            Only measurements in "XY" and "YZ" planes are allowed in this version.
 
         Attributes:
-            which_qubit (any): 作用测量命令的节点标签
-            angle (Tensor): 原始的测量角度
-            plane (str): 测量平面
-            domain_s (list): 域 s 对应的节点标签列表
-            domain_t (list): 域 t 对应的节点标签列表
+            which_qubit (any): the qubit to be measured.
+            angle (Tensor): the original measurement angle.
+            plane (str): the measurement plane.
+            domain_s (list): the node list corresponding to domain s.
+            domain_t (list): the node list corresponding to domain t.
         """
 
         def __init__(self, which_qubit, angle, plane, domain_s, domain_t):
-            r"""构造函数，用于实例化一个 ``CommandM`` 对象。
+            r"""The constructor of the ``CommandM`` class used for instantiated an object.
 
             Args:
-                which_qubit (any): 作用测量命令的节点标签
-                angle (Tensor): 原始的测量角度
-                plane (str): 测量平面
-                domain_s (list): 域 s 对应的节点标签列表
-                domain_t (list): 域 t 对应的节点标签列表
+                which_qubit (any): the qubit to be measured.
+                angle (Tensor): the original measurement angle.
+                plane (str): the measurement plane.
+                domain_s (list): the node list corresponding to domain s.
+                domain_t (list): the node list corresponding to domain t.
             """
             self.name = "M"
             self.which_qubit = which_qubit
@@ -833,69 +852,70 @@ class Pattern:
             self.domain_t = domain_t
 
     class CommandX:
-        r"""定义 Pauli X 副产品修正命令类。
+        r"""Define the ``CommandX`` class used for correcting the byproduct induced by Pauli X.
 
         Attributes:
-            which_qubit (any): 作用修正算符的节点标签
-            domain (list): 依赖关系列表
+            which_qubit (any): the label of the qubit that the correcting operator applies to.
+            domain (list): the list contains the dependence relation.
         """
 
         def __init__(self, which_qubit, domain):
-            r"""构造函数，用于实例化一个 ``CommandX`` 对象。
+            r"""The constructor of the ``CommandX`` class used for instantiated an object.
 
             Args:
-                which_qubit (any): 作用修正算符的节点标签
-                domain (list): 依赖关系列表
+                which_qubit (any): the label of the qubit that the correcting operator applies to.
+                domain (list): the list contains the dependence relation.
             """
             self.name = "X"
             self.which_qubit = which_qubit
             self.domain = domain
 
     class CommandZ:
-        r"""定义 Pauli Z 副产品修正命令。
+        r"""Define the ``CommandZ`` class used for correcting the byproduct induced by Pauli Z.
 
         Attributes:
-            which_qubit (any): 作用修正命令的节点标签
-            domain (list): 依赖关系列表
+            which_qubit (any): the label of the qubit that the correcting operator applies to.
+            domain (list): the list contains the dependence relation.
         """
 
         def __init__(self, which_qubit, domain):
-            r"""构造函数，用于实例化一个 ``CommandZ`` 对象。
+            r"""The constructor of the ``CommandZ`` class used for instantiated an object.
 
             Args:
-                which_qubit (any): 作用修正命令的节点标签
-                domain (list): 依赖关系列表
+                which_qubit (any): the label of the qubit that the correcting operator applies to.
+                domain (list): the list contains the dependence relation.
             """
             self.name = "Z"
             self.which_qubit = which_qubit
             self.domain = domain
 
     class CommandS:
-        r"""定义 "信号转移" 命令类。
+        r"""Define the ``CommandS`` class used for signal shifting.
 
         Note:
-            "信号转移" 是一类特殊的操作，用于消除测量命令对域 t 中节点的依赖关系，在某些情况下对测量模式进行简化。
+            Signal shifting is a class of special operations used for eliminating the measurement operations' dependence
+            on the nodes in domain t and simplify the measurement patterns on some conditions.
 
         Attributes:
-            which_qubit (any): 消除依赖关系的测量命令作用的节点标签
-            domain (list): 依赖关系列表
+            which_qubit (any): the labels of the nodes applied by the signal shifting operations.
+            domain (list): the list contains the dependence relation.
         """
 
         def __init__(self, which_qubit, domain):
-            r"""构造函数，用于实例化一个 ``CommandS`` 对象。
+            r"""The constructor of the ``CommandS`` class used for instantiated an object.
 
             Args:
-                which_qubit (any): 消除依赖关系的测量命令作用的节点标签
-                domain (list): 依赖关系列表
+                which_qubit (any): the labels of the nodes applied by the signal shifting operations.
+                domain (list): the list contains the dependence relation.
             """
             self.name = "S"
             self.which_qubit = which_qubit
             self.domain = domain
 
     def print_command_list(self):
-        r"""打印该 ``Pattern`` 类中的命令的信息，便于用户查看。
+        r"""Print the information of commands in the ``Pattern`` class.
 
-        代码示例:
+        Code example:
 
         .. code-block:: python
 

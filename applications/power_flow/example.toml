@@ -1,0 +1,9 @@
+data_dir = './ieee5cdf.txt'
+threshold = 1e-1
+minIter = 1
+maxIter = 100
+depth = 4
+iterations = 100
+LR = 0.1
+gamma = 0
+

@@ -87,7 +87,7 @@ def main(args):
 
 if __name__ == "__main__":
     this_file_path = sys.path[0]
-    parser = argparse.ArgumentParser(description="Quantum chemistry task with paddle quantum.")
+    parser = argparse.ArgumentParser(description="Quantum portfolio optimization with paddle quantum.")
     parser.add_argument(
         "--config", default=os.path.join(this_file_path, './config.toml'), type=str, help="The path of toml format config file.")
     parser.add_argument(

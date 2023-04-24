@@ -5,13 +5,6 @@ paddle\_quantum.channel
    :members:
    :show-inheritance:
 
-.. rubric:: Subpackages
-
-.. toctree::
-   :maxdepth: 4
-
-   paddle_quantum.channel.functional
-
 .. rubric:: Submodules
 
 .. toctree::

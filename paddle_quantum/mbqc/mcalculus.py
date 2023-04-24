@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-此模块包含处理 MBQC 测量模式的相关操作。
+r"""
+This module contains the related operations for the MBQC measurement patterns.
 """
 
 from numpy import pi
@@ -27,13 +27,14 @@ __all__ = [
 
 
 class MCalculus:
-    r"""定义测量模式类。
+    r"""Define the class MCalculus.
 
-    跟据文献 [The measurement calculus, arXiv: 0704.1263] 的测量语言，该类提供处理测量模式的各种基本操作。
+    According to the paper's [The measurement calculus, arXiv: 0704.1263] measurement language, 
+    this class provides series of basic operations dealing with  measurement patterns.
     """
 
     def __init__(self):
-        r"""``MCalculus`` 的构造函数，用于实例化一个 ``MCalculus`` 对象。
+        r""" The constructors of ``MCalculus`` which is used for initialize a ``MCalculus`` object.
         """
         self.__circuit_slice = []  # Restore the information of sliced circuit
         self.__wild_pattern = []  # Record the background pattern
@@ -44,19 +45,19 @@ class MCalculus:
         self.__track = False  # Switch of progress bar
 
     def track_progress(self, track=True):
-        r"""显示测量模式处理过程的进度条开关。
+        r"""The button for revealing the progress bar during dealing with the measurement pattern.
 
         Args:
-            track (bool, optional): ``True`` 为打开进度条显示，``False`` 为关闭进度条显示，默认为 ``True``
+            track (bool, optional): ``True`` open the progress bar, ``False`` close the progress bar, the default is ``True``
         """
         assert isinstance(track, bool), "parameter 'track' must be a bool."
         self.__track = track
 
     def set_circuit(self, circuit):
-        r"""对 ``MCalculus`` 类设置量子电路。
+        r"""Set the quantum circuit for the  ``MCalculus`` class.
 
         Args:
-            circuit (Circuit): 量子电路
+            circuit (Circuit): quantum circuit
         """
         assert isinstance(circuit, Circuit), "please input a parameter of type 'Circuit'."
         assert circuit.is_valid(), "the circuit is not valid as at least one qubit is not performed any gate yet."
@@ -67,15 +68,16 @@ class MCalculus:
         self.__join_patterns()
 
     def __slice_circuit(self, circuit):
-        r"""对电路进行切片操作，标记每个量子门和量子测量的输入比特和输出比特。
+        r"""Cut the circuit into slices, label the input and output qubit of each quantum gate.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
-            在此，我们使用 ``str`` 类型的变量作为节点的标签。为了不丢失原先节点的坐标信息，便于后续的画图操作，
-            我们使用形如 ``("1/1", "2/1")`` 类型作为所有节点的标签。
+            This is an internal method which the users don't need to use directly.
+            Here we use``str`` type variables as the label of the nodes. In order to avoid losing the
+            coordinates of the previous nodes and benefit for the plotting operation, we label
+            all the nodes by the type looks like ``("1/1","2/1")``.
 
         Args:
-            circuit (list): 电路列表，列表中每个元素代表一个量子门或测量
+            circuit (list): a list of circuits, each element represents a quantum gate or measurement.
         """
         # Slice the circuit to mark the input_/output_ labels for measurement pattern
         counter = []
@@ -132,20 +134,22 @@ class MCalculus:
 
     @staticmethod
     def __set_ancilla_label(input_, output_, ancilla_num_list=None):
-        r"""插入辅助比特。
+        r"""Insert the auxiliary qubit
 
-        在输入比特和输出比特中间插入辅助比特，辅助比特节点的坐标根据数目而均分，其标签类型与输入和输出比特的标签类型相同。
+        Insert auxiliary qubit between the input and output qubit. The coordinates of the auxiliary qubits are
+        assigned according to the qubit number, and the labels of them are the same as the input/output qubits.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            input_ (list): 测量模式的输入节点
-            output_ (list): 测量模式的输出节点
-            ancilla_num_list (list): 需要插入的辅助节点个数列表
+            input_ (list): The input node of the measurement pattern.
+            output_ (list): The output node of the measurement pattern.
+            ancilla_num_list (list): The list of the auxiliary qubits required to be inserted to the system.
 
         Returns:
-            list: 辅助节点标签列表
+            list: The list containing the labels of the auxiliary qubits.
         """
         assert len(input_) == len(output_), "input and output must have same length."
         assert len(input_) in [1, 2], str(len(input_)) + "-qubit gate is not supported in this version."
@@ -175,17 +179,20 @@ class MCalculus:
         return ancilla_labels
 
     def __to_pattern(self, gate):
-        r"""将量子电路中的门和测量翻译为等价的测量模式。
+        r""" Translate the quantum gates and quantum measurements to their equivalent measurement patterns in MBQC.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Warning:
-            当前版本支持的量子门为 ``[H, X, Y, Z, S, T, Rx, Ry, Rz, Rz_5, U, CNOT, CNOT_15, CZ]`` 和单比特测量。
-            注意量子门和测量对应的测量模式不唯一，本方法目前仅选取常用的一种或者两种测量模式进行翻译。
+            The current version supports ``[H, X, Y, Z, S, T, Rx, Ry, Rz, Rz_5, U, CNOT, CNOT_15, CZ]`` quantum gates
+            and single qubit measurement.
+            By the way, there are no one-to-one correspondence between the quantum circuits and measurement patterns.
+            Here, we adopt the most common onr or two measurement patterns.
 
         Args:
-            gate (list): 待翻译的量子门或量子测量，列表中存储的是原始量子门（其中包含量子门名称、作用比特、参数）、输入比特、输出比特
+            gate (list): The quantum gates or quantum measurements to be translated. The elements in the list
+                contains the original quantum gates(the name of gate, acting qubits, parameters),input/output qubits.
         """
         original_gate, input_, output_ = gate
         name, which_qubit, param = original_gate
@@ -397,16 +404,18 @@ class MCalculus:
                     input_, output_, commands))
 
     def __list_to_net(self, bit_lst):
-        r"""把一个包含比特标签的一维列表处理为二维网状结构的列表，与电路图的网状结构相对应。
+        r""" Change a 1-dimensional list containing the labels of qubits to a 2-dimensional list corresponding
+        to the circuit diagram.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            bit_lst (list): 输入或输出节点标签的列表
+            bit_lst (list): the list containing the labels of the input/output nodes
 
         Returns:
-            list: 网状结构的二维列表，每行记录的是输入或输出节点所在的列数
+            list: a 2-dimensional list with circuit structure, each line contains the column coordinates
+            of the input/output nodes.
         """
         bit_net = [[] for _ in range(self.__circuit_width)]
         for qubit in bit_lst:
@@ -414,16 +423,16 @@ class MCalculus:
         return bit_net
 
     def __get_input(self, bit_lst):
-        r"""获得列表中的输入比特节点标签。
+        r"""Get the labels of the input qubits in the list.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            bit_lst (list): 节点标签的列表
+            bit_lst (list): the list containing the labels of the nodes
 
         Returns:
-            list: 输入比特的节点标签列表
+            list: the list containing node labels of the input qubits
         """
         bit_net = self.__list_to_net(bit_lst)
         input_ = []
@@ -432,16 +441,16 @@ class MCalculus:
         return input_
 
     def __get_output(self, bit_lst):
-        r"""获得列表中的输出比特节点标签。
+        r""" Get the labels of the output qubits in the list.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            bit_lst (list): 节点标签的列表
+            bit_lst (list): the list containing the labels of the nodes
 
         Returns:
-            list: 输出比特的节点标签列表
+            list: the list containing node labels of the output qubits
         """
         bit_net = self.__list_to_net(bit_lst)
         # Need to separate the classical output and quantum output
@@ -456,10 +465,10 @@ class MCalculus:
         return output_
 
     def __join_patterns(self):
-        r"""将逐个翻译好的量子门和测量的测量模式拼接到一起。
+        r"""Connect the translated measurement patterns of the quantum gates and quantum measurements.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
         """
         names = ""
         input_list = []
@@ -479,24 +488,26 @@ class MCalculus:
 
     @staticmethod
     def __propagate(which_cmds):
-        r"""交换两个命令。
+        r"""Swap two commands
 
-        任意两个命令交换遵从对应算符的交换关系，详细的交换关系请参见 [arXiv:0704.1263]。
+        The swap of any two commands obeys the commutation relation of the operators, see
+        more details in [arXiv:0704.1263].
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Hint:
-            我们默认算符由左至右的顺序运算，例如 ``"E"`` 要在所有运算之前，因此 ``"E"`` 要在命令列表中的最左侧，其他命令以此类推。
+            We default to the left-to-right order of operators, such as "E" before all
+            operations, so "E" should be at the leftmost in the list of commands, and so on.
 
         Warning:
-            该方法中只对 ``"E"``, ``"M"``, ``"X"``, ``"Z"``, ``"S"`` 五类命令中的任意两个进行交换。
+            This method exchange any two of the five commands `"E"``, ``"M"``, ``"X"``, ``"Z"``, ``"S"``.
 
         Args:
-            which_cmds (list): 待交换的命令列表
+            which_cmds (list): 待交换的命令列表 The list of commands to be exchanged.
 
         Returns:
-            list: 交换后的新命令列表
+            list: The list of the commands after exchanged.
         """
         cmd1 = which_cmds[0]
         cmd2 = which_cmds[1]
@@ -613,20 +624,23 @@ class MCalculus:
             return which_cmds
 
     def __propagate_by_type(self, cmd_type, cmds):
-        r"""把列表中某指定类型的所有命令向前交换。
+        r""" Move forward the commands of a specific type.
 
-        向前交换不是指将其交换至整个命令列表的最左端，而是交换至规则允许范围内的最前方。
-        例如：对同一比特的测量操作必须在纠缠操作的后面，所以当调用该方法交换测量算符时，测量算符被交换到了它前面的纠缠算符之后。
+        The "move forward" should obeys the commutation rules. For example,
+        the measurement operations should behind the entanglement operations
+        acting on the same qubits as the measurements. When we use his method to move
+        the measurement commands, the commands should be move forward until the first
+        entanglement operation in front of them.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            cmd_type (str): 待交换的命令类型，为 ``"E"``, ``"M"``, ``"X"``, ``"Z"`` 或 ``"S"``
-            cmds (list): 待处理的命令列表
+            cmd_type (str): the type of the command to be exchanged, 为 ``"E"``, ``"M"``, ``"X"``, ``"Z"`` 或 ``"S"``
+            cmds (list): the list of commands to be dealt with.
 
         Returns:
-            list: 交换后的新命令列表
+            list: 交换后的新命令列表the new command list after exchange.
         """
         assert cmd_type in ["E", "M", "X", "Z", "S"], "command's name must be 'E', 'M', 'X', 'Z' or 'S'."
 
@@ -646,18 +660,20 @@ class MCalculus:
 
     @staticmethod
     def __reorder_labels_by_row(labels):
-        r"""将标签按照行数从小到大进行排序。
+        r""" Sort the labels by the number of rows form small to large.
 
-        该方法是为了调整输入节点和输出节点的顺序，从而与电路图的顺序相一致，便于后续运行和使用。
+        The purpose of this method is to adjust the order of input/output nodes,
+        so as to be consistent with the order of the circuit diagram and facilitate
+        subsequent operations.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            labels (list): 待改写的标签列表
+            labels (list): the list of labels to be dealt with.
 
         Returns:
-            list: 改写后的标签列表，按照行数从小到大顺序排列
+            list: the list of labels sorted by the number of rows form small to large.
         """
         row = []
         row_and_col = {}
@@ -673,20 +689,20 @@ class MCalculus:
 
     @staticmethod
     def __commands_to_numbers(cmds):
-        r"""将命令列表映射成数字列表。
+        r""" Map the list of commands to the list of numbers.
 
-        映射规则为 CommandE -> 1, CommandM -> 2, CommandX -> 3, CommandZ -> 4, CommandS -> 5。
+        The rule is CommandE -> 1, CommandM -> 2, CommandX -> 3, CommandZ -> 4, CommandS -> 5.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            cmds (list): 待处理的命令列表
+            cmds (list): The list of commands to be dealt with.
 
         Returns:
-            list: 记录每种命令的个数
-            list: 映射后的列表
-            list: 映射后的列表进行从小到大排序得到的标准列表
+            list: contains the number of each type of command
+            list: the list of numbers after the map
+            list: the sorted standard number list after the map
         """
         cmd_map = {"E": 1, "M": 2, "X": 3, "Z": 4, "S": 5}
         cmd_num_wild = [cmd_map[cmd.name] for cmd in cmds]
@@ -697,30 +713,31 @@ class MCalculus:
         return cmds_count, cmd_num_wild, cmd_num_standard
 
     def __distance_to_standard(self, cmds):
-        r"""采用 Hamming 距离定义当前命令列表的顺序和标准顺序的距离函数。
+        r""" Use Hamming distance to measure the difference between the order of the current list
+            and the standard list.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            cmds (list): 当前命令列表
+            cmds (list): the current command list
         """
         _, cmd_wild, cmd_std = self.__commands_to_numbers(cmds[:])
 
         return sum([cmd_wild[i] == cmd_std[i] for i in range(len(cmd_wild))]) / len(cmd_wild)
 
     def __is_standard(self, cmd_type, cmds):
-        r"""判断命令列表中指定的命令类型是否为标准顺序。
+        r""" This method judges whether the given type of command is in the standard order.
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method which the users don't need to use directly.
 
         Args:
-            cmd_type (str): 待判断的命令名称，为 ``E``, ``M``, ``X``, ``Z`` 或 ``S``
-            cmds (list): 待判断的命令列表
+            cmd_type (str): The command to be judged, including ``E``, ``M``, ``X``, ``Z`` 或 ``S``
+            cmds (list): the list of commands to be judged
 
         Returns:
-            bool: 列表是否为标准列表的布尔值
+            bool: the bool value of whether the list is in the standard order.
         """
         assert cmd_type in ["E", "M", "X", "Z", "S"], "command's name must be 'E', 'M', 'X', 'Z', or 'S'."
 
@@ -735,10 +752,11 @@ class MCalculus:
         return cmd_num_wild[:pointer_map[cmd_type]] == cmd_num_standard[:pointer_map[cmd_type]]
 
     def __simplify_pauli_measurements(self):
-        r"""对节点依赖性进行简化。
+        r""" This method simplifies the dependence relation between different nodes.
 
-        在某些特殊情形下，测量节点对其他节点的依赖性可以被简化。
-        设 \alpha 为不考虑依赖关系的测量角度，则测量角度实际上只有四种可能性，分别为：
+        In some special cases, the dependence of the measurement nodes to other nodes can be simplified.
+        Assume that \alpha is a measurement angle without considering the dependence relation, there are four
+        possible measurement angles as:
 
          .. math::
 
@@ -750,12 +768,13 @@ class MCalculus:
 
             \theta_{\text{ad}} = - \alpha + \pi
 
-            \text{当 } \alpha \text{ 为 } 0, \pi / 2, \pi, 3 \times \pi / 2 \text{ 时，该依赖关系可以简化。}
+            \text{when } \alpha \text{ is } 0, \pi / 2, \pi, 3 \times \pi / 2 \text{ the dependence relation can be simplified.}
 
-            \text{例如 } \alpha = \pi \text{ 时，}\pm \alpha + t \times \pi \text{导致的测量效果一样，与 domain\_s 无关，因此 domain\_s 可以移除。其他情形同理。}
+            \text{For example, when } \alpha = \pi \text{, }\pm \alpha + t \times \pi \text{ lead to the same measurement result, 
+            independent of domain\_s. As a result, domain\_s can be removed.}
 
         Note:
-        这是内部方法，用户不需要直接调用到该方法。
+        In some special cases, the dependence of the measurement nodes to other nodes can be simplified.
         """
         for cmd in self.__pattern.commands:
             if cmd.name == 'M':  # Find CommandM
@@ -767,10 +786,11 @@ class MCalculus:
                     cmd.domain_s = []
 
     def standardize(self):
-        r"""对测量模式进行标准化。
+        r"""Standardize the measurement pattern.
 
-        该方法对测量模式进行标准化操作，转化成等价的 EMC 模型。即将所有的 ``CommandE`` 交换到最前面，其次是 ``CommandM``，
-        ``CommandX`` 和 ``CommandZ``。为了简化测量模式，该方法在标准化各类命令之后还对 ``CommandM`` 进行 Pauli 简化。
+        This method standardize the measurement pattern to the equivalent EMC model. The method exchange all
+        the "Command E" to the first, followed by "Command M", "Command X" and "Command Z". To simplify the
+        measurement pattern, this method applies Pauli simplification to "Command M" after the standardization.
         """
         cmds = self.__pattern.commands
 
@@ -784,20 +804,22 @@ class MCalculus:
 
     @staticmethod
     def __pull_out_domain_t(cmds):
-        r"""在命令列表中把信号转移算符从测量算符中提取出来。
+        r""" Extract the signal shifting operators from the measurement operators in the command list.
 
         Note:
-            信号转移是一种特殊的操作，通过与其他命令算符的交换，解除测量命令的域 t 列表中节点的依赖性，
-            从而在某些情况下简化测量模式，详情请参见 [arXiv:0704.1263]。
+            Signal shifting is a special operation. By switching with other command operators, this method
+            remove the dependency among nodes in domain t in order to simplify the measurement patterns on some
+            conditions, see more details in [arXiv:0704.1263].
 
         Warning:
-            我们只提取 XY 平面测量算符的域 t 列表中节点的依赖性作为信号转移算符。对于 YZ 平面测量算符，我们并未采取此操作。
+            We only extract the node dependence of the nodes in domain t of measurement operators in XY plane, and
+            we don't apply this operation to the measurement operator in YZ plane.
 
         Args:
-            cmds (list): 命令列表
+            cmds (list): command list
 
         Returns:
-            list: 提取信号转移算符后的命令列表
+            list: 提取信号转移算符后的命令列表 command list after extracting the signal shifting operators
         """
         cmds_len = len(cmds)
         for i in range(cmds_len - 1, -1, -1):
@@ -809,10 +831,10 @@ class MCalculus:
         return cmds
 
     def shift_signals(self):
-        r"""信号转移操作。
+        r"""Signal shifting operation
 
         Note:
-            这是用户选择性调用的方法之一。
+            This is one of the choices of the users.
         """
         cmds = self.__pattern.commands
         cmds = self.__pull_out_domain_t(cmds)
@@ -827,27 +849,31 @@ class MCalculus:
         self.__pattern.commands = cmds
 
     def get_pattern(self):
-        r"""返回测量模式。
+        r"""Return the measurement pattern
 
         Returns:
-            Pattern: 处理后的测量模式
+            Pattern: the measurement pattern after processing.
         """
         return self.__pattern
 
     @staticmethod
     def __default_order_by_row(labels):
-        r"""按照行的顺序对节点标签列表进行排序并返回。
+        r""" Sort the nodes' labels by the number of rows.
 
-        排序规则：不同行数，行数小的优先。相同行数，列数小的优先。
+
+        sorting rules: If the number of rows of the labels are different,
+        smaller first; If the number of rows of the labels are the same, the labels
+        with smaller number of columns first.
+
 
         Note:
-            这是内部方法，用户不需要直接调用到该方法。
+            This is an internal method and users don't use it directly.
 
         Args:
-            labels (list): 待处理的节点标签列表
+            labels (list): the list of the nodes' labels to be processed.
 
         Returns:
-            list: 排序后的节点标签列表
+            list: the list of nodes' labels after sorting.
         """
         # Construct a dict by string labels and their float values
         labels_dict = {label: (div_str_to_float(label[0]), div_str_to_float(label[1])) for label in labels}
@@ -859,11 +885,14 @@ class MCalculus:
         return labels_sorted
 
     def optimize_by_row(self):
-        r"""按照行序优先的原则对测量模式中的测量顺序进行优化。
+        r""" Optimize the measurement order in the measurement pattern according
+        to row major order.
 
         Warning:
-            这是一种启发式的优化算法，对于特定的测量模式可以起到优化测量顺序的作用，不排除存在更优的测量顺序。例如，对于浅层量子电路，
-            按照行序优先原则，测量完同一量子位上的量子门、测量对应的节点后，该量子位不再起作用，进而减少后续计算时可能涉及到的节点数目。
+            This is a heuristic optimization algorithm works for specific measurement patterns.
+            It's also possible to find better measurement order. For example, for a shallow quantum
+            circuit, a specific qubit is no more needed after the quantum measurements according to the
+            row major order such that the computational cost in the follow-up process is simplified.
         """
         cmds = self.__pattern.commands
 

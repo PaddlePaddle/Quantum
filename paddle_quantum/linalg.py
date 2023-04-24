@@ -24,14 +24,13 @@ import scipy
 import itertools
 from scipy.stats import unitary_group
 from functools import reduce
-from typing import Optional, Union, Callable, List
+from typing import Optional, Union, Callable, List, Tuple
 
 import paddle_quantum as pq
-from .intrinsic import _get_float_dtype
-from .state import State, _type_fetch, _type_transform
+from .intrinsic import get_dtype, _get_float_dtype, _type_fetch, _type_transform
 
 
-def abs_norm(mat: Union[np.ndarray, paddle.Tensor, State]) -> float:
+def abs_norm(mat: Union[np.ndarray, paddle.Tensor, pq.State]) -> float:
     r""" tool for calculation of matrix norm
 
     Args:
@@ -42,7 +41,7 @@ def abs_norm(mat: Union[np.ndarray, paddle.Tensor, State]) -> float:
 
     """
     mat = _type_transform(mat, "tensor")
-    mat = mat.cast(pq.get_dtype())
+    mat = mat.cast(get_dtype())
     return paddle.norm(paddle.abs(mat)).item()
 
 
@@ -93,6 +92,82 @@ def is_positive(mat: Union[np.ndarray, paddle.Tensor], eps: Optional[float] = 1e
         mat = _type_transform(mat, "tensor").cast('complex128')
         return (min(paddle.linalg.eigvalsh(mat)) >= -eps).item()
     return False
+
+
+def is_state_vector(vec: Union[np.ndarray, paddle.Tensor], eps: Optional[float] = None) -> Tuple[bool, int]:
+    r""" verify whether ``vec`` is a legal quantum state vector
+    
+    Args:
+        vec: state vector candidate :math:`x`
+        eps: tolerance of error, default to be `None` i.e. no testing for data correctness
+    
+    Returns:
+        determine whether :math:`x^\dagger x = 1`, and return the number of qubits or an error message
+        
+    Note:
+        error message is:
+        * ``-1`` if the above equation does not hold
+        * ``-2`` if the dimension of ``vec`` is not a power of 2
+        * ``-3`` if ``vec`` is not a vector
+    
+    """
+    vec = _type_transform(vec, "tensor")
+    vec = paddle.squeeze(vec)
+    
+    dimension = vec.shape[0]
+    if len(vec.shape) != 1:
+        return False, -3
+    
+    num_qubits = int(math.log2(dimension))
+    if 2 ** num_qubits != dimension:
+        return False, -2
+    
+    if eps is None:
+        return True, num_qubits
+    
+    vec = vec.reshape([dimension, 1])
+    vec_bra = paddle.conj(vec.T)   
+    eps = min(eps * dimension, 1e-2)
+    return {False, -1} if paddle.abs(vec_bra @ vec - (1 + 0j)) > eps else {True, num_qubits}
+
+
+def is_density_matrix(rho: Union[np.ndarray, paddle.Tensor], eps: Optional[float] = None) -> Tuple[bool, int]:
+    r""" verify whether ``rho`` is a legal quantum density matrix
+    
+    Args:
+        rho: density matrix candidate
+        eps: tolerance of error, default to be `None` i.e. no testing for data correctness
+    
+    Returns:
+        determine whether ``rho`` is a PSD matrix with trace 1 and return the number of qubits or an error message.
+    
+    Note:
+        error message is:
+        * ``-1`` if ``rho`` is not PSD
+        * ``-2`` if the trace of ``rho`` is not 1
+        * ``-3`` if the dimension of ``rho`` is not a power of 2 
+        * ``-4`` if ``rho`` is not a square matrix
+    
+    """
+    rho = _type_transform(rho, "tensor")
+    
+    dimension = rho.shape[0]
+    if len(rho.shape) != 2 or dimension != rho.shape[1]:
+        return False, -4
+    
+    num_qubits = int(math.log2(dimension))
+    if 2 ** num_qubits != dimension:
+        return False, -3
+    
+    if eps is None:
+        return True, num_qubits
+    
+    eps = min(eps * dimension, 1e-2)
+    if paddle.abs(paddle.trace(rho) - (1 + 0j)).item() > eps:
+        return False, -2
+    
+    return {False, -1} if not is_positive(rho, eps) else {True, num_qubits}
+
 
 def is_projector(mat: Union[np.ndarray, paddle.Tensor], eps: Optional[float] = 1e-6) -> bool:
     r""" verify whether ``mat`` is a projector
@@ -154,7 +229,7 @@ def hermitian_random(num_qubits: int) -> paddle.Tensor:
     
     eigval= np.linalg.eigvalsh(mat)
     max_eigval = np.max(np.abs(eigval))
-    return paddle.to_tensor(mat / max_eigval, dtype=pq.get_dtype())
+    return paddle.to_tensor(mat / max_eigval, dtype=get_dtype())
 
 
 def orthogonal_projection_random(num_qubits: int) -> paddle.Tensor:
@@ -168,7 +243,7 @@ def orthogonal_projection_random(num_qubits: int) -> paddle.Tensor:
     """
     assert num_qubits > 0
     n = 2 ** num_qubits
-    float_dtype = _get_float_dtype(pq.get_dtype())
+    float_dtype = _get_float_dtype(get_dtype())
     vec = paddle.randn([n, 1], dtype=float_dtype) + 1j * paddle.randn([n, 1], dtype=float_dtype)
     mat = vec @ dagger(vec)
     return mat / paddle.trace(mat)
@@ -184,12 +259,7 @@ def density_matrix_random(num_qubits: int) -> paddle.Tensor:
         a :math:`2^n \times 2^n` density matrix
         
     """
-    float_dtype = _get_float_dtype(pq.get_dtype())
-    real = paddle.rand([2 ** num_qubits, 2 ** num_qubits], dtype=float_dtype)
-    imag = paddle.rand([2 ** num_qubits, 2 ** num_qubits], dtype=float_dtype)
-    M = real + 1j * imag
-    M = M @ dagger(M)
-    return M / paddle.trace(M)
+    return haar_density_operator(num_qubits, rank=np.random.randint(1,2**num_qubits))
 
 
 def unitary_random(num_qubits: int) -> paddle.Tensor:
@@ -202,7 +272,7 @@ def unitary_random(num_qubits: int) -> paddle.Tensor:
          a :math:`2^n \times 2^n` unitary matrix
          
     """
-    return paddle.to_tensor(unitary_group.rvs(2 ** num_qubits), dtype=pq.get_dtype())
+    return paddle.to_tensor(unitary_group.rvs(2 ** num_qubits), dtype=get_dtype())
 
 
 def unitary_hermitian_random(num_qubits: int) -> paddle.Tensor:
@@ -242,7 +312,7 @@ def unitary_random_with_hermitian_block(num_qubits: int, is_unitary: bool = Fals
 
     mat = np.block([[mat0, mat1], [mat1, mat0]])
 
-    return paddle.to_tensor(mat, dtype=pq.get_dtype())
+    return paddle.to_tensor(mat, dtype=get_dtype())
 
 
 def block_enc_herm(mat: Union[np.ndarray, paddle.Tensor], 
@@ -294,7 +364,7 @@ def haar_orthogonal(num_qubits: int) -> paddle.Tensor:
     # Step 3: make the decomposition unique
     mat_lambda = np.diag(mat_r) / abs(np.diag(mat_r))
     mat_u = mat_q @ np.diag(mat_lambda)
-    return paddle.to_tensor(mat_u, dtype=pq.get_dtype())
+    return paddle.to_tensor(mat_u, dtype=get_dtype())
 
 
 def haar_unitary(num_qubits: int) -> paddle.Tensor:
@@ -316,7 +386,7 @@ def haar_unitary(num_qubits: int) -> paddle.Tensor:
     # Step 3: make the decomposition unique
     mat_lambda = np.diag(mat_r) / np.abs(np.diag(mat_r))
     mat_u = mat_q @ np.diag(mat_lambda)
-    return paddle.to_tensor(mat_u, dtype=pq.get_dtype())
+    return paddle.to_tensor(mat_u, dtype=get_dtype())
 
 
 def haar_state_vector(num_qubits: int, is_real: Optional[bool] = False) -> paddle.Tensor:
@@ -343,7 +413,7 @@ def haar_state_vector(num_qubits: int, is_real: Optional[bool] = False) -> paddl
         # Perform u onto |0>, i.e., the first column of u
         phi = unitary[:, 0]
 
-    return paddle.to_tensor(phi, dtype=pq.get_dtype())
+    return paddle.to_tensor(phi, dtype=get_dtype())
 
 
 def haar_density_operator(num_qubits: int, rank: Optional[int] = None, is_real: Optional[bool] = False) -> paddle.Tensor:
@@ -351,7 +421,7 @@ def haar_density_operator(num_qubits: int, rank: Optional[int] = None, is_real: 
 
         Args:
             num_qubits: number of qubits :math:`n`
-            rank: rank of density matrix, default to be False refering to full ranks
+            rank: rank of density matrix, default to be ``None`` refering to full ranks
             is_real: whether the density matrix is real, default to be False
 
         Returns:
@@ -367,7 +437,7 @@ def haar_density_operator(num_qubits: int, rank: Optional[int] = None, is_real: 
         ginibre_matrix = np.random.randn(dim, rank) + 1j * np.random.randn(dim, rank)
         rho = ginibre_matrix @ ginibre_matrix.conj().T
     rho = rho / np.trace(rho)
-    return paddle.to_tensor(rho / np.trace(rho), dtype=pq.get_dtype())
+    return paddle.to_tensor(rho, dtype=get_dtype())
 
 
 def direct_sum(A: Union[np.ndarray, paddle.Tensor], 
@@ -411,8 +481,8 @@ def NKron(
 
     .. code-block:: python
 
-        from pq.state import density_op_random
-        from pq.linalg import NKron
+        from paddle_quantum.state import density_op_random
+        from paddle_quantum.linalg import NKron
         A = density_op_random(2)
         B = density_op_random(2)
         C = density_op_random(2)
@@ -430,7 +500,7 @@ def NKron(
         return reduce(lambda result, index: np.kron(result, index), args, np.kron(matrix_A, matrix_B), )
 
     
-def herm_transform(fcn: Callable[[float], float], mat: Union[paddle.Tensor, np.ndarray, State], 
+def herm_transform(fcn: Callable[[float], float], mat: Union[paddle.Tensor, np.ndarray, pq.State], 
                    ignore_zero: Optional[bool] = False) -> paddle.Tensor:
     r""" function transformation for Hermitian matrix
     
@@ -476,7 +546,7 @@ def pauli_basis_generation(num_qubits: int) -> List[paddle.Tensor]:
     def __single_pauli_basis() -> List[paddle.Tensor]:
         r"""The Pauli basis in single-qubit case.
         """
-        complex_dtype = pq.get_dtype()
+        complex_dtype = get_dtype()
         I = paddle.to_tensor([[0.5, 0],
                             [0, 0.5]], dtype=complex_dtype)
         X = paddle.to_tensor([[0, 0.5],

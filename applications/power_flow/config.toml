@@ -1,0 +1,24 @@
+# The path of the input data. It should be a .txt file and in the IEEE Common Data Format.
+data_dir = './ieee5cdf.txt'
+
+# Threshold for loss value to end optmization for power flow, default is 1e-3
+threshold = 1e-3
+
+# Minimum number of iterations of power flow optimization.
+minIter = 3
+
+# Maximum number of iteration of power flow optimization.
+maxIter = 100
+
+# The depth of the quantum ansatz circuit.
+depth = 4
+
+# Number optimization cycles of quantum circuit. 
+iterations = 100
+
+# The learning rate of the optimizer.
+LR = 0.1
+
+# Threshold for loss value to end optimization for quantum circuit early, default is 0.
+gamma = 0
+

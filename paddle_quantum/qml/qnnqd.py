@@ -118,7 +118,7 @@ def _filter_circuit(num_qubits: int, depth:int) -> pq.ansatz.Circuit:
     """
     cir = Circuit(num_qubits)
 
-    cir.complex_entangled_layer(qubits_idx='full', depth=depth)
+    cir.complex_entangled_layer(depth=depth)
 
     return cir
 

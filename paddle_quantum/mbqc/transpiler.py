@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-此模块包含电路模型和 MBQC 测量模式的转义工具。
+r"""
+This module contains the transpile of the circuit models and MBQC measurement patterns.
 """
 
 from paddle_quantum.mbqc.qobject import Circuit
@@ -25,14 +25,14 @@ __all__ = [
 
 
 def transpile(circuit, track=False):
-    r"""将输入的量子电路翻译为等价的测量模式。
+    r"""Translate the input circuit model to equivalent measurement patterns.
 
     Args:
-        circuit (Circuit): 量子电路，包含可能的测量部分
-        track (bool): 是否显示翻译进度条的开关
+        circuit (Circuit): quantum circuit, possibly contains measurement.
+        track (bool): The boolean switch of whether showing the progress bar.
 
     Returns:
-        pattern (Pattern): 等价的测量模式
+        pattern (Pattern): equivalent measurement pattern
     """
     assert isinstance(circuit, Circuit), "'circuit' must be of type 'Circuit'."
     assert isinstance(track, bool), "'track' must be a 'bool'."

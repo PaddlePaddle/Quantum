@@ -10,4 +10,5 @@ paddle\_quantum.ansatz
 
    paddle_quantum.ansatz.circuit
    paddle_quantum.ansatz.container
+   paddle_quantum.ansatz.layer
    paddle_quantum.ansatz.vans

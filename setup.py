@@ -24,7 +24,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='paddle-quantum',
-    version='2.3.0',
+    version='2.4.0',
     author='Institute for Quantum Computing, Baidu INC.',
     author_email='qml@baidu.com',
     description='Paddle Quantum is a quantum machine learning (QML) toolkit developed based on Baidu PaddlePaddle.',
@@ -94,6 +94,7 @@ setuptools.setup(
         'tqdm',
         'openfermion',
         'pyscf; platform_system == "Linux" or platform_system == "Darwin"',
+        'paddlenlp',
         'opencv-python',
         'scikit-learn',
         'fastdtw',

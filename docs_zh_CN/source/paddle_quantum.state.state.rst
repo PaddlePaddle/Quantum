@@ -3,7 +3,7 @@ paddle\_quantum.state.state
 
 量子态类的功能实现。
 
-.. py:class:: State(data, num_qubits=None, backend=None, dtype=None)
+.. py:class:: State(data, num_qubits=None, backend=None, dtype=None, override=False)
 
    基类：:py:class:`object`
 
@@ -17,6 +17,8 @@ paddle\_quantum.state.state
    :type backend: paddle_quantum.Backend, optional
    :param dtype: 量子态的数据类型。默认为 None，使用全局的默认数据类型。
    :type dtype: str, optional
+   :param override: 是否跳过输入校验，仅限于内部开发使用。默认为 ``False``。
+   :type override: bool, optional
    :raises ValueError: 无法识别后端
 
 
@@ -24,9 +26,15 @@ paddle\_quantum.state.state
 
       得到量子态的列向量形式。
 
+      :raises ValueError: 后端必须为 StateVector。
+      :return: 量子态的列向量形式
+
    .. py:property:: bra()
 
       得到量子态的行向量形式。
+
+      :raises ValueError: 后端必须为 StateVector。
+      :return: 量子态的行向量形式
 
    .. py:method:: normalize()
 
@@ -53,30 +61,6 @@ paddle\_quantum.state.state
       
       :return: 返回张量积
       :rtype: State
-
-   .. py:method:: __matmul__(other)
-
-      得到与量子态或张量之间的乘积
-
-      :param other: 给定量子态
-      :type other: State
-      :raises NotImplementedError: 不支持与该量子态进行乘积计算
-      :raises ValueError: 无法对两个态向量相乘，请检查使用的后端
-
-      :return: 返回量子态的乘积
-      :rtype: paddle.Tensor
-
-   .. py:method:: __rmatmul__(other)
-
-      得到与量子态或张量之间的乘积
-
-      :param other: 给定量子态
-      :type other: State
-      :raises NotImplementedError: 不支持与该量子态进行乘积计算
-      :raises ValueError: 无法对两个态向量相乘，请检查使用的后端
-
-      :return: 返回量子态的乘积
-      :rtype: paddle.Tensor
 
    .. py:method:: numpy()
 
@@ -107,6 +91,15 @@ paddle\_quantum.state.state
       :return: 一个内容和当前量子态都相同的新的量子态。
       :rtype: paddle_quantum.State
 
+   .. py:property:: oper_history()
+
+      储存在QPU后端的算子历史信息
+
+      :return: 算子的历史信息
+      :rtype: List[Dict[str, Union[str, List[int], paddle.Tensor]]]
+      :raises NotImplementedError: 此属性应仅适用于 QuLeaf 后端。
+      :raises ValueError: 无法获取算子历史信息，请先运行电路
+
    .. py:method:: expec_val(hamiltonian, shots: int)
 
       量子态关于输入的可观测量的期望值。
@@ -120,7 +113,7 @@ paddle\_quantum.state.state
       :rtype: float
         
 
-   .. py:method:: measure(shots=0, qubits_idx=None, plot=False)
+   .. py:method:: measure(shots=0, qubits_idx=None, plot=False, record=False)
 
       对量子态进行测量。
 
@@ -130,84 +123,21 @@ paddle\_quantum.state.state
       :type qubits_idx: Union[Iterable[int], int], optional
       :param plot: 是否画图。默认为 Flase，表示不画图。
       :type plot: bool, optional
-      :raises Exception: 测量的次数必须大于0。
+      :param record: 是否返回原始的测量结果记录。默认为 Flase，表示不返回。
+      :type record: bool, optional
+      :raises ValueError: 测量的次数必须大于0。
+      :raises NotImplementedError: Quleaf后端暂不支持record功能。
       :raises NotImplementedError: 所指定的后端必须为量桨已经实现的后端。
       :raises NotImplementedError: 输入的量子比特下标有误。
+      :raises ValueError: 使用record功能要求测量次数必须大于0。
       :return: 测量结果。
       :rtype: dict
 
-.. py:function:: _type_fetch(data)
+   .. py:method:: reset_sequence(target_sequence=None)
 
-   获取数据的类型
+      根据输入顺序重置量子比特顺序
 
-   :param data: 输入数据
-   :type data: Union[np.ndarray, paddle.Tensor, State]
-
-   :raises ValueError: 输入量子态不支持所选后端
-   :raises TypeError: 无法识别输入量子态的数据类型
-
-   :return: 返回输入量子态的数据类型
-   :rtype: str
-
-.. py:function:: _density_to_vector(rho)
-
-   将密度矩阵转换为态向量
-
-   :param rho: 输入的密度矩阵
-   :type rho: Union[np.ndarray, paddle.Tensor]
-
-   :raises ValueError: 输出量子态可能不为纯态
-
-   :return: 返回态向量
-   :rtype: Union[np.ndarray, paddle.Tensor]
-
-.. py:function:: _type_transform(data, output_type)
-
-   将输入量子态转换成目标类型
-
-   :param data: 需要转换的数据
-   :type data: Union[np.ndarray, paddle.Tensor, State]
-   :param output_type: 目标数据类型
-   :type output_type: str
-
-   :raises ValueError: 输入态不支持转换为目标数据类型
-
-   :return: 返回目标数据类型的量子态
-   :rtype: Union[np.ndarray, paddle.Tensor, State]
-
-.. py:function:: is_state_vector(vec, eps)
-
-   检查输入态是否为量子态向量
-
-   :param vec: 输入的数据 :math:`x`
-   :type vec: Union[np.ndarray, paddle.Tensor]
-   :param eps: 容错率
-   :type eps: float, optional
-
-   :return: 返回是否满足 :math:`x^\dagger x = 1` ，以及量子比特数目或错误信息
-   :rtype: Tuple[bool, int]
-
-   .. note::
-      错误信息为:
-        * ``-1`` 如果上述公式不成立
-        * ``-2`` 如果输入数据维度不为2的幂
-        * ``-3`` 如果输入数据不为向量
-
-.. py:function:: is_density_matrix(rho, eps)
-
-   检查输入数据是否为量子态的密度矩阵
-
-   :param rho: 输入的数据 ``rho`` 
-   :type rho: Union[np.ndarray, paddle.Tensor]
-   :param eps: 容错率
-   :type eps: float, optional
-
-   :return: 返回输入数据 ``rho`` 是否为迹为1的PSD矩阵，以及量子比特数目或错误信息
-   :rtype: Tuple[bool, int]
-
-   .. note::
-      错误信息为:
-        * ``-1`` 如果 ``rho`` 不为PSD矩阵
-        * ``-2`` 如果 ``rho`` 的迹不为1
-        * ``-3`` 如果 ``rho`` 的维度不为2的幂
-        * ``-4`` 如果 ``rho`` 不为一个方阵
+      :param target_sequence: 目标顺序，默认为 ``None``。
+      :type target_sequence: Union[List[int],None]
+      :return: 在输入比特顺序下的量子态
+      :rtype: paddle_quantum.state.state.State

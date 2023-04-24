@@ -20,17 +20,14 @@ The module of the quantum gates.
 from . import functional
 from .base import Gate, ParamGate
 from .clifford import Clifford, compose_clifford_circuit
-from .single_qubit_gate import H, S, Sdg, T, Tdg, X, Y, Z, P, RX, RY, RZ, U3
-from .multi_qubit_gate import CNOT, CX, CY, CZ, SWAP
-from .multi_qubit_gate import CP, CRX, CRY, CRZ, CU, RXX, RYY, RZZ
-from .multi_qubit_gate import MS, CSWAP, Toffoli
-from .multi_qubit_gate import UniversalTwoQubits, UniversalThreeQubits
-from .custom import Oracle, ControlOracle
-from .layer import SuperpositionLayer, WeakSuperpositionLayer
-from .layer import LinearEntangledLayer, RealEntangledLayer, ComplexEntangledLayer
-from .layer import RealBlockLayer, ComplexBlockLayer
-from .layer import QAOALayer
+from .custom import Oracle, ControlOracle, ParamOracle
 from .encoding import BasisEncoding
 from .encoding import AmplitudeEncoding
 from .encoding import AngleEncoding
 from .encoding import IQPEncoding
+from .matrix import *
+from .multi_qubit_gate import CNOT, CX, CY, CZ, SWAP
+from .multi_qubit_gate import CP, CRX, CRY, CRZ, CU, RXX, RYY, RZZ
+from .multi_qubit_gate import MS, CSWAP, Toffoli, CCX
+from .multi_qubit_gate import UniversalTwoQubits, UniversalThreeQubits
+from .single_qubit_gate import H, S, Sdg, T, Tdg, X, Y, Z, P, RX, RY, RZ, U3

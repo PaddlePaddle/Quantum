@@ -47,6 +47,39 @@ paddle\_quantum.linalg
    :return: 决定是否 :math:`P` 为厄密矩阵且本征值均为非负实数
    :rtype: bool
 
+.. py:function:: is_state_vector(vec, eps=1e-6)
+
+   验证 ``vec`` 是否为合法的态向量
+
+   :param vec: 候选态向量
+   :type vec: Union[np.ndarray,paddle.Tensor]
+   :param eps: 容错率，默认为 ``None`` i.e. 不做判定
+   :type eps: float, optional
+   
+   :return: 判断候选态向量是否归一，返回量子比特数量或错误信息
+   :rtype: Tuple[bool,int]
+
+   .. note:: 
+      
+      错误信息为 ``-1`` 时，候选量子态未归一；错误信息为 ``-2`` 时，候选量子态维度不是2的整数次方；错误信息为 ``-3`` 时， ``vec`` 不是向量。
+
+.. py:function:: is_density_matrix(rho, eps=None)
+
+   验证 ``rho`` 是否为合法的密度矩阵
+
+   :param rho: 候选密度矩阵
+   :type rho: Union[np.ndarray,paddle.Tensor]
+   :param eps: 容错率，默认为 ``None`` i.e. 不做判定
+   :type eps: float, optional
+
+   :return: 判断候选密度矩阵是否为迹数为1的半正定矩阵，返回量子比特数量或错误信息
+   :rtype: Tuple[bool,int]
+
+   .. note:: 
+      
+      错误信息为 ``-1`` 时，候选密度矩阵不是半正定矩阵；错误信息为 ``-2`` 时，候选密度矩阵迹数不为1；错误信息为 ``-3`` 时，候选密度矩阵维度不是2的整数次方；错误信息为 ``-4`` 时， ``rho`` 不是方阵。
+   
+
 .. py:function:: is_projector(mat, eps=1e-6)
 
    验证矩阵 ``P`` 是否为映射算子
@@ -217,7 +250,8 @@ paddle\_quantum.linalg
 
    .. code-block:: python
 
-      from paddle_quantum.linalg import density_op_random, NKron
+      from paddle_quantum.state import density_op_random
+      from paddle_quantum.linalg import NKron
       A = density_op_random(2)
       B = density_op_random(2)
       C = density_op_random(2)

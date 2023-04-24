@@ -43,8 +43,9 @@ import warnings
 # paddle libs
 import paddle
 import paddle_quantum as pq
-from paddle_quantum.ansatz import Circuit
-from paddle_quantum.state import State, _type_fetch, _type_transform
+from ..ansatz import Circuit
+from ..state import State
+from ..intrinsic import _type_fetch, _type_transform
 from paddle_quantum.loss import Measure
 
 # format figures

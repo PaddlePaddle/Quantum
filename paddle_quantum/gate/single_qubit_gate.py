@@ -17,16 +17,18 @@ r"""
 The source file of the classes for single-qubit gates.
 """
 
-import copy
-import math
-import numpy as np
-import paddle.nn
-import paddle_quantum
-from . import functional
+from typing import Optional, Union, Iterable
+
+import paddle
 from .base import Gate, ParamGate
+from .matrix import (
+    h_gate, s_gate, sdg_gate, t_gate, tdg_gate,
+    x_gate, y_gate, z_gate, p_gate,
+    rx_gate, ry_gate, rz_gate, u3_gate,
+)
 from ..backend import Backend
-from paddle_quantum.intrinsic import _format_qubits_idx, _get_float_dtype
-from typing import Optional, List, Union, Iterable
+from ..intrinsic import _format_qubits_idx, _get_float_dtype
+
 
 class H(Gate):
     r"""A collection of single-qubit Hadamard gates.
@@ -46,27 +48,25 @@ class H(Gate):
         num_qubits: Total number of qubits. Defaults to ``None``.
         depth: Number of layers. Defaults to ``1``.
     """
-    def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_info = {
+    __matrix = h_gate('complex128')
+
+    def __init__(
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1
+    ):
+        gate_info = {
             'gatename': 'h',
-            'texname': '$H$',
+            'texname': r'$H$',
             'plot_width': 0.4,
         }
+        super().__init__(
+            None, qubits_idx, depth, gate_info, num_qubits, check_legality=False, num_acted_qubits=1)
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.gate_history.append({
-                'gate_name': 'h',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-            })
-            return state
-        for _ in range(0, self.depth):
-            for qubit_idx in self.qubits_idx:
-                state = functional.h(state, qubit_idx, self.dtype, self.backend)
-        return state
+    @property
+    def matrix(self) -> paddle.Tensor:
+        if self.dtype == 'complex64':
+            return H.__matrix.cast('complex64')
+        return H.__matrix
 
 
 class S(Gate):
@@ -87,27 +87,26 @@ class S(Gate):
         num_qubits: Total number of qubits. Defaults to ``None``.
         depth: Number of layers. Defaults to ``1``.
     """
-    def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_info = {
+    __matrix = s_gate('complex128')
+
+    def __init__(
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1
+    ):
+        gate_info = {
             'gatename': 's',
-            'texname': '$S$',
+            'texname': r'$S$',
             'plot_width': 0.4,
         }
+        super().__init__(
+            None, qubits_idx, depth, gate_info, num_qubits, check_legality=False, num_acted_qubits=1)
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.gate_history.append({
-                'gate_name': 's',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-            })
-            return state
-        for _ in range(0, self.depth):
-            for qubit_idx in self.qubits_idx:
-                state = functional.s(state, qubit_idx, self.dtype, self.backend)
-        return state
+    @property
+    def matrix(self) -> paddle.Tensor:
+        if self.dtype == 'complex64':
+            return S.__matrix.cast('complex64')
+        return S.__matrix
+
 
 class Sdg(Gate):
     r"""A collection of single-qubit S dagger (S inverse) gates.
@@ -127,27 +126,26 @@ class Sdg(Gate):
         num_qubits: Total number of qubits. Defaults to ``None``.
         depth: Number of layers. Defaults to ``1``.
     """
-    def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_info = {
+    __matrix = sdg_gate('complex128')
+
+    def __init__(
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1
+    ):
+        gate_info = {
             'gatename': 'sdg',
             'texname': r'$S^\dagger$',
             'plot_width': 0.4,
         }
+        super().__init__(
+            None, qubits_idx, depth, gate_info, num_qubits, check_legality=False, num_acted_qubits=1)
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.Quleaf:
-            state.gate_history.append({
-                'gate_name': 'sdg',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-            })
-            return state
-        for _ in range(0, self.depth):
-            for qubit_idx in self.qubits_idx:
-                state = functional.sdg(state, qubit_idx, self.dtype, self.backend)
-        return state
+    @property
+    def matrix(self) -> paddle.Tensor:
+        if self.dtype == 'complex64':
+            return Sdg.__matrix.cast('complex64')
+        return Sdg.__matrix
+
 
 class T(Gate):
     r"""A collection of single-qubit T gates.
@@ -167,27 +165,26 @@ class T(Gate):
         num_qubits: Total number of qubits. Defaults to ``None``.
         depth: Number of layers. Defaults to ``1``.
     """
-    def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_info = {
+    __matrix = t_gate('complex128')
+
+    def __init__(
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1
+    ):
+        gate_info = {
             'gatename': 't',
-            'texname': '$T$',
+            'texname': r'$T$',
             'plot_width': 0.4,
         }
+        super().__init__(
+            None, qubits_idx, depth, gate_info, num_qubits, check_legality=False, num_acted_qubits=1)
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.gate_history.append({
-                'gate_name': 't',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-            })
-            return state
-        for _ in range(0, self.depth):
-            for qubit_idx in self.qubits_idx:
-                state = functional.t(state, qubit_idx, self.dtype, self.backend)
-        return state
+    @property
+    def matrix(self) -> paddle.Tensor:
+        if self.dtype == 'complex64':
+            return T.__matrix.cast('complex64')
+        return T.__matrix
+
 
 class Tdg(Gate):
     r"""A collection of single-qubit T dagger (T inverse) gates.
@@ -207,26 +204,27 @@ class Tdg(Gate):
         num_qubits: Total number of qubits. Defaults to ``None``.
         depth: Number of layers. Defaults to ``1``.
     """
-    def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_info = {
+    __matrix = tdg_gate('complex128')
+
+    def __init__(
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1
+    ):
+        gate_info = {
             'gatename': 'tdg',
             'texname': r'$T^\dagger$',
             'plot_width': 0.4,
         }
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.Quleaf:
-            state.gate_history.append({
-                'gate_name': 'tdg',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-            })
-            return state
-        for _ in range(0, self.depth):
-            for qubit_idx in self.qubits_idx:
-                state = functional.tdg(state, qubit_idx, self.dtype, self.backend)
-        return state
+        super().__init__(
+            None, qubits_idx, depth, gate_info, num_qubits, check_legality=False, num_acted_qubits=1)
+
+    @property
+    def matrix(self) -> paddle.Tensor:
+        if self.dtype == 'complex64':
+            return Tdg.__matrix.cast('complex64')
+        return Tdg.__matrix
+
+
 class X(Gate):
     r"""A collection of single-qubit X gates.
 
@@ -244,28 +242,26 @@ class X(Gate):
         num_qubits: Total number of qubits. Defaults to ``None``.
         depth: Number of layers. Defaults to ``1``.
     """
-    def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_info = {
+
+    __matrix = x_gate('complex128')
+
+    def __init__(
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1
+    ):
+        gate_info = {
             'gatename': 'x',
-            'texname': '$X$',
+            'texname': r'$X$',
             'plot_width': 0.4,
         }
-        
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.gate_history.append({
-                'gate_name': 'x',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-            })
-            return state
-        for _ in range(0, self.depth):
-            for qubit_idx in self.qubits_idx:
-                state = functional.x(state, qubit_idx, self.dtype, self.backend)
-        return state
-    
+        super().__init__(
+            None, qubits_idx, depth, gate_info, num_qubits, check_legality=False, num_acted_qubits=1)
+
+    @property
+    def matrix(self) -> paddle.Tensor:
+        if self.dtype == 'complex64':
+            return X.__matrix.cast('complex64')
+        return X.__matrix
 
 
 class Y(Gate):
@@ -285,28 +281,25 @@ class Y(Gate):
         num_qubits: Total number of qubits. Defaults to ``None``.
         depth: Number of layers. Defaults to ``1``.
     """
-    def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_info = {
+    __matrix = y_gate('complex128')
+
+    def __init__(
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1
+    ):
+        gate_info = {
             'gatename': 'y',
-            'texname': '$Y$',
+            'texname': r'$Y$',
             'plot_width': 0.4,
         }
+        super().__init__(
+            None, qubits_idx, depth, gate_info, num_qubits, check_legality=False, num_acted_qubits=1)
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.gate_history.append({
-                'gate_name': 'y',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-            })
-            return state
-        for _ in range(0, self.depth):
-            for qubit_idx in self.qubits_idx:
-                state = functional.y(state, qubit_idx, self.dtype, self.backend)
-        return state
-
+    @property
+    def matrix(self) -> paddle.Tensor:
+        if self.dtype == 'complex64':
+            return Y.__matrix.cast('complex64')
+        return Y.__matrix
 
 
 class Z(Gate):
@@ -326,27 +319,25 @@ class Z(Gate):
         num_qubits: Total number of qubits. Defaults to ``None``.
         depth: Number of layers. Defaults to ``1``.
     """
-    def __init__(self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.gate_info = {
+    __matrix = z_gate('complex128')
+
+    def __init__(
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1
+    ):
+        gate_info = {
             'gatename': 'z',
-            'texname': '$Z$',
+            'texname': r'$Z$',
             'plot_width': 0.4,
         }
+        super().__init__(
+            None, qubits_idx, depth, gate_info, num_qubits, check_legality=False, num_acted_qubits=1)
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.gate_history.append({
-                'gate_name': 'z',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-            })
-            return state
-        for _ in range(0, self.depth):
-            for qubit_idx in self.qubits_idx:
-                state = functional.z(state, qubit_idx, self.dtype, self.backend)
-        return state
+    @property
+    def matrix(self) -> paddle.Tensor:
+        if self.dtype == 'complex64':
+            return Z.__matrix.cast('complex64')
+        return Z.__matrix
 
 
 class P(ParamGate):
@@ -372,34 +363,18 @@ class P(ParamGate):
         ValueError: The ``param`` must be ``paddle.Tensor`` or ``float``.
     """
     def __init__(
-            self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1,
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1,
             param: Optional[Union[paddle.Tensor, float]] = None, param_sharing: Optional[bool] = False
     ):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.param_sharing = param_sharing
-        
-        param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
-        self.theta_generation(param, param_shape)
-        self.gate_info = {
+        gate_info = {
             'gatename': 'p',
-            'texname': '$P$',
+            'texname': r'$P$',
             'plot_width': 0.9,
         }
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            raise NotImplementedError
-        for depth_idx in range(0, self.depth):
-            if self.param_sharing:
-                for qubit_idx in self.qubits_idx:
-                    state = functional.p(state, self.theta[depth_idx], qubit_idx, self.dtype, self.backend)
-            else:
-                for param_idx, qubit_idx in enumerate(self.qubits_idx):
-                    state = functional.p(
-                        state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
-        return state
-
+        super().__init__(
+            p_gate, param, depth, 1, param_sharing, qubits_idx, gate_info, num_qubits, False, num_acted_qubits=1)
 
 
 class RX(ParamGate):
@@ -425,50 +400,18 @@ class RX(ParamGate):
         ValueError: The ``param`` must be ``paddle.Tensor`` or ``float``.
     """
     def __init__(
-            self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1,
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1,
             param: Optional[Union[paddle.Tensor, float]] = None, param_sharing: Optional[bool] = False
     ):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.param_sharing = param_sharing
-        
-        param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
-        self.theta_generation(param, param_shape)
-        self.gate_info = {
+        gate_info = {
             'gatename': 'rx',
             'texname': r'$R_{x}$',
             'plot_width': 0.9,
         }
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.param_list.extend(self.theta)
-            if self.param_sharing:
-                param_idx_list = [[state.num_param]]
-                state.num_param += 1
-            else:
-                param_idx_list = []
-                for _ in range(0, self.depth):
-                    param_idx_list.append(list(range(state.num_param, state.num_param + len(self.qubits_idx))))
-                    state.num_param += self.theta.size
-            state.gate_history.append({
-                'gate_name': 'rx',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-                'param': param_idx_list,
-                'param_sharing': self.param_sharing,
-            })
-            return state
-        for depth_idx in range(0, self.depth):
-            if self.param_sharing:
-                for qubit_idx in self.qubits_idx:
-                    state = functional.rx(state, self.theta[depth_idx], qubit_idx, self.dtype, self.backend)
-            else:
-                for param_idx, qubit_idx in enumerate(self.qubits_idx):
-                    state = functional.rx(
-                        state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
-        return state
-    
+        super().__init__(
+            rx_gate, param, depth, 1, param_sharing, qubits_idx, gate_info, num_qubits, False, num_acted_qubits=1)
 
 
 class RY(ParamGate):
@@ -494,51 +437,17 @@ class RY(ParamGate):
         ValueError: The ``param`` must be ``paddle.Tensor`` or ``float``.
     """
     def __init__(
-            self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1,
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1,
             param: Optional[Union[paddle.Tensor, float]] = None, param_sharing: Optional[bool] = False
     ):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.param_sharing = param_sharing
-        
-        param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
-        self.theta_generation(param, param_shape)
-        self.gate_info = {
+        gate_info = {
             'gatename': 'ry',
             'texname': r'$R_{y}$',
             'plot_width': 0.9,
         }
-
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.param_list.extend(self.theta)
-            if self.param_sharing:
-                param_idx_list = [[state.num_param]]
-                state.num_param += 1
-            else:
-                param_idx_list = []
-                for _ in range(0, self.depth):
-                    param_idx_list.append(list(range(state.num_param, state.num_param + len(self.qubits_idx))))
-                state.num_param += len(self.qubits_idx)
-            state.gate_history.append({
-                'gate_name': 'ry',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-                'param': param_idx_list,
-                'param_sharing': self.param_sharing,
-            })
-            return state
-        for depth_idx in range(0, self.depth):
-            if self.param_sharing:
-                for qubit_idx in self.qubits_idx:
-                    state = functional.ry(state, self.theta[depth_idx], qubit_idx, self.dtype, self.backend)
-            else:
-                for param_idx, qubit_idx in enumerate(self.qubits_idx):
-                    state = functional.ry(
-                        state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
-        return state
-    
-
+        super().__init__(
+            ry_gate, param, depth, 1, param_sharing, qubits_idx, gate_info, num_qubits, False, num_acted_qubits=1)
 
 
 class RZ(ParamGate):
@@ -564,50 +473,18 @@ class RZ(ParamGate):
         ValueError: The ``param`` must be ``paddle.Tensor`` or ``float``.
     """
     def __init__(
-            self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1,
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1,
             param: Optional[Union[paddle.Tensor, float]] = None, param_sharing: Optional[bool] = False
     ):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.param_sharing = param_sharing
-        
-        param_shape = [depth, 1 if param_sharing else len(self.qubits_idx)]
-        self.theta_generation(param, param_shape)
-        self.gate_info = {
+        gate_info = {
             'gatename': 'rz',
             'texname': r'$R_{z}$',
             'plot_width': 0.9,
         }
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.param_list.extend(self.theta)
-            if self.param_sharing:
-                param_idx_list = [[state.num_param]]
-                state.num_param += 1
-            else:
-                param_idx_list = []
-                for _ in range(0, self.depth):
-                    param_idx_list.append(list(range(state.num_param, state.num_param + len(self.qubits_idx))))
-                    state.num_param += self.theta.size
-            state.gate_history.append({
-                'gate_name': 'rz',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-                'param': param_idx_list,
-                'param_sharing': self.param_sharing,
-            })
-            return state
-        for depth_idx in range(0, self.depth):
-            if self.param_sharing:
-                for qubit_idx in self.qubits_idx:
-                    state = functional.rz(state, self.theta[depth_idx], qubit_idx, self.dtype, self.backend)
-            else:
-                for param_idx, qubit_idx in enumerate(self.qubits_idx):
-                    state = functional.rz(
-                        state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
-        return state
-    
+        super().__init__(
+            rz_gate, param, depth, 1, param_sharing, qubits_idx, gate_info, num_qubits, False, num_acted_qubits=1)
 
 
 class U3(ParamGate):
@@ -636,51 +513,15 @@ class U3(ParamGate):
         ValueError: The ``param`` must be ``paddle.Tensor`` or ``float``.
     """
     def __init__(
-            self, qubits_idx: Optional[Union[Iterable, int, str]] = 'full', num_qubits: Optional[int] = None, depth: Optional[int] = 1,
+            self, qubits_idx: Optional[Union[Iterable, int, str]] = None,
+            num_qubits: Optional[int] = None, depth: Optional[int] = 1,
             param: Optional[Union[paddle.Tensor, Iterable[float]]] = None, param_sharing: Optional[bool] = False
     ):
-        super().__init__(depth)
-        self.qubits_idx = _format_qubits_idx(qubits_idx, num_qubits)
-        self.param_sharing = param_sharing
-        
-        if param_sharing:
-            param_shape = [depth, 3]
-        else:
-            param_shape = [depth, len(self.qubits_idx), 3]
-        self.theta_generation(param, param_shape)
-        self.gate_info = {
+        gate_info = {
             'gatename': 'u',
             'texname': r'$U$',
             'plot_width': 1.65,
         }
 
-    def forward(self, state: paddle_quantum.State) -> paddle_quantum.State:
-        if self.backend == Backend.QuLeaf and state.backend == Backend.QuLeaf:
-            state.param_list.extend(self.theta)
-            if self.param_sharing:
-                param_idx_list = [range(state.num_param, state.num_param + 3)]
-                state.num_param += 3
-            else:
-                param_idx_list = []
-                for _ in range(0, self.depth):
-                    param_idx_list.append(list(range(state.num_param, state.num_param + len(self.qubits_idx))))
-                    state.num_param += self.theta.size
-            state.gate_history.append({
-                'gate_name': 'u3',
-                'qubits_idx': copy.deepcopy(self.qubits_idx),
-                'depth': self.depth,
-                'param': param_idx_list,
-                'param_sharing': self.param_sharing,
-            })
-            return state
-        for depth_idx in range(0, self.depth):
-            if self.param_sharing:
-                for qubit_idx in self.qubits_idx:
-                    state = functional.u3(state, self.theta[depth_idx], qubit_idx, self.dtype, self.backend)
-            else:
-                for param_idx, qubit_idx in enumerate(self.qubits_idx):
-                    state = functional.u3(
-                        state, self.theta[depth_idx, param_idx], qubit_idx, self.dtype, self.backend)
-        return state
-    
- 
+        super().__init__(
+            u3_gate, param, depth, 3, param_sharing, qubits_idx, gate_info, num_qubits, False, num_acted_qubits=1)

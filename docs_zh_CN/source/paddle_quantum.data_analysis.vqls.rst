@@ -59,6 +59,7 @@ VQLS模型
       :rtype: paddle.Tensor
 
 .. py:function:: compute(A, b, depth, iterations, LR, gamma)
+   :noindex:
 
    求解线性方程组 Ax=b。
 

@@ -25,12 +25,12 @@ from ..ansatz import Circuit
 from ..backend import Backend
 from ..base import get_dtype
 from ..gate import X
-from ..intrinsic import _get_float_dtype
+from ..intrinsic import _get_float_dtype, _type_transform
 from ..linalg import unitary_random, is_unitary
 from ..loss import Measure
 from ..operator import Collapse
 from ..qinfo import dagger, partial_trace
-from ..state import State, _type_transform, zero_state
+from ..state import State, zero_state
 
 
 r"""

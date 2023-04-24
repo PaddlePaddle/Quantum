@@ -2,7 +2,7 @@
    :maxdepth: 1
 
    paddle_quantum.ansatz
-   paddle_quantum.backend
+   paddle_quantum.backend.quleaf
    paddle_quantum.biocomputing
    paddle_quantum.channel
    paddle_quantum.data_analysis

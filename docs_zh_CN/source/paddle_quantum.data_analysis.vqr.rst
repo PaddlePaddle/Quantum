@@ -30,7 +30,7 @@ paddle\_quantum.data_analysis.vqr
 
 .. py:class:: QRegressionModel(data_file, model_name, x_feature, y_feature, num_variable, init_params, num_qubits, learning_rate, iteration, language)
 
-   基类：:py:class: `object`
+   基类：:py:class:`object`
 
    变分量子回归分析器（variational quantum regression, VQR）模型实现。
 
@@ -64,7 +64,7 @@ paddle\_quantum.data_analysis.vqr
 
 .. py:class:: LinearRegression(num_qubits, num_x)
 
-   基类：:py:class: `paddle.nn.Layer`
+   基类：:py:class:`paddle.nn.Layer`
 
    量子线性回归分析器。
 

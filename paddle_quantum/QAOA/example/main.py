@@ -36,7 +36,7 @@ options = {
 
 
 if __name__ == "__main__":
-    n = 4
+    num_acted_qubits = 4
     paddle.seed(SEED)
     
     p = 4  # number of layers in the circuit
@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     # construct the Hamiltonian
     H_D_list = maxcut_hamiltonian(E)
-    H_D_matrix = pauli_str_to_matrix(H_D_list, n)
+    H_D_matrix = pauli_str_to_matrix(H_D_list, num_acted_qubits)
     H_D_diag = np.diag(H_D_matrix).real
     H_max = np.max(H_D_diag)
 

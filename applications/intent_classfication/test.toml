@@ -1,0 +1,21 @@
+# The full config for test the BERT-QTC model.
+# The task of this config. Available values: 'train' | 'test'.
+task = 'test'
+# The text to be tested.
+text = 'The text to be predicted.'
+# The path of the trained model, which will be loaded.
+model_path = 'decoder.pdparams'
+# The number of the filters
+num_filter = 1
+# The size of the kernel
+kernel_size = 5
+# The depth of the quantum circuit
+circuit_depth = 2
+# The length to pad
+padding = 2
+# The pretrained bert model
+bert_model = 'bert-base-chinese'
+# The size of the hidden state obtained through the BERT model
+hidden_size = 768
+# The classes of input text to be predicted.
+classes = ['火车', '音乐', '天气', '短信', '电话', '航班', '新闻']

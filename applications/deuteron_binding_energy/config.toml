@@ -1,0 +1,24 @@
+# A description of the task of this configuration file, this is optional. "Binding energy" stands for calculating deuteron binding energy.
+task = "Binding energy"
+
+# Set the dimension of the fermionic Hamiltonian
+N = 3
+# Set the parameters used in VQE
+hbar_omega = 7
+V0 = -5.6865811
+# Whether return the exact ground state energy of the Hamiltonian, **NOTE: should use `true` or `false` instead of `True` or `False`**
+calc_exact = true
+
+# This field stores configurations of the variational quantum eigensolver (VQE) method. 
+[VQE]
+# Number of optimization cycles, default is 100.
+num_iterations = 100
+# The convergence criteria for the VQE optimization, default is 1e-5.
+tol = 1e-5
+# The number of optimization steps after which we record the loss value.
+save_every = 10
+
+# This field specifies the optimizer used in the VQE method, default is `Adam`, see here for available optimizers https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/optimizer/Overview_cn.html
+[optimizer.Adam]
+# The learning rate of the optimizer, see here for more details https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/optimizer/Adam_cn.html, default is 0.4.
+learning_rate = 0.5

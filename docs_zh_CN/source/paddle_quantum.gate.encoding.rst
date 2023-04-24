@@ -5,7 +5,7 @@ paddle\_quantum.gate.encoding
 
 .. py:class:: BasisEncoding(qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.base.Operator`
 
    将输入的经典数据编码成量子态的基态编码门。
 
@@ -19,7 +19,7 @@ paddle\_quantum.gate.encoding
 
 .. py:class:: AmplitudeEncoding(qubits_idx='full', num_qubits=None)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.base.Operator`
 
    将输入的经典数据编码成量子态的振幅编码门。
 
@@ -30,7 +30,7 @@ paddle\_quantum.gate.encoding
 
 .. py:class:: AngleEncoding(feature, qubits_idx='full', num_qubits=None, encoding_gate=None)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.base.Operator`
 
    将输入的经典数据编码成量子态的角度编码门。
 
@@ -45,7 +45,7 @@ paddle\_quantum.gate.encoding
 
 .. py:class:: IQPEncoding(feature, qubits_idx=None, num_qubits=None, num_repeat=1)
 
-   基类：:py:class:`paddle_quantum.gate.base.Gate`
+   基类：:py:class:`paddle_quantum.base.Operator`
 
    将输入的经典数据编码成量子态的 IQP 编码门。
 

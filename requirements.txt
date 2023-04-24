@@ -7,6 +7,7 @@ scipy
 tqdm
 openfermion
 pyscf; platform_system == "Linux" or platform_system == "Darwin"
+paddlenlp
 scikit-learn
 opencv-python
 cvxpy

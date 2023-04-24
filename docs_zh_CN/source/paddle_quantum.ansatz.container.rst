@@ -16,11 +16,18 @@ paddle\_quantum.ansatz.container
 
       子 Layer 将按构造函数参数的顺序添加到此容器中。传递给构造函数的参数可以 Layers 或可迭代的 (name, Layer) 元组。
 
+   .. py:property:: oper_history()
+
+      量子电路包含的算子的相关信息
+
+      :return: 算子的相关信息
+      :rtype: List[Dict[str, Union[str, List[int], paddle.Tensor]]]
+
    .. py:method:: append(operator)
       
       增加一个 Operator 类
 
-      :param operator: 一个（附带名字的）Operator 类
+      :param operator: 一个 (附带名字的) Operator 类
       :type operator: Union[Iterable, Operator]
 
    .. py:method:: extend(operator)

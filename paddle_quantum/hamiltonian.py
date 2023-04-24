@@ -25,6 +25,7 @@ from scipy import sparse
 import paddle
 import paddle_quantum
 import openfermion
+import math
 
 
 class Hamiltonian:
@@ -301,7 +302,7 @@ class Hamiltonian:
         r"""Construct a matrix form of the Hamiltonian in Z-basis.
 
         Args:
-            qubit_num: The number of qubits. Defaults to ``1``.
+            qubit_num: The number of qubits. Defaults to ``None``.
 
         Returns:
             The matrix form of the Hamiltonian in Z-basis.
@@ -333,6 +334,11 @@ class Hamiltonian:
     def from_qubit_operator(cls, qubitOp: openfermion.QubitOperator):
         pauli_strs = []
         for xyz_tuple, coef in qubitOp.terms.items():
+            if isinstance(coef, complex):
+                if not math.isclose(coef.imag, 0.0):
+                    raise ValueError("Coefficients in qubit Hamiltonian must be real since Hamiltonian is Hermitian.")
+                else:
+                    coef = coef.real
             if len(xyz_tuple) == 0:
                 pauli_strs.append((coef, "I"))
             else:

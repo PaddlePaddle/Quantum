@@ -16,7 +16,8 @@ paddle\_quantum.qml.vsql
    :rtype: numpy.ndarray
 
 .. py:class:: ImageDataset(file_path, num_samples, transform)
-
+   :noindex:
+   
    基类：:py:class:`paddle.io.Dataset`
 
    实现图片数据集的类。
@@ -66,7 +67,8 @@ paddle\_quantum.qml.vsql
       :rtype: paddle.Tensor
 
 .. py:function:: train(model_name, num_qubits, num_shadow, classes, batch_size, num_epochs, depth, datasets, saved_dir, learning_rate, using_validation, num_workers, early_stopping, num_train, num_dev, num_test)
-
+   :noindex:
+   
    训练 VSQL 模型的函数。
 
    :param model_name: 模型的名字，用于作为保存的模型参数的文件名。
@@ -103,6 +105,7 @@ paddle\_quantum.qml.vsql
    :type num_test: int
 
 .. py:function:: evaluate(model, data_loader)
+   :noindex:
 
    对模型进行评估。
 
@@ -115,6 +118,7 @@ paddle\_quantum.qml.vsql
    :rtype: Tuple[float, float]
 
 .. py:function:: test(model, model_path, test_loader)
+   :noindex:
 
    使用测试集对模型进行测试。
 
@@ -126,6 +130,7 @@ paddle\_quantum.qml.vsql
    :type test_loader: paddle.io.DataLoader
 
 .. py:function:: inference(image_path, is_dir, model_path, num_qubits, num_shadow, classes, depth)
+   :noindex:
 
    推理函数。使用训练好的模型对输入的图片进行预测。
 

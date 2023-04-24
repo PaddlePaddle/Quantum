@@ -10,7 +10,9 @@ paddle\_quantum.qml
 
 .. toctree::
    :maxdepth: 4
-
+   
+   paddle_quantum.qml.bert_qtc
+   paddle_quantum.qml.qcaan
    paddle_quantum.qml.qnnmic
    paddle_quantum.qml.qnnqd
    paddle_quantum.qml.qsann

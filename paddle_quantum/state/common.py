@@ -19,17 +19,17 @@ The common function of the quantum state.
 
 import numpy as np
 import paddle
-import paddle_quantum
+import paddle_quantum as pq
 import QCompute
-from ..backend import Backend
-from ..backend import quleaf
+from ..base import get_backend, get_dtype
+from ..backend import Backend, quleaf
 from .state import State
 from typing import Union, Optional, List
 
 
 def to_state(
         data: Union[paddle.Tensor, np.ndarray, QCompute.QEnv], num_qubits: Optional[int] = None,
-        backend: Optional[paddle_quantum.Backend] = None, dtype: Optional[str] = None
+        backend: Optional[Backend] = None, dtype: Optional[str] = None
 ) -> State:
     r"""The function to generate a specified state instance.
 
@@ -48,7 +48,7 @@ def to_state(
 
 
 def zero_state(
-        num_qubits: int, backend: Optional[paddle_quantum.Backend] = None, dtype: Optional[str] = None
+        num_qubits: int, backend: Optional[Backend] = None, dtype: Optional[str] = None
 ) -> State:
     r"""The function to generate a zero state.
 
@@ -63,12 +63,12 @@ def zero_state(
     Returns:
        The generated quantum state.
     """
-    dtype = paddle_quantum.get_dtype() if dtype is None else dtype
+    dtype = get_dtype() if dtype is None else dtype
     np_dtype = np.complex64 if dtype == 'complex64' else np.complex128
     data = np.zeros((2 ** num_qubits,), dtype=np_dtype)
     data[0] = 1
     data = paddle.to_tensor(data)
-    backend = paddle_quantum.get_backend() if backend is None else backend
+    backend = get_backend() if backend is None else backend
     if backend == Backend.StateVector:
         state = State(data, num_qubits, backend=backend, dtype=dtype)
     elif backend == Backend.DensityMatrix:
@@ -86,7 +86,7 @@ def zero_state(
 
 
 def computational_basis(
-        num_qubits: int, index: int, backend: Optional[paddle_quantum.Backend] = None, dtype: Optional[str] = None
+        num_qubits: int, index: int, backend: Optional[Backend] = None, dtype: Optional[str] = None
 ) -> State:
     r"""Generate a computational basis state :math:`|e_{i}\rangle` , whose i-th element is 1 and all the other elements are 0.
 
@@ -102,12 +102,12 @@ def computational_basis(
     Returns:
         The generated quantum state.
     """
-    dtype = paddle_quantum.get_dtype() if dtype is None else dtype
+    dtype = get_dtype() if dtype is None else dtype
     np_dtype = np.complex64 if dtype == 'complex64' else np.complex128
     data = np.zeros((2 ** num_qubits,), dtype=np_dtype)
     data[index] = 1
     data = paddle.to_tensor(data)
-    backend = paddle_quantum.get_backend() if backend is None else backend
+    backend = get_backend() if backend is None else backend
     if backend == Backend.StateVector:
         state = State(data, num_qubits, backend=backend)
     elif backend == Backend.DensityMatrix:
@@ -119,7 +119,7 @@ def computational_basis(
     return state
 
 
-def bell_state(num_qubits: int, backend: Optional[paddle_quantum.Backend] = None) -> State:
+def bell_state(num_qubits: int, backend: Optional[Backend] = None) -> State:
     r"""Generate a bell state.
 
     Its matrix form is:
@@ -138,7 +138,7 @@ def bell_state(num_qubits: int, backend: Optional[paddle_quantum.Backend] = None
     Returns:
         The generated quantum state.
     """
-    np_dtype = np.complex64 if paddle_quantum.get_dtype() == 'complex64' else np.complex128
+    np_dtype = np.complex64 if get_dtype() == 'complex64' else np.complex128
     dim = 2 ** num_qubits
     local_dim = 2 ** int(num_qubits / 2)
     coeff = 1 / local_dim
@@ -146,7 +146,7 @@ def bell_state(num_qubits: int, backend: Optional[paddle_quantum.Backend] = None
     for i in range(0, dim, local_dim + 1):
         for j in range(0, dim, local_dim + 1):
             data[i, j] = coeff
-    backend = paddle_quantum.get_backend() if backend is None else backend
+    backend = get_backend() if backend is None else backend
     if backend == Backend.StateVector:
         eigenvalue, eigenvector = paddle.linalg.eig(paddle.to_tensor(data))
         data = eigenvector[:, paddle.argmax(paddle.real(eigenvalue))]
@@ -182,7 +182,7 @@ def bell_diagonal_state(prob: List[float]) -> State:
     assert 0 <= p1 <= 1 and 0 <= p2 <= 1 and 0 <= p3 <= 1 and 0 <= p4 <= 1, "Each probability must be in [0, 1]."
     assert abs(p1 + p2 + p3 + p4 - 1) < 1e-6, "The sum of probabilities should be 1."
 
-    np_dtype = np.complex64 if paddle_quantum.get_dtype() == 'complex64' else np.complex128
+    np_dtype = np.complex64 if get_dtype() == 'complex64' else np.complex128
     coeff = np.sqrt(0.5)
     phi_p_vec = np.array([[coeff, 0, 0, coeff]], dtype=np_dtype)
     phi_p_mat = np.matmul(phi_p_vec.T, phi_p_vec)
@@ -195,7 +195,7 @@ def bell_diagonal_state(prob: List[float]) -> State:
 
     state = p1 * phi_p_mat + p2 * psi_p_mat + p3 * phi_m_mat + p4 * psi_m_mat
 
-    backend = paddle_quantum.get_backend()
+    backend = get_backend()
     if backend == Backend.StateVector:
         trace_rho = paddle.trace(paddle.to_tensor(state) @ paddle.to_tensor(state))
         if trace_rho.numpy()[0] == 1:
@@ -225,32 +225,14 @@ def random_state(num_qubits: int, is_real: Optional[bool] = False, rank: Optiona
     Returns:
         The generated quantum state.
     """
-    float_dtype = 'float32' if paddle_quantum.get_dtype() == 'complex64' else 'float64'
-    backend = paddle_quantum.get_backend()
+    backend = get_backend()
     if backend == Backend.StateVector:
-        if is_real:
-            data = paddle.rand((2 ** num_qubits,), dtype=float_dtype)
-        else:
-            data_real = paddle.rand((2 ** num_qubits,), dtype=float_dtype)
-            data_imag = paddle.rand((2 ** num_qubits,), dtype=float_dtype)
-            data = data_real + 1j * data_imag
-        norm = np.linalg.norm(data.numpy())
-        data = data / paddle.to_tensor(norm)
-        state = State(data, num_qubits, backend=backend)
+        data = pq.linalg.haar_state_vector(num_qubits, is_real)
     elif backend == Backend.DensityMatrix:
-        rank = 2 ** num_qubits if rank is None else rank
-        if is_real:
-            data = paddle.rand((2 ** num_qubits, rank), dtype=float_dtype)
-        else:
-            data_real = paddle.rand((2 ** num_qubits, rank), dtype=float_dtype)
-            data_imag = paddle.rand((2 ** num_qubits, rank), dtype=float_dtype)
-            data = data_real + 1j * data_imag
-        data = paddle.matmul(data, paddle.conj(paddle.t(data)))
-        data = data / paddle.trace(data)
-        state = State(data, num_qubits, backend=backend)
+        data = pq.linalg.haar_density_operator(num_qubits, rank, is_real)
     else:
         raise NotImplementedError
-    return state
+    return State(data, num_qubits, backend=backend)
 
 
 def w_state(num_qubits: int) -> 'State':
@@ -265,11 +247,11 @@ def w_state(num_qubits: int) -> 'State':
     Returns:
         The generated quantum state.
     """
-    np_dtype = np.complex64 if paddle_quantum.get_dtype() == 'complex64' else np.complex128
-    coeff = np.ones((1, 2 ** num_qubits)) / np.sqrt(num_qubits)
-    backend = paddle_quantum.get_backend()
+    np_dtype = np.complex64 if get_dtype() == 'complex64' else np.complex128
+    coeff = np.ones(2 ** num_qubits) / np.sqrt(num_qubits)
+    backend = get_backend()
     if backend == Backend.StateVector:
-        state = np.zeros((1, 2 ** num_qubits), dtype=np_dtype)
+        state = np.zeros(2 ** num_qubits, dtype=np_dtype)
         for i in range(num_qubits):
             state[0][2 ** i] = coeff[0][num_qubits - i - 1]
         state = State(paddle.to_tensor(state), num_qubits, backend=backend)
@@ -298,12 +280,12 @@ def ghz_state(num_qubits: int) -> 'State':
     Returns:
         The generated quantum state.
     """
-    np_dtype = np.complex64 if paddle_quantum.get_dtype() == 'complex64' else np.complex128
-    backend = paddle_quantum.get_backend()
+    np_dtype = np.complex64 if get_dtype() == 'complex64' else np.complex128
+    backend = get_backend()
     if backend == Backend.StateVector:
-        state = np.zeros((1, 2 ** num_qubits))
-        state[0][0] = 1 / np.sqrt(2)
-        state[0][-1] = 1 / np.sqrt(2)
+        state = np.zeros(2 ** num_qubits, dtype=np_dtype)
+        state[0] = 1 / np.sqrt(2)
+        state[-1] = 1 / np.sqrt(2)
         state = State(paddle.to_tensor(state), num_qubits, backend=backend)
     elif backend == Backend.DensityMatrix:
         state = np.zeros(2 ** num_qubits, dtype=np_dtype)
@@ -333,10 +315,10 @@ def completely_mixed_computational(num_qubits: int) -> State:
     """
     assert num_qubits > 0, 'qubit number must be positive'
 
-    np_dtype = np.complex64 if paddle_quantum.get_dtype() == 'complex64' else np.complex128
+    np_dtype = np.complex64 if get_dtype() == 'complex64' else np.complex128
     state = np.eye(2 ** num_qubits) / (2 ** num_qubits)
     state = state.astype(np_dtype)
-    backend = paddle_quantum.get_backend()
+    backend = get_backend()
     if backend == Backend.StateVector:
         trace_rho = paddle.trace(paddle.to_tensor(state) @ paddle.to_tensor(state))
         if trace_rho.numpy()[0] == 1:
@@ -373,7 +355,7 @@ def r_state(prob: float) -> State:
     """
     assert 0 <= prob <= 1, "Probability must be in [0, 1]"
 
-    np_dtype = np.complex64 if paddle_quantum.get_dtype() == 'complex64' else np.complex128
+    np_dtype = np.complex64 if get_dtype() == 'complex64' else np.complex128
     coeff = np.sqrt(0.5)
     psi_p_vec = np.array([[0, coeff, coeff, 0]])
     psi_p_mat = np.matmul(psi_p_vec.T, psi_p_vec)
@@ -381,7 +363,7 @@ def r_state(prob: float) -> State:
     state_11[3, 3] = 1
     state = prob * psi_p_mat + (1 - prob) * state_11
     state = state.astype(np_dtype)
-    backend = paddle_quantum.get_backend()
+    backend = get_backend()
     if backend == Backend.StateVector:
         trace_rho = paddle.trace(paddle.to_tensor(state) @ paddle.to_tensor(state))
         if trace_rho.numpy()[0] == 1:
@@ -418,14 +400,14 @@ def s_state(prob: float) -> State:
     """
     assert 0 <= prob <= 1, "Probability must be in [0, 1]"
 
-    np_dtype = np.complex64 if paddle_quantum.get_dtype() == 'complex64' else np.complex128
+    np_dtype = np.complex64 if get_dtype() == 'complex64' else np.complex128
     phi_p = bell_state(2).data.numpy()
     psi0 = np.zeros_like(phi_p)
     psi0[0, 0] = 1
     state = prob * phi_p + (1 - prob) * psi0
     state = state.astype(np_dtype)
 
-    backend = paddle_quantum.get_backend()
+    backend = get_backend()
     if backend == Backend.StateVector:
         trace_rho = paddle.trace(paddle.to_tensor(state) @ paddle.to_tensor(state))
         if trace_rho.numpy()[0] == 1:
@@ -463,13 +445,13 @@ def isotropic_state(num_qubits: int, prob: float) -> State:
     """
     assert 0 <= prob <= 1, "Probability must be in [0, 1]"
 
-    np_dtype = np.complex64 if paddle_quantum.get_dtype() == 'complex64' else np.complex128
+    np_dtype = np.complex64 if get_dtype() == 'complex64' else np.complex128
     dim = 2 ** num_qubits
     phi_b = bell_state(num_qubits).data.numpy()
     state = prob * phi_b + (1 - prob) * np.eye(dim) / dim
     state = state.astype(np_dtype)
 
-    backend = paddle_quantum.get_backend()
+    backend = get_backend()
     if backend == Backend.StateVector:
         trace_rho = paddle.trace(paddle.to_tensor(state) @ paddle.to_tensor(state))
         if trace_rho.numpy()[0] == 1:
